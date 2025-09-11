@@ -104,7 +104,7 @@ export default function Home() {
                     i believe in building products that solve real problems. this means starting with customer research, 
                     understanding pain points deeply, and validating assumptions early.
                   </p>
-                  <p>my background helps me work closely with engineering teams to find the right balance between what's possible and what's valuable.</p>
+                  <p>my business background helps me work closely with gtm, design and engineering teams to find the right balance between what's possible and what's valuable.</p>
                   <p>
                     i prefer small, autonomous teams that can move fast and iterate based on user feedback.
                   </p>

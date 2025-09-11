@@ -25,7 +25,7 @@ export default function Home() {
             based in nyc.
           </p>
           <p className="text-base leading-relaxed">
-            i've been building products for 5,475 days.
+            i've been working in tech for 14+ years.
           </p>
         </section>
 
@@ -35,11 +35,11 @@ export default function Home() {
             a few achievements:
           </h2>
           <ul className="space-y-2 text-base leading-relaxed">
-            <li>- leading product for 34+ million subscribers</li>
-            <li>- architected ai-powered personalization systems</li>
-            <li>- built platform apis serving billions of requests</li>
-            <li>- shipped products used by millions daily</li>
-            <li>- led cross-functional teams of 20+ engineers and designers</li>
+            <li>- leading product management for siriusxm's 34+ million subscribers</li>
+            <li>- shipped disney+ b2b2c products and espn streaming experiences</li>
+            <li>- built ai-powered automation systems at hyperscience</li>
+            <li>- directed product strategy for ea's gaming platforms</li>
+            <li>- certified in ai product management and strategic planning</li>
           </ul>
         </section>
 
@@ -54,8 +54,8 @@ export default function Home() {
             <li>- <Link href="/blog" className="underline hover:no-underline" data-testid="link-writing-product">writing about product</Link> - sharing insights and learnings</li>
           </ul>
           <p className="text-base leading-relaxed mt-4 text-gray-600">
-            i focus on building platforms that make other teams move faster. 
-            this approach creates leverage through thoughtful abstractions.
+            connecting people to audio experiences - music, stories, news and sports. 
+            i focus on platform architecture that enables content discovery at scale.
           </p>
         </section>
 
@@ -65,10 +65,10 @@ export default function Home() {
             tl;dr:
           </h2>
           <p className="text-base leading-relaxed mb-4">
-            i started building things as a kid and never stopped.
+            i started in consulting as a salesforce solutions architect, then moved into product management.
           </p>
           <p className="text-base leading-relaxed mb-4">
-            i've worked across startups and scale-ups, from 0-to-1 products to platform engineering.
+            i've worked across entertainment (disney), enterprise ai (hyperscience), gaming (ea), and now audio (siriusxm).
           </p>
           <p className="text-base leading-relaxed">
             i believe the best products come from deep customer empathy, technical feasibility, and clear business impact.
@@ -147,16 +147,16 @@ export default function Home() {
             {openSections.background && (
               <div className="mt-6 text-base leading-relaxed space-y-4" data-testid="section-background">
                 <p>
-                  before siriusxm, i worked at early-stage startups building b2b saas products. 
-                  i've been on both sides of the 0-to-1 and 1-to-n equation.
+                  i started my career in consulting, working as a salesforce solutions architect and analyst 
+                  for companies like pwc, redkite, and bluewolf from 2011-2016.
                 </p>
                 <p>
-                  i have a computer science background but found my passion in product management—
-                  the intersection of technology, business, and user experience.
+                  i transitioned to product management at disney in 2016, working on espn and disney+ products. 
+                  since then i've worked at hyperscience, ea, and now siriusxm.
                 </p>
                 <p>
-                  i spend my free time reading about emerging tech, experimenting with new tools, 
-                  and occasionally building side projects.
+                  i have a philosophy degree from st. john's and an executive mba from quantic. 
+                  i'm also a uc berkeley haas venture fellow and ondeck fellow.
                 </p>
               </div>
             )}
@@ -195,10 +195,11 @@ export default function Home() {
             recent experience:
           </h2>
           <ul className="space-y-2 text-base leading-relaxed">
-            <li>- (24-) <span className="font-semibold">siriusxm</span> - senior director of product</li>
-            <li>- (22-24) <span className="font-semibold">siriusxm</span> - director of product</li>
-            <li>- (21-22) <span className="font-semibold">pandora</span> - senior product manager</li>
-            <li>- (19-21) <span className="font-semibold">various startups</span> - product management roles</li>
+            <li>- (2023–present) <span className="font-semibold">siriusxm</span> - senior director of product management</li>
+            <li>- (2021–2023) <span className="font-semibold">electronic arts</span> - director of product management</li>
+            <li>- (2020–2021) <span className="font-semibold">hyperscience</span> - senior product manager</li>
+            <li>- (2016–2020) <span className="font-semibold">disney</span> - product manager, streaming & espn</li>
+            <li>- (2011–2016) <span className="font-semibold">consulting</span> - salesforce solutions architect & analyst</li>
           </ul>
         </section>
 
@@ -208,11 +209,26 @@ export default function Home() {
             some projects i've worked on:
           </h2>
           <ul className="space-y-2 text-base leading-relaxed">
-            <li>- (24) <Link href="/projects" className="underline hover:no-underline" data-testid="link-unified-api">unified content api</Link> - platform serving 1b+ requests</li>
-            <li>- (24) <Link href="/projects" className="underline hover:no-underline" data-testid="link-ai-engine">ai recommendation engine</Link> - personalized content discovery</li>
-            <li>- (23) <Link href="/projects" className="underline hover:no-underline" data-testid="link-developer-portal">developer portal</Link> - self-service tools for internal teams</li>
-            <li>- (23) <Link href="/blog" className="underline hover:no-underline" data-testid="link-product-blog">product blog</Link> - sharing insights and learnings</li>
-            <li>- (22) <Link href="/projects" className="underline hover:no-underline" data-testid="link-mobile-platform">mobile platform</Link> - cross-platform sdk and tools</li>
+            <li>- (2024) <Link href="/projects" className="underline hover:no-underline" data-testid="link-unified-api">unified content api</Link> - large-scale platform architecture</li>
+            <li>- (2024) <Link href="/projects" className="underline hover:no-underline" data-testid="link-ai-engine">ai recommendation engine</Link> - personalized content discovery</li>
+            <li>- (2023) <Link href="/projects" className="underline hover:no-underline" data-testid="link-developer-portal">developer portal</Link> - self-service tools for internal teams</li>
+            <li>- (2023) <Link href="/blog" className="underline hover:no-underline" data-testid="link-product-blog">product blog</Link> - sharing insights and learnings</li>
+            <li>- (2022) <Link href="/projects" className="underline hover:no-underline" data-testid="link-mobile-platform">mobile platform</Link> - cross-platform sdk and tools</li>
+          </ul>
+        </section>
+
+        {/* Education & Certifications */}
+        <section className="mb-12">
+          <h2 className="text-lg font-normal mb-4 uppercase tracking-wider" data-testid="text-section-education">
+            education & certifications:
+          </h2>
+          <ul className="space-y-2 text-base leading-relaxed">
+            <li>- <span className="font-semibold">quantic school of business</span> - executive mba</li>
+            <li>- <span className="font-semibold">uc berkeley haas</span> - venture fellow (2021)</li>
+            <li>- <span className="font-semibold">st. john's university</span> - ba philosophy</li>
+            <li>- <span className="font-semibold">ondeck</span> - fellow</li>
+            <li>- ai product management certification (ai product academy)</li>
+            <li>- prof g certified strategist (product strategy)</li>
           </ul>
         </section>
 

@@ -54,7 +54,7 @@ export default function Home() {
             <p><span className="font-semibold">thinking with:</span> claude, chatgpt, oboe</p>
             <p><span className="font-semibold">learning from:</span> twitter, hacker news, product hunt, youtube</p>
             <p><span className="font-semibold">reading:</span> brian sanderson, viet thanh nguyen, shane parrish, patty wipfler, anything about consciousness</p>
-            <p><span className="font-semibold">exploring:</span> cursor, v0, replit, n8n, langchain, jiu jitsu, muay thai</p>
+            <p><span className="font-semibold">exploring:</span> cursor, v0, replit, n8n, jiu jitsu, muay thai</p>
           </div>
         </section>
 

@@ -261,20 +261,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Experience */}
-        <section className="mb-12">
-          <h2 className="text-lg font-normal mb-4 uppercase tracking-wider" data-testid="text-section-experience">
-            recent experience:
-          </h2>
-          <ul className="space-y-2 text-base leading-relaxed">
-            <li>- (2023–present) <span className="font-semibold">siriusxm</span> - senior director of product management</li>
-            <li>- (2021–2023) <span className="font-semibold">electronic arts</span> - director of product management</li>
-            <li>- (2020–2021) <span className="font-semibold">hyperscience</span> - senior product manager</li>
-            <li>- (2016–2020) <span className="font-semibold">disney</span> - product manager, streaming & espn</li>
-            <li>- (2011–2016) <span className="font-semibold">consulting</span> - salesforce solutions architect & analyst</li>
-          </ul>
-        </section>
-
         {/* Projects */}
         <section className="mb-12">
           <h2 className="text-lg font-normal mb-4 uppercase tracking-wider" data-testid="text-section-projects">
@@ -286,21 +272,6 @@ export default function Home() {
             <li>- (2023) <Link href="/projects" className="underline hover:no-underline" data-testid="link-developer-portal">developer portal</Link> - self-service tools for internal teams</li>
             <li>- (2023) <Link href="/blog" className="underline hover:no-underline" data-testid="link-product-blog">product blog</Link> - sharing insights and learnings</li>
             <li>- (2022) <Link href="/projects" className="underline hover:no-underline" data-testid="link-mobile-platform">mobile platform</Link> - cross-platform sdk and tools</li>
-          </ul>
-        </section>
-
-        {/* Education & Certifications */}
-        <section className="mb-12">
-          <h2 className="text-lg font-normal mb-4 uppercase tracking-wider" data-testid="text-section-education">
-            education & certifications:
-          </h2>
-          <ul className="space-y-2 text-base leading-relaxed">
-            <li>- <span className="font-semibold">quantic school of business</span> - executive mba</li>
-            <li>- <span className="font-semibold">uc berkeley haas</span> - venture fellow (2021)</li>
-            <li>- <span className="font-semibold">st. john's university</span> - ba philosophy</li>
-            <li>- <span className="font-semibold">ondeck</span> - fellow</li>
-            <li>- ai product management certification (ai product academy)</li>
-            <li>- prof g certified strategist (product strategy)</li>
           </ul>
         </section>
 

@@ -58,7 +58,8 @@ export default function Home() {
           <ul className="space-y-2 text-base leading-relaxed">
             <li>- <Link href="/projects" className="underline hover:no-underline" data-testid="link-platform-architecture">platform architecture</Link> - scalable apis and developer tools</li>
             <li>- <Link href="/projects" className="underline hover:no-underline" data-testid="link-ai-personalization">ai personalization</Link> - content discovery at scale</li>
-            <li>- <Link href="/blog" className="underline hover:no-underline" data-testid="link-writing-product">writing about product</Link> - sharing insights and learnings</li>
+            <li>- <Link href="/blog" className="underline hover:no-underline" data-testid="link-writing-product">writing a scifi fiction novel</Link> - exploring new worlds and ideas</li>
+            <li>- parenting and how to be a good parent - the most important project of all</li>
           </ul>
         </section>
 

@@ -1,316 +1,234 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { Link } from "wouter";
 
-interface DisclosureProps {
-  title: string;
-  children: React.ReactNode;
-  isOpen: boolean;
-  onClick: () => void;
-}
-
-function Disclosure({ title, children, isOpen, onClick }: DisclosureProps) {
-  return (
-    <div className="disclosure-item">
-      <button
-        onClick={onClick}
-        className="w-full text-left px-4 py-3 bg-zinc-950 hover:bg-zinc-900 flex items-center justify-between transition-colors duration-200"
-        data-testid={`button-disclosure-${title.toLowerCase().replace(/\s+/g, '-')}`}
-      >
-        <span className="font-semibold">{title}</span>
-        <span className="text-zinc-500">{isOpen ? "−" : "+"}</span>
-      </button>
-      {isOpen && (
-        <div className="px-4 py-4 text-zinc-300 leading-relaxed bg-black transition-all duration-300 ease-in-out">
-          {children}
-        </div>
-      )}
-    </div>
-  );
-}
-
 export default function Home() {
-  const [openDisclosure, setOpenDisclosure] = useState<string | null>(null);
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
 
-  const toggleDisclosure = (key: string) => {
-    setOpenDisclosure(openDisclosure === key ? null : key);
+  const toggleSection = (section: string) => {
+    setOpenSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
   };
 
-  const daysBuilding = useMemo(() => {
-    const birthDate = new Date('1989-03-06');
-    const today = new Date();
-    const diffTime = Math.abs(today.getTime() - birthDate.getTime());
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
-  }, []);
-
-  const currentYear = new Date().getFullYear();
-
   return (
-    <main className="min-h-screen bg-black text-zinc-100 selection:bg-white selection:text-black">
-      {/* Sticky Header */}
-      <header className="sticky top-0 z-40 backdrop-blur bg-black/70 border-b border-zinc-800">
-        <div className="mx-auto max-w-3xl px-4 py-3 flex items-center justify-between text-sm">
-          <nav className="flex gap-5 font-medium">
-            <Link 
-              href="/blog" 
-              className="hover:underline transition-all duration-200"
-              data-testid="link-blog"
-            >
-              BLOG
-            </Link>
-            <Link 
-              href="/projects" 
-              className="hover:underline transition-all duration-200"
-              data-testid="link-projects"
-            >
-              PROJECTS
-            </Link>
-            <Link 
-              href="/contact" 
-              className="hover:underline transition-all duration-200"
-              data-testid="link-contact"
-            >
-              CONTACT
-            </Link>
-            <a 
-              href="https://www.linkedin.com/in/adrianlumley" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="hover:underline transition-all duration-200"
-              data-testid="link-linkedin"
-            >
-              LINKEDIN
-            </a>
-          </nav>
-          <div className="text-xs text-zinc-400" data-testid="text-location">NYC • US/UK</div>
-        </div>
-      </header>
-
-      <div className="mx-auto max-w-3xl px-4 pt-10 pb-28">
-        {/* Hero Section */}
-        <section className="hero-section">
-          <h1 className="text-4xl sm:text-5xl font-black tracking-tight" data-testid="text-hero-title">
-            HEY, I'M ADRIAN.
+    <main className="min-h-screen bg-white text-black font-mono selection:bg-black selection:text-white">
+      <div className="mx-auto max-w-2xl px-6 py-12">
+        
+        {/* Main intro */}
+        <section className="mb-12">
+          <h1 className="text-2xl font-normal mb-6 leading-relaxed" data-testid="text-main-title">
+            hey, i'm adrian.
           </h1>
-          <p className="mt-4 text-lg text-zinc-300" data-testid="text-hero-description">
-            Senior Director of Product Management at SiriusXM, based in Long Island City, NYC. I build partnerships, platforms, and AI-enabled experiences.
+          <p className="text-base leading-relaxed mb-4">
+            i'm a senior director of product management at <a href="https://www.siriusxm.com" className="underline hover:no-underline" target="_blank" rel="noopener noreferrer" data-testid="link-siriusxm">siriusxm</a>, 
+            based in nyc.
           </p>
-          <p className="mt-4 text-zinc-400" data-testid="text-days-building">
-            I've been building things for{' '}
-            <span className="font-semibold text-white">{daysBuilding.toLocaleString()}</span> days.
-          </p>
-        </section>
-
-        {/* Notes & Wins Section */}
-        <section className="mt-10">
-          <h2 className="text-sm font-bold tracking-wider text-zinc-400" data-testid="text-section-notes">
-            A FEW NOTES & WINS
-          </h2>
-          <ul className="mt-3 space-y-2 text-zinc-200">
-            <li data-testid="text-note-siriusxm">
-              Led product partnerships at <span className="font-semibold">SiriusXM</span> shaping connected, personalized subscriber journeys.
-            </li>
-            <li data-testid="text-note-background">
-              EMBA grad (Quantic). Formerly at <span className="font-semibold">EA</span>, <span className="font-semibold">Disney Streaming</span>, and <span className="font-semibold">ESPN</span>.
-            </li>
-            <li data-testid="text-note-consulting">
-              Built a small consulting practice and a portfolio of AI/product strategy experiments.
-            </li>
-            <li data-testid="text-note-personal">
-              Dual citizen (US/UK); endlessly curious about cities, culture, and design. Martial artist for longevity (Muay Thai + BJJ).
-            </li>
-          </ul>
-        </section>
-
-        {/* Projects Section */}
-        <section className="mt-10">
-          <h2 className="text-sm font-bold tracking-wider text-zinc-400" data-testid="text-section-projects">
-            SOME PROJECTS I'M WORKING ON
-          </h2>
-          <ul className="mt-3 space-y-2 text-zinc-200">
-            <li data-testid="text-project-lacarta">
-              <a className="underline hover:text-white transition-colors duration-200" href="#" target="_blank" rel="noopener noreferrer">
-                La Carta
-              </a>{' '}
-              — a dining experience product: reserve, pre-order, and pre-pay to compress dwell time and personalize service.
-            </li>
-            <li data-testid="text-project-sierra">
-              <a className="underline hover:text-white transition-colors duration-200" href="#" target="_blank" rel="noopener noreferrer">
-                Sierra AI Playbooks
-              </a>{' '}
-              — org design + guardrails for AI agents across growth and service journeys.
-            </li>
-            <li data-testid="text-project-radar">
-              <a className="underline hover:text-white transition-colors duration-200" href="#" target="_blank" rel="noopener noreferrer">
-                VP Comp Radar
-              </a>{' '}
-              — living Google Sheet + visuals tracking market ranges and outbound pipeline.
-            </li>
-            <li data-testid="text-project-automations">
-              <a className="underline hover:text-white transition-colors duration-200" href="#" target="_blank" rel="noopener noreferrer">
-                Personal Automations
-              </a>{' '}
-              — inbox triage, contact memory, travel planning, and family ops.
-            </li>
-          </ul>
-          <p className="mt-3 text-sm text-zinc-400" data-testid="text-projects-philosophy">
-            I start many experiments and keep the compounding ones. Sunk cost is not a strategy.
+          <p className="text-base leading-relaxed">
+            i've been building products for 5,475 days.
           </p>
         </section>
 
-        {/* TL;DR Disclosure Section */}
-        <section className="mt-10">
-          <h2 className="text-sm font-bold tracking-wider text-zinc-400" data-testid="text-section-tldr">
-            TL;DR
+        {/* Achievements */}
+        <section className="mb-12">
+          <h2 className="text-lg font-normal mb-4 uppercase tracking-wider" data-testid="text-section-achievements">
+            a few achievements:
           </h2>
-          
-          <div className="mt-3 divide-y divide-zinc-800 border border-zinc-800 rounded-xl overflow-hidden">
-            <Disclosure
-              title="HOW I STARTED"
-              isOpen={openDisclosure === 'start'}
-              onClick={() => toggleDisclosure('start')}
-            >
-              <p>
-                First-gen builder with roots in Jamaica and London, raised in the U.S. Learned systems by shipping: games at EA, platforms at Disney/ESPN, partnerships at SiriusXM. Now optimizing for meaningful work, family, and health.
-              </p>
-            </Disclosure>
-
-            <Disclosure
-              title="MY GOAL"
-              isOpen={openDisclosure === 'goal'}
-              onClick={() => toggleDisclosure('goal')}
-            >
-              <p>
-                Become a VP of Product to scale platforms and teams, then build a durable business around human-centered AI experiences.
-              </p>
-            </Disclosure>
-
-            <Disclosure
-              title="MY MOTIVATIONS"
-              isOpen={openDisclosure === 'motivation'}
-              onClick={() => toggleDisclosure('motivation')}
-            >
-              <p>
-                Longevity, craftsmanship, and compounding knowledge. Make good things with good people, leave processes cleaner than I found them, and be present for my wife Nicole and our daughter Evelyn.
-              </p>
-            </Disclosure>
-
-            <Disclosure
-              title="WHERE I SEE MYSELF IN ~3,000 DAYS"
-              isOpen={openDisclosure === 'horizon'}
-              onClick={() => toggleDisclosure('horizon')}
-            >
-              <p>
-                Running a small, high-leverage company that blends content, software, and services—calm, profitable, and useful.
-              </p>
-            </Disclosure>
-          </div>
-        </section>
-
-        {/* Previous Ventures Section */}
-        <section className="mt-10">
-          <h2 className="text-sm font-bold tracking-wider text-zinc-400" data-testid="text-section-ventures">
-            PREVIOUS VENTURES
-          </h2>
-          <ul className="mt-3 space-y-2 text-zinc-200">
-            <li data-testid="text-venture-advisory">
-              (25–){' '}
-              <a className="underline hover:text-white transition-colors duration-200" href="#" target="_blank" rel="noopener noreferrer">
-                Lumley Advisory
-              </a>{' '}
-              — solo consulting (product strategy, platform org design).
-            </li>
-            <li data-testid="text-venture-family">
-              (24–25) Family Ops Kit — baby logistics, daycare readiness, and travel systems.
-            </li>
-            <li data-testid="text-venture-habit">
-              (23–24) Habit Stack — micro-rituals app exploring adherence and delight.
-            </li>
+          <ul className="space-y-2 text-base leading-relaxed">
+            <li>- leading product for 34+ million subscribers</li>
+            <li>- architected ai-powered personalization systems</li>
+            <li>- built platform apis serving billions of requests</li>
+            <li>- shipped products used by millions daily</li>
+            <li>- led cross-functional teams of 20+ engineers and designers</li>
           </ul>
         </section>
 
-        {/* Shipped Section */}
-        <section className="mt-10">
-          <h2 className="text-sm font-bold tracking-wider text-zinc-400" data-testid="text-section-shipped">
-            A FEW THINGS I'VE SHIPPED OR HELPED SHAPE
+        {/* Current work */}
+        <section className="mb-12">
+          <h2 className="text-lg font-normal mb-4 uppercase tracking-wider" data-testid="text-section-current-work">
+            what i'm working on:
           </h2>
-          <ul className="mt-3 space-y-2 text-zinc-200">
-            <li data-testid="text-shipped-platform">
-              (25) Growth & Experience Platform patterns — decision rights, RICE portfolio flow, and headless agent deployment.
-            </li>
-            <li data-testid="text-shipped-travel">
-              (24) Travel + parenting playbooks for Japan, Paris, and California with infant-first constraints.
-            </li>
-            <li data-testid="text-shipped-recovery">
-              (24) Personal recovery protocol for Muay Thai & BJJ (sleep, nutrition, and mobility routines).
-            </li>
+          <ul className="space-y-2 text-base leading-relaxed">
+            <li>- <Link href="/projects" className="underline hover:no-underline" data-testid="link-platform-architecture">platform architecture</Link> - scalable apis and developer tools</li>
+            <li>- <Link href="/projects" className="underline hover:no-underline" data-testid="link-ai-personalization">ai personalization</Link> - content discovery at scale</li>
+            <li>- <Link href="/blog" className="underline hover:no-underline" data-testid="link-writing-product">writing about product</Link> - sharing insights and learnings</li>
+          </ul>
+          <p className="text-base leading-relaxed mt-4 text-gray-600">
+            i focus on building platforms that make other teams move faster. 
+            this approach creates leverage through thoughtful abstractions.
+          </p>
+        </section>
+
+        {/* TL;DR */}
+        <section className="mb-12">
+          <h2 className="text-lg font-normal mb-4 uppercase tracking-wider" data-testid="text-section-tldr">
+            tl;dr:
+          </h2>
+          <p className="text-base leading-relaxed mb-4">
+            i started building things as a kid and never stopped.
+          </p>
+          <p className="text-base leading-relaxed mb-4">
+            i've worked across startups and scale-ups, from 0-to-1 products to platform engineering.
+          </p>
+          <p className="text-base leading-relaxed">
+            i believe the best products come from deep customer empathy, technical feasibility, and clear business impact.
+          </p>
+        </section>
+
+        {/* Expandable sections */}
+        <div className="space-y-8 mb-12">
+          <div>
+            <button
+              onClick={() => toggleSection('approach')}
+              className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left"
+              data-testid="button-toggle-approach"
+            >
+              {openSections.approach ? 'close' : 'open'}
+            </button>
+            <div className="text-center text-sm uppercase tracking-wider text-gray-500 mt-2">
+              my approach
+            </div>
+            {openSections.approach && (
+              <div className="mt-6 text-base leading-relaxed space-y-4" data-testid="section-approach">
+                <p>
+                  i believe in building products that solve real problems. this means starting with customer research, 
+                  understanding pain points deeply, and validating assumptions early.
+                </p>
+                <p>
+                  my technical background helps me work closely with engineering teams to find the right balance 
+                  between what's possible and what's valuable.
+                </p>
+                <p>
+                  i prefer small, autonomous teams that can move fast and iterate based on user feedback.
+                </p>
+              </div>
+            )}
+          </div>
+
+          <div>
+            <button
+              onClick={() => toggleSection('philosophy')}
+              className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left"
+              data-testid="button-toggle-philosophy"
+            >
+              {openSections.philosophy ? 'close' : 'open'}
+            </button>
+            <div className="text-center text-sm uppercase tracking-wider text-gray-500 mt-2">
+              product philosophy
+            </div>
+            {openSections.philosophy && (
+              <div className="mt-6 text-base leading-relaxed space-y-4" data-testid="section-philosophy">
+                <p>
+                  platforms over features. developer experience over short-term wins. 
+                  systems thinking over isolated solutions.
+                </p>
+                <p>
+                  in the ai era, i focus on augmenting human creativity rather than replacing it. 
+                  the best ai products feel magical but work reliably.
+                </p>
+                <p>
+                  measurement matters, but not everything that matters can be measured.
+                </p>
+              </div>
+            )}
+          </div>
+
+          <div>
+            <button
+              onClick={() => toggleSection('background')}
+              className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left"
+              data-testid="button-toggle-background"
+            >
+              {openSections.background ? 'close' : 'open'}
+            </button>
+            <div className="text-center text-sm uppercase tracking-wider text-gray-500 mt-2">
+              background
+            </div>
+            {openSections.background && (
+              <div className="mt-6 text-base leading-relaxed space-y-4" data-testid="section-background">
+                <p>
+                  before siriusxm, i worked at early-stage startups building b2b saas products. 
+                  i've been on both sides of the 0-to-1 and 1-to-n equation.
+                </p>
+                <p>
+                  i have a computer science background but found my passion in product management—
+                  the intersection of technology, business, and user experience.
+                </p>
+                <p>
+                  i spend my free time reading about emerging tech, experimenting with new tools, 
+                  and occasionally building side projects.
+                </p>
+              </div>
+            )}
+          </div>
+
+          <div>
+            <button
+              onClick={() => toggleSection('future')}
+              className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left"
+              data-testid="button-toggle-future"
+            >
+              {openSections.future ? 'close' : 'open'}
+            </button>
+            <div className="text-center text-sm uppercase tracking-wider text-gray-500 mt-2">
+              where i see myself in 3,650 days
+            </div>
+            {openSections.future && (
+              <div className="mt-6 text-base leading-relaxed space-y-4" data-testid="section-future">
+                <p>
+                  leading product for a company that's pushing the boundaries of what's possible with ai and content.
+                </p>
+                <p>
+                  maybe building my own thing. maybe advising startups. definitely still learning and growing.
+                </p>
+                <p>
+                  whatever comes next, i want to be working on products that genuinely improve people's lives.
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Experience */}
+        <section className="mb-12">
+          <h2 className="text-lg font-normal mb-4 uppercase tracking-wider" data-testid="text-section-experience">
+            recent experience:
+          </h2>
+          <ul className="space-y-2 text-base leading-relaxed">
+            <li>- (24-) <span className="font-semibold">siriusxm</span> - senior director of product</li>
+            <li>- (22-24) <span className="font-semibold">siriusxm</span> - director of product</li>
+            <li>- (21-22) <span className="font-semibold">pandora</span> - senior product manager</li>
+            <li>- (19-21) <span className="font-semibold">various startups</span> - product management roles</li>
           </ul>
         </section>
 
-        {/* Directory Section */}
-        <section id="directory" className="mt-10">
-          <h2 className="text-sm font-bold tracking-wider text-zinc-400" data-testid="text-section-directory">
-            DIRECTORY
+        {/* Projects */}
+        <section className="mb-12">
+          <h2 className="text-lg font-normal mb-4 uppercase tracking-wider" data-testid="text-section-projects">
+            some projects i've worked on:
           </h2>
-          <ul className="mt-3 space-y-2 text-zinc-200">
-            <li>
-              <a className="underline hover:text-white transition-colors duration-200" href="#contact" data-testid="link-directory-contact">
-                contact
-              </a>
-            </li>
-            <li>
-              <a className="underline hover:text-white transition-colors duration-200" href="#resources" data-testid="link-directory-resources">
-                resources
-              </a>
-            </li>
-            <li>
-              <a className="underline hover:text-white transition-colors duration-200" href="#gallery" data-testid="link-directory-gallery">
-                gallery
-              </a>
-            </li>
-            <li>
-              <a className="underline hover:text-white transition-colors duration-200" href="#radio" data-testid="link-directory-radio">
-                radio
-              </a>
-            </li>
+          <ul className="space-y-2 text-base leading-relaxed">
+            <li>- (24) <Link href="/projects" className="underline hover:no-underline" data-testid="link-unified-api">unified content api</Link> - platform serving 1b+ requests</li>
+            <li>- (24) <Link href="/projects" className="underline hover:no-underline" data-testid="link-ai-engine">ai recommendation engine</Link> - personalized content discovery</li>
+            <li>- (23) <Link href="/projects" className="underline hover:no-underline" data-testid="link-developer-portal">developer portal</Link> - self-service tools for internal teams</li>
+            <li>- (23) <Link href="/blog" className="underline hover:no-underline" data-testid="link-product-blog">product blog</Link> - sharing insights and learnings</li>
+            <li>- (22) <Link href="/projects" className="underline hover:no-underline" data-testid="link-mobile-platform">mobile platform</Link> - cross-platform sdk and tools</li>
           </ul>
         </section>
 
-        {/* Contact Section */}
-        <section id="contact" className="mt-16">
-          <h2 className="text-sm font-bold tracking-wider text-zinc-400" data-testid="text-section-contact">
-            CONTACT
+        {/* Directory */}
+        <section>
+          <h2 className="text-lg font-normal mb-4 uppercase tracking-wider" data-testid="text-section-directory">
+            directory:
           </h2>
-          <div className="mt-3 grid sm:grid-cols-2 gap-3">
-            <a
-              className="group border border-zinc-800 rounded-xl p-4 hover:bg-zinc-900 transition-all duration-300 hover:border-zinc-700"
-              href="mailto:adrian@adrianlumley.com"
-              data-testid="link-email"
-            >
-              <div className="text-zinc-400 text-xs">EMAIL</div>
-              <div className="font-semibold">adrian@adrianlumley.com</div>
-              <div className="text-zinc-400 text-xs group-hover:underline">preferred for collabs and intros</div>
-            </a>
-            <a
-              className="group border border-zinc-800 rounded-xl p-4 hover:bg-zinc-900 transition-all duration-300 hover:border-zinc-700"
-              href="https://cal.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              data-testid="link-calendar"
-            >
-              <div className="text-zinc-400 text-xs">CALENDAR</div>
-              <div className="font-semibold">Book time</div>
-              <div className="text-zinc-400 text-xs">brief intros only</div>
-            </a>
-          </div>
+          <ul className="space-y-2 text-base leading-relaxed">
+            <li>- <Link href="/contact" className="underline hover:no-underline" data-testid="link-contact">contact</Link></li>
+            <li>- <Link href="/blog" className="underline hover:no-underline" data-testid="link-blog">writing</Link></li>
+            <li>- <Link href="/projects" className="underline hover:no-underline" data-testid="link-projects">projects</Link></li>
+            <li>- <a href="https://www.linkedin.com/in/adrianlumley" className="underline hover:no-underline" target="_blank" rel="noopener noreferrer" data-testid="link-linkedin">linkedin</a></li>
+          </ul>
         </section>
 
-        {/* Footer */}
-        <footer className="mt-20 pt-6 border-t border-zinc-800 text-xs text-zinc-500">
-          <div data-testid="text-copyright">
-            © {currentYear} ADRIAN LUMLEY — BY ADRIAN®
-          </div>
-        </footer>
       </div>
     </main>
   );

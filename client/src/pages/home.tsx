@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "wouter";
+import { ChevronDown } from "lucide-react";
 
 export default function Home() {
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
@@ -76,14 +77,12 @@ export default function Home() {
           <div>
             <button
               onClick={() => toggleSection('approach')}
-              className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left"
+              className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left flex items-center justify-between"
               data-testid="button-toggle-approach"
             >
               my approach
+              <ChevronDown className="w-4 h-4" />
             </button>
-            <div className="text-center text-sm uppercase tracking-wider text-gray-500 mt-2">
-              {openSections.approach ? 'close' : 'open'}
-            </div>
             {openSections.approach && (
               <div className="mt-6 text-base leading-relaxed space-y-4" data-testid="section-approach">
                 <p>
@@ -104,14 +103,12 @@ export default function Home() {
           <div>
             <button
               onClick={() => toggleSection('philosophy')}
-              className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left"
+              className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left flex items-center justify-between"
               data-testid="button-toggle-philosophy"
             >
               product philosophy
+              <ChevronDown className="w-4 h-4" />
             </button>
-            <div className="text-center text-sm uppercase tracking-wider text-gray-500 mt-2">
-              {openSections.philosophy ? 'close' : 'open'}
-            </div>
             {openSections.philosophy && (
               <div className="mt-6 text-base leading-relaxed space-y-4" data-testid="section-philosophy">
                 <p>
@@ -132,14 +129,12 @@ export default function Home() {
           <div>
             <button
               onClick={() => toggleSection('background')}
-              className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left"
+              className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left flex items-center justify-between"
               data-testid="button-toggle-background"
             >
               background
+              <ChevronDown className="w-4 h-4" />
             </button>
-            <div className="text-center text-sm uppercase tracking-wider text-gray-500 mt-2">
-              {openSections.background ? 'close' : 'open'}
-            </div>
             {openSections.background && (
               <div className="mt-6 text-base leading-relaxed space-y-4" data-testid="section-background">
                 <p>
@@ -161,14 +156,12 @@ export default function Home() {
           <div>
             <button
               onClick={() => toggleSection('future')}
-              className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left"
+              className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left flex items-center justify-between"
               data-testid="button-toggle-future"
             >
               where i see myself in 3,650 days
+              <ChevronDown className="w-4 h-4" />
             </button>
-            <div className="text-center text-sm uppercase tracking-wider text-gray-500 mt-2">
-              {openSections.future ? 'close' : 'open'}
-            </div>
             {openSections.future && (
               <div className="mt-6 text-base leading-relaxed space-y-4" data-testid="section-future">
                 <p>

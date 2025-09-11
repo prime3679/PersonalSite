@@ -39,7 +39,6 @@ export default function Home() {
             <p>ai should augment human creativity, not replace it. the best ai feels magical but works reliably.</p>
             <p>small autonomous teams {'>'} big hierarchical ones. user feedback {'>'} internal opinions.</p>
             <p>measurement matters, but not everything that matters can be measured.</p>
-            <p>platforms beat features. developer experience beats quick wins. systems thinking beats isolated solutions.</p>
             <p>in 3,650 days: maybe leading product at a company pushing ai/content boundaries. maybe building my own thing. definitely still learning.</p>
           </div>
         </section>

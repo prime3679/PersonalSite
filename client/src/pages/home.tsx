@@ -45,7 +45,7 @@ export default function Home() {
             <li>- leading product management for siriusxm's 34+ million subscribers</li>
             <li>- shipped disney+ b2b2c products and espn streaming experiences</li>
             <li>- built ai-powered automation systems at hyperscience</li>
-            <li>- built a social sports app to increase football (soccer) engagement for gen z audiences</li>
+            <li>- shipped social football app for gen z</li>
           </ul>
         </section>
 

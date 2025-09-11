@@ -65,7 +65,7 @@ export default function Home() {
           </h2>
           <div className="space-y-4 text-base leading-relaxed">
             <p>always interested in product challenges, creative projects, or just good conversation.</p>
-            <p>open to advisory roles and the right full-time opportunity.</p>
+            <p>open to advisory roles and the right side-hustle.</p>
             <div className="space-y-2 mt-6">
               <p>- <a href="mailto:alumley007@gmail.com" className="underline hover:no-underline" data-testid="link-email">email me</a></p>
               <p>- <a href="https://minoritymusings.substack.com/?r=4evku&utm_campaign=pub-share-checklist" className="underline hover:no-underline" target="_blank" rel="noopener noreferrer" data-testid="link-blog">read my writing</a></p>

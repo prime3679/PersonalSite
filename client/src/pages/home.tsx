@@ -1,12 +1,43 @@
 import { Link } from "wouter";
+import { useState, useEffect } from "react";
+import { Moon, Sun } from "lucide-react";
 
 export default function Home() {
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    // Check for saved theme preference or default to light mode
+    const savedTheme = localStorage.getItem('theme');
+    const isDark = savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    setDarkMode(isDark);
+    
+    // Apply theme to document
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const newDarkMode = !darkMode;
+    setDarkMode(newDarkMode);
+    
+    if (newDarkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  };
+
   return (
-    <main className="min-h-screen bg-white text-black font-mono selection:bg-black selection:text-white">
+    <main className="min-h-screen bg-background text-foreground font-mono selection:bg-primary selection:text-primary-foreground transition-colors duration-300">
       <div className="mx-auto max-w-2xl px-6 py-12">
         
         {/* Intro */}
-        <section className="mb-16">
+        <section className="mb-16 fade-in">
           <h1 className="text-2xl font-normal mb-6 leading-relaxed" data-testid="text-main-title">
             hello, i'm adrian.
           </h1>
@@ -19,19 +50,19 @@ export default function Home() {
         </section>
 
         {/* Current Focus */}
-        <section className="mb-16">
+        <section className="mb-16 fade-in">
           <h2 className="text-lg font-normal mb-6 uppercase tracking-wider" data-testid="text-section-focus">
             current focus:
           </h2>
           <div className="space-y-4 text-base leading-relaxed">
             <p>learning how to be a good parent — the hardest and most rewarding experience.</p>
             <p>building scalable content platforms and ai personalization systems.</p>
-            <p>writing a scifi novel about consciousness and reality (because product docs aren't creative enough).</p>
+            <p>writing a scifi novel exploring what happens when AI develops consciousness (because product docs aren't creative enough).</p>
           </div>
         </section>
 
         {/* Things I Believe */}
-        <section className="mb-16">
+        <section className="mb-16 fade-in">
           <h2 className="text-lg font-normal mb-6 uppercase tracking-wider" data-testid="text-section-beliefs">
             things i believe:
           </h2>
@@ -44,7 +75,7 @@ export default function Home() {
         </section>
 
         {/* Currently */}
-        <section className="mb-16">
+        <section className="mb-16 fade-in">
           <h2 className="text-lg font-normal mb-6 uppercase tracking-wider" data-testid="text-section-currently">
             currently:
           </h2>
@@ -52,13 +83,23 @@ export default function Home() {
             <p><span className="font-semibold">building with:</span> react, typescript, tailwind, figma, notion</p>
             <p><span className="font-semibold">thinking with:</span> claude, chatgpt, oboe</p>
             <p><span className="font-semibold">learning from:</span> twitter, hacker news, product hunt, youtube</p>
-            <p><span className="font-semibold">reading:</span> brian sanderson, viet thanh nguyen, shane parrish, patty wipfler, anything about consciousness</p>
+            <p><span className="font-semibold">reading:</span> brian sanderson, viet thanh nguyen, shane parrish, patty wipfler, anything about consciousness — <a href="https://www.goodreads.com/user/show/149439647-adrian-lumley" className="underline hover:no-underline" target="_blank" rel="noopener noreferrer" data-testid="link-goodreads">see my goodreads</a></p>
             <p><span className="font-semibold">exploring:</span> cursor, v0, replit, n8n, jiu jitsu, muay thai</p>
           </div>
         </section>
 
+        {/* Theme Toggle */}
+        <button
+          onClick={toggleTheme}
+          className="theme-toggle"
+          aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+          data-testid="button-theme-toggle"
+        >
+          {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+        </button>
+
         {/* Connect */}
-        <section>
+        <section className="fade-in">
           <h2 className="text-lg font-normal mb-6 uppercase tracking-wider" data-testid="text-section-connect">
             let's talk:
           </h2>

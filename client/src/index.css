@@ -124,6 +124,96 @@
   overflow: hidden;
 }
 
+/* Enhanced hover effects and animations */
+a {
+  transition: all 0.2s ease-in-out;
+}
+
+a:hover {
+  transform: translateY(-1px);
+  color: hsl(var(--muted-foreground));
+}
+
+.underline:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Gentle fade-in animation for sections */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* Subtle scale effect for interactive elements */
+[data-testid] {
+  transition: transform 0.15s ease-out;
+}
+
+[data-testid]:hover {
+  transform: scale(1.02);
+}
+
+/* Dark mode toggle button styles */
+.theme-toggle {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  z-index: 50;
+  padding: 0.5rem;
+  border-radius: 50%;
+  background: hsl(var(--background));
+  border: 1px solid hsl(var(--border));
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Mobile optimization */
+@media (max-width: 768px) {
+  .theme-toggle {
+    top: 1rem;
+    right: 1rem;
+    padding: 0.4rem;
+  }
+  
+  /* Better touch targets */
+  a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  
+  /* Improved typography scaling */
+  h1 {
+    font-size: 1.5rem !important;
+  }
+  
+  h2 {
+    font-size: 1.125rem !important;
+  }
+  
+  /* Better spacing on mobile */
+  .mx-auto.max-w-2xl {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
 /* Accessibility improvements */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -133,5 +223,9 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+  
+  .fade-in {
+    animation: none;
   }
 }

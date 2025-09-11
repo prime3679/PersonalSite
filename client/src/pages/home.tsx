@@ -244,13 +244,13 @@ export default function Home() {
               >
                 <div className="text-base leading-relaxed space-y-4" data-testid="section-tools">
                   <p>
-                    <span className="font-semibold">for building:</span> react, typescript, tailwind, figma, linear, notion
+                    <span className="font-semibold">for building:</span> react, typescript, tailwind, figma, notion
                   </p>
                   <p>
-                    <span className="font-semibold">for thinking:</span> claude, chatgpt, roam research, superhuman, spark
+                    <span className="font-semibold">for thinking:</span> claude, chatgpt, oboe
                   </p>
                   <p>
-                    <span className="font-semibold">for learning:</span> twitter, hacker news, product hunt, first round review
+                    <span className="font-semibold">for learning:</span> twitter, hacker news, product hunt, youtube
                   </p>
                   <p>
                     always experimenting with new tools. currently exploring cursor, v0, and various ai coding assistants.

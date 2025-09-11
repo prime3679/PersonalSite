@@ -68,7 +68,7 @@ export default function Home() {
             <p>open to advisory roles and the right full-time opportunity.</p>
             <div className="space-y-2 mt-6">
               <p>- <a href="mailto:alumley007@gmail.com" className="underline hover:no-underline" data-testid="link-email">email me</a></p>
-              <p>- <Link href="/blog" className="underline hover:no-underline" data-testid="link-blog">read my writing</Link></p>
+              <p>- <a href="https://minoritymusings.substack.com/?r=4evku&utm_campaign=pub-share-checklist" className="underline hover:no-underline" target="_blank" rel="noopener noreferrer" data-testid="link-blog">read my writing</a></p>
               <p>- <a href="https://www.linkedin.com/in/adrianlumley/" className="underline hover:no-underline" target="_blank" rel="noopener noreferrer" data-testid="link-linkedin">find me on linkedin</a></p>
             </div>
           </div>

@@ -79,10 +79,10 @@ export default function Home() {
               className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left"
               data-testid="button-toggle-approach"
             >
-              {openSections.approach ? 'close' : 'open'}
+              my approach
             </button>
             <div className="text-center text-sm uppercase tracking-wider text-gray-500 mt-2">
-              my approach
+              {openSections.approach ? 'close' : 'open'}
             </div>
             {openSections.approach && (
               <div className="mt-6 text-base leading-relaxed space-y-4" data-testid="section-approach">
@@ -107,10 +107,10 @@ export default function Home() {
               className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left"
               data-testid="button-toggle-philosophy"
             >
-              {openSections.philosophy ? 'close' : 'open'}
+              product philosophy
             </button>
             <div className="text-center text-sm uppercase tracking-wider text-gray-500 mt-2">
-              product philosophy
+              {openSections.philosophy ? 'close' : 'open'}
             </div>
             {openSections.philosophy && (
               <div className="mt-6 text-base leading-relaxed space-y-4" data-testid="section-philosophy">
@@ -135,10 +135,10 @@ export default function Home() {
               className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left"
               data-testid="button-toggle-background"
             >
-              {openSections.background ? 'close' : 'open'}
+              background
             </button>
             <div className="text-center text-sm uppercase tracking-wider text-gray-500 mt-2">
-              background
+              {openSections.background ? 'close' : 'open'}
             </div>
             {openSections.background && (
               <div className="mt-6 text-base leading-relaxed space-y-4" data-testid="section-background">
@@ -164,10 +164,10 @@ export default function Home() {
               className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left"
               data-testid="button-toggle-future"
             >
-              {openSections.future ? 'close' : 'open'}
+              where i see myself in 3,650 days
             </button>
             <div className="text-center text-sm uppercase tracking-wider text-gray-500 mt-2">
-              where i see myself in 3,650 days
+              {openSections.future ? 'close' : 'open'}
             </div>
             {openSections.future && (
               <div className="mt-6 text-base leading-relaxed space-y-4" data-testid="section-future">

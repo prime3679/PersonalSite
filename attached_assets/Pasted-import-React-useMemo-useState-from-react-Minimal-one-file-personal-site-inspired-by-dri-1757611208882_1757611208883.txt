@@ -1,0 +1,154 @@
+import React, { useMemo, useState } from "react";
+
+// Minimal one-file personal site inspired by dris.one
+// Tailwind classes are used by default in the preview environment
+
+export default function App() {
+  const [open, setOpen] = useState<string | null>(null);
+  const toggle = (k: string) => setOpen(open === k ? null : k);
+
+  const daysBuilding = useMemo(() => {
+    // Adrian: born 1989-03-06; today 2025-09-11 => 13,338 days
+    return 13338; 
+  }, []);
+
+  return (
+    <main className="min-h-screen bg-black text-zinc-100 selection:bg-white selection:text-black">
+      <header className="sticky top-0 z-40 backdrop-blur bg-black/70 border-b border-zinc-800">
+        <div className="mx-auto max-w-3xl px-4 py-3 flex items-center justify-between text-sm">
+          <nav className="flex gap-5 font-medium">
+            <a href="#contact" className="hover:underline">CONTACT</a>
+            <a href="https://www.linkedin.com/in/adrianlumley" target="_blank" className="hover:underline">LINKEDIN</a>
+            <a href="https://github.com/" target="_blank" className="hover:underline">GITHUB</a>
+            <a href="https://x.com/" target="_blank" className="hover:underline">TWITTER</a>
+          </nav>
+          <div className="text-xs text-zinc-400">NYC • US/UK</div>
+        </div>
+      </header>
+
+      <div className="mx-auto max-w-3xl px-4 pt-10 pb-28">
+        <h1 className="text-4xl sm:text-5xl font-black tracking-tight">HEY, I'M ADRIAN.</h1>
+        <p className="mt-4 text-lg text-zinc-300">Senior Director of Product Management at SiriusXM, based in Long Island City, NYC. I build partnerships, platforms, and AI-enabled experiences.</p>
+        <p className="mt-4 text-zinc-400">I've been building things for <span className="font-semibold text-white">{daysBuilding.toLocaleString()}</span> days.</p>
+
+        <section className="mt-10">
+          <h2 className="text-sm font-bold tracking-wider text-zinc-400">A FEW NOTES & WINS</h2>
+          <ul className="mt-3 space-y-2 text-zinc-200">
+            <li>Led product partnerships at <span className="font-semibold">SiriusXM</span> shaping connected, personalized subscriber journeys.</li>
+            <li>EMBA grad (Quantic). Formerly at <span className="font-semibold">EA</span>, <span className="font-semibold">Disney Streaming</span>, and <span className="font-semibold">ESPN</span>.</li>
+            <li>Built a small consulting practice and a portfolio of AI/product strategy experiments.</li>
+            <li>Dual citizen (US/UK); endlessly curious about cities, culture, and design. Martial artist for longevity (Muay Thai + BJJ).</li>
+          </ul>
+        </section>
+
+        <section className="mt-10">
+          <h2 className="text-sm font-bold tracking-wider text-zinc-400">SOME PROJECTS I'M WORKING ON</h2>
+          <ul className="mt-3 space-y-2 text-zinc-200">
+            <li><a className="underline" href="#" target="_blank">La Carta</a> — a dining experience product: reserve, pre-order, and pre-pay to compress dwell time and personalize service.</li>
+            <li><a className="underline" href="#" target="_blank">Sierra AI Playbooks</a> — org design + guardrails for AI agents across growth and service journeys.</li>
+            <li><a className="underline" href="#" target="_blank">VP Comp Radar</a> — living Google Sheet + visuals tracking market ranges and outbound pipeline.</li>
+            <li><a className="underline" href="#" target="_blank">Personal Automations</a> — inbox triage, contact memory, travel planning, and family ops.
+            </li>
+          </ul>
+          <p className="mt-3 text-sm text-zinc-400">I start many experiments and keep the compounding ones. Sunk cost is not a strategy.</p>
+        </section>
+
+        <section className="mt-10">
+          <h2 className="text-sm font-bold tracking-wider text-zinc-400">TL;DR</h2>
+
+          <div className="mt-3 divide-y divide-zinc-800 border border-zinc-800 rounded-xl overflow-hidden">
+            {[
+              { k: "start", t: "HOW I STARTED", c: (
+                <p>
+                  First-gen builder with roots in Jamaica and London, raised in the U.S. Learned systems by shipping: games at EA, platforms at Disney/ESPN, partnerships at SiriusXM. Now optimizing for meaningful work, family, and health.
+                </p>
+              )},
+              { k: "goal", t: "MY GOAL", c: (
+                <p>
+                  Become a VP of Product to scale platforms and teams, then build a durable business around human-centered AI experiences.
+                </p>
+              )},
+              { k: "motivation", t: "MY MOTIVATIONS", c: (
+                <p>
+                  Longevity, craftsmanship, and compounding knowledge. Make good things with good people, leave processes cleaner than I found them, and be present for my wife Nicole and our daughter Evelyn.
+                </p>
+              )},
+              { k: "horizon", t: "WHERE I SEE MYSELF IN ~3,000 DAYS", c: (
+                <p>
+                  Running a small, high-leverage company that blends content, software, and services—calm, profitable, and useful.
+                </p>
+              )}
+            ].map(({k,t,c}) => (
+              <Disclosure key={k} title={t} open={open===k} onClick={() => toggle(k)}>
+                {c}
+              </Disclosure>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-10">
+          <h2 className="text-sm font-bold tracking-wider text-zinc-400">PREVIOUS VENTURES</h2>
+          <ul className="mt-3 space-y-2 text-zinc-200">
+            <li>(25–) <a className="underline" href="#" target="_blank">Lumley Advisory</a> — solo consulting (product strategy, platform org design).</li>
+            <li>(24–25) Family Ops Kit — baby logistics, daycare readiness, and travel systems.</li>
+            <li>(23–24) Habit Stack — micro-rituals app exploring adherence and delight.</li>
+          </ul>
+        </section>
+
+        <section className="mt-10">
+          <h2 className="text-sm font-bold tracking-wider text-zinc-400">A FEW THINGS I'VE SHIPPED OR HELPED SHAPE</h2>
+          <ul className="mt-3 space-y-2 text-zinc-200">
+            <li>(25) Growth & Experience Platform patterns — decision rights, RICE portfolio flow, and headless agent deployment.</li>
+            <li>(24) Travel + parenting playbooks for Japan, Paris, and California with infant-first constraints.</li>
+            <li>(24) Personal recovery protocol for Muay Thai & BJJ (sleep, nutrition, and mobility routines).</li>
+          </ul>
+        </section>
+
+        <section id="directory" className="mt-10">
+          <h2 className="text-sm font-bold tracking-wider text-zinc-400">DIRECTORY</h2>
+          <ul className="mt-3 space-y-2 text-zinc-200">
+            <li><a className="underline" href="#contact">contact</a></li>
+            <li><a className="underline" href="#resources">resources</a></li>
+            <li><a className="underline" href="#gallery">gallery</a></li>
+            <li><a className="underline" href="#radio">radio</a></li>
+          </ul>
+        </section>
+
+        <section id="contact" className="mt-16">
+          <h2 className="text-sm font-bold tracking-wider text-zinc-400">CONTACT</h2>
+          <div className="mt-3 grid sm:grid-cols-2 gap-3">
+            <a className="group border border-zinc-800 rounded-xl p-4 hover:bg-zinc-900" href="mailto:adrian@adrianlumley.com">
+              <div className="text-zinc-400 text-xs">EMAIL</div>
+              <div className="font-semibold">adrian@adrianlumley.com</div>
+              <div className="text-zinc-400 text-xs group-hover:underline">preferred for collabs and intros</div>
+            </a>
+            <a className="group border border-zinc-800 rounded-xl p-4 hover:bg-zinc-900" href="https://cal.com/" target="_blank">
+              <div className="text-zinc-400 text-xs">CALENDAR</div>
+              <div className="font-semibold">Book time</div>
+              <div className="text-zinc-400 text-xs">brief intros only</div>
+            </a>
+          </div>
+        </section>
+
+        <footer className="mt-20 pt-6 border-t border-zinc-800 text-xs text-zinc-500">
+          <div>© {new Date().getFullYear()} ADRIAN LUMLEY — BY ADRIAN®</div>
+        </footer>
+      </div>
+    </main>
+  );
+}
+
+function Disclosure({title, children, open, onClick}: {title: string; children: React.ReactNode; open?: boolean; onClick?: () => void}){
+  return (
+    <div className="">
+      <button onClick={onClick} className="w-full text-left px-4 py-3 bg-zinc-950 hover:bg-zinc-900 flex items-center justify-between">
+        <span className="font-semibold">{title}</span>
+        <span className="text-zinc-500">{open ? "−" : "+"}</span>
+      </button>
+      {open && (
+        <div className="px-4 py-4 text-zinc-300 leading-relaxed bg-black">{children}</div>
+      )}
+      <div className="h-px bg-zinc-800" />
+    </div>
+  );
+}

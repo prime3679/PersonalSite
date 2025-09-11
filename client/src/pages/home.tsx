@@ -27,7 +27,6 @@ export default function Home() {
             <p>learning how to be a good parent — the hardest and most important product challenge.</p>
             <p>building scalable content platforms and ai personalization systems.</p>
             <p>writing a scifi novel about consciousness and reality (because product docs aren't creative enough).</p>
-            <p>shipped disney+ b2b products, ai automation at scale.</p>
           </div>
         </section>
 

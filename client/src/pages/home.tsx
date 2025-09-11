@@ -104,7 +104,10 @@ export default function Home() {
                     i believe in building products that solve real problems. this means starting with customer research, 
                     understanding pain points deeply, and validating assumptions early.
                   </p>
-                  <p>my business background helps me work closely with gtm, design and engineering teams to find the right balance between what's possible and what's valuable.</p>
+                  <p>
+                    my business background helps me work closely with gtm, design and engineering teams to find the right balance 
+                    between what's possible and what's valuable.
+                  </p>
                   <p>
                     i prefer small, autonomous teams that can move fast and iterate based on user feedback.
                   </p>
@@ -134,12 +137,12 @@ export default function Home() {
               >
                 <div className="text-base leading-relaxed space-y-4" data-testid="section-philosophy">
                   <p>
-                    platforms over features. developer experience over short-term wins. 
-                    systems thinking over isolated solutions.
-                  </p>
-                  <p>
                     in the ai era, i focus on augmenting human creativity rather than replacing it. 
                     the best ai products feel magical but work reliably.
+                  </p>
+                  <p>
+                    platforms over features. developer experience over short-term wins. 
+                    systems thinking over isolated solutions.
                   </p>
                   <p>
                     measurement matters, but not everything that matters can be measured.

@@ -1,306 +1,91 @@
-import { useState } from "react";
 import { Link } from "wouter";
-import { ChevronDown } from "lucide-react";
 
 export default function Home() {
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
-    approach: false,
-    philosophy: false,
-    background: false,
-    future: false,
-    tools: false
-  });
-
-  const toggleSection = (section: string) => {
-    setOpenSections(prev => ({
-      ...prev,
-      [section]: !prev[section]
-    }));
-  };
-
   return (
     <main className="min-h-screen bg-white text-black font-mono selection:bg-black selection:text-white">
       <div className="mx-auto max-w-2xl px-6 py-12">
         
-        {/* Main intro */}
-        <section className="mb-12">
+        {/* Intro */}
+        <section className="mb-16">
           <h1 className="text-2xl font-normal mb-6 leading-relaxed" data-testid="text-main-title">
             hey, i'm adrian.
           </h1>
           <p className="text-base leading-relaxed mb-4">
-            i'm a senior director of product management at <a href="https://www.siriusxm.com" className="underline hover:no-underline" target="_blank" rel="noopener noreferrer" data-testid="link-siriusxm">siriusxm</a>, 
-            based in nyc.
+            i build products at <a href="https://www.siriusxm.com" className="underline hover:no-underline" target="_blank" rel="noopener noreferrer" data-testid="link-siriusxm">siriusxm</a> for 34+ million people.
           </p>
           <p className="text-base leading-relaxed">
-            i've been working in tech for 14+ years.
+            previously: disney+ (streaming), ea (gaming), hyperscience (ai). 14 years in tech, based in nyc.
           </p>
         </section>
 
-        {/* Achievements */}
-        <section className="mb-12">
-          <h2 className="text-lg font-normal mb-4 uppercase tracking-wider" data-testid="text-section-achievements">
-            notable moments:
+        {/* Current Focus */}
+        <section className="mb-16">
+          <h2 className="text-lg font-normal mb-6 uppercase tracking-wider" data-testid="text-section-focus">
+            current focus:
           </h2>
-          <ul className="space-y-2 text-base leading-relaxed">
-            <li>- leading product management for siriusxm's 34+ million subscribers</li>
-            <li>- shipped disney+ b2b2c products and espn streaming experiences</li>
-            <li>- built ai-powered automation systems at hyperscience</li>
-            <li>- shipped social football app for gen z</li>
-          </ul>
+          <div className="space-y-4 text-base leading-relaxed">
+            <p>building scalable content platforms and ai personalization systems.</p>
+            <p>writing a scifi novel about consciousness and reality (because product docs aren't creative enough).</p>
+            <p>learning how to be a good parent — the hardest and most important product challenge.</p>
+            <p>shipped social football app for gen z, disney+ b2b products, ai automation at scale.</p>
+          </div>
         </section>
 
-        {/* Current work */}
-        <section className="mb-12">
-          <h2 className="text-lg font-normal mb-4 uppercase tracking-wider" data-testid="text-section-current-work">
-            what i'm working on:
+        {/* Things I Believe */}
+        <section className="mb-16">
+          <h2 className="text-lg font-normal mb-6 uppercase tracking-wider" data-testid="text-section-beliefs">
+            things i believe:
           </h2>
-          <ul className="space-y-2 text-base leading-relaxed">
-            <li>- <Link href="/projects" className="underline hover:no-underline" data-testid="link-platform-architecture">platform architecture</Link> - scalable apis and developer tools</li>
-            <li>- <Link href="/projects" className="underline hover:no-underline" data-testid="link-ai-personalization">ai personalization</Link> - content discovery at scale</li>
-            <li>- <Link href="/blog" className="underline hover:no-underline" data-testid="link-writing-product">writing a scifi fiction novel</Link> - exploring new worlds and ideas</li>
-            <li>- parenting and how to be a good parent - the most important project of all</li>
-          </ul>
+          <div className="space-y-4 text-base leading-relaxed">
+            <p>platforms beat features. developer experience beats quick wins. systems thinking beats isolated solutions.</p>
+            <p>ai should augment human creativity, not replace it. the best ai feels magical but works reliably.</p>
+            <p>small autonomous teams {'>'} big hierarchical ones. user feedback {'>'} internal opinions.</p>
+            <p>measurement matters, but not everything that matters can be measured.</p>
+            <p>in 3,650 days: maybe leading product at a company pushing ai/content boundaries. maybe building my own thing. definitely still learning.</p>
+          </div>
         </section>
 
-        {/* TL;DR */}
-        <section className="mb-12">
-          <h2 className="text-lg font-normal mb-4 uppercase tracking-wider" data-testid="text-section-tldr">
-            tl;dr:
+        {/* Currently */}
+        <section className="mb-16">
+          <h2 className="text-lg font-normal mb-6 uppercase tracking-wider" data-testid="text-section-currently">
+            currently:
           </h2>
-          <p className="text-base leading-relaxed mb-4">
-            i started in consulting as a salesforce solutions architect, then moved into product management.
-          </p>
-          <p className="text-base leading-relaxed mb-4">
-            i've worked across entertainment (disney), enterprise ai (hyperscience), gaming (ea), and now audio (siriusxm).
-          </p>
-          <p className="text-base leading-relaxed">
-            i believe the best products come from deep customer empathy, technical feasibility, and clear business impact.
-          </p>
+          <div className="space-y-3 text-base leading-relaxed">
+            <p><span className="font-semibold">building with:</span> react, typescript, tailwind, figma, notion</p>
+            <p><span className="font-semibold">thinking with:</span> claude, chatgpt, oboe</p>
+            <p><span className="font-semibold">learning from:</span> twitter, hacker news, product hunt, youtube</p>
+            <p><span className="font-semibold">reading:</span> ted chiang, ursula k. le guin, anything about consciousness</p>
+            <p><span className="font-semibold">exploring:</span> cursor, v0, ai coding assistants (the future is weird)</p>
+          </div>
         </section>
 
-        {/* Expandable sections */}
-        <div className="space-y-8 mb-12">
-          <div>
-            <button
-              onClick={() => toggleSection('approach')}
-              className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left flex items-center justify-between focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-              data-testid="button-toggle-approach"
-              aria-expanded={openSections.approach}
-              aria-controls="section-approach"
-              id="button-approach"
-            >
-              my approach
-              <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openSections.approach ? 'rotate-180' : ''}`} />
-            </button>
-            {openSections.approach && (
-              <div 
-                className="mt-6 animate-in slide-in-from-top-1 duration-300 fade-in"
-                id="section-approach"
-                role="region"
-                aria-labelledby="button-approach"
-              >
-                <div className="text-base leading-relaxed space-y-4" data-testid="section-approach">
-                  <p>
-                    i believe in building products that solve real problems. this means starting with customer research, 
-                    understanding pain points deeply, and validating assumptions early.
-                  </p>
-                  <p>
-                    my business background helps me work closely with gtm, design and engineering teams to find the right balance 
-                    between what's possible and what's valuable.
-                  </p>
-                  <p>
-                    i prefer small, autonomous teams that can move fast and iterate based on user feedback.
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div>
-            <button
-              onClick={() => toggleSection('philosophy')}
-              className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left flex items-center justify-between focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-              data-testid="button-toggle-philosophy"
-              aria-expanded={openSections.philosophy}
-              aria-controls="section-philosophy"
-              id="button-philosophy"
-            >
-              product philosophy
-              <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openSections.philosophy ? 'rotate-180' : ''}`} />
-            </button>
-            {openSections.philosophy && (
-              <div 
-                className="mt-6 animate-in slide-in-from-top-1 duration-300 fade-in"
-                id="section-philosophy"
-                role="region"
-                aria-labelledby="button-philosophy"
-              >
-                <div className="text-base leading-relaxed space-y-4" data-testid="section-philosophy">
-                  <p>
-                    in the ai era, i focus on augmenting human creativity rather than replacing it. 
-                    the best ai products feel magical but work reliably.
-                  </p>
-                  <p>
-                    platforms over features. developer experience over short-term wins. 
-                    systems thinking over isolated solutions.
-                  </p>
-                  <p>
-                    measurement matters, but not everything that matters can be measured.
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div>
-            <button
-              onClick={() => toggleSection('background')}
-              className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left flex items-center justify-between focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-              data-testid="button-toggle-background"
-              aria-expanded={openSections.background}
-              aria-controls="section-background"
-              id="button-background"
-            >
-              background
-              <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openSections.background ? 'rotate-180' : ''}`} />
-            </button>
-            {openSections.background && (
-              <div 
-                className="mt-6 animate-in slide-in-from-top-1 duration-300 fade-in"
-                id="section-background"
-                role="region"
-                aria-labelledby="button-background"
-              >
-                <div className="text-base leading-relaxed space-y-4" data-testid="section-background">
-                  <p>
-                    i started my career in consulting, working as a salesforce solutions architect and analyst 
-                    for companies like pwc, redkite, and bluewolf from 2011-2016.
-                  </p>
-                  <p>
-                    i transitioned to product management at disney in 2016, working on espn and disney+ products. 
-                    since then i've worked at hyperscience, ea, and now siriusxm.
-                  </p>
-                  <p>
-                    i have a philosophy degree from st. john's and an executive mba from quantic. 
-                    i'm also a uc berkeley haas venture fellow and ondeck fellow.
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div>
-            <button
-              onClick={() => toggleSection('future')}
-              className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left flex items-center justify-between focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-              data-testid="button-toggle-future"
-              aria-expanded={openSections.future}
-              aria-controls="section-future"
-              id="button-future"
-            >
-              where i see myself in 3,650 days
-              <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openSections.future ? 'rotate-180' : ''}`} />
-            </button>
-            {openSections.future && (
-              <div 
-                className="mt-6 animate-in slide-in-from-top-1 duration-300 fade-in"
-                id="section-future"
-                role="region"
-                aria-labelledby="button-future"
-              >
-                <div className="text-base leading-relaxed space-y-4" data-testid="section-future">
-                  <p>
-                    leading product for a company that's pushing the boundaries of what's possible with ai and content.
-                  </p>
-                  <p>
-                    maybe building my own thing. maybe advising startups. definitely still learning and growing.
-                  </p>
-                  <p>
-                    whatever comes next, i want to be working on products that genuinely improve people's lives.
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div>
-            <button
-              onClick={() => toggleSection('tools')}
-              className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left flex items-center justify-between focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-              data-testid="button-toggle-tools"
-              aria-expanded={openSections.tools}
-              aria-controls="section-tools"
-              id="button-tools"
-            >
-              tools i love
-              <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openSections.tools ? 'rotate-180' : ''}`} />
-            </button>
-            {openSections.tools && (
-              <div 
-                className="mt-6 animate-in slide-in-from-top-1 duration-300 fade-in"
-                id="section-tools"
-                role="region"
-                aria-labelledby="button-tools"
-              >
-                <div className="text-base leading-relaxed space-y-4" data-testid="section-tools">
-                  <p>
-                    <span className="font-semibold">for building:</span> react, typescript, tailwind, figma, notion
-                  </p>
-                  <p>
-                    <span className="font-semibold">for thinking:</span> claude, chatgpt, oboe
-                  </p>
-                  <p>
-                    <span className="font-semibold">for learning:</span> twitter, hacker news, product hunt, youtube
-                  </p>
-                  <p>
-                    always experimenting with new tools. currently exploring cursor, v0, and various ai coding assistants.
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Projects */}
-        <section className="mb-12">
-          <h2 className="text-lg font-normal mb-4 uppercase tracking-wider" data-testid="text-section-projects">
-            some projects i've worked on:
+        {/* Select Work */}
+        <section className="mb-16">
+          <h2 className="text-lg font-normal mb-6 uppercase tracking-wider" data-testid="text-section-work">
+            select work:
           </h2>
-          <ul className="space-y-2 text-base leading-relaxed">
-            <li>- (2024) <Link href="/projects" className="underline hover:no-underline" data-testid="link-unified-api">unified content api</Link> - large-scale platform architecture</li>
-            <li>- (2024) <Link href="/projects" className="underline hover:no-underline" data-testid="link-ai-engine">ai recommendation engine</Link> - personalized content discovery</li>
-            <li>- (2023) <Link href="/projects" className="underline hover:no-underline" data-testid="link-developer-portal">developer portal</Link> - self-service tools for internal teams</li>
-            <li>- (2023) <Link href="/blog" className="underline hover:no-underline" data-testid="link-product-blog">product blog</Link> - sharing insights and learnings</li>
-            <li>- (2022) <Link href="/projects" className="underline hover:no-underline" data-testid="link-mobile-platform">mobile platform</Link> - cross-platform sdk and tools</li>
-          </ul>
+          <div className="space-y-2 text-base leading-relaxed">
+            <p>- <Link href="/projects" className="underline hover:no-underline" data-testid="link-unified-api">unified content api</Link></p>
+            <p>- <Link href="/projects" className="underline hover:no-underline" data-testid="link-ai-engine">ai recommendation engine</Link></p>
+            <p>- <Link href="/projects" className="underline hover:no-underline" data-testid="link-developer-portal">developer portal</Link></p>
+            <p>- <Link href="/blog" className="underline hover:no-underline" data-testid="link-product-blog">thoughts on product</Link></p>
+          </div>
         </section>
 
-        {/* Let's Connect */}
-        <section className="mb-12">
-          <h2 className="text-lg font-normal mb-4 uppercase tracking-wider" data-testid="text-section-connect">
-            let's connect:
-          </h2>
-          <p className="text-base leading-relaxed mb-4">
-            always interested in talking product, sharing ideas, or exploring opportunities.
-          </p>
-          <p className="text-base leading-relaxed mb-4">
-            currently open to advisory roles, interesting product challenges, and the right full-time opportunity.
-          </p>
-          <p className="text-base leading-relaxed">
-            email is best: <a href="mailto:alumley007@gmail.com" className="underline hover:no-underline" data-testid="link-email">alumley007@gmail.com</a>
-          </p>
-        </section>
-
-        {/* Directory */}
+        {/* Connect */}
         <section>
-          <h2 className="text-lg font-normal mb-4 uppercase tracking-wider" data-testid="text-section-directory">
-            directory:
+          <h2 className="text-lg font-normal mb-6 uppercase tracking-wider" data-testid="text-section-connect">
+            let's talk:
           </h2>
-          <ul className="space-y-2 text-base leading-relaxed">
-            <li>- <Link href="/contact" className="underline hover:no-underline" data-testid="link-contact">contact</Link></li>
-            <li>- <Link href="/blog" className="underline hover:no-underline" data-testid="link-blog">writing</Link></li>
-            <li>- <a href="https://www.linkedin.com/in/adrianlumley/" className="underline hover:no-underline" target="_blank" rel="noopener noreferrer" data-testid="link-linkedin">linkedin</a></li>
-          </ul>
+          <div className="space-y-4 text-base leading-relaxed">
+            <p>always interested in product challenges, creative projects, or just good conversation.</p>
+            <p>open to advisory roles and the right full-time opportunity.</p>
+            <div className="space-y-2 mt-6">
+              <p>- <a href="mailto:alumley007@gmail.com" className="underline hover:no-underline" data-testid="link-email">email me</a></p>
+              <p>- <Link href="/blog" className="underline hover:no-underline" data-testid="link-blog">read my writing</Link></p>
+              <p>- <a href="https://www.linkedin.com/in/adrianlumley/" className="underline hover:no-underline" target="_blank" rel="noopener noreferrer" data-testid="link-linkedin">find me on linkedin</a></p>
+            </div>
+          </div>
         </section>
 
       </div>

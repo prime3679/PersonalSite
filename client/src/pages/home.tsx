@@ -65,13 +65,13 @@ export default function Home() {
             >
               PROJECTS
             </Link>
-            <a 
-              href="#contact" 
+            <Link 
+              href="/contact" 
               className="hover:underline transition-all duration-200"
               data-testid="link-contact"
             >
               CONTACT
-            </a>
+            </Link>
             <a 
               href="https://www.linkedin.com/in/adrianlumley" 
               target="_blank" 

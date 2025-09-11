@@ -1,7 +1,9 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import rateLimit from "express-rate-limit";
 import { storage } from "./storage";
 import { insertBlogPostSchema, insertProjectSchema, insertContactSubmissionSchema } from "@shared/schema";
+import { sendEmail } from "./email";
 
 // Basic auth middleware for admin operations
 function requireBasicAuth(req: any, res: any, next: any) {
@@ -198,13 +200,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/contact", async (req, res) => {
+  // Rate limiting for contact form
+  const contactLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 3, // limit each IP to 3 requests per windowMs
+    message: {
+      error: "Too many contact form submissions. Please try again later."
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
+    // Skip rate limiting for localhost during development only
+    skip: (req) => {
+      return process.env.NODE_ENV === 'development' && 
+             (req.ip === '127.0.0.1' || req.ip === '::1' || req.ip?.startsWith('192.168.'));
+    }
+  });
+
+  app.post("/api/contact", contactLimiter, async (req, res) => {
     try {
       const result = insertContactSubmissionSchema.safeParse(req.body);
       if (!result.success) {
         return res.status(400).json({ error: "Invalid contact submission data", details: result.error.errors });
       }
+      
+      // Store the submission in database
       const submission = await storage.createContactSubmission(result.data);
+      
+      // Send email notification
+      const emailSent = await sendEmail({
+        to: process.env.CONTACT_EMAIL || "adrian@adrianlumley.com",
+        subject: result.data.subject || "New Contact Form Submission",
+        text: `You have received a new contact form submission:
+
+Name: ${result.data.name}
+Email: ${result.data.email}
+Subject: ${result.data.subject || "No subject"}
+
+Message:
+${result.data.message}
+
+This message was submitted on ${new Date().toLocaleString()}.`,
+        userEmail: result.data.email,
+        userName: result.data.name,
+        userMessage: result.data.message
+      });
+      
+      if (!emailSent) {
+        console.warn("Failed to send email notification for contact submission:", submission.id);
+      }
+      
       res.status(201).json(submission);
     } catch (error) {
       console.error("Error creating contact submission:", error);

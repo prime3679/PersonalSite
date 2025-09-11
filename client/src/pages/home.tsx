@@ -39,14 +39,13 @@ export default function Home() {
         {/* Achievements */}
         <section className="mb-12">
           <h2 className="text-lg font-normal mb-4 uppercase tracking-wider" data-testid="text-section-achievements">
-            a few achievements:
+            notable moments:
           </h2>
           <ul className="space-y-2 text-base leading-relaxed">
             <li>- leading product management for siriusxm's 34+ million subscribers</li>
             <li>- shipped disney+ b2b2c products and espn streaming experiences</li>
             <li>- built ai-powered automation systems at hyperscience</li>
-            <li>- directed product strategy for ea's gaming platforms</li>
-            <li>- certified in ai product management and strategic planning</li>
+            <li>- built a social sports app to increase football (soccer) engagement for gen z audiences</li>
           </ul>
         </section>
 

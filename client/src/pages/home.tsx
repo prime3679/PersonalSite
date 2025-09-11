@@ -24,7 +24,7 @@ export default function Home() {
             current focus:
           </h2>
           <div className="space-y-4 text-base leading-relaxed">
-            <p>learning how to be a good parent — the hardest and most important product challenge.</p>
+            <p>learning how to be a good parent — the hardest and most important challenge.</p>
             <p>building scalable content platforms and ai personalization systems.</p>
             <p>writing a scifi novel about consciousness and reality (because product docs aren't creative enough).</p>
           </div>

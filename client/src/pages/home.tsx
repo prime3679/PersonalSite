@@ -24,10 +24,10 @@ export default function Home() {
             current focus:
           </h2>
           <div className="space-y-4 text-base leading-relaxed">
+            <p>learning how to be a good parent — the hardest and most important product challenge.</p>
             <p>building scalable content platforms and ai personalization systems.</p>
             <p>writing a scifi novel about consciousness and reality (because product docs aren't creative enough).</p>
-            <p>learning how to be a good parent — the hardest and most important product challenge.</p>
-            <p>shipped social football app for gen z, disney+ b2b products, ai automation at scale.</p>
+            <p>shipped disney+ b2b products, ai automation at scale.</p>
           </div>
         </section>
 
@@ -56,19 +56,6 @@ export default function Home() {
             <p><span className="font-semibold">learning from:</span> twitter, hacker news, product hunt, youtube</p>
             <p><span className="font-semibold">reading:</span> ted chiang, ursula k. le guin, anything about consciousness</p>
             <p><span className="font-semibold">exploring:</span> cursor, v0, ai coding assistants (the future is weird)</p>
-          </div>
-        </section>
-
-        {/* Select Work */}
-        <section className="mb-16">
-          <h2 className="text-lg font-normal mb-6 uppercase tracking-wider" data-testid="text-section-work">
-            select work:
-          </h2>
-          <div className="space-y-2 text-base leading-relaxed">
-            <p>- <Link href="/projects" className="underline hover:no-underline" data-testid="link-unified-api">unified content api</Link></p>
-            <p>- <Link href="/projects" className="underline hover:no-underline" data-testid="link-ai-engine">ai recommendation engine</Link></p>
-            <p>- <Link href="/projects" className="underline hover:no-underline" data-testid="link-developer-portal">developer portal</Link></p>
-            <p>- <Link href="/blog" className="underline hover:no-underline" data-testid="link-product-blog">thoughts on product</Link></p>
           </div>
         </section>
 

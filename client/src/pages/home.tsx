@@ -53,7 +53,7 @@ export default function Home() {
             <p><span className="font-semibold">building with:</span> react, typescript, tailwind, figma, notion</p>
             <p><span className="font-semibold">thinking with:</span> claude, chatgpt, oboe</p>
             <p><span className="font-semibold">learning from:</span> twitter, hacker news, product hunt, youtube</p>
-            <p><span className="font-semibold">reading:</span> ted chiang, ursula k. le guin, anything about consciousness</p>
+            <p><span className="font-semibold">reading:</span> brian sanderson, viet thanh nguyen, shane parrish, patty wipfler, anything about consciousness</p>
             <p><span className="font-semibold">exploring:</span> cursor, v0, ai coding assistants (the future is weird)</p>
           </div>
         </section>

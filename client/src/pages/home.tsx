@@ -299,8 +299,7 @@ export default function Home() {
           <ul className="space-y-2 text-base leading-relaxed">
             <li>- <Link href="/contact" className="underline hover:no-underline" data-testid="link-contact">contact</Link></li>
             <li>- <Link href="/blog" className="underline hover:no-underline" data-testid="link-blog">writing</Link></li>
-            <li>- <Link href="/projects" className="underline hover:no-underline" data-testid="link-projects">projects</Link></li>
-            <li>- <a href="https://www.linkedin.com/in/adrianlumley" className="underline hover:no-underline" target="_blank" rel="noopener noreferrer" data-testid="link-linkedin">linkedin</a></li>
+            <li>- <a href="https://www.linkedin.com/in/adrianlumley/" className="underline hover:no-underline" target="_blank" rel="noopener noreferrer" data-testid="link-linkedin">linkedin</a></li>
           </ul>
         </section>
 

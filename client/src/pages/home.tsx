@@ -53,10 +53,6 @@ export default function Home() {
             <li>- <Link href="/projects" className="underline hover:no-underline" data-testid="link-ai-personalization">ai personalization</Link> - content discovery at scale</li>
             <li>- <Link href="/blog" className="underline hover:no-underline" data-testid="link-writing-product">writing about product</Link> - sharing insights and learnings</li>
           </ul>
-          <p className="text-base leading-relaxed mt-4 text-gray-600">
-            connecting people to audio experiences - music, stories, news and sports. 
-            i focus on platform architecture that enables content discovery at scale.
-          </p>
         </section>
 
         {/* TL;DR */}

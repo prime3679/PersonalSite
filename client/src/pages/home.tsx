@@ -3,7 +3,13 @@ import { Link } from "wouter";
 import { ChevronDown } from "lucide-react";
 
 export default function Home() {
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
+    approach: false,
+    philosophy: false,
+    background: false,
+    future: false,
+    tools: false
+  });
 
   const toggleSection = (section: string) => {
     setOpenSections(prev => ({
@@ -77,25 +83,35 @@ export default function Home() {
           <div>
             <button
               onClick={() => toggleSection('approach')}
-              className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left flex items-center justify-between"
+              className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left flex items-center justify-between focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
               data-testid="button-toggle-approach"
+              aria-expanded={openSections.approach}
+              aria-controls="section-approach"
+              id="button-approach"
             >
               my approach
-              <ChevronDown className="w-4 h-4" />
+              <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openSections.approach ? 'rotate-180' : ''}`} />
             </button>
             {openSections.approach && (
-              <div className="mt-6 text-base leading-relaxed space-y-4" data-testid="section-approach">
-                <p>
-                  i believe in building products that solve real problems. this means starting with customer research, 
-                  understanding pain points deeply, and validating assumptions early.
-                </p>
-                <p>
-                  my technical background helps me work closely with engineering teams to find the right balance 
-                  between what's possible and what's valuable.
-                </p>
-                <p>
-                  i prefer small, autonomous teams that can move fast and iterate based on user feedback.
-                </p>
+              <div 
+                className="mt-6 animate-in slide-in-from-top-1 duration-300 fade-in"
+                id="section-approach"
+                role="region"
+                aria-labelledby="button-approach"
+              >
+                <div className="text-base leading-relaxed space-y-4" data-testid="section-approach">
+                  <p>
+                    i believe in building products that solve real problems. this means starting with customer research, 
+                    understanding pain points deeply, and validating assumptions early.
+                  </p>
+                  <p>
+                    my technical background helps me work closely with engineering teams to find the right balance 
+                    between what's possible and what's valuable.
+                  </p>
+                  <p>
+                    i prefer small, autonomous teams that can move fast and iterate based on user feedback.
+                  </p>
+                </div>
               </div>
             )}
           </div>
@@ -103,25 +119,35 @@ export default function Home() {
           <div>
             <button
               onClick={() => toggleSection('philosophy')}
-              className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left flex items-center justify-between"
+              className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left flex items-center justify-between focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
               data-testid="button-toggle-philosophy"
+              aria-expanded={openSections.philosophy}
+              aria-controls="section-philosophy"
+              id="button-philosophy"
             >
               product philosophy
-              <ChevronDown className="w-4 h-4" />
+              <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openSections.philosophy ? 'rotate-180' : ''}`} />
             </button>
             {openSections.philosophy && (
-              <div className="mt-6 text-base leading-relaxed space-y-4" data-testid="section-philosophy">
-                <p>
-                  platforms over features. developer experience over short-term wins. 
-                  systems thinking over isolated solutions.
-                </p>
-                <p>
-                  in the ai era, i focus on augmenting human creativity rather than replacing it. 
-                  the best ai products feel magical but work reliably.
-                </p>
-                <p>
-                  measurement matters, but not everything that matters can be measured.
-                </p>
+              <div 
+                className="mt-6 animate-in slide-in-from-top-1 duration-300 fade-in"
+                id="section-philosophy"
+                role="region"
+                aria-labelledby="button-philosophy"
+              >
+                <div className="text-base leading-relaxed space-y-4" data-testid="section-philosophy">
+                  <p>
+                    platforms over features. developer experience over short-term wins. 
+                    systems thinking over isolated solutions.
+                  </p>
+                  <p>
+                    in the ai era, i focus on augmenting human creativity rather than replacing it. 
+                    the best ai products feel magical but work reliably.
+                  </p>
+                  <p>
+                    measurement matters, but not everything that matters can be measured.
+                  </p>
+                </div>
               </div>
             )}
           </div>
@@ -129,26 +155,36 @@ export default function Home() {
           <div>
             <button
               onClick={() => toggleSection('background')}
-              className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left flex items-center justify-between"
+              className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left flex items-center justify-between focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
               data-testid="button-toggle-background"
+              aria-expanded={openSections.background}
+              aria-controls="section-background"
+              id="button-background"
             >
               background
-              <ChevronDown className="w-4 h-4" />
+              <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openSections.background ? 'rotate-180' : ''}`} />
             </button>
             {openSections.background && (
-              <div className="mt-6 text-base leading-relaxed space-y-4" data-testid="section-background">
-                <p>
-                  i started my career in consulting, working as a salesforce solutions architect and analyst 
-                  for companies like pwc, redkite, and bluewolf from 2011-2016.
-                </p>
-                <p>
-                  i transitioned to product management at disney in 2016, working on espn and disney+ products. 
-                  since then i've worked at hyperscience, ea, and now siriusxm.
-                </p>
-                <p>
-                  i have a philosophy degree from st. john's and an executive mba from quantic. 
-                  i'm also a uc berkeley haas venture fellow and ondeck fellow.
-                </p>
+              <div 
+                className="mt-6 animate-in slide-in-from-top-1 duration-300 fade-in"
+                id="section-background"
+                role="region"
+                aria-labelledby="button-background"
+              >
+                <div className="text-base leading-relaxed space-y-4" data-testid="section-background">
+                  <p>
+                    i started my career in consulting, working as a salesforce solutions architect and analyst 
+                    for companies like pwc, redkite, and bluewolf from 2011-2016.
+                  </p>
+                  <p>
+                    i transitioned to product management at disney in 2016, working on espn and disney+ products. 
+                    since then i've worked at hyperscience, ea, and now siriusxm.
+                  </p>
+                  <p>
+                    i have a philosophy degree from st. john's and an executive mba from quantic. 
+                    i'm also a uc berkeley haas venture fellow and ondeck fellow.
+                  </p>
+                </div>
               </div>
             )}
           </div>
@@ -156,23 +192,70 @@ export default function Home() {
           <div>
             <button
               onClick={() => toggleSection('future')}
-              className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left flex items-center justify-between"
+              className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left flex items-center justify-between focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
               data-testid="button-toggle-future"
+              aria-expanded={openSections.future}
+              aria-controls="section-future"
+              id="button-future"
             >
               where i see myself in 3,650 days
-              <ChevronDown className="w-4 h-4" />
+              <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openSections.future ? 'rotate-180' : ''}`} />
             </button>
             {openSections.future && (
-              <div className="mt-6 text-base leading-relaxed space-y-4" data-testid="section-future">
-                <p>
-                  leading product for a company that's pushing the boundaries of what's possible with ai and content.
-                </p>
-                <p>
-                  maybe building my own thing. maybe advising startups. definitely still learning and growing.
-                </p>
-                <p>
-                  whatever comes next, i want to be working on products that genuinely improve people's lives.
-                </p>
+              <div 
+                className="mt-6 animate-in slide-in-from-top-1 duration-300 fade-in"
+                id="section-future"
+                role="region"
+                aria-labelledby="button-future"
+              >
+                <div className="text-base leading-relaxed space-y-4" data-testid="section-future">
+                  <p>
+                    leading product for a company that's pushing the boundaries of what's possible with ai and content.
+                  </p>
+                  <p>
+                    maybe building my own thing. maybe advising startups. definitely still learning and growing.
+                  </p>
+                  <p>
+                    whatever comes next, i want to be working on products that genuinely improve people's lives.
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div>
+            <button
+              onClick={() => toggleSection('tools')}
+              className="text-base font-normal uppercase tracking-wider bg-gray-100 px-4 py-2 hover:bg-gray-200 transition-colors w-full text-left flex items-center justify-between focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+              data-testid="button-toggle-tools"
+              aria-expanded={openSections.tools}
+              aria-controls="section-tools"
+              id="button-tools"
+            >
+              tools i love
+              <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openSections.tools ? 'rotate-180' : ''}`} />
+            </button>
+            {openSections.tools && (
+              <div 
+                className="mt-6 animate-in slide-in-from-top-1 duration-300 fade-in"
+                id="section-tools"
+                role="region"
+                aria-labelledby="button-tools"
+              >
+                <div className="text-base leading-relaxed space-y-4" data-testid="section-tools">
+                  <p>
+                    <span className="font-semibold">for building:</span> react, typescript, tailwind, figma, linear, notion
+                  </p>
+                  <p>
+                    <span className="font-semibold">for thinking:</span> claude, chatgpt, roam research, superhuman, spark
+                  </p>
+                  <p>
+                    <span className="font-semibold">for learning:</span> twitter, hacker news, product hunt, first round review
+                  </p>
+                  <p>
+                    always experimenting with new tools. currently exploring cursor, v0, and various ai coding assistants.
+                  </p>
+                </div>
               </div>
             )}
           </div>
@@ -219,6 +302,22 @@ export default function Home() {
             <li>- ai product management certification (ai product academy)</li>
             <li>- prof g certified strategist (product strategy)</li>
           </ul>
+        </section>
+
+        {/* Let's Connect */}
+        <section className="mb-12">
+          <h2 className="text-lg font-normal mb-4 uppercase tracking-wider" data-testid="text-section-connect">
+            let's connect:
+          </h2>
+          <p className="text-base leading-relaxed mb-4">
+            always interested in talking product, sharing ideas, or exploring opportunities.
+          </p>
+          <p className="text-base leading-relaxed mb-4">
+            currently open to advisory roles, interesting product challenges, and the right full-time opportunity.
+          </p>
+          <p className="text-base leading-relaxed">
+            email is best: <a href="mailto:alumley007@gmail.com" className="underline hover:no-underline" data-testid="link-email">alumley007@gmail.com</a>
+          </p>
         </section>
 
         {/* Directory */}

@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { Link } from "wouter";
 
 interface DisclosureProps {
   title: string;
@@ -50,6 +51,20 @@ export default function Home() {
       <header className="sticky top-0 z-40 backdrop-blur bg-black/70 border-b border-zinc-800">
         <div className="mx-auto max-w-3xl px-4 py-3 flex items-center justify-between text-sm">
           <nav className="flex gap-5 font-medium">
+            <Link 
+              href="/blog" 
+              className="hover:underline transition-all duration-200"
+              data-testid="link-blog"
+            >
+              BLOG
+            </Link>
+            <Link 
+              href="/projects" 
+              className="hover:underline transition-all duration-200"
+              data-testid="link-projects"
+            >
+              PROJECTS
+            </Link>
             <a 
               href="#contact" 
               className="hover:underline transition-all duration-200"
@@ -65,24 +80,6 @@ export default function Home() {
               data-testid="link-linkedin"
             >
               LINKEDIN
-            </a>
-            <a 
-              href="https://github.com/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="hover:underline transition-all duration-200"
-              data-testid="link-github"
-            >
-              GITHUB
-            </a>
-            <a 
-              href="https://x.com/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="hover:underline transition-all duration-200"
-              data-testid="link-twitter"
-            >
-              TWITTER
             </a>
           </nav>
           <div className="text-xs text-zinc-400" data-testid="text-location">NYC • US/UK</div>

@@ -8,7 +8,7 @@ export default function Home() {
         {/* Intro */}
         <section className="mb-16">
           <h1 className="text-2xl font-normal mb-6 leading-relaxed" data-testid="text-main-title">
-            hey, i'm adrian.
+            hello, i'm adrian.
           </h1>
           <p className="text-base leading-relaxed mb-4">
             i build products at <a href="https://www.siriusxm.com" className="underline hover:no-underline" target="_blank" rel="noopener noreferrer" data-testid="link-siriusxm">siriusxm</a> for 34+ million people.

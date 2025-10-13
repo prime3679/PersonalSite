@@ -10,8 +10,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import SiteHeader from "@/components/site-header";
+import { useTheme } from "@/components/theme-provider";
 
 export default function Contact() {
+  const { theme } = useTheme();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { toast } = useToast();
   
@@ -62,39 +65,23 @@ export default function Contact() {
 
   if (isSubmitted) {
     return (
-      <main className="min-h-screen bg-black text-zinc-100 selection:bg-white selection:text-black">
-        {/* Header */}
-        <header className="sticky top-0 z-40 backdrop-blur bg-black/70 border-b border-zinc-800">
-          <div className="mx-auto max-w-3xl px-4 py-3 flex items-center justify-between text-sm">
-            <nav className="flex gap-5 font-medium">
-              <Link href="/" className="hover:underline transition-all duration-200" data-testid="link-home">
-                HOME
-              </Link>
-              <Link href="/blog" className="hover:underline transition-all duration-200" data-testid="link-blog">
-                BLOG
-              </Link>
-              <Link href="/projects" className="hover:underline transition-all duration-200" data-testid="link-projects">
-                PROJECTS
-              </Link>
-              <Link href="/contact" className="hover:underline transition-all duration-200 text-white" data-testid="link-contact">
-                CONTACT
-              </Link>
-            </nav>
-            <div className="text-xs text-zinc-400" data-testid="text-location">NYC • US/UK</div>
-          </div>
-        </header>
+      <main
+        data-theme={theme}
+        className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-primary-foreground transition-colors duration-300"
+      >
+        <SiteHeader />
 
         <div className="mx-auto max-w-2xl px-4 pt-10 pb-28">
           <div className="text-center" data-testid="success-message">
-            <h1 className="text-4xl sm:text-5xl font-black tracking-tight mb-4">
+            <h1 className="mb-4 text-4xl font-black tracking-tight sm:text-5xl">
               MESSAGE SENT!
             </h1>
-            <p className="text-lg text-zinc-300 mb-8">
+            <p className="mb-8 text-lg text-muted-foreground">
               Thank you for reaching out. I'll get back to you as soon as possible.
             </p>
-            <Link 
-              href="/" 
-              className="inline-flex items-center gap-2 text-white hover:underline"
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 text-foreground hover:underline"
               data-testid="link-back-home"
             >
               ← Back to Home
@@ -106,38 +93,22 @@ export default function Contact() {
   }
 
   return (
-    <main className="min-h-screen bg-black text-zinc-100 selection:bg-white selection:text-black">
-      {/* Header */}
-      <header className="sticky top-0 z-40 backdrop-blur bg-black/70 border-b border-zinc-800">
-        <div className="mx-auto max-w-3xl px-4 py-3 flex items-center justify-between text-sm">
-          <nav className="flex gap-5 font-medium">
-            <Link href="/" className="hover:underline transition-all duration-200" data-testid="link-home">
-              HOME
-            </Link>
-            <Link href="/blog" className="hover:underline transition-all duration-200" data-testid="link-blog">
-              BLOG
-            </Link>
-            <Link href="/projects" className="hover:underline transition-all duration-200" data-testid="link-projects">
-              PROJECTS
-            </Link>
-            <Link href="/contact" className="hover:underline transition-all duration-200 text-white" data-testid="link-contact">
-              CONTACT
-            </Link>
-          </nav>
-          <div className="text-xs text-zinc-400" data-testid="text-location">NYC • US/UK</div>
-        </div>
-      </header>
+    <main
+      data-theme={theme}
+      className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-primary-foreground transition-colors duration-300"
+    >
+      <SiteHeader />
 
       <div className="mx-auto max-w-2xl px-4 pt-10 pb-28">
-        <h1 className="text-4xl sm:text-5xl font-black tracking-tight mb-8" data-testid="text-contact-title">
+        <h1 className="mb-8 text-4xl font-black tracking-tight sm:text-5xl" data-testid="text-contact-title">
           GET IN TOUCH
         </h1>
-        
+
         <div className="mb-8">
-          <p className="text-lg text-zinc-300 mb-4">
+          <p className="mb-4 text-lg text-muted-foreground">
             I'm always interested in hearing about new opportunities, collaborations, or just having a chat about product, platforms, and AI.
           </p>
-          <p className="text-zinc-400">
+          <p className="text-muted-foreground">
             Fill out the form below and I'll get back to you as soon as possible.
           </p>
         </div>
@@ -150,13 +121,13 @@ export default function Contact() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-zinc-300">Name *</FormLabel>
+                    <FormLabel className="text-muted-foreground">Name *</FormLabel>
                     <FormControl>
-                      <Input 
+                      <Input
                         placeholder="Your name"
-                        className="bg-zinc-950 border-zinc-800 text-white placeholder:text-zinc-500 focus:border-zinc-600"
+                        className="border-border bg-card text-foreground placeholder:text-muted-foreground focus-visible:border-primary"
                         data-testid="input-name"
-                        {...field} 
+                        {...field}
                       />
                     </FormControl>
                     <FormMessage />
@@ -169,14 +140,14 @@ export default function Contact() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-zinc-300">Email *</FormLabel>
+                    <FormLabel className="text-muted-foreground">Email *</FormLabel>
                     <FormControl>
-                      <Input 
+                      <Input
                         type="email"
-                        placeholder="your@email.com"
-                        className="bg-zinc-950 border-zinc-800 text-white placeholder:text-zinc-500 focus:border-zinc-600"
+                        placeholder="you@example.com"
+                        className="border-border bg-card text-foreground placeholder:text-muted-foreground focus-visible:border-primary"
                         data-testid="input-email"
-                        {...field} 
+                        {...field}
                       />
                     </FormControl>
                     <FormMessage />
@@ -190,13 +161,13 @@ export default function Contact() {
               name="subject"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-zinc-300">Subject</FormLabel>
+                  <FormLabel className="text-muted-foreground">Subject</FormLabel>
                   <FormControl>
-                    <Input 
-                      placeholder="What's this about?"
-                      className="bg-zinc-950 border-zinc-800 text-white placeholder:text-zinc-500 focus:border-zinc-600"
+                    <Input
+                      placeholder="What would you like to talk about?"
+                      className="border-border bg-card text-foreground placeholder:text-muted-foreground focus-visible:border-primary"
                       data-testid="input-subject"
-                      {...field} 
+                      {...field}
                     />
                   </FormControl>
                   <FormMessage />
@@ -209,12 +180,11 @@ export default function Contact() {
               name="message"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-zinc-300">Message *</FormLabel>
+                  <FormLabel className="text-muted-foreground">Message *</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Tell me about your project, idea, or just say hello..."
-                      rows={6}
-                      className="bg-zinc-950 border-zinc-800 text-white placeholder:text-zinc-500 focus:border-zinc-600 resize-none"
+                      placeholder="Tell me about your project or question."
+                      className="min-h-[180px] resize-none border-border bg-card text-foreground placeholder:text-muted-foreground focus-visible:border-primary"
                       data-testid="input-message"
                       {...field}
                     />
@@ -224,40 +194,43 @@ export default function Contact() {
               )}
             />
 
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               disabled={submitMutation.isPending}
-              className="w-full bg-white text-black hover:bg-zinc-200 disabled:opacity-50"
+              className="w-full bg-foreground text-background transition-colors hover:bg-foreground/90 disabled:opacity-50"
               data-testid="button-submit"
             >
               {submitMutation.isPending ? "Sending..." : "Send Message"}
             </Button>
+            <div className="text-sm text-muted-foreground" data-testid="text-privacy">
+              By submitting this form, you agree to receive a response from me via email.
+            </div>
           </form>
         </Form>
 
         {/* Alternative contact methods */}
-        <div className="mt-12 pt-8 border-t border-zinc-800">
-          <h2 className="text-sm font-bold tracking-wider text-zinc-400 mb-4">OTHER WAYS TO REACH ME</h2>
-          <div className="grid sm:grid-cols-2 gap-3">
-            <a 
-              className="group border border-zinc-800 rounded-xl p-4 hover:bg-zinc-950 transition-all duration-300 hover:border-zinc-700"
+        <div className="mt-12 border-t border-border pt-8">
+          <h2 className="mb-4 text-sm font-bold tracking-wider text-muted-foreground">OTHER WAYS TO REACH ME</h2>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <a
+              className="group rounded-xl border border-border p-4 transition-all duration-300 hover:border-foreground/30 hover:bg-muted/60"
               href="mailto:adrian@adrianlumley.com"
               data-testid="link-email-direct"
             >
-              <div className="text-zinc-400 text-xs">EMAIL</div>
-              <div className="font-semibold">adrian@adrianlumley.com</div>
-              <div className="text-zinc-400 text-xs group-hover:underline">direct email</div>
+              <div className="text-xs text-muted-foreground">EMAIL</div>
+              <div className="font-semibold text-foreground">adrian@adrianlumley.com</div>
+              <div className="text-xs text-muted-foreground group-hover:underline">direct email</div>
             </a>
-            <a 
-              className="group border border-zinc-800 rounded-xl p-4 hover:bg-zinc-950 transition-all duration-300 hover:border-zinc-700"
+            <a
+              className="group rounded-xl border border-border p-4 transition-all duration-300 hover:border-foreground/30 hover:bg-muted/60"
               href="https://www.linkedin.com/in/adrianlumley"
               target="_blank"
               rel="noopener noreferrer"
               data-testid="link-linkedin-contact"
             >
-              <div className="text-zinc-400 text-xs">LINKEDIN</div>
-              <div className="font-semibold">Connect with me</div>
-              <div className="text-zinc-400 text-xs">professional network</div>
+              <div className="text-xs text-muted-foreground">LINKEDIN</div>
+              <div className="font-semibold text-foreground">Connect with me</div>
+              <div className="text-xs text-muted-foreground">professional network</div>
             </a>
           </div>
         </div>

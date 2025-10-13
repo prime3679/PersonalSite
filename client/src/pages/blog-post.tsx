@@ -4,9 +4,12 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import { BlogPost } from "@shared/schema";
+import SiteHeader from "@/components/site-header";
+import { useTheme } from "@/components/theme-provider";
 import "highlight.js/styles/github-dark.css";
 
 export default function BlogPostPage() {
+  const { theme } = useTheme();
   const { slug } = useParams();
   
   const { data: post, isLoading, error } = useQuery<BlogPost>({
@@ -20,14 +23,18 @@ export default function BlogPostPage() {
 
   if (isLoading) {
     return (
-      <main className="min-h-screen bg-black text-zinc-100">
-        <div className="mx-auto max-w-3xl px-4 pt-20 pb-28">
-          <div className="animate-pulse">
-            <div className="h-8 bg-zinc-800 rounded mb-6"></div>
-            <div className="h-4 bg-zinc-800 rounded mb-8 w-1/3"></div>
+      <main
+        data-theme={theme}
+        className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-primary-foreground transition-colors duration-300"
+      >
+        <SiteHeader />
+        <div className="mx-auto max-w-3xl px-4 pt-10 pb-28">
+          <div className="space-y-6 animate-pulse">
+            <div className="h-8 w-3/4 rounded bg-muted" />
+            <div className="h-4 w-1/3 rounded bg-muted" />
             <div className="space-y-4">
               {[...Array(8)].map((_, i) => (
-                <div key={i} className="h-4 bg-zinc-800 rounded"></div>
+                <div key={i} className="h-4 w-full rounded bg-muted" />
               ))}
             </div>
           </div>
@@ -38,13 +45,17 @@ export default function BlogPostPage() {
 
   if (error || !post) {
     return (
-      <main className="min-h-screen bg-black text-zinc-100">
-        <div className="mx-auto max-w-3xl px-4 pt-20 pb-28">
-          <h1 className="text-4xl font-black tracking-tight mb-8">POST NOT FOUND</h1>
-          <p className="text-zinc-400 mb-6">
+      <main
+        data-theme={theme}
+        className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-primary-foreground transition-colors duration-300"
+      >
+        <SiteHeader />
+        <div className="mx-auto max-w-3xl px-4 pt-10 pb-28">
+          <h1 className="mb-8 text-4xl font-black tracking-tight">POST NOT FOUND</h1>
+          <p className="mb-6 text-muted-foreground">
             The blog post you're looking for doesn't exist or has been removed.
           </p>
-          <Link href="/blog" className="inline-flex items-center gap-2 text-white hover:underline" data-testid="link-back-to-blog">
+          <Link href="/blog" className="inline-flex items-center gap-2 text-foreground hover:underline" data-testid="link-back-to-blog">
             ← Back to Blog
           </Link>
         </div>
@@ -53,33 +64,17 @@ export default function BlogPostPage() {
   }
 
   return (
-    <main className="min-h-screen bg-black text-zinc-100 selection:bg-white selection:text-black">
-      {/* Header */}
-      <header className="sticky top-0 z-40 backdrop-blur bg-black/70 border-b border-zinc-800">
-        <div className="mx-auto max-w-3xl px-4 py-3 flex items-center justify-between text-sm">
-          <nav className="flex gap-5 font-medium">
-            <Link href="/" className="hover:underline transition-all duration-200" data-testid="link-home">
-              HOME
-            </Link>
-            <Link href="/blog" className="hover:underline transition-all duration-200 text-white" data-testid="link-blog">
-              BLOG
-            </Link>
-            <Link href="/projects" className="hover:underline transition-all duration-200" data-testid="link-projects">
-              PROJECTS
-            </Link>
-            <a href="/#contact" className="hover:underline transition-all duration-200" data-testid="link-contact">
-              CONTACT
-            </a>
-          </nav>
-          <div className="text-xs text-zinc-400" data-testid="text-location">NYC • US/UK</div>
-        </div>
-      </header>
+    <main
+      data-theme={theme}
+      className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-primary-foreground transition-colors duration-300"
+    >
+      <SiteHeader />
 
       <article className="mx-auto max-w-3xl px-4 pt-10 pb-28">
         {/* Back to blog link */}
-        <Link 
-          href="/blog" 
-          className="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors duration-200 mb-8"
+        <Link
+          href="/blog"
+          className="mb-8 inline-flex items-center gap-2 text-muted-foreground transition-colors duration-200 hover:text-foreground"
           data-testid="link-back-to-blog"
         >
           ← Back to Blog
@@ -87,10 +82,10 @@ export default function BlogPostPage() {
 
         {/* Post header */}
         <header className="mb-8">
-          <h1 className="text-4xl sm:text-5xl font-black tracking-tight mb-4" data-testid="text-post-title">
+          <h1 className="mb-4 text-4xl font-black tracking-tight sm:text-5xl" data-testid="text-post-title">
             {post.title}
           </h1>
-          <div className="text-zinc-400 text-sm">
+          <div className="text-sm text-muted-foreground">
             <time dateTime={post.publishedAt?.toString() || post.createdAt.toString()} data-testid="text-post-date">
               {new Date(post.publishedAt || post.createdAt).toLocaleDateString('en-US', {
                 year: 'numeric',
@@ -102,20 +97,20 @@ export default function BlogPostPage() {
         </header>
 
         {/* Post content */}
-        <div 
-          className="prose prose-invert prose-zinc max-w-none 
+        <div
+          className="prose prose-zinc max-w-none
                      prose-headings:font-bold prose-headings:tracking-tight
-                     prose-h1:text-3xl prose-h1:mb-6
-                     prose-h2:text-2xl prose-h2:mb-4 prose-h2:mt-8
-                     prose-h3:text-xl prose-h3:mb-3 prose-h3:mt-6
-                     prose-p:leading-relaxed prose-p:text-zinc-300
-                     prose-a:text-white prose-a:underline hover:prose-a:text-zinc-300
-                     prose-code:bg-zinc-800 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:text-zinc-200
-                     prose-pre:bg-zinc-900 prose-pre:border prose-pre:border-zinc-800
-                     prose-blockquote:border-l-zinc-600 prose-blockquote:text-zinc-300
-                     prose-ul:text-zinc-300 prose-ol:text-zinc-300
-                     prose-li:text-zinc-300
-                     prose-strong:text-white prose-strong:font-semibold"
+                     prose-h1:mb-6 prose-h1:text-3xl
+                     prose-h2:mb-4 prose-h2:mt-8 prose-h2:text-2xl
+                     prose-h3:mb-3 prose-h3:mt-6 prose-h3:text-xl
+                     prose-p:leading-relaxed prose-p:text-muted-foreground
+                     prose-a:text-foreground prose-a:underline hover:prose-a:text-muted-foreground
+                     prose-code:rounded prose-code:bg-muted prose-code:px-1 prose-code:py-0.5 prose-code:text-foreground
+                     prose-pre:border prose-pre:border-border prose-pre:bg-muted/70
+                     prose-blockquote:border-l prose-blockquote:border-border prose-blockquote:text-muted-foreground
+                     prose-ul:text-muted-foreground prose-ol:text-muted-foreground
+                     prose-li:text-muted-foreground
+                     prose-strong:text-foreground prose-strong:font-semibold dark:prose-invert"
           data-testid="content-post-body"
         >
           <ReactMarkdown
@@ -127,10 +122,10 @@ export default function BlogPostPage() {
         </div>
 
         {/* Post footer */}
-        <footer className="mt-12 pt-8 border-t border-zinc-800">
-          <Link 
-            href="/blog" 
-            className="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors duration-200"
+        <footer className="mt-12 border-t border-border pt-8">
+          <Link
+            href="/blog"
+            className="inline-flex items-center gap-2 text-muted-foreground transition-colors duration-200 hover:text-foreground"
             data-testid="link-back-to-blog-footer"
           >
             ← Back to All Posts

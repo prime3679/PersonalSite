@@ -1,41 +1,18 @@
 import { Link } from "wouter";
-import { useState, useEffect } from "react";
-import { Moon, Sun } from "lucide-react";
+import SiteHeader from "@/components/site-header";
+import { useTheme } from "@/components/theme-provider";
 
 export default function Home() {
-  const [darkMode, setDarkMode] = useState(false);
-
-  useEffect(() => {
-    // Check for saved theme preference or default to light mode
-    const savedTheme = localStorage.getItem('theme');
-    const isDark = savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    setDarkMode(isDark);
-    
-    // Apply theme to document
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    const newDarkMode = !darkMode;
-    setDarkMode(newDarkMode);
-    
-    if (newDarkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  };
+  const { theme } = useTheme();
 
   return (
-    <main className="min-h-screen bg-background text-foreground font-mono selection:bg-primary selection:text-primary-foreground transition-colors duration-300">
+    <main
+      data-theme={theme}
+      className="min-h-screen bg-background text-foreground font-mono selection:bg-primary selection:text-primary-foreground transition-colors duration-300"
+    >
+      <SiteHeader />
       <div className="mx-auto max-w-2xl px-6 py-12">
-        
+
         {/* Intro */}
         <section className="mb-16 fade-in">
           <h1 className="text-2xl font-normal mb-6 leading-relaxed" data-testid="text-main-title">
@@ -93,18 +70,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Theme Toggle */}
-        <button
-          onClick={toggleTheme}
-          className="theme-toggle"
-          aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-          data-testid="button-theme-toggle"
-        >
-          {darkMode ? <Sun size={20} /> : <Moon size={20} />}
-        </button>
-
         {/* Connect */}
-        <section className="fade-in">
+        <section className="fade-in" id="contact">
           <h2 className="text-lg font-normal mb-6 uppercase tracking-wider" data-testid="text-section-connect">
             let's talk:
           </h2>

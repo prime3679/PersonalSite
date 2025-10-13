@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "wouter";
 import { Project } from "@shared/schema";
 import { ExternalLink, Github } from "lucide-react";
+import SiteHeader from "@/components/site-header";
+import { useTheme } from "@/components/theme-provider";
 
 type CaseStudy = {
   id: string;
@@ -67,96 +68,69 @@ const caseStudies: CaseStudy[] = [
 ];
 
 export default function Projects() {
+  const { theme } = useTheme();
   const { data: projects, isLoading, error } = useQuery<Project[]>({
     queryKey: ["/api/projects"],
     queryFn: () => fetch("/api/projects").then(res => res.json()),
   });
 
-  return (
-    <main className="min-h-screen bg-black text-zinc-100 selection:bg-white selection:text-black">
-      {/* Header */}
-      <header className="sticky top-0 z-40 backdrop-blur bg-black/70 border-b border-zinc-800">
-        <div className="mx-auto max-w-3xl px-4 py-3 flex items-center justify-between text-sm">
-          <nav className="flex gap-5 font-medium">
-            <Link href="/" className="hover:underline transition-all duration-200" data-testid="link-home">
-              HOME
-            </Link>
-            <Link href="/blog" className="hover:underline transition-all duration-200" data-testid="link-blog">
-              BLOG
-            </Link>
-            <Link href="/projects" className="hover:underline transition-all duration-200 text-white" data-testid="link-projects">
-              PROJECTS
-            </Link>
-            <a href="/#contact" className="hover:underline transition-all duration-200" data-testid="link-contact">
-              CONTACT
-            </a>
-          </nav>
-          <div className="text-xs text-zinc-400" data-testid="text-location">NYC • US/UK</div>
-        </div>
-      </header>
-
-      <div className="mx-auto max-w-3xl px-4 pt-10 pb-28">
-        <h1 className="text-4xl sm:text-5xl font-black tracking-tight mb-8" data-testid="text-projects-title">
-          PROJECTS
-        </h1>
-
-        <section className="space-y-12 mb-16">
-          {caseStudies.map((study) => (
-            <article
-              key={study.id}
-              id={study.id}
-              className="border border-zinc-800 rounded-2xl p-6 sm:p-8 bg-zinc-950/40 backdrop-blur-sm"
-              data-testid={`case-study-${study.id}`}
-            >
-              <header className="mb-4">
-                <h2 className="text-2xl font-semibold text-white mb-1">{study.title}</h2>
-                <p className="text-sm uppercase tracking-wider text-amber-400">{study.headline}</p>
-              </header>
-              <p className="text-zinc-300 leading-relaxed mb-6">{study.summary}</p>
-              <div className="grid gap-6 md:grid-cols-2">
-                <div>
-                  <h3 className="text-sm font-semibold uppercase tracking-wider text-zinc-400 mb-2">Outcomes</h3>
-                  <ul className="space-y-2 text-zinc-200 leading-relaxed list-disc list-inside">
-                    {study.outcomes.map((outcome, index) => (
-                      <li key={index}>{outcome}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="text-sm font-semibold uppercase tracking-wider text-zinc-400 mb-2">Responsibilities</h3>
-                  <ul className="space-y-2 text-zinc-200 leading-relaxed list-disc list-inside">
-                    {study.responsibilities.map((item, index) => (
-                      <li key={index}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </article>
-          ))}
-        </section>
-
-        {error ? (
-          <p className="text-zinc-400" data-testid="text-projects-error">
-            Failed to load projects. Please try again later.
-          </p>
-        ) : isLoading ? (
-          <div className="animate-pulse" data-testid="skeleton-projects">
-            <div className="h-8 bg-zinc-800 rounded mb-4"></div>
+  if (isLoading) {
+    return (
+      <main
+        data-theme={theme}
+        className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-primary-foreground transition-colors duration-300"
+      >
+        <SiteHeader />
+        <div className="mx-auto max-w-3xl px-4 pt-10 pb-28">
+          <div className="animate-pulse space-y-6">
+            <div className="h-8 w-56 rounded bg-muted" />
             <div className="grid gap-6 md:grid-cols-2">
               {[...Array(4)].map((_, i) => (
-                <div key={i} className="p-6 border border-zinc-800 rounded-xl">
-                  <div className="h-6 bg-zinc-800 rounded mb-2"></div>
-                  <div className="h-4 bg-zinc-800 rounded mb-4"></div>
+                <div key={i} className="rounded-xl border border-border p-6">
+                  <div className="mb-2 h-6 w-2/3 rounded bg-muted" />
+                  <div className="mb-4 h-4 w-full rounded bg-muted" />
                   <div className="flex gap-2">
-                    <div className="h-6 bg-zinc-800 rounded w-16"></div>
-                    <div className="h-6 bg-zinc-800 rounded w-20"></div>
+                    <div className="h-6 w-16 rounded bg-muted" />
+                    <div className="h-6 w-20 rounded bg-muted" />
                   </div>
                 </div>
               ))}
             </div>
           </div>
-        ) : projects && projects.length === 0 ? (
-          <p className="text-zinc-400" data-testid="text-no-projects">
+        </div>
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main
+        data-theme={theme}
+        className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-primary-foreground transition-colors duration-300"
+      >
+        <SiteHeader />
+        <div className="mx-auto max-w-3xl px-4 pt-10 pb-28">
+          <h1 className="mb-8 text-4xl font-black tracking-tight">PROJECTS</h1>
+          <p className="text-muted-foreground">Failed to load projects. Please try again later.</p>
+        </div>
+      </main>
+    );
+  }
+
+  return (
+    <main
+      data-theme={theme}
+      className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-primary-foreground transition-colors duration-300"
+    >
+      <SiteHeader />
+
+      <div className="mx-auto max-w-3xl px-4 pt-10 pb-28">
+        <h1 className="mb-8 text-4xl font-black tracking-tight sm:text-5xl" data-testid="text-projects-title">
+          PROJECTS
+        </h1>
+
+        {projects && projects.length === 0 ? (
+          <p className="text-muted-foreground" data-testid="text-no-projects">
             No projects available yet. Check back soon!
           </p>
         ) : (
@@ -164,7 +138,7 @@ export default function Projects() {
             {projects?.map((project) => (
               <article
                 key={project.id}
-                className="group border border-zinc-800 rounded-xl p-6 hover:bg-zinc-950 transition-all duration-300 hover:border-zinc-700"
+                className="group rounded-xl border border-border p-6 transition-all duration-300 hover:border-foreground/30 hover:bg-muted/60"
                 data-testid={`card-project-${project.slug}`}
               >
                 {project.imageUrl && (
@@ -172,17 +146,20 @@ export default function Projects() {
                     <img
                       src={project.imageUrl}
                       alt={project.title}
-                      className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105"
                       data-testid={`img-project-${project.slug}`}
                     />
                   </div>
                 )}
 
-                <h2 className="text-xl font-bold mb-2 group-hover:text-white transition-colors duration-200" data-testid={`text-project-title-${project.slug}`}>
+                <h2
+                  className="mb-2 text-xl font-bold transition-colors duration-200 group-hover:text-foreground"
+                  data-testid={`text-project-title-${project.slug}`}
+                >
                   {project.title}
                 </h2>
 
-                <p className="text-zinc-300 mb-4 leading-relaxed" data-testid={`text-project-description-${project.slug}`}>
+                <p className="mb-4 leading-relaxed text-muted-foreground" data-testid={`text-project-description-${project.slug}`}>
                   {project.description}
                 </p>
 
@@ -191,7 +168,7 @@ export default function Projects() {
                     {project.technologies.map((tech, index) => (
                       <span
                         key={index}
-                        className="px-2 py-1 bg-zinc-800 text-zinc-300 text-xs rounded-md"
+                        className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground"
                         data-testid={`tag-tech-${project.slug}-${index}`}
                       >
                         {tech}
@@ -206,7 +183,7 @@ export default function Projects() {
                       href={project.projectUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-sm text-zinc-300 hover:text-white transition-colors duration-200"
+                      className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors duration-200 hover:text-foreground"
                       data-testid={`link-project-live-${project.slug}`}
                     >
                       <ExternalLink size={14} />
@@ -219,7 +196,7 @@ export default function Projects() {
                       href={project.githubUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-sm text-zinc-300 hover:text-white transition-colors duration-200"
+                      className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors duration-200 hover:text-foreground"
                       data-testid={`link-project-github-${project.slug}`}
                     >
                       <Github size={14} />
@@ -229,8 +206,8 @@ export default function Projects() {
                 </div>
 
                 {project.featured && (
-                  <div className="mt-3 pt-3 border-t border-zinc-800">
-                    <span className="text-xs text-amber-400 font-medium" data-testid={`text-project-featured-${project.slug}`}>
+                  <div className="mt-3 border-t border-border pt-3">
+                    <span className="text-xs font-medium text-amber-500 dark:text-amber-400" data-testid={`text-project-featured-${project.slug}`}>
                       ★ Featured Project
                     </span>
                   </div>

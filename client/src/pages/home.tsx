@@ -132,7 +132,7 @@ function FeaturedWork() {
       <div className="grid gap-6">
         {featuredWins.map((win) => (
           <article key={win.id} className="border border-foreground/10 rounded-xl p-6 hover:border-foreground/40 transition-colors duration-300">
-            <div className="flex items-center justify-between mb-2 text-sm uppercase tracking-wide text-foreground/70">
+            <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between mb-2 text-sm uppercase tracking-wide text-foreground/70">
               <span>{win.company}</span>
               <span className="font-semibold">{win.headline}</span>
             </div>

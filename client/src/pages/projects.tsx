@@ -74,48 +74,127 @@ export default function Projects() {
     queryFn: () => fetch("/api/projects").then(res => res.json()),
   });
 
-  if (isLoading) {
-    return (
-      <main
-        data-theme={theme}
-        className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-primary-foreground transition-colors duration-300"
-      >
-        <SiteHeader />
-        <div className="mx-auto max-w-3xl px-4 pt-10 pb-28">
-          <div className="animate-pulse space-y-6">
-            <div className="h-8 w-56 rounded bg-muted" />
-            <div className="grid gap-6 md:grid-cols-2">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="rounded-xl border border-border p-6">
-                  <div className="mb-2 h-6 w-2/3 rounded bg-muted" />
-                  <div className="mb-4 h-4 w-full rounded bg-muted" />
-                  <div className="flex gap-2">
-                    <div className="h-6 w-16 rounded bg-muted" />
-                    <div className="h-6 w-20 rounded bg-muted" />
-                  </div>
+  const projectGrid = () => {
+    if (error) {
+      return (
+        <p className="text-muted-foreground" data-testid="text-projects-error">
+          Failed to load projects. Please try again later.
+        </p>
+      );
+    }
+
+    if (isLoading) {
+      return (
+        <div className="animate-pulse space-y-6" data-testid="skeleton-projects">
+          <div className="h-8 w-56 rounded bg-muted" />
+          <div className="grid gap-6 md:grid-cols-2">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="rounded-xl border border-border p-6">
+                <div className="mb-2 h-6 w-2/3 rounded bg-muted" />
+                <div className="mb-4 h-4 w-full rounded bg-muted" />
+                <div className="flex gap-2">
+                  <div className="h-6 w-16 rounded bg-muted" />
+                  <div className="h-6 w-20 rounded bg-muted" />
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
-      </main>
-    );
-  }
+      );
+    }
 
-  if (error) {
+    if (!projects || projects.length === 0) {
+      return (
+        <p className="text-muted-foreground" data-testid="text-no-projects">
+          No projects available yet. Check back soon!
+        </p>
+      );
+    }
+
     return (
-      <main
-        data-theme={theme}
-        className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-primary-foreground transition-colors duration-300"
-      >
-        <SiteHeader />
-        <div className="mx-auto max-w-3xl px-4 pt-10 pb-28">
-          <h1 className="mb-8 text-4xl font-black tracking-tight">PROJECTS</h1>
-          <p className="text-muted-foreground">Failed to load projects. Please try again later.</p>
-        </div>
-      </main>
+      <div className="grid gap-6 md:grid-cols-2">
+        {projects.map((project) => (
+          <article
+            key={project.id}
+            className="group rounded-xl border border-border p-6 transition-all duration-300 hover:border-foreground/30 hover:bg-muted/60"
+            data-testid={`card-project-${project.slug}`}
+          >
+            {project.imageUrl && (
+              <div className="mb-4 overflow-hidden rounded-lg">
+                <img
+                  src={project.imageUrl}
+                  alt={project.title}
+                  className="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  data-testid={`img-project-${project.slug}`}
+                />
+              </div>
+            )}
+
+            <h2
+              className="mb-2 text-xl font-bold transition-colors duration-200 group-hover:text-foreground"
+              data-testid={`text-project-title-${project.slug}`}
+            >
+              {project.title}
+            </h2>
+
+            <p className="mb-4 leading-relaxed text-muted-foreground" data-testid={`text-project-description-${project.slug}`}>
+              {project.description}
+            </p>
+
+            {project.technologies && project.technologies.length > 0 && (
+              <div className="mb-4 flex flex-wrap gap-2">
+                {project.technologies.map((tech, index) => (
+                  <span
+                    key={index}
+                    className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground"
+                    data-testid={`tag-tech-${project.slug}-${index}`}
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            <div className="flex items-center gap-3">
+              {project.projectUrl && (
+                <a
+                  href={project.projectUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors duration-200 hover:text-foreground"
+                  data-testid={`link-project-live-${project.slug}`}
+                >
+                  <ExternalLink size={14} />
+                  Live Demo
+                </a>
+              )}
+
+              {project.githubUrl && (
+                <a
+                  href={project.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors duration-200 hover:text-foreground"
+                  data-testid={`link-project-github-${project.slug}`}
+                >
+                  <Github size={14} />
+                  GitHub
+                </a>
+              )}
+            </div>
+
+            {project.featured && (
+              <div className="mt-3 border-t border-border pt-3">
+                <span className="text-xs font-medium text-amber-500 dark:text-amber-400" data-testid={`text-project-featured-${project.slug}`}>
+                  ★ Featured Project
+                </span>
+              </div>
+            )}
+          </article>
+        ))}
+      </div>
     );
-  }
+  };
 
   return (
     <main
@@ -129,93 +208,48 @@ export default function Projects() {
           PROJECTS
         </h1>
 
-        {projects && projects.length === 0 ? (
-          <p className="text-muted-foreground" data-testid="text-no-projects">
-            No projects available yet. Check back soon!
-          </p>
-        ) : (
-          <div className="grid gap-6 md:grid-cols-2">
-            {projects?.map((project) => (
-              <article
-                key={project.id}
-                className="group rounded-xl border border-border p-6 transition-all duration-300 hover:border-foreground/30 hover:bg-muted/60"
-                data-testid={`card-project-${project.slug}`}
-              >
-                {project.imageUrl && (
-                  <div className="mb-4 overflow-hidden rounded-lg">
-                    <img
-                      src={project.imageUrl}
-                      alt={project.title}
-                      className="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                      data-testid={`img-project-${project.slug}`}
-                    />
-                  </div>
-                )}
-
-                <h2
-                  className="mb-2 text-xl font-bold transition-colors duration-200 group-hover:text-foreground"
-                  data-testid={`text-project-title-${project.slug}`}
-                >
-                  {project.title}
-                </h2>
-
-                <p className="mb-4 leading-relaxed text-muted-foreground" data-testid={`text-project-description-${project.slug}`}>
-                  {project.description}
+        <section className="mb-16 space-y-12">
+          {caseStudies.map((study) => (
+            <article
+              key={study.id}
+              id={study.id}
+              className="rounded-2xl border border-border bg-card/60 p-6 shadow-sm backdrop-blur sm:p-8"
+              data-testid={`case-study-${study.id}`}
+            >
+              <header className="mb-4">
+                <h2 className="mb-1 text-2xl font-semibold">{study.title}</h2>
+                <p className="text-sm font-medium uppercase tracking-widest text-amber-500 dark:text-amber-400">
+                  {study.headline}
                 </p>
-
-                {project.technologies && project.technologies.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {project.technologies.map((tech, index) => (
-                      <span
-                        key={index}
-                        className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground"
-                        data-testid={`tag-tech-${project.slug}-${index}`}
-                      >
-                        {tech}
-                      </span>
+              </header>
+              <p className="mb-6 text-muted-foreground">{study.summary}</p>
+              <div className="grid gap-6 md:grid-cols-2">
+                <div>
+                  <h3 className="mb-2 text-sm font-semibold uppercase tracking-wider text-muted-foreground/80">Outcomes</h3>
+                  <ul className="space-y-2 text-sm leading-relaxed text-foreground/90">
+                    {study.outcomes.map((outcome, index) => (
+                      <li key={index} className="list-inside list-disc">
+                        {outcome}
+                      </li>
                     ))}
-                  </div>
-                )}
-
-                <div className="flex items-center gap-3">
-                  {project.projectUrl && (
-                    <a
-                      href={project.projectUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors duration-200 hover:text-foreground"
-                      data-testid={`link-project-live-${project.slug}`}
-                    >
-                      <ExternalLink size={14} />
-                      Live Demo
-                    </a>
-                  )}
-
-                  {project.githubUrl && (
-                    <a
-                      href={project.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors duration-200 hover:text-foreground"
-                      data-testid={`link-project-github-${project.slug}`}
-                    >
-                      <Github size={14} />
-                      GitHub
-                    </a>
-                  )}
+                  </ul>
                 </div>
+                <div>
+                  <h3 className="mb-2 text-sm font-semibold uppercase tracking-wider text-muted-foreground/80">Responsibilities</h3>
+                  <ul className="space-y-2 text-sm leading-relaxed text-foreground/90">
+                    {study.responsibilities.map((item, index) => (
+                      <li key={index} className="list-inside list-disc">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </article>
+          ))}
+        </section>
 
-                {project.featured && (
-                  <div className="mt-3 border-t border-border pt-3">
-                    <span className="text-xs font-medium text-amber-500 dark:text-amber-400" data-testid={`text-project-featured-${project.slug}`}>
-                      ★ Featured Project
-                    </span>
-                  </div>
-                )}
-              </article>
-            ))}
-          </div>
-        )}
+        {projectGrid()}
       </div>
     </main>
   );

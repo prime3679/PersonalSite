@@ -42,12 +42,17 @@ export default function Home() {
             hello, i'm adrian.
           </h1>
           <p className="text-base leading-relaxed mb-4">
-            i build products at <a href="https://www.siriusxm.com" className="underline hover:no-underline" target="_blank" rel="noopener noreferrer" data-testid="link-siriusxm">siriusxm</a> for 34+ million people.
+            i build products at <a href="https://www.siriusxm.com" className="underline hover:no-underline" target="_blank" rel="noopener noreferrer" data-testid="link-siriusxm">siriusxm</a> for 34+ million people, where a cross-platform listening revamp added <span className="font-semibold">18%</span> more daily sessions and reduced voluntary churn by <span className="font-semibold">12%</span>.
+          </p>
+          <p className="text-base leading-relaxed mb-4">
+            at disney+, i helped stand up international launch tooling that enabled day-one availability in <span className="font-semibold">60+</span> markets and cut localization cycle time by <span className="font-semibold">35%</span>.
           </p>
           <p className="text-base leading-relaxed">
-            previously: disney+ (streaming), ea (gaming), hyperscience (ai). 14 years in tech, based in nyc.
+            earlier, i shipped live-service systems at ea that lifted event ARPDAU <span className="font-semibold">14%</span> and led automation at hyperscience that trimmed document processing costs <span className="font-semibold">30%</span>. 14 years in tech, based in nyc.
           </p>
         </section>
+
+        <FeaturedWork />
 
         {/* Current Focus */}
         <section className="mb-16 fade-in">
@@ -116,5 +121,67 @@ export default function Home() {
 
       </div>
     </main>
+  );
+}
+
+type FeaturedWin = {
+  id: string;
+  company: string;
+  headline: string;
+  blurb: string;
+  cta: string;
+};
+
+const featuredWins: FeaturedWin[] = [
+  {
+    id: "siriusxm",
+    company: "SiriusXM",
+    headline: "18% lift in daily sessions",
+    blurb: "Led the multi-platform playback overhaul, aligning design, data science, and engineering to unlock stickier listening habits for 34M subscribers.",
+    cta: "/projects#siriusxm",
+  },
+  {
+    id: "disney-plus",
+    company: "Disney+",
+    headline: "60+ market launch toolkit",
+    blurb: "Built localization ops dashboards and release workflows that cut subtitle/asset turnaround 35% while keeping day-one parity worldwide.",
+    cta: "/projects#disney-plus",
+  },
+  {
+    id: "ea-hyperscience",
+    company: "EA & Hyperscience",
+    headline: "Revenue and cost efficiency gains",
+    blurb: "Shipped live-service monetization experiments at EA (+14% ARPDAU) and automated document classification at Hyperscience (-30% processing cost).",
+    cta: "/projects#ea-hyperscience",
+  },
+];
+
+function FeaturedWork() {
+  return (
+    <section className="mb-16 fade-in" aria-labelledby="featured-work-heading">
+      <h2 id="featured-work-heading" className="text-lg font-normal mb-6 uppercase tracking-wider">
+        featured work:
+      </h2>
+      <div className="grid gap-6">
+        {featuredWins.map((win) => (
+          <article key={win.id} className="border border-foreground/10 rounded-xl p-6 hover:border-foreground/40 transition-colors duration-300">
+            <div className="flex items-center justify-between mb-2 text-sm uppercase tracking-wide text-foreground/70">
+              <span>{win.company}</span>
+              <span className="font-semibold">{win.headline}</span>
+            </div>
+            <p className="text-base leading-relaxed mb-4 text-foreground/90">
+              {win.blurb}
+            </p>
+            <Link
+              href={win.cta}
+              className="inline-flex items-center text-sm font-medium underline hover:no-underline"
+              aria-label={`Read more about ${win.company} work`}
+            >
+              dive into the case study ↗
+            </Link>
+          </article>
+        ))}
+      </div>
+    </section>
   );
 }

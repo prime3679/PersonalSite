@@ -4,6 +4,69 @@ import { ExternalLink, Github } from "lucide-react";
 import SiteHeader from "@/components/site-header";
 import { useTheme } from "@/components/theme-provider";
 
+type CaseStudy = {
+  id: string;
+  title: string;
+  headline: string;
+  summary: string;
+  outcomes: string[];
+  responsibilities: string[];
+};
+
+const caseStudies: CaseStudy[] = [
+  {
+    id: "siriusxm",
+    title: "SiriusXM cross-platform listening growth",
+    headline: "18% more daily sessions, 12% churn reduction",
+    summary:
+      "Scaled a listening experience refresh across mobile, web, and in-car devices for 34M subscribers by pairing human-centered design with personalization experiments.",
+    outcomes: [
+      "18% lift in daily listening sessions and +9 pt improvement in weekly retention",
+      "12% drop in voluntary churn inside the first 90 days of subscription",
+      "New experimentation framework increased shipping cadence 3x",
+    ],
+    responsibilities: [
+      "Owned product strategy and roadmap across playback, discovery, and personalization squads",
+      "Partnered with data science to operationalize a multi-armed bandit recommendation model",
+      "Directed multi-platform design system alignment with design and engineering leads",
+    ],
+  },
+  {
+    id: "disney-plus",
+    title: "Disney+ global launch operations",
+    headline: "60+ markets live with 35% faster localization",
+    summary:
+      "Built the orchestration layer that let launch teams localize and certify content, payments, and UX strings so new markets could ship with feature parity day one.",
+    outcomes: [
+      "Enabled simultaneous launches across 60+ countries and 45 language variants",
+      "Reduced subtitle and artwork localization SLAs by 35% through workflow automation",
+      "Improved regression detection coverage to 92% ahead of regional rollouts",
+    ],
+    responsibilities: [
+      "Defined multi-team launch playbooks spanning content ops, payments, and growth",
+      "Shipped analytics dashboards for real-time readiness tracking across 12 partner teams",
+      "Negotiated vendor integrations and QA gates to keep quality bars consistent",
+    ],
+  },
+  {
+    id: "ea-hyperscience",
+    title: "EA live service & Hyperscience automation",
+    headline: "14% ARPDAU lift and 30% cost savings",
+    summary:
+      "Balanced monetization, player trust, and automation by shipping data-informed systems across gaming and enterprise AI contexts.",
+    outcomes: [
+      "Improved EA live event ARPDAU 14% while maintaining session satisfaction scores",
+      "Expanded personalization tests that lifted daily active teams 11% across flagship titles",
+      "Reduced Hyperscience document processing cost per page 30% via ML-driven routing",
+    ],
+    responsibilities: [
+      "Co-led economy design, pricing experiments, and merchandising with PMM and analytics",
+      "Introduced player telemetry reviews that shortened decision loops from weeks to days",
+      "Guided ML productization from prototype to SOC2-compliant customer deployment",
+    ],
+  },
+];
+
 export default function Projects() {
   const { theme } = useTheme();
   const { data: projects, isLoading, error } = useQuery<Project[]>({

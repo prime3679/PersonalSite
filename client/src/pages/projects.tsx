@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Project } from "@shared/schema";
 import { ExternalLink, Github } from "lucide-react";
@@ -74,44 +75,40 @@ export default function Projects() {
     queryFn: () => fetch("/api/projects").then(res => res.json()),
   });
 
-  const projectGrid = () => {
-    if (error) {
-      return (
-        <p className="text-muted-foreground" data-testid="text-projects-error">
-          Failed to load projects. Please try again later.
-        </p>
-      );
-    }
+  let projectGridContent: ReactNode;
 
-    if (isLoading) {
-      return (
-        <div className="animate-pulse space-y-6" data-testid="skeleton-projects">
-          <div className="h-8 w-56 rounded bg-muted" />
-          <div className="grid gap-6 md:grid-cols-2">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="rounded-xl border border-border p-6">
-                <div className="mb-2 h-6 w-2/3 rounded bg-muted" />
-                <div className="mb-4 h-4 w-full rounded bg-muted" />
-                <div className="flex gap-2">
-                  <div className="h-6 w-16 rounded bg-muted" />
-                  <div className="h-6 w-20 rounded bg-muted" />
-                </div>
+  if (error) {
+    projectGridContent = (
+      <p className="text-muted-foreground" data-testid="text-projects-error">
+        Failed to load projects. Please try again later.
+      </p>
+    );
+  } else if (isLoading) {
+    projectGridContent = (
+      <div className="animate-pulse space-y-6" data-testid="skeleton-projects">
+        <div className="h-8 w-56 rounded bg-muted" />
+        <div className="grid gap-6 md:grid-cols-2">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="rounded-xl border border-border p-6">
+              <div className="mb-2 h-6 w-2/3 rounded bg-muted" />
+              <div className="mb-4 h-4 w-full rounded bg-muted" />
+              <div className="flex gap-2">
+                <div className="h-6 w-16 rounded bg-muted" />
+                <div className="h-6 w-20 rounded bg-muted" />
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
-      );
-    }
-
-    if (!projects || projects.length === 0) {
-      return (
-        <p className="text-muted-foreground" data-testid="text-no-projects">
-          No projects available yet. Check back soon!
-        </p>
-      );
-    }
-
-    return (
+      </div>
+    );
+  } else if (!projects || projects.length === 0) {
+    projectGridContent = (
+      <p className="text-muted-foreground" data-testid="text-no-projects">
+        No projects available yet. Check back soon!
+      </p>
+    );
+  } else {
+    projectGridContent = (
       <div className="grid gap-6 md:grid-cols-2">
         {projects.map((project) => (
           <article
@@ -194,7 +191,7 @@ export default function Projects() {
         ))}
       </div>
     );
-  };
+  }
 
   return (
     <main
@@ -249,7 +246,7 @@ export default function Projects() {
           ))}
         </section>
 
-        {projectGrid()}
+        {projectGridContent}
       </div>
     </main>
   );

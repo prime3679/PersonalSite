@@ -7,7 +7,9 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Home from "@/pages/home";
 import HomeV2 from "@/pages/home-v2";
 import Blog from "@/pages/blog";
+import BlogV2 from "@/pages/blog-v2";
 import BlogPost from "@/pages/blog-post";
+import BlogPostV2 from "@/pages/blog-post-v2";
 import Projects from "@/pages/projects";
 import Contact from "@/pages/contact";
 import NotFound from "@/pages/not-found";
@@ -18,7 +20,9 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/v2" component={HomeV2} />
       <Route path="/blog" component={Blog} />
+      <Route path="/blog-v2" component={BlogV2} />
       <Route path="/blog/:slug" component={BlogPost} />
+      <Route path="/blog-v2/:slug" component={BlogPostV2} />
       <Route path="/projects" component={Projects} />
       <Route path="/contact" component={Contact} />
       <Route component={NotFound} />

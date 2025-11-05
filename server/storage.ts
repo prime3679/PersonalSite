@@ -42,9 +42,16 @@ export interface IStorage {
 }
 
 export class DatabaseStorage implements IStorage {
+  private checkDb() {
+    if (!db) {
+      throw new Error("Database not available - running in static content mode");
+    }
+  }
+
   // User methods
   async getUser(id: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.id, id));
+    this.checkDb();
+    const [user] = await db!.select().from(users).where(eq(users.id, id));
     return user || undefined;
   }
 

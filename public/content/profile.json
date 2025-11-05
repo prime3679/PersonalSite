@@ -1,0 +1,28 @@
+{
+  "frontmatter": {
+    "title": "hello, i'm adrian."
+  },
+  "content": "\n# Introduction\n\ni build products at [siriusxm](https://www.siriusxm.com) for 34+ million people, where a cross-platform listening revamp added **18%** more daily sessions and reduced voluntary churn by **12%**.\n\nat disney+, i helped stand up international launch tooling that enabled day-one availability in **60+** markets and cut localization cycle time by **35%**.\n\nearlier, i shipped live-service systems at ea that lifted event ARPDAU **14%** and led automation at hyperscience that trimmed document processing costs **30%**. 14 years in tech, based in nyc.\n\n## Current Focus\n\n- learning how to be a good parent — the hardest and most rewarding experience.\n- building scalable content platforms and ai personalization systems.\n- writing a scifi novel exploring what happens when AI develops consciousness (because product docs aren't creative enough).\n\n## Things I Believe\n\n- ai should augment human creativity, not replace it. the best ai feels magical but works reliably.\n- small autonomous teams > big hierarchical ones. user feedback > internal opinions.\n- measurement matters, but not everything that matters can be measured.\n- in 3,650 days: maybe leading product at a company pushing ai/content boundaries. maybe building my own thing. definitely still learning.\n\n## Currently\n\n**building with:** react, typescript, tailwind, figma, notion\n\n**thinking with:** claude, chatgpt, oboe\n\n**learning from:** twitter, hacker news, product hunt, youtube\n\n**reading:** brian sanderson, viet thanh nguyen, shane parrish, patty wipfler, anything about consciousness — [see my goodreads](https://www.goodreads.com/user/show/149439647-adrian-lumley)\n\n**exploring:** cursor, v0, replit, n8n, jiu jitsu, muay thai\n\n## Let's Talk\n\nalways interested in product challenges, creative projects, or just good conversation.\n\nopen to advisory roles and the right side-hustle.\n\n- [email me](mailto:alumley007@gmail.com)\n- [read my writing](https://minoritymusings.substack.com/?r=4evku&utm_campaign=pub-share-checklist)\n- [find me on linkedin](https://www.linkedin.com/in/adrianlumley/)\n",
+  "sections": {
+    "introduction": "",
+    "currentFocus": [
+      "learning how to be a good parent — the hardest and most rewarding experience.",
+      "building scalable content platforms and ai personalization systems.",
+      "writing a scifi novel exploring what happens when AI develops consciousness (because product docs aren't creative enough)."
+    ],
+    "beliefs": [
+      "ai should augment human creativity, not replace it. the best ai feels magical but works reliably.",
+      "small autonomous teams > big hierarchical ones. user feedback > internal opinions.",
+      "measurement matters, but not everything that matters can be measured.",
+      "in 3,650 days: maybe leading product at a company pushing ai/content boundaries. maybe building my own thing. definitely still learning."
+    ],
+    "currently": {
+      "building with": "react, typescript, tailwind, figma, notion",
+      "thinking with": "claude, chatgpt, oboe",
+      "learning from": "twitter, hacker news, product hunt, youtube",
+      "reading": "brian sanderson, viet thanh nguyen, shane parrish, patty wipfler, anything about consciousness — [see my goodreads](https://www.goodreads.com/user/show/149439647-adrian-lumley)",
+      "exploring": "cursor, v0, replit, n8n, jiu jitsu, muay thai"
+    },
+    "contact": "always interested in product challenges, creative projects, or just good conversation.\n\nopen to advisory roles and the right side-hustle.\n\n- [email me](mailto:alumley007@gmail.com)\n- [read my writing](https://minoritymusings.substack.com/?r=4evku&utm_campaign=pub-share-checklist)\n- [find me on linkedin](https://www.linkedin.com/in/adrianlumley/)"
+  }
+}

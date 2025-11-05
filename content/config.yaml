@@ -1,0 +1,32 @@
+# Site Configuration
+site:
+  title: "Adrian Lumley"
+  description: "Product leader building scalable platforms and AI systems"
+  url: "https://adrianlumley.com"
+  author: "Adrian Lumley"
+
+# Personal Information
+person:
+  name: "Adrian Lumley"
+  email: "alumley007@gmail.com"
+  location: "NYC"
+  yearsInTech: 14
+
+# Social Links
+social:
+  linkedin: "https://www.linkedin.com/in/adrianlumley/"
+  github: "https://github.com/prime3679"
+  substack: "https://minoritymusings.substack.com/?r=4evku&utm_campaign=pub-share-checklist"
+  goodreads: "https://www.goodreads.com/user/show/149439647-adrian-lumley"
+
+# Current Role
+currentRole:
+  company: "SiriusXM"
+  companyUrl: "https://www.siriusxm.com"
+  subscribers: "34+ million"
+
+# Theme Configuration
+theme:
+  defaultMode: "system" # system, light, or dark
+  font: "mono"
+  primaryColor: "default"

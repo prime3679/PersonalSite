@@ -1,0 +1,65 @@
+[
+  {
+    "id": "siriusxm",
+    "company": "SiriusXM",
+    "title": "SiriusXM cross-platform listening growth",
+    "headline": "18% lift in daily sessions",
+    "shortBlurb": "Led the multi-platform playback overhaul, aligning design, data science, and engineering to unlock stickier listening habits for 34M subscribers.",
+    "fullHeadline": "18% more daily sessions, 12% churn reduction",
+    "summary": "Scaled a listening experience refresh across mobile, web, and in-car devices for 34M subscribers by pairing human-centered design with personalization experiments.",
+    "outcomes": [
+      "18% lift in daily listening sessions and +9 pt improvement in weekly retention",
+      "12% drop in voluntary churn inside the first 90 days of subscription",
+      "New experimentation framework increased shipping cadence 3x"
+    ],
+    "responsibilities": [
+      "Owned product strategy and roadmap across playback, discovery, and personalization squads",
+      "Partnered with data science to operationalize a multi-armed bandit recommendation model",
+      "Directed multi-platform design system alignment with design and engineering leads"
+    ],
+    "featured": true,
+    "order": 1
+  },
+  {
+    "id": "disney-plus",
+    "company": "Disney+",
+    "title": "Disney+ global launch operations",
+    "headline": "60+ market launch toolkit",
+    "shortBlurb": "Built localization ops dashboards and release workflows that cut subtitle/asset turnaround 35% while keeping day-one parity worldwide.",
+    "fullHeadline": "60+ markets live with 35% faster localization",
+    "summary": "Built the orchestration layer that let launch teams localize and certify content, payments, and UX strings so new markets could ship with feature parity day one.",
+    "outcomes": [
+      "Enabled simultaneous launches across 60+ countries and 45 language variants",
+      "Reduced subtitle and artwork localization SLAs by 35% through workflow automation",
+      "Improved regression detection coverage to 92% ahead of regional rollouts"
+    ],
+    "responsibilities": [
+      "Defined multi-team launch playbooks spanning content ops, payments, and growth",
+      "Shipped analytics dashboards for real-time readiness tracking across 12 partner teams",
+      "Negotiated vendor integrations and QA gates to keep quality bars consistent"
+    ],
+    "featured": true,
+    "order": 2
+  },
+  {
+    "id": "ea-hyperscience",
+    "company": "EA & Hyperscience",
+    "title": "EA live service & Hyperscience automation",
+    "headline": "Revenue and cost efficiency gains",
+    "shortBlurb": "Shipped live-service monetization experiments at EA (+14% ARPDAU) and automated document classification at Hyperscience (-30% processing cost).",
+    "fullHeadline": "14% ARPDAU lift and 30% cost savings",
+    "summary": "Balanced monetization, player trust, and automation by shipping data-informed systems across gaming and enterprise AI contexts.",
+    "outcomes": [
+      "Improved EA live event ARPDAU 14% while maintaining session satisfaction scores",
+      "Expanded personalization tests that lifted daily active teams 11% across flagship titles",
+      "Reduced Hyperscience document processing cost per page 30% via ML-driven routing"
+    ],
+    "responsibilities": [
+      "Co-led economy design, pricing experiments, and merchandising with PMM and analytics",
+      "Introduced player telemetry reviews that shortened decision loops from weeks to days",
+      "Guided ML productization from prototype to SOC2-compliant customer deployment"
+    ],
+    "featured": true,
+    "order": 3
+  }
+]

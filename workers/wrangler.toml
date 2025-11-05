@@ -1,0 +1,30 @@
+# Cloudflare Workers Configuration
+# Documentation: https://developers.cloudflare.com/workers/
+
+name = "adrianlumley-contact"
+main = "contact.ts"
+compatibility_date = "2025-01-01"
+
+# Environment variables (set via wrangler secret)
+# wrangler secret put SENDGRID_API_KEY
+# wrangler secret put CONTACT_EMAIL
+
+# KV namespace for rate limiting
+[[kv_namespaces]]
+binding = "RATE_LIMIT_KV"
+id = "YOUR_KV_NAMESPACE_ID"  # Replace with actual KV namespace ID
+
+# Production environment
+[env.production]
+name = "adrianlumley-contact"
+route = "adrianlumley.com/api/contact"
+workers_dev = false
+
+# Development environment
+[env.development]
+name = "adrianlumley-contact-dev"
+workers_dev = true
+
+# Account info (optional, for deployment)
+# account_id = "YOUR_ACCOUNT_ID"
+# workers_dev = true

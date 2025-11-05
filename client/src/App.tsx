@@ -11,7 +11,9 @@ import BlogV2 from "@/pages/blog-v2";
 import BlogPost from "@/pages/blog-post";
 import BlogPostV2 from "@/pages/blog-post-v2";
 import Projects from "@/pages/projects";
+import ProjectsV2 from "@/pages/projects-v2";
 import Contact from "@/pages/contact";
+import Compare from "@/pages/compare";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -24,7 +26,9 @@ function Router() {
       <Route path="/blog/:slug" component={BlogPost} />
       <Route path="/blog-v2/:slug" component={BlogPostV2} />
       <Route path="/projects" component={Projects} />
+      <Route path="/projects-v2" component={ProjectsV2} />
       <Route path="/contact" component={Contact} />
+      <Route path="/compare" component={Compare} />
       <Route component={NotFound} />
     </Switch>
   );

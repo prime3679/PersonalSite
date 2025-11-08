@@ -1,0 +1,153 @@
+/**
+ * Mobile Optimizations CSS
+ *
+ * Enhanced responsive design for all V2 pages
+ * Optimized for phones (320px+), tablets (768px+), and desktops (1024px+)
+ */
+
+/* Touch-friendly tap targets (minimum 44x44px) */
+@media (max-width: 768px) {
+  button, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 640px) {
+  /* Better text rendering on mobile */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Prevent horizontal scroll */
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  /* Better touch scrolling */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Prevent text size adjust on orientation change */
+  html {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+  }
+}
+
+/* Mobile typography scale */
+@media (max-width: 640px) {
+  h1 {
+    font-size: clamp(2rem, 8vw, 3rem);
+  }
+
+  h2 {
+    font-size: clamp(1.5rem, 6vw, 2rem);
+  }
+
+  h3 {
+    font-size: clamp(1.25rem, 5vw, 1.5rem);
+  }
+
+  p {
+    font-size: clamp(0.875rem, 4vw, 1rem);
+    line-height: 1.6;
+  }
+}
+
+/* Mobile-friendly cards */
+@media (max-width: 640px) {
+  .card {
+    padding: 1rem !important;
+  }
+
+  .card-title {
+    font-size: 1.25rem !important;
+  }
+}
+
+/* Stack grids on mobile */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Better mobile navigation */
+@media (max-width: 640px) {
+  nav {
+    padding: 0.75rem 1rem;
+  }
+
+  nav a {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Mobile-optimized spacing */
+@media (max-width: 640px) {
+  .section-spacing {
+    padding-top: 3rem !important;
+    padding-bottom: 3rem !important;
+  }
+
+  .container-padding {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}
+
+/* Landscape mobile devices */
+@media (max-width: 896px) and (max-height: 414px) and (orientation: landscape) {
+  .min-h-screen {
+    min-height: 100vh;
+  }
+
+  .hero-section {
+    min-height: 100vh !important;
+  }
+}
+
+/* iPhone SE and small devices */
+@media (max-width: 375px) {
+  html {
+    font-size: 14px;
+  }
+
+  .text-base {
+    font-size: 0.875rem;
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .container {
+    max-width: 90%;
+  }
+
+  h1 {
+    font-size: 3rem;
+  }
+
+  h2 {
+    font-size: 2.25rem;
+  }
+}

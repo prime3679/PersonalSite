@@ -90,16 +90,16 @@ export default function HomeV2() {
       <SiteHeader />
 
       {/* Hero Section - The Opening */}
-      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden px-6">
+      <section className="relative min-h-[85vh] sm:min-h-[90vh] flex items-center justify-center overflow-hidden px-4 sm:px-6 py-16 sm:py-0">
         <motion.div
           style={{ opacity, scale }}
-          className="max-w-4xl mx-auto text-center space-y-8"
+          className="max-w-4xl mx-auto text-center space-y-6 sm:space-y-8"
         >
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="text-5xl md:text-7xl font-light leading-tight tracking-tight"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light leading-tight tracking-tight px-2"
           >
             hello, i'm adrian.
           </motion.h1>
@@ -108,13 +108,13 @@ export default function HomeV2() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-6 text-lg md:text-xl leading-relaxed text-foreground/80"
+            className="space-y-4 sm:space-y-6 text-base sm:text-lg md:text-xl leading-relaxed text-foreground/80 px-2"
           >
             <p>
               i build products at{' '}
               <a
                 href="https://www.siriusxm.com"
-                className="underline decoration-foreground/30 hover:decoration-foreground transition-all duration-300"
+                className="underline decoration-foreground/30 hover:decoration-foreground transition-all duration-300 active:text-foreground"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -122,7 +122,7 @@ export default function HomeV2() {
               </a>{' '}
               for 34+ million people.
             </p>
-            <p className="text-base md:text-lg">
+            <p className="text-sm sm:text-base md:text-lg">
               <span className="font-semibold text-foreground">18%</span> more daily sessions.{' '}
               <span className="font-semibold text-foreground">12%</span> less churn.{' '}
               <span className="font-semibold text-foreground">14</span> years in tech.
@@ -146,19 +146,19 @@ export default function HomeV2() {
       </section>
 
       {/* Featured Work - The Evidence */}
-      <section className="py-24 px-6">
+      <section className="py-12 sm:py-16 md:py-24 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
+            viewport={{ once: true, margin: '-50px' }}
             transition={{ duration: 0.6 }}
-            className="text-sm uppercase tracking-widest text-foreground/60 mb-12"
+            className="text-xs sm:text-sm uppercase tracking-widest text-foreground/60 mb-8 sm:mb-12"
           >
             Featured Work
           </motion.h2>
 
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {caseStudies.map((study, index) => (
               <motion.article
                 key={study.id}
@@ -176,27 +176,27 @@ export default function HomeV2() {
 
       {/* Philosophy - The Beliefs */}
       {profile?.sections.beliefs && (
-        <section className="py-24 px-6 bg-muted/30">
+        <section className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 bg-muted/30">
           <div className="max-w-3xl mx-auto">
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-100px' }}
+              viewport={{ once: true, margin: '-50px' }}
               transition={{ duration: 0.6 }}
-              className="text-sm uppercase tracking-widest text-foreground/60 mb-12"
+              className="text-xs sm:text-sm uppercase tracking-widest text-foreground/60 mb-8 sm:mb-12"
             >
               Things I Believe
             </motion.h2>
 
-            <div className="space-y-8">
+            <div className="space-y-6 sm:space-y-8">
               {profile.sections.beliefs.map((belief, index) => (
                 <motion.p
                   key={index}
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: '-50px' }}
+                  viewport={{ once: true, margin: '-30px' }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="text-lg md:text-xl leading-relaxed text-foreground/80"
+                  className="text-base sm:text-lg md:text-xl leading-relaxed text-foreground/80"
                 >
                   {belief}
                 </motion.p>
@@ -208,19 +208,19 @@ export default function HomeV2() {
 
       {/* Currently - The Now */}
       {profile?.sections.currently && (
-        <section className="py-24 px-6">
+        <section className="py-12 sm:py-16 md:py-24 px-4 sm:px-6">
           <div className="max-w-3xl mx-auto">
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-100px' }}
+              viewport={{ once: true, margin: '-50px' }}
               transition={{ duration: 0.6 }}
-              className="text-sm uppercase tracking-widest text-foreground/60 mb-12"
+              className="text-xs sm:text-sm uppercase tracking-widest text-foreground/60 mb-8 sm:mb-12"
             >
               Currently
             </motion.h2>
 
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2">
               {Object.entries(profile.sections.currently).map(([key, value], index) => (
                 <motion.div
                   key={key}
@@ -245,14 +245,14 @@ export default function HomeV2() {
       )}
 
       {/* Contact - The Invitation */}
-      <section className="py-32 px-6">
-        <div className="max-w-2xl mx-auto text-center space-y-8">
+      <section className="py-16 sm:py-24 md:py-32 px-4 sm:px-6">
+        <div className="max-w-2xl mx-auto text-center space-y-6 sm:space-y-8">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-3xl md:text-5xl font-light"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light px-4"
           >
             let's build something together
           </motion.h2>
@@ -262,7 +262,7 @@ export default function HomeV2() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-lg text-foreground/70"
+            className="text-base sm:text-lg text-foreground/70 px-4"
           >
             always interested in product challenges, creative projects, or just good conversation.
           </motion.p>
@@ -272,7 +272,7 @@ export default function HomeV2() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex flex-wrap gap-4 justify-center"
+            className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-center px-4"
           >
             <ContactButton href={`mailto:${config?.person.email}`}>
               Email Me
@@ -288,8 +288,8 @@ export default function HomeV2() {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-6 border-t border-foreground/10">
-        <div className="max-w-4xl mx-auto text-center text-sm text-foreground/50">
+      <footer className="py-8 sm:py-12 px-4 sm:px-6 border-t border-foreground/10">
+        <div className="max-w-4xl mx-auto text-center text-xs sm:text-sm text-foreground/50">
           <p>© {new Date().getFullYear()} {config?.person.name}. Built with care.</p>
         </div>
       </footer>
@@ -303,12 +303,12 @@ export default function HomeV2() {
 function CaseStudyCard({ study }: { study: CaseStudy }) {
   return (
     <Link href={`/projects#${study.id}`}>
-      <div className="group relative p-8 rounded-2xl border border-foreground/10 hover:border-foreground/30 transition-all duration-500 overflow-hidden cursor-pointer">
+      <div className="group relative p-5 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl border border-foreground/10 hover:border-foreground/30 active:border-foreground/40 transition-all duration-500 overflow-hidden cursor-pointer touch-manipulation">
         {/* Hover effect background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity duration-500" />
 
-        <div className="relative space-y-4">
-          <div className="flex items-start justify-between gap-4">
+        <div className="relative space-y-3 sm:space-y-4">
+          <div className="flex flex-col sm:flex-row items-start justify-between gap-2 sm:gap-4">
             <div className="text-xs uppercase tracking-wider text-foreground/50">
               {study.company}
             </div>
@@ -317,14 +317,14 @@ function CaseStudyCard({ study }: { study: CaseStudy }) {
             </div>
           </div>
 
-          <p className="text-base leading-relaxed text-foreground/70 group-hover:text-foreground/90 transition-colors duration-300">
+          <p className="text-sm sm:text-base leading-relaxed text-foreground/70 group-hover:text-foreground/90 transition-colors duration-300">
             {study.shortBlurb}
           </p>
 
-          <div className="inline-flex items-center gap-2 text-sm font-medium text-foreground/60 group-hover:text-foreground group-hover:gap-3 transition-all duration-300">
+          <div className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-foreground/60 group-hover:text-foreground group-hover:gap-3 transition-all duration-300">
             <span>Read case study</span>
             <svg
-              className="w-4 h-4"
+              className="w-3 h-3 sm:w-4 sm:h-4"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -360,7 +360,7 @@ function ContactButton({
       href={href}
       target={external ? '_blank' : undefined}
       rel={external ? 'noopener noreferrer' : undefined}
-      className="px-6 py-3 rounded-full border border-foreground/20 hover:border-foreground hover:bg-foreground hover:text-background transition-all duration-300 font-medium"
+      className="px-6 py-3 min-h-[44px] flex items-center justify-center rounded-full border border-foreground/20 hover:border-foreground hover:bg-foreground hover:text-background active:bg-foreground active:text-background transition-all duration-300 font-medium text-sm sm:text-base touch-manipulation"
     >
       {children}
     </a>

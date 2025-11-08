@@ -31,16 +31,16 @@ export default function BlogV2() {
         className="min-h-screen bg-background text-foreground"
       >
         <SiteHeader />
-        <div className="mx-auto max-w-3xl px-6 pt-12 pb-28">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 py-12 sm:py-16 md:py-20">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="space-y-8"
+            className="space-y-6 sm:space-y-8"
           >
             <div className="h-12 w-32 rounded bg-muted animate-pulse" />
             <div className="space-y-6">
               {[...Array(3)].map((_, i) => (
-                <div key={i} className="rounded-2xl border border-border p-8">
+                <div key={i} className="rounded-xl sm:rounded-2xl border border-border p-5 sm:p-6 md:p-8">
                   <div className="mb-3 h-7 w-3/4 rounded bg-muted animate-pulse" />
                   <div className="mb-4 h-5 w-full rounded bg-muted animate-pulse" />
                   <div className="h-4 w-1/3 rounded bg-muted animate-pulse" />
@@ -60,14 +60,14 @@ export default function BlogV2() {
         className="min-h-screen bg-background text-foreground"
       >
         <SiteHeader />
-        <div className="mx-auto max-w-3xl px-6 pt-12 pb-28">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 py-12 sm:py-16 md:py-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="space-y-4"
+            className="space-y-3 sm:space-y-4"
           >
-            <h1 className="text-4xl font-light tracking-tight">Blog</h1>
-            <p className="text-lg text-destructive">
+            <h1 className="text-3xl sm:text-4xl font-light tracking-tight">Blog</h1>
+            <p className="text-base sm:text-lg text-destructive">
               Failed to load blog posts: {error.message}
             </p>
           </motion.div>
@@ -83,18 +83,18 @@ export default function BlogV2() {
     >
       <SiteHeader />
 
-      <div className="mx-auto max-w-3xl px-6 pt-12 pb-28">
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 py-12 sm:py-16 md:py-20">
         {/* Header */}
         <motion.header
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-12"
+          className="mb-8 sm:mb-10 md:mb-12"
         >
-          <h1 className="text-5xl md:text-6xl font-light tracking-tight mb-4">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-light tracking-tight mb-3 sm:mb-4">
             Writing
           </h1>
-          <p className="text-lg text-foreground/70">
+          <p className="text-base sm:text-lg text-foreground/70">
             Thoughts on product, engineering, and building things that matter.
           </p>
         </motion.header>
@@ -105,14 +105,14 @@ export default function BlogV2() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="text-center py-16"
+            className="text-center py-12 sm:py-16"
           >
-            <p className="text-lg text-foreground/60">
+            <p className="text-base sm:text-lg text-foreground/60">
               No posts yet. Check back soon!
             </p>
           </motion.div>
         ) : (
-          <div className="space-y-8">
+          <div className="space-y-6 sm:space-y-8">
             {posts?.map((post, index) => (
               <motion.article
                 key={post.slug}
@@ -132,7 +132,7 @@ export default function BlogV2() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8 }}
-            className="mt-16 pt-8 border-t border-foreground/10"
+            className="mt-12 sm:mt-14 md:mt-16 pt-6 sm:pt-8 border-t border-foreground/10"
           >
             <p className="text-sm text-foreground/50 text-center">
               {posts.length} {posts.length === 1 ? 'post' : 'posts'} • All content loaded from static JSON • No database queries
@@ -156,23 +156,23 @@ function BlogPostCard({ post }: { post: BlogPost }) {
 
   return (
     <Link href={`/blog-v2/${post.slug}`}>
-      <div className="group relative rounded-2xl border border-foreground/10 p-8 hover:border-foreground/30 transition-all duration-500 overflow-hidden cursor-pointer">
+      <div className="group relative rounded-xl sm:rounded-2xl border border-foreground/10 p-5 sm:p-6 md:p-8 hover:border-foreground/30 active:border-foreground/40 transition-all duration-500 overflow-hidden cursor-pointer touch-manipulation">
         {/* Hover gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity duration-500" />
 
-        <div className="relative space-y-4">
+        <div className="relative space-y-3 sm:space-y-4">
           {/* Title */}
-          <h2 className="text-2xl md:text-3xl font-light tracking-tight text-foreground group-hover:text-foreground transition-colors">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-light tracking-tight text-foreground group-hover:text-foreground transition-colors">
             {post.title}
           </h2>
 
           {/* Excerpt */}
-          <p className="text-base md:text-lg leading-relaxed text-foreground/70 group-hover:text-foreground/90 transition-colors">
+          <p className="text-sm sm:text-base md:text-lg leading-relaxed text-foreground/70 group-hover:text-foreground/90 transition-colors">
             {post.excerpt}
           </p>
 
           {/* Footer */}
-          <div className="flex items-center justify-between pt-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0 pt-3 sm:pt-4">
             <time
               dateTime={post.publishedAt}
               className="text-sm text-foreground/50"
@@ -182,7 +182,7 @@ function BlogPostCard({ post }: { post: BlogPost }) {
 
             {/* Tags */}
             {post.tags && post.tags.length > 0 && (
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 {post.tags.slice(0, 3).map((tag) => (
                   <span
                     key={tag}
@@ -196,10 +196,10 @@ function BlogPostCard({ post }: { post: BlogPost }) {
           </div>
 
           {/* Read more indicator */}
-          <div className="inline-flex items-center gap-2 text-sm font-medium text-foreground/60 group-hover:text-foreground group-hover:gap-3 transition-all duration-300">
+          <div className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-foreground/60 group-hover:text-foreground group-hover:gap-3 transition-all duration-300">
             <span>Read article</span>
             <svg
-              className="w-4 h-4"
+              className="w-3 h-3 sm:w-4 sm:h-4"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"

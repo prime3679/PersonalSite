@@ -20,18 +20,18 @@ export default function Compare() {
     >
       <SiteHeader />
 
-      <div className="mx-auto max-w-6xl px-6 pt-12 pb-28">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 py-12 sm:py-16 md:py-20">
         {/* Hero */}
         <motion.header
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-16 text-center"
+          className="mb-10 sm:mb-12 md:mb-16 text-center"
         >
-          <h1 className="text-5xl md:text-6xl font-light tracking-tight mb-6">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-tight mb-4 sm:mb-5 md:mb-6 px-2">
             The Transformation
           </h1>
-          <p className="text-xl text-foreground/70 max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-foreground/70 max-w-3xl mx-auto px-4">
             From database-driven to static-first: 10x faster, $0 hosting, infinitely scalable
           </p>
         </motion.header>
@@ -41,7 +41,7 @@ export default function Compare() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="grid md:grid-cols-3 gap-6 mb-16"
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5 md:gap-6 mb-10 sm:mb-12 md:mb-16"
         >
           <StatCard
             icon={<Zap className="w-6 h-6" />}
@@ -68,21 +68,21 @@ export default function Compare() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="mb-16"
+          className="mb-10 sm:mb-12 md:mb-16"
         >
-          <h2 className="text-3xl font-light tracking-tight mb-8 text-center">
+          <h2 className="text-2xl sm:text-3xl font-light tracking-tight mb-6 sm:mb-8 text-center">
             Architecture Comparison
           </h2>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
             {/* Old Architecture */}
-            <div className="border border-foreground/10 rounded-2xl p-8 bg-muted/30">
-              <div className="flex items-center gap-3 mb-6">
-                <Database className="w-6 h-6 text-foreground/50" />
-                <h3 className="text-2xl font-light">Database-Driven</h3>
+            <div className="border border-foreground/10 rounded-xl sm:rounded-2xl p-5 sm:p-6 md:p-8 bg-muted/30">
+              <div className="flex items-center gap-2 sm:gap-3 mb-5 sm:mb-6">
+                <Database className="w-5 h-5 sm:w-6 sm:h-6 text-foreground/50" />
+                <h3 className="text-xl sm:text-2xl font-light">Database-Driven</h3>
               </div>
 
-              <div className="space-y-4 text-sm">
+              <div className="space-y-3 sm:space-y-4 text-xs sm:text-sm">
                 <ArchitectureStep number={1} text="User visits page" />
                 <ArchitectureStep number={2} text="React component loads" />
                 <ArchitectureStep number={3} text="API call to Express server" />
@@ -91,7 +91,7 @@ export default function Compare() {
                 <ArchitectureStep number={6} text="Render content" />
               </div>
 
-              <div className="mt-6 pt-6 border-t border-foreground/10 space-y-2 text-sm">
+              <div className="mt-5 sm:mt-6 pt-5 sm:pt-6 border-t border-foreground/10 space-y-2 text-xs sm:text-sm">
                 <div className="flex justify-between">
                   <span className="text-foreground/60">Total Time:</span>
                   <span className="font-semibold">~500ms</span>
@@ -108,18 +108,18 @@ export default function Compare() {
             </div>
 
             {/* New Architecture */}
-            <div className="border border-primary/30 rounded-2xl p-8 bg-primary/5">
-              <div className="flex items-center gap-3 mb-6">
-                <FileText className="w-6 h-6 text-primary" />
-                <h3 className="text-2xl font-light">Static-First</h3>
+            <div className="border border-primary/30 rounded-xl sm:rounded-2xl p-5 sm:p-6 md:p-8 bg-primary/5">
+              <div className="flex items-center gap-2 sm:gap-3 mb-5 sm:mb-6">
+                <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+                <h3 className="text-xl sm:text-2xl font-light">Static-First</h3>
               </div>
 
-              <div className="space-y-4 text-sm">
-                <div className="mb-4 p-3 rounded-lg bg-background/50 border border-foreground/10">
+              <div className="space-y-3 sm:space-y-4 text-xs sm:text-sm">
+                <div className="mb-3 sm:mb-4 p-2 sm:p-3 rounded-lg bg-background/50 border border-foreground/10">
                   <div className="text-xs uppercase tracking-wider text-foreground/50 mb-1">
                     Build Time:
                   </div>
-                  <div className="text-sm">
+                  <div className="text-xs sm:text-sm">
                     Markdown/YAML → Generator (0.01s) → Static JSON
                   </div>
                 </div>
@@ -129,7 +129,7 @@ export default function Compare() {
                 <ArchitectureStep number={3} text="Render content (10-20ms)" />
               </div>
 
-              <div className="mt-6 pt-6 border-t border-primary/20 space-y-2 text-sm">
+              <div className="mt-5 sm:mt-6 pt-5 sm:pt-6 border-t border-primary/20 space-y-2 text-xs sm:text-sm">
                 <div className="flex justify-between">
                   <span className="text-foreground/60">Total Time:</span>
                   <span className="font-semibold text-primary">~100ms</span>
@@ -152,23 +152,23 @@ export default function Compare() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="mb-16"
+          className="mb-10 sm:mb-12 md:mb-16"
         >
-          <h2 className="text-3xl font-light tracking-tight mb-8 text-center">
+          <h2 className="text-2xl sm:text-3xl font-light tracking-tight mb-6 sm:mb-8 text-center">
             Feature Comparison
           </h2>
 
-          <div className="border border-foreground/10 rounded-2xl overflow-hidden">
-            <table className="w-full">
+          <div className="border border-foreground/10 rounded-xl sm:rounded-2xl overflow-hidden overflow-x-auto">
+            <table className="w-full min-w-[500px]">
               <thead className="bg-muted/50">
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-medium text-foreground/70">
+                  <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-foreground/70">
                     Feature
                   </th>
-                  <th className="px-6 py-4 text-center text-sm font-medium text-foreground/70">
+                  <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-center text-xs sm:text-sm font-medium text-foreground/70">
                     Old
                   </th>
-                  <th className="px-6 py-4 text-center text-sm font-medium text-foreground/70">
+                  <th className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-center text-xs sm:text-sm font-medium text-foreground/70">
                     New
                   </th>
                 </tr>
@@ -234,44 +234,44 @@ export default function Compare() {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="text-center"
         >
-          <h2 className="text-3xl font-light tracking-tight mb-6">
+          <h2 className="text-2xl sm:text-3xl font-light tracking-tight mb-4 sm:mb-6">
             See the Difference
           </h2>
-          <p className="text-lg text-foreground/70 mb-8">
+          <p className="text-base sm:text-lg text-foreground/70 mb-6 sm:mb-8 px-4">
             Compare the old and new versions side by side
           </p>
 
-          <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 max-w-2xl mx-auto">
             <Link href="/">
-              <div className="p-6 border border-foreground/10 rounded-xl hover:border-foreground/30 transition-colors cursor-pointer">
-                <div className="text-sm uppercase tracking-wider text-foreground/50 mb-2">
+              <div className="p-5 sm:p-6 border border-foreground/10 rounded-xl hover:border-foreground/30 active:border-foreground/40 transition-colors cursor-pointer touch-manipulation">
+                <div className="text-xs sm:text-sm uppercase tracking-wider text-foreground/50 mb-2">
                   Original
                 </div>
-                <div className="text-lg font-medium mb-2">Database Version</div>
-                <ExternalLink className="w-5 h-5 mx-auto text-foreground/50" />
+                <div className="text-base sm:text-lg font-medium mb-2">Database Version</div>
+                <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5 mx-auto text-foreground/50" />
               </div>
             </Link>
 
             <Link href="/v2">
-              <div className="p-6 border border-primary/30 rounded-xl bg-primary/5 hover:border-primary transition-colors cursor-pointer">
-                <div className="text-sm uppercase tracking-wider text-primary/70 mb-2">
+              <div className="p-5 sm:p-6 border border-primary/30 rounded-xl bg-primary/5 hover:border-primary active:border-primary transition-colors cursor-pointer touch-manipulation">
+                <div className="text-xs sm:text-sm uppercase tracking-wider text-primary/70 mb-2">
                   Transformed
                 </div>
-                <div className="text-lg font-medium mb-2">Static-First Version</div>
-                <ExternalLink className="w-5 h-5 mx-auto text-primary" />
+                <div className="text-base sm:text-lg font-medium mb-2">Static-First Version</div>
+                <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5 mx-auto text-primary" />
               </div>
             </Link>
           </div>
 
-          <div className="mt-8 space-y-4">
+          <div className="mt-6 sm:mt-8 space-y-3 sm:space-y-4">
             <Link href="/blog-v2">
-              <span className="inline-flex items-center gap-2 text-sm font-medium text-foreground/60 hover:text-foreground transition-colors">
+              <span className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-foreground/60 hover:text-foreground transition-colors touch-manipulation">
                 View static-first blog with sample posts →
               </span>
             </Link>
             <br />
             <Link href="/projects-v2">
-              <span className="inline-flex items-center gap-2 text-sm font-medium text-foreground/60 hover:text-foreground transition-colors">
+              <span className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-foreground/60 hover:text-foreground transition-colors touch-manipulation">
                 View static-first case studies →
               </span>
             </Link>
@@ -294,24 +294,24 @@ function StatCard({
   description: string;
 }) {
   return (
-    <div className="border border-foreground/10 rounded-xl p-6 bg-muted/30">
-      <div className="flex items-center gap-3 mb-3 text-foreground/70">{icon}</div>
+    <div className="border border-foreground/10 rounded-xl p-5 sm:p-6 bg-muted/30">
+      <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3 text-foreground/70">{icon}</div>
       <div className="text-xs uppercase tracking-wider text-foreground/50 mb-1">
         {label}
       </div>
-      <div className="text-3xl font-light mb-1">{value}</div>
-      <div className="text-sm text-foreground/60">{description}</div>
+      <div className="text-2xl sm:text-3xl font-light mb-1">{value}</div>
+      <div className="text-xs sm:text-sm text-foreground/60">{description}</div>
     </div>
   );
 }
 
 function ArchitectureStep({ number, text }: { number: number; text: string }) {
   return (
-    <div className="flex items-center gap-3">
-      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-foreground/10 flex items-center justify-center text-xs font-medium">
+    <div className="flex items-center gap-2 sm:gap-3">
+      <div className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-foreground/10 flex items-center justify-center text-xs font-medium">
         {number}
       </div>
-      <div className="text-foreground/80">{text}</div>
+      <div className="text-foreground/80 text-xs sm:text-sm">{text}</div>
     </div>
   );
 }
@@ -329,11 +329,11 @@ function ComparisonRow({
 }) {
   return (
     <tr>
-      <td className="px-6 py-4 font-medium">{feature}</td>
-      <td className={`px-6 py-4 text-center text-sm ${winner === 'old' ? 'text-primary font-semibold' : 'text-foreground/60'}`}>
+      <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 font-medium text-xs sm:text-sm">{feature}</td>
+      <td className={`px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-center text-xs sm:text-sm ${winner === 'old' ? 'text-primary font-semibold' : 'text-foreground/60'}`}>
         {old}
       </td>
-      <td className={`px-6 py-4 text-center text-sm ${winner === 'new' ? 'text-primary font-semibold' : 'text-foreground/60'}`}>
+      <td className={`px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-center text-xs sm:text-sm ${winner === 'new' ? 'text-primary font-semibold' : 'text-foreground/60'}`}>
         {newValue}
       </td>
     </tr>

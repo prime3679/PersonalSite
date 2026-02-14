@@ -13,12 +13,27 @@ import Header from '../components/Header.astro';
       <p>open to advisory roles and the right side-hustle.</p>
     </div>
 
-    <div class="space-y-4 fade-in">
-      <a href="mailto:alumley007@gmail.com" class="block border border-border rounded-xl p-5 hover:border-foreground/30 transition-colors duration-300 group">
-        <span class="text-xs uppercase tracking-wider text-muted-foreground">email</span>
-        <span class="block font-normal mt-1">alumley007@gmail.com</span>
-      </a>
+    <form action="https://formspree.io/f/xjgewgoq" method="POST" class="space-y-6 fade-in mb-12">
+      <div>
+        <label for="name" class="block text-xs uppercase tracking-wider text-muted-foreground mb-2">name *</label>
+        <input type="text" id="name" name="name" required class="w-full border border-border rounded-xl px-4 py-3 bg-transparent font-mono text-base focus:outline-none focus:border-foreground/40 transition-colors" placeholder="your name" />
+      </div>
+      <div>
+        <label for="email" class="block text-xs uppercase tracking-wider text-muted-foreground mb-2">email *</label>
+        <input type="email" id="email" name="email" required class="w-full border border-border rounded-xl px-4 py-3 bg-transparent font-mono text-base focus:outline-none focus:border-foreground/40 transition-colors" placeholder="your@email.com" />
+      </div>
+      <div>
+        <label for="subject" class="block text-xs uppercase tracking-wider text-muted-foreground mb-2">subject</label>
+        <input type="text" id="subject" name="subject" class="w-full border border-border rounded-xl px-4 py-3 bg-transparent font-mono text-base focus:outline-none focus:border-foreground/40 transition-colors" placeholder="what's this about?" />
+      </div>
+      <div>
+        <label for="message" class="block text-xs uppercase tracking-wider text-muted-foreground mb-2">message *</label>
+        <textarea id="message" name="message" required rows="5" class="w-full border border-border rounded-xl px-4 py-3 bg-transparent font-mono text-base focus:outline-none focus:border-foreground/40 transition-colors resize-vertical" placeholder="tell me about your project, idea, or just say hello."></textarea>
+      </div>
+      <button type="submit" class="border border-foreground rounded-xl px-6 py-3 font-mono text-sm uppercase tracking-wider hover:bg-foreground hover:text-background transition-colors duration-300">send message</button>
+    </form>
 
+    <div class="space-y-4 fade-in">
       <a href="https://www.linkedin.com/in/adrianlumley/" target="_blank" rel="noopener noreferrer" class="block border border-border rounded-xl p-5 hover:border-foreground/30 transition-colors duration-300 group">
         <span class="text-xs uppercase tracking-wider text-muted-foreground">linkedin</span>
         <span class="block font-normal mt-1">connect with me</span>

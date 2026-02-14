@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 0 0% 0%;
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 45%;
+  --border: 0 0% 90%;
+}
+
+.dark {
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  --muted: 0 0% 10%;
+  --muted-foreground: 0 0% 65%;
+  --border: 0 0% 18%;
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+  body {
+    @apply bg-background text-foreground font-mono antialiased;
+  }
+  ::selection {
+    @apply bg-foreground text-background;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+a {
+  transition: all 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Prose styles for blog posts */
+.prose h1 { @apply text-3xl font-bold mb-6 mt-8; }
+.prose h2 { @apply text-2xl font-bold mb-4 mt-8; }
+.prose h3 { @apply text-xl font-bold mb-3 mt-6; }
+.prose p { @apply leading-relaxed mb-4 text-foreground/80; }
+.prose a { @apply underline hover:no-underline; }
+.prose ul, .prose ol { @apply mb-4 pl-6 text-foreground/80; }
+.prose li { @apply mb-1; }
+.prose ul { @apply list-disc; }
+.prose ol { @apply list-decimal; }
+.prose strong { @apply font-semibold text-foreground; }
+.prose code { @apply rounded bg-muted px-1 py-0.5 text-sm; }
+.prose pre { @apply rounded-lg border border-border p-4 mb-4 overflow-x-auto; }
+.prose pre code { @apply bg-transparent p-0; }
+.prose blockquote { @apply border-l-2 border-border pl-4 italic text-foreground/70 mb-4; }
+.prose table { @apply w-full border-collapse mb-4; }
+.prose th, .prose td { @apply border border-border px-3 py-2 text-left text-sm; }
+.prose th { @apply font-semibold bg-muted; }
+.prose hr { @apply border-border my-8; }
+.prose em { @apply text-foreground/70; }

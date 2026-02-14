@@ -1,0 +1,99 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+
+const caseStudies = [
+  {
+    id: 'siriusxm',
+    company: 'SiriusXM',
+    title: 'SiriusXM cross-platform listening growth',
+    headline: '18% more daily sessions, 12% churn reduction',
+    summary: 'Scaled a listening experience refresh across mobile, web, and in-car devices for 34M subscribers by pairing human-centered design with personalization experiments.',
+    outcomes: [
+      '18% lift in daily listening sessions and +9 pt improvement in weekly retention',
+      '12% drop in voluntary churn inside the first 90 days of subscription',
+      'New experimentation framework increased shipping cadence 3x',
+    ],
+    responsibilities: [
+      'Owned product strategy and roadmap across playback, discovery, and personalization squads',
+      'Partnered with data science to operationalize a multi-armed bandit recommendation model',
+      'Directed multi-platform design system alignment with design and engineering leads',
+    ],
+  },
+  {
+    id: 'disney-plus',
+    company: 'Disney+',
+    title: 'Disney+ global launch operations',
+    headline: '60+ markets live with 35% faster localization',
+    summary: 'Built the orchestration layer that let launch teams localize and certify content, payments, and UX strings so new markets could ship with feature parity day one.',
+    outcomes: [
+      'Enabled simultaneous launches across 60+ countries and 45 language variants',
+      'Reduced subtitle and artwork localization SLAs by 35% through workflow automation',
+      'Improved regression detection coverage to 92% ahead of regional rollouts',
+    ],
+    responsibilities: [
+      'Defined multi-team launch playbooks spanning content ops, payments, and growth',
+      'Shipped analytics dashboards for real-time readiness tracking across 12 partner teams',
+      'Negotiated vendor integrations and QA gates to keep quality bars consistent',
+    ],
+  },
+  {
+    id: 'ea-hyperscience',
+    company: 'EA & Hyperscience',
+    title: 'EA live service & Hyperscience automation',
+    headline: '14% ARPDAU lift and 30% cost savings',
+    summary: 'Balanced monetization, player trust, and automation by shipping data-informed systems across gaming and enterprise AI contexts.',
+    outcomes: [
+      'Improved EA live event ARPDAU 14% while maintaining session satisfaction scores',
+      'Expanded personalization tests that lifted daily active teams 11% across flagship titles',
+      'Reduced Hyperscience document processing cost per page 30% via ML-driven routing',
+    ],
+    responsibilities: [
+      'Co-led economy design, pricing experiments, and merchandising with PMM and analytics',
+      'Introduced player telemetry reviews that shortened decision loops from weeks to days',
+      'Guided ML productization from prototype to SOC2-compliant customer deployment',
+    ],
+  },
+];
+---
+
+<Base title="Work">
+  <Header />
+  <main class="mx-auto max-w-3xl px-4 py-12 font-mono">
+    <h1 class="text-2xl font-normal mb-12 uppercase tracking-wider fade-in">work</h1>
+
+    <div class="space-y-16">
+      {caseStudies.map((cs) => (
+        <article id={cs.id} class="fade-in scroll-mt-20">
+          <div class="mb-4">
+            <span class="text-xs uppercase tracking-wider text-muted-foreground">{cs.company}</span>
+            <h2 class="text-xl font-normal mt-1">{cs.title}</h2>
+            <p class="text-sm font-semibold text-foreground/70 mt-1">{cs.headline}</p>
+          </div>
+
+          <p class="text-base leading-relaxed mb-6 text-foreground/90">{cs.summary}</p>
+
+          <div class="mb-6">
+            <h3 class="text-sm uppercase tracking-wider text-muted-foreground mb-3">outcomes</h3>
+            <ul class="space-y-2">
+              {cs.outcomes.map((o) => (
+                <li class="text-sm leading-relaxed pl-4 border-l-2 border-foreground/10">{o}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div class="mb-6">
+            <h3 class="text-sm uppercase tracking-wider text-muted-foreground mb-3">what i did</h3>
+            <ul class="space-y-2">
+              {cs.responsibilities.map((r) => (
+                <li class="text-sm leading-relaxed pl-4 border-l-2 border-foreground/10">{r}</li>
+              ))}
+            </ul>
+          </div>
+
+          <hr class="border-border" />
+        </article>
+      ))}
+    </div>
+  </main>
+</Base>

@@ -1,9 +1,11 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  integrations: [tailwind()],
+  site: 'https://adrianlumley.co',
+  integrations: [tailwind(), sitemap()],
   markdown: {
     shikiConfig: {
       theme: 'github-dark',

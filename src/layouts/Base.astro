@@ -6,7 +6,7 @@ interface Props {
   description?: string;
 }
 
-const { title = 'Adrian Lumley', description = 'Product leader building scalable platforms and AI systems' } = Astro.props;
+const { title = 'Adrian Lumley — Product @ Salesforce', description = 'Product leader building scalable platforms and AI systems. Previously SiriusXM, Disney+, EA.' } = Astro.props;
 const fullTitle = title === 'Adrian Lumley' ? title : `${title} — Adrian Lumley`;
 ---
 
@@ -28,6 +28,11 @@ const fullTitle = title === 'Adrian Lumley' ? title : `${title} — Adrian Lumle
   <meta name="twitter:image" content="https://adrianlumley.co/og-image.png" />
   <link rel="canonical" href="https://adrianlumley.co" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta name="theme-color" content="#000000" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
   <script is:inline>
     // Prevent flash of wrong theme
     (function() {

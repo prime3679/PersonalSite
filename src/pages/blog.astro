@@ -1,0 +1,135 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+
+const title = "Blog";
+const description = "Monthly musings on product leadership, systems thinking, and building scalable platforms.";
+
+// Sample posts - will be replaced with real content
+const posts = [
+  {
+    slug: 'ai-cost-optimization-lessons',
+    title: 'What I learned cutting AI costs 70% in one weekend',
+    date: '2026-03-01',
+    excerpt: 'Most teams burn money on AI by treating every task like it needs PhD-level reasoning. Here\'s how multi-model routing changed everything.',
+    published: false
+  },
+  {
+    slug: 'systems-thinking-product-orgs',
+    title: 'Second-order effects in product organizations', 
+    date: '2026-02-01',
+    excerpt: 'Why the best product decisions consider what happens after what happens. Lessons from scaling at Salesforce, SiriusXM, and Disney+.',
+    published: false
+  }
+];
+
+const publishedPosts = posts.filter(post => post.published);
+---
+
+<Base title={title} description={description}>
+  <Header />
+  <main class="mx-auto max-w-2xl px-6 py-12 font-mono">
+    
+    <!-- Header -->
+    <section class="mb-16 fade-in">
+      <h1 class="text-2xl font-normal mb-6 leading-relaxed">monthly musings.</h1>
+      <p class="text-base leading-relaxed mb-4">
+        deeper thoughts on product leadership, systems thinking, and building scalable platforms. 
+        published monthly, when there's something worth saying.
+      </p>
+    </section>
+
+    <!-- Posts -->
+    <section class="mb-16 fade-in">
+      {publishedPosts.length > 0 ? (
+        <div class="space-y-12">
+          {publishedPosts.map((post) => (
+            <article class="border-b border-border pb-8">
+              <div class="mb-4">
+                <h2 class="text-lg font-normal mb-2 leading-relaxed">
+                  <a href={`/blog/${post.slug}`} class="underline hover:no-underline">
+                    {post.title}
+                  </a>
+                </h2>
+                <time class="text-sm text-muted-foreground uppercase tracking-wider">
+                  {new Date(post.date).toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long' 
+                  })}
+                </time>
+              </div>
+              <p class="text-base leading-relaxed text-muted-foreground">
+                {post.excerpt}
+              </p>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <div class="text-center py-16">
+          <p class="text-base text-muted-foreground mb-4">
+            first post coming soon.
+          </p>
+          <p class="text-sm text-muted-foreground">
+            building the content from voice musings and real insights. 
+            quality over frequency.
+          </p>
+        </div>
+      )}
+    </section>
+
+    <!-- Themes -->
+    <section class="mb-16 fade-in">
+      <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">recurring themes:</h2>
+      
+      <div class="space-y-4">
+        <div>
+          <h3 class="font-semibold mb-1">product leadership</h3>
+          <p class="text-sm text-muted-foreground">
+            frameworks, trade-offs, decision-making at director+ scale
+          </p>
+        </div>
+        
+        <div>
+          <h3 class="font-semibold mb-1">systems thinking</h3>
+          <p class="text-sm text-muted-foreground">
+            second-order effects, feedback loops, leverage points
+          </p>
+        </div>
+        
+        <div>
+          <h3 class="font-semibold mb-1">scaling platforms</h3>
+          <p class="text-sm text-muted-foreground">
+            lessons from salesforce, siriusxm, disney+, ea
+          </p>
+        </div>
+        
+        <div>
+          <h3 class="font-semibold mb-1">career navigation</h3>
+          <p class="text-sm text-muted-foreground">
+            breaking into senior product roles, influence without authority
+          </p>
+        </div>
+        
+        <div>
+          <h3 class="font-semibold mb-1">optimization</h3>
+          <p class="text-sm text-muted-foreground">
+            ai costs, operational efficiency, finding leverage
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <div class="text-sm text-muted-foreground border-t border-border pt-8">
+      <p class="mb-2">
+        thoughts developed from voice musings, real experience, and systems analysis.
+      </p>
+      <p>
+        subscribe: 
+        <a href="/contact" class="underline hover:no-underline">email me</a> 
+        for updates when new posts drop.
+      </p>
+    </div>
+
+  </main>
+</Base>

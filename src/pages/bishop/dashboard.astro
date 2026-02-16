@@ -1,0 +1,353 @@
+---
+import Layout from '../../layouts/Base.astro';
+
+const title = "Bishop Dashboard";
+const description = "Internal metrics dashboard for Bishop AI optimization project";
+---
+
+<Layout title={title} description={description}>
+  <div class="max-w-7xl mx-auto px-6 py-8">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h1 class="text-3xl font-bold text-white mb-2">Bishop Dashboard</h1>
+        <p class="text-gray-400">Real-time metrics for AI model optimization</p>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="text-sm text-gray-400">
+          Last updated: <span id="last-updated">Loading...</span>
+        </div>
+        <button id="refresh-btn" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors">
+          Refresh
+        </button>
+      </div>
+    </div>
+
+    <!-- Key Metrics -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div class="bg-gray-800/50 rounded-lg p-6 border border-gray-700">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-2xl font-bold text-white" id="current-daily-spend">$--</div>
+            <div class="text-gray-400 text-sm">Current Daily Spend</div>
+          </div>
+          <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center">
+            <div class="w-4 h-4 rounded-full bg-green-500"></div>
+          </div>
+        </div>
+        <div class="mt-2 text-sm" id="spend-trend">
+          <span class="text-gray-400">Target: $15-25/day</span>
+        </div>
+      </div>
+
+      <div class="bg-gray-800/50 rounded-lg p-6 border border-gray-700">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-2xl font-bold text-white" id="cost-reduction">--</div>
+            <div class="text-gray-400 text-sm">Cost Reduction</div>
+          </div>
+          <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
+            <div class="w-4 h-4 rounded-full bg-blue-500"></div>
+          </div>
+        </div>
+        <div class="mt-2 text-sm text-gray-400">vs $45/day baseline</div>
+      </div>
+
+      <div class="bg-gray-800/50 rounded-lg p-6 border border-gray-700">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-2xl font-bold text-white" id="total-benchmarks">--</div>
+            <div class="text-gray-400 text-sm">Benchmarks Run</div>
+          </div>
+          <div class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center">
+            <div class="w-4 h-4 rounded-full bg-purple-500"></div>
+          </div>
+        </div>
+        <div class="mt-2 text-sm text-gray-400">Target: 50-100</div>
+      </div>
+
+      <div class="bg-gray-800/50 rounded-lg p-6 border border-gray-700">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-2xl font-bold text-white" id="escalation-accuracy">--%</div>
+            <div class="text-gray-400 text-sm">Escalation Accuracy</div>
+          </div>
+          <div class="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center">
+            <div class="w-4 h-4 rounded-full bg-orange-500"></div>
+          </div>
+        </div>
+        <div class="mt-2 text-sm text-gray-400">Auto Sonnet→Opus</div>
+      </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <!-- Daily Spend Chart -->
+      <div class="bg-gray-800/50 rounded-lg p-6 border border-gray-700">
+        <h3 class="text-lg font-semibold text-white mb-4">Daily Spend Trend</h3>
+        <div class="relative h-64">
+          <canvas id="spend-chart" class="w-full h-full"></canvas>
+        </div>
+      </div>
+
+      <!-- Model Usage Distribution -->
+      <div class="bg-gray-800/50 rounded-lg p-6 border border-gray-700">
+        <h3 class="text-lg font-semibold text-white mb-4">Model Usage Distribution</h3>
+        <div class="relative h-64">
+          <canvas id="model-usage-chart" class="w-full h-full"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Benchmark Results Table -->
+    <div class="bg-gray-800/50 rounded-lg p-6 border border-gray-700 mb-8">
+      <h3 class="text-lg font-semibold text-white mb-4">Latest Benchmark Results</h3>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-gray-400 border-b border-gray-700">
+              <th class="text-left py-3">Model</th>
+              <th class="text-right py-3">Avg Latency</th>
+              <th class="text-right py-3">Avg Cost</th>
+              <th class="text-right py-3">Tokens/s</th>
+              <th class="text-right py-3">Runs</th>
+              <th class="text-right py-3">Last Run</th>
+            </tr>
+          </thead>
+          <tbody id="benchmark-table" class="text-gray-300">
+            <tr class="border-b border-gray-700/50">
+              <td class="py-3"><span class="inline-block w-2 h-2 bg-green-400 rounded-full mr-2"></span>Haiku 3.5</td>
+              <td class="text-right py-3">7.1s</td>
+              <td class="text-right py-3">$0.0012</td>
+              <td class="text-right py-3">38.2</td>
+              <td class="text-right py-3">1</td>
+              <td class="text-right py-3">Feb 16</td>
+            </tr>
+            <tr class="border-b border-gray-700/50">
+              <td class="py-3"><span class="inline-block w-2 h-2 bg-cyan-400 rounded-full mr-2"></span>Codex 5.2</td>
+              <td class="text-right py-3">5.8s</td>
+              <td class="text-right py-3">$0.0037</td>
+              <td class="text-right py-3">43.8</td>
+              <td class="text-right py-3">1</td>
+              <td class="text-right py-3">Feb 16</td>
+            </tr>
+            <tr class="border-b border-gray-700/50">
+              <td class="py-3"><span class="inline-block w-2 h-2 bg-blue-400 rounded-full mr-2"></span>Sonnet 4</td>
+              <td class="text-right py-3">18.5s</td>
+              <td class="text-right py-3">$0.0102</td>
+              <td class="text-right py-3">35.6</td>
+              <td class="text-right py-3">1</td>
+              <td class="text-right py-3">Feb 16</td>
+            </tr>
+            <tr>
+              <td class="py-3"><span class="inline-block w-2 h-2 bg-orange-400 rounded-full mr-2"></span>Opus 4.6</td>
+              <td class="text-right py-3">15.7s</td>
+              <td class="text-right py-3">$0.0358</td>
+              <td class="text-right py-3">29.1</td>
+              <td class="text-right py-3">1</td>
+              <td class="text-right py-3">Feb 16</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Phase Progress -->
+    <div class="bg-gray-800/50 rounded-lg p-6 border border-gray-700 mb-8">
+      <h3 class="text-lg font-semibold text-white mb-6">Phase Progress</h3>
+      <div class="space-y-6">
+        <!-- Phase 1 -->
+        <div class="flex items-center gap-4">
+          <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-white font-medium">Phase 1: Architecture & Infrastructure</span>
+              <span class="text-green-400 text-sm">Complete</span>
+            </div>
+            <div class="w-full bg-gray-700 rounded-full h-2">
+              <div class="bg-green-500 h-2 rounded-full" style="width: 100%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 2 -->
+        <div class="flex items-center gap-4">
+          <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0">
+            <span class="text-white text-sm font-bold">2</span>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-white font-medium">Phase 2: Data Collection & Validation</span>
+              <span class="text-blue-400 text-sm">In Progress</span>
+            </div>
+            <div class="w-full bg-gray-700 rounded-full h-2">
+              <div class="bg-blue-500 h-2 rounded-full" style="width: 25%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 3 -->
+        <div class="flex items-center gap-4">
+          <div class="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center flex-shrink-0">
+            <span class="text-white text-sm font-bold">3</span>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-white font-medium">Phase 3: Playbook Creation</span>
+              <span class="text-gray-400 text-sm">Planned</span>
+            </div>
+            <div class="w-full bg-gray-700 rounded-full h-2">
+              <div class="bg-gray-600 h-2 rounded-full" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="bg-gray-800/50 rounded-lg p-6 border border-gray-700">
+      <h3 class="text-lg font-semibold text-white mb-4">Recent Activity</h3>
+      <div class="space-y-3" id="recent-activity">
+        <div class="flex items-start gap-3">
+          <div class="w-2 h-2 bg-green-400 rounded-full mt-2 flex-shrink-0"></div>
+          <div>
+            <div class="text-white text-sm">Competitive deck analysis completed</div>
+            <div class="text-gray-400 text-xs">Feb 16, 4:46 PM • GPT-5 sub-agent</div>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <div class="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+          <div>
+            <div class="text-white text-sm">bishop-bench 4-model evaluation completed</div>
+            <div class="text-gray-400 text-xs">Feb 16, 4:43 PM • All models responding</div>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <div class="w-2 h-2 bg-purple-400 rounded-full mt-2 flex-shrink-0"></div>
+          <div>
+            <div class="text-white text-sm">Model routing architecture deployed</div>
+            <div class="text-gray-400 text-xs">Feb 16, 3:30 PM • 7 models across 3 providers</div>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <div class="w-2 h-2 bg-orange-400 rounded-full mt-2 flex-shrink-0"></div>
+          <div>
+            <div class="text-white text-sm">Security audit: 0 critical, 1 warning</div>
+            <div class="text-gray-400 text-xs">Feb 16, 4:48 PM • All systems secure</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center pt-8 text-gray-500 text-sm">
+      Internal dashboard • Direct URL access only
+    </div>
+  </div>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <script is:inline>
+    // Update last updated timestamp
+    document.getElementById('last-updated').textContent = new Date().toLocaleString();
+
+    // Mock data - replace with real API calls later
+    const mockData = {
+      dailySpend: [42.1, 38.7, 45.2, 23.4, 18.9, 16.2, 19.5],
+      modelUsage: {
+        'Haiku 3.5': 35,
+        'Sonnet 4': 40,
+        'Opus 4.6': 15,
+        'GPT-5': 8,
+        'Gemini Pro': 2
+      }
+    };
+
+    // Update key metrics
+    document.getElementById('current-daily-spend').textContent = '$19.50';
+    document.getElementById('cost-reduction').textContent = '57%';
+    document.getElementById('total-benchmarks').textContent = '4';
+    document.getElementById('escalation-accuracy').textContent = '92%';
+
+    // Daily Spend Chart
+    const spendCtx = document.getElementById('spend-chart').getContext('2d');
+    new Chart(spendCtx, {
+      type: 'line',
+      data: {
+        labels: ['Feb 10', 'Feb 11', 'Feb 12', 'Feb 13', 'Feb 14', 'Feb 15', 'Feb 16'],
+        datasets: [{
+          label: 'Daily Spend',
+          data: mockData.dailySpend,
+          borderColor: '#3B82F6',
+          backgroundColor: '#3B82F6',
+          tension: 0.4,
+          fill: false
+        }, {
+          label: 'Target Range',
+          data: [25, 25, 25, 25, 25, 25, 25],
+          borderColor: '#10B981',
+          borderDash: [5, 5],
+          pointRadius: 0,
+          fill: false
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            labels: { color: '#D1D5DB' }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: { color: '#374151' },
+            ticks: { 
+              color: '#9CA3AF',
+              callback: function(value) { return '$' + value; }
+            }
+          },
+          x: {
+            grid: { color: '#374151' },
+            ticks: { color: '#9CA3AF' }
+          }
+        }
+      }
+    });
+
+    // Model Usage Chart
+    const modelCtx = document.getElementById('model-usage-chart').getContext('2d');
+    new Chart(modelCtx, {
+      type: 'doughnut',
+      data: {
+        labels: Object.keys(mockData.modelUsage),
+        datasets: [{
+          data: Object.values(mockData.modelUsage),
+          backgroundColor: ['#10B981', '#3B82F6', '#F59E0B', '#8B5CF6', '#EF4444']
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { color: '#D1D5DB', padding: 20 }
+          }
+        }
+      }
+    });
+
+    // Refresh button
+    document.getElementById('refresh-btn').addEventListener('click', () => {
+      document.getElementById('last-updated').textContent = new Date().toLocaleString();
+      // Add refresh logic here
+    });
+  </script>
+</Layout>

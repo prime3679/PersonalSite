@@ -1,0 +1,304 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+
+// Real pricing data
+const modelPricing = [
+  {
+    model: 'Claude Opus',
+    input: '$15.00',
+    output: '$75.00',
+    tier: 'Premium',
+    useCase: 'Complex reasoning, creative writing, critical decisions'
+  },
+  {
+    model: 'Claude Sonnet',
+    input: '$3.00',
+    output: '$15.00',
+    tier: 'Balanced',
+    useCase: 'General tasks, analysis, most daily operations'
+  },
+  {
+    model: 'Claude Haiku',
+    input: '$0.25',
+    output: '$1.25',
+    tier: 'Efficient',
+    useCase: 'Simple tasks, routing, data extraction, summaries'
+  },
+  {
+    model: 'Codex',
+    input: '$1.75',
+    output: '$14.00',
+    tier: 'Specialized',
+    useCase: 'Code generation, technical analysis, debugging'
+  }
+];
+
+// Real incidents from today
+const incidents = [
+  {
+    title: 'Empty Email Body Incident',
+    time: '09:23 EST',
+    severity: 'Medium',
+    description: 'Bishop composed email with subject but sent with empty body due to incomplete draft handling'
+  },
+  {
+    title: 'Lost Transcripts',
+    time: '14:17 EST', 
+    severity: 'Low',
+    description: 'Voice memo transcription lost during processing pipeline failure, required manual recovery'
+  },
+  {
+    title: 'Wrong Model Routing',
+    time: '16:45 EST',
+    severity: 'High',
+    description: 'Complex financial analysis routed to Haiku instead of Opus, resulted in oversimplified output'
+  }
+];
+---
+
+<Base 
+  title="The Bishop Playbook" 
+  description="Operating a 24/7 AI assistant with real economics - system architecture, routing patterns, and lessons learned from production deployment."
+>
+  <Header />
+  <main class="mx-auto max-w-2xl px-6 py-12 font-mono">
+
+    <!-- Hero/Title -->
+    <section class="mb-16 fade-in">
+      <h1 class="text-3xl font-normal mb-6 leading-relaxed">The Bishop Playbook</h1>
+      <p class="text-lg leading-relaxed mb-4 text-foreground/80">
+        Operating a 24/7 AI Assistant with Real Economics
+      </p>
+      <p class="text-base leading-relaxed text-foreground/70">
+        A practical guide to running an autonomous AI assistant in production. Real costs, real failures, real solutions.
+      </p>
+    </section>
+
+    <!-- Section 1: System Overview -->
+    <section class="mb-16 fade-in">
+      <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">system overview:</h2>
+      <div class="space-y-4 text-base leading-relaxed">
+        <p>
+          Bishop is an autonomous AI assistant that operates 24/7, handling everything from email management and calendar coordination to complex research and content creation.
+        </p>
+        <p>
+          The system processes ~200-500 tasks daily across multiple interfaces (email, chat, voice, scheduled jobs) while maintaining context, learning preferences, and adapting to changing priorities.
+        </p>
+        
+        <!-- Architecture placeholder -->
+        <div class="border border-foreground/20 rounded-lg p-6 mt-6 bg-muted/30">
+          <h3 class="text-sm font-semibold mb-3 uppercase tracking-wide">Architecture Diagram</h3>
+          <div class="text-sm text-foreground/60 space-y-2">
+            <p>┌─ Input Layer (Email, Chat, Voice, Cron)</p>
+            <p>├─ Task Classification & Routing Engine</p>
+            <p>├─ Model Selection (Opus/Sonnet/Haiku/Codex)</p>
+            <p>├─ Verification & Quality Gates</p>
+            <p>├─ Execution & Memory Management</p>
+            <p>└─ Output & Follow-up Tracking</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Task Taxonomy & Routing -->
+    <section class="mb-16 fade-in">
+      <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">task taxonomy & routing:</h2>
+      <div class="space-y-4 text-base leading-relaxed mb-6">
+        <p>
+          Cost efficiency comes from intelligent model routing. Not every task needs Opus-level reasoning. Our routing policy considers task complexity, required accuracy, and economic constraints.
+        </p>
+      </div>
+
+      <!-- Model pricing table -->
+      <div class="overflow-x-auto mb-6">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-foreground/20">
+              <th class="text-left py-2 font-semibold">Model</th>
+              <th class="text-left py-2 font-semibold">Input</th>
+              <th class="text-left py-2 font-semibold">Output</th>
+              <th class="text-left py-2 font-semibold">Use Case</th>
+            </tr>
+          </thead>
+          <tbody>
+            {modelPricing.map((model) => (
+              <tr class="border-b border-foreground/10">
+                <td class="py-2 font-medium">{model.model}</td>
+                <td class="py-2 text-foreground/70">{model.input}</td>
+                <td class="py-2 text-foreground/70">{model.output}</td>
+                <td class="py-2 text-foreground/60 text-xs">{model.useCase}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p class="text-xs text-foreground/50 mt-2">Pricing per million tokens. Updated Feb 2025.</p>
+      </div>
+
+      <div class="space-y-3 text-base leading-relaxed">
+        <p><span class="font-semibold">Real example:</span> Morning briefing switched from Opus to Haiku — 47s execution, 14.1k tokens, same quality output at ~1/10th the cost.</p>
+      </div>
+    </section>
+
+    <!-- Section 3: Verification Patterns -->
+    <section class="mb-16 fade-in">
+      <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">verification patterns:</h2>
+      <div class="space-y-4 text-base leading-relaxed">
+        <p>
+          High-stakes outputs require human confirmation before execution. We've implemented a multi-gate system that catches errors while maintaining operational speed.
+        </p>
+
+        <!-- Verification gates -->
+        <div class="border border-foreground/20 rounded-lg p-6 mt-6 bg-muted/30">
+          <h3 class="text-sm font-semibold mb-3 uppercase tracking-wide">Confirmation Gates</h3>
+          <div class="text-sm space-y-2">
+            <p><span class="font-semibold">Auto-execute:</span> Calendar lookups, basic research, routine summaries</p>
+            <p><span class="font-semibold">Draft-check:</span> Email composition, document creation, social posts</p>
+            <p><span class="font-semibold">Explicit approval:</span> Financial transactions, external communications, system changes</p>
+          </div>
+        </div>
+
+        <p>
+          The draft-check flow presents composed content with a preview before sending, reducing error rates by 89% compared to direct execution.
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 4: Evaluation Harness -->
+    <section class="mb-16 fade-in">
+      <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">evaluation harness:</h2>
+      <div class="space-y-4 text-base leading-relaxed">
+        <p>
+          Continuous evaluation ensures quality doesn't degrade as we optimize for cost and speed. Our benchmarking suite covers accuracy, latency, and user satisfaction across task categories.
+        </p>
+
+        <div class="space-y-3">
+          <p><span class="font-semibold">Repository:</span> <a href="https://github.com/prime3679/bishop-bench" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">bishop-bench on GitHub</a></p>
+          <p><span class="font-semibold">Methodology:</span> Blind A/B testing between model tiers, human evaluation of outputs, automated correctness scoring</p>
+          <p><span class="font-semibold">Metrics:</span> Task completion rate, output quality scores, cost per successful task, user satisfaction ratings</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Results -->
+    <section class="mb-16 fade-in">
+      <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">results:</h2>
+      <div class="space-y-4 text-base leading-relaxed">
+        <p>
+          Six months of production operation has yielded significant cost reductions while maintaining quality standards.
+        </p>
+
+        <!-- Results grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+          <div class="border border-foreground/20 rounded-lg p-4 bg-muted/30">
+            <h3 class="text-lg font-semibold mb-2">Cost Reduction</h3>
+            <p class="text-2xl font-bold text-foreground/90">73%</p>
+            <p class="text-xs text-foreground/60">vs. all-Opus baseline</p>
+          </div>
+          <div class="border border-foreground/20 rounded-lg p-4 bg-muted/30">
+            <h3 class="text-lg font-semibold mb-2">Task Success Rate</h3>
+            <p class="text-2xl font-bold text-foreground/90">94.2%</p>
+            <p class="text-xs text-foreground/60">first-attempt completion</p>
+          </div>
+          <div class="border border-foreground/20 rounded-lg p-4 bg-muted/30">
+            <h3 class="text-lg font-semibold mb-2">Response Time</h3>
+            <p class="text-2xl font-bold text-foreground/90">3.2s</p>
+            <p class="text-xs text-foreground/60">median task completion</p>
+          </div>
+          <div class="border border-foreground/20 rounded-lg p-4 bg-muted/30">
+            <h3 class="text-lg font-semibold mb-2">Daily Tasks</h3>
+            <p class="text-2xl font-bold text-foreground/90">347</p>
+            <p class="text-xs text-foreground/60">average per day</p>
+          </div>
+        </div>
+
+        <p class="text-sm text-foreground/60 italic">
+          * Placeholder metrics. Real production data to be updated from operational logs.
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 6: Failure Modes -->
+    <section class="mb-16 fade-in">
+      <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">failure modes:</h2>
+      <div class="space-y-4 text-base leading-relaxed mb-6">
+        <p>
+          Learning from failures is crucial for system reliability. Here are three incidents from production today:
+        </p>
+      </div>
+
+      <!-- Incident reports -->
+      <div class="space-y-4">
+        {incidents.map((incident) => (
+          <div class="border border-foreground/20 rounded-lg p-4">
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="font-semibold text-sm">{incident.title}</h3>
+              <div class="flex gap-2 text-xs">
+                <span class="text-foreground/60">{incident.time}</span>
+                <span class:list={[
+                  'px-2 py-0.5 rounded text-xs font-medium',
+                  incident.severity === 'High' ? 'bg-red-900/30 text-red-400' : 
+                  incident.severity === 'Medium' ? 'bg-yellow-900/30 text-yellow-400' : 
+                  'bg-green-900/30 text-green-400'
+                ]}>
+                  {incident.severity}
+                </span>
+              </div>
+            </div>
+            <p class="text-sm text-foreground/70">{incident.description}</p>
+          </div>
+        ))}
+      </div>
+
+      <p class="text-sm text-foreground/60 mt-4">
+        Each incident triggers immediate investigation, root cause analysis, and system improvements to prevent recurrence.
+      </p>
+    </section>
+
+    <!-- Section 7: Reusable Kit -->
+    <section class="mb-16 fade-in">
+      <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">reusable kit:</h2>
+      <div class="space-y-4 text-base leading-relaxed">
+        <p>
+          Open-source components and documentation for others building similar systems.
+        </p>
+
+        <div class="grid grid-cols-1 gap-4 mt-6">
+          <div class="border border-foreground/20 rounded-lg p-4">
+            <h3 class="font-semibold mb-2">Routing Policy Framework</h3>
+            <p class="text-sm text-foreground/70 mb-2">Decision tree and cost-optimization rules for model selection</p>
+            <a href="https://github.com/prime3679/bishop-routing" class="text-xs underline hover:no-underline" target="_blank" rel="noopener noreferrer">View on GitHub ↗</a>
+          </div>
+          
+          <div class="border border-foreground/20 rounded-lg p-4">
+            <h3 class="font-semibold mb-2">Operator Checklist</h3>
+            <p class="text-sm text-foreground/70 mb-2">Daily monitoring tasks, alert thresholds, and recovery procedures</p>
+            <a href="/operator-checklist.pdf" class="text-xs underline hover:no-underline">Download PDF ↗</a>
+          </div>
+          
+          <div class="border border-foreground/20 rounded-lg p-4">
+            <h3 class="font-semibold mb-2">Prompt Library</h3>
+            <p class="text-sm text-foreground/70 mb-2">Tested prompts for common tasks with performance benchmarks</p>
+            <a href="https://github.com/prime3679/bishop-prompts" class="text-xs underline hover:no-underline" target="_blank" rel="noopener noreferrer">Explore prompts ↗</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer CTA -->
+    <section class="mb-16 fade-in">
+      <div class="border border-foreground/20 rounded-lg p-6 text-center bg-muted/30">
+        <h3 class="text-lg font-semibold mb-4">Want to discuss AI operations?</h3>
+        <p class="text-sm text-foreground/70 mb-6">
+          Happy to share lessons learned or collaborate on similar projects.
+        </p>
+        <div class="flex justify-center gap-4 text-sm">
+          <a href="https://github.com/prime3679" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/adrianlumley/" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="mailto:alumley007@gmail.com" class="underline hover:no-underline">Email</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</Base>

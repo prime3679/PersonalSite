@@ -1,0 +1,175 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+
+const title = "AI Services";
+const description = "Free AI optimization services - API cost audits and model routing proxy";
+---
+
+<Base title={title} description={description}>
+  <Header />
+  <main class="mx-auto max-w-2xl px-6 py-12">
+    
+    <!-- Header -->
+    <div class="mb-16">
+      <h1 class="text-3xl font-light mb-4 leading-relaxed">ai optimization services.</h1>
+      <p class="text-lg leading-relaxed mb-4">
+        free tools to reduce your ai costs by up to 70%. proven methodologies, zero hassle.
+      </p>
+    </div>
+
+    <!-- Services -->
+    <div class="space-y-12">
+      
+      <!-- API Cost Audit -->
+      <section class="border border-gray-200 p-8">
+        <h2 class="text-xl font-light mb-4">api cost audit report</h2>
+        <p class="text-base leading-relaxed mb-6">
+          upload your openai or claude usage logs. get a detailed report showing exactly how much you'd save 
+          with multi-model routing. based on proven 70% cost reduction methodology.
+        </p>
+        
+        <div class="mb-6">
+          <h3 class="font-medium mb-2">what you get:</h3>
+          <ul class="text-sm space-y-1 text-gray-700">
+            <li>• current spend analysis</li>
+            <li>• optimized routing recommendations</li>
+            <li>• projected monthly savings</li>
+            <li>• implementation roadmap</li>
+          </ul>
+        </div>
+
+        <div class="space-y-4">
+          <input 
+            type="file" 
+            id="usage-file" 
+            accept=".csv,.json,.txt"
+            class="w-full p-3 border border-gray-300 text-sm"
+          >
+          <button 
+            onclick="submitAudit()"
+            class="bg-black text-white px-6 py-3 text-sm hover:bg-gray-800 transition-colors w-full"
+          >
+            generate free audit report
+          </button>
+        </div>
+
+        <p class="text-xs text-gray-500 mt-3">
+          your data stays private. reports delivered via email within 24 hours.
+        </p>
+      </section>
+
+      <!-- Model Router Proxy -->
+      <section class="border border-gray-200 p-8">
+        <h2 class="text-xl font-light mb-4">model routing proxy</h2>
+        <p class="text-base leading-relaxed mb-6">
+          drop-in replacement for openai/anthropic api endpoints. automatically routes requests 
+          to the most cost-effective model while maintaining quality.
+        </p>
+        
+        <div class="mb-6">
+          <h3 class="font-medium mb-2">how it works:</h3>
+          <ul class="text-sm space-y-1 text-gray-700">
+            <li>• change one line of code (api endpoint)</li>
+            <li>• automatic model selection based on request complexity</li>
+            <li>• 70% average cost reduction</li>
+            <li>• same api interface, better economics</li>
+          </ul>
+        </div>
+
+        <div class="bg-gray-50 p-4 mb-6">
+          <h4 class="font-medium mb-2 text-sm">endpoint:</h4>
+          <code class="text-sm font-mono break-all">
+            https://api.adrianlumley.co/v1/chat/completions
+          </code>
+        </div>
+
+        <button 
+          onclick="requestApiKey()"
+          class="bg-black text-white px-6 py-3 text-sm hover:bg-gray-800 transition-colors w-full"
+        >
+          get free api key
+        </button>
+
+        <p class="text-xs text-gray-500 mt-3">
+          free tier: 10,000 requests/month. no credit card required.
+        </p>
+      </section>
+
+    </div>
+
+    <!-- Contact -->
+    <div class="mt-16 text-center">
+      <p class="text-sm text-gray-600">
+        questions? email 
+        <a href="mailto:adrian@adrianlumley.co" class="underline hover:no-underline">
+          adrian@adrianlumley.co
+        </a>
+      </p>
+    </div>
+
+  </main>
+
+  <script>
+    async function submitAudit() {
+      const fileInput = document.getElementById('usage-file');
+      const file = fileInput.files[0];
+      
+      if (!file) {
+        alert('Please select a usage file first');
+        return;
+      }
+      
+      const email = prompt('Enter your email for the audit report:');
+      if (!email) return;
+      
+      try {
+        const formData = new FormData();
+        formData.append('email', email);
+        formData.append('usage_file', file);
+        
+        const response = await fetch('/api/audit', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+          alert(`Success! ${result.message}`);
+        } else {
+          alert(`Error: ${result.error}`);
+        }
+      } catch (error) {
+        alert('Failed to submit audit request. Please try again.');
+        console.error('Audit submission error:', error);
+      }
+    }
+    
+    async function requestApiKey() {
+      const email = prompt('Enter your email for API key delivery:');
+      if (!email) return;
+      
+      try {
+        const response = await fetch('/api/generate-key', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email })
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+          alert(`API Key Generated: ${result.apiKey}\n\nEndpoint: ${result.endpoint}\nFree Limit: ${result.freeLimit}`);
+        } else {
+          alert(`Error: ${result.error}`);
+        }
+      } catch (error) {
+        alert('Failed to generate API key. Please try again.');
+        console.error('API key generation error:', error);
+      }
+    }
+  </script>
+</Base>

@@ -1,0 +1,171 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+---
+
+<Base
+  title="Lab — Adrian Lumley"
+  description="Things I'm building. Some finished, some running, some still figuring out."
+>
+  <Header />
+  <main class="mx-auto max-w-2xl px-6 py-12 font-mono">
+
+    <!-- Header -->
+    <section class="mb-12 fade-in">
+      <h1 class="text-2xl font-normal mb-3">lab</h1>
+      <p class="text-sm leading-relaxed text-foreground/60">
+        things i'm building. not a portfolio — an honest record of what's running,
+        what's in progress, and what didn't survive contact with reality.
+      </p>
+    </section>
+
+    <!-- Projects -->
+    <section class="space-y-4 fade-in">
+
+      <!-- FamilyOS -->
+      <article class="border border-foreground/10 rounded-xl overflow-hidden" id="familyos">
+        <div class="p-6">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <a href="/familyos" class="text-base font-medium hover:underline">familyos</a>
+              <p class="text-xs text-muted-foreground mt-0.5">started feb 2026</p>
+            </div>
+            <span class="status-badge text-xs px-2 py-0.5 rounded border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-500/5 shrink-0 ml-4">
+              active
+            </span>
+          </div>
+          <p class="text-sm leading-relaxed text-foreground/70 mb-4">
+            multi-agent family coordination. scans the week's calendar every monday,
+            proposes assignments, learns from approvals. built because two working
+            parents and a toddler deserve better than group texts and spreadsheets.
+          </p>
+
+          <!-- Live Stats -->
+          <div id="familyos-stats" class="border-t border-foreground/5 pt-4 mt-4">
+            <div class="grid grid-cols-3 gap-4 text-center" id="familyos-stats-loaded" style="display:none">
+              <div>
+                <div class="text-lg font-medium tabular-nums" id="stat-weeks">—</div>
+                <div class="text-xs text-muted-foreground mt-0.5">weeks running</div>
+              </div>
+              <div>
+                <div class="text-lg font-medium tabular-nums" id="stat-proposals">—</div>
+                <div class="text-xs text-muted-foreground mt-0.5">proposals sent</div>
+              </div>
+              <div>
+                <div class="text-lg font-medium tabular-nums" id="stat-approval">—</div>
+                <div class="text-xs text-muted-foreground mt-0.5">approval rate</div>
+              </div>
+            </div>
+            <div id="familyos-stats-loading" class="text-xs text-muted-foreground">
+              loading stats...
+            </div>
+          </div>
+
+          <div class="flex items-center gap-4 mt-4 pt-4 border-t border-foreground/5">
+            <a href="/familyos" class="text-xs underline hover:no-underline text-muted-foreground">details ↗</a>
+            <a href="https://github.com/prime3679/familyos" target="_blank" rel="noopener noreferrer" class="text-xs underline hover:no-underline text-muted-foreground">github ↗</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Bishop -->
+      <article class="border border-foreground/10 rounded-xl overflow-hidden" id="bishop">
+        <div class="p-6">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <a href="/bishop-development" class="text-base font-medium hover:underline">bishop</a>
+              <p class="text-xs text-muted-foreground mt-0.5">started feb 2026</p>
+            </div>
+            <span class="text-xs px-2 py-0.5 rounded border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-500/5 shrink-0 ml-4">
+              active
+            </span>
+          </div>
+          <p class="text-sm leading-relaxed text-foreground/70 mb-4">
+            ai chief of staff. runs on a mac mini, connected to calendar, email, and github.
+            handles morning briefings, monitors systems, drafts artifacts, and builds things
+            like this while i'm at work. the goal is to see how much a single agent can own.
+          </p>
+
+          <!-- Live Stats -->
+          <div class="border-t border-foreground/5 pt-4 mt-4">
+            <div class="grid grid-cols-3 gap-4 text-center">
+              <div>
+                <div class="text-lg font-medium tabular-nums" id="stat-uptime">5</div>
+                <div class="text-xs text-muted-foreground mt-0.5">days running</div>
+              </div>
+              <div>
+                <div class="text-lg font-medium tabular-nums" id="stat-crons">6</div>
+                <div class="text-xs text-muted-foreground mt-0.5">cron jobs</div>
+              </div>
+              <div>
+                <div class="text-lg font-medium tabular-nums">24/7</div>
+                <div class="text-xs text-muted-foreground mt-0.5">uptime</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-4 mt-4 pt-4 border-t border-foreground/5">
+            <a href="/bishop-development" class="text-xs underline hover:no-underline text-muted-foreground">details ↗</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Placeholder: more to come -->
+      <div class="border border-dashed border-foreground/10 rounded-xl p-6 text-center">
+        <p class="text-xs text-muted-foreground">more things brewing. check back.</p>
+      </div>
+
+    </section>
+
+    <!-- Philosophy -->
+    <section class="mt-16 fade-in">
+      <p class="text-xs leading-relaxed text-foreground/40">
+        i build things i actually use. if they're useful to others, i open source them.
+        no launch announcements, no waitlists. just working software that solves real problems.
+      </p>
+    </section>
+
+  </main>
+</Base>
+
+<script>
+  // Fetch live FamilyOS stats from public JSON (updated by cron after each scan)
+  async function loadFamilyOsStats() {
+    const loadingEl = document.getElementById('familyos-stats-loading');
+    const loadedEl = document.getElementById('familyos-stats-loaded');
+
+    try {
+      const res = await fetch('/familyos-stats.json');
+      if (!res.ok) throw new Error('not found');
+      const stats = await res.json();
+
+      const weeksEl = document.getElementById('stat-weeks');
+      const proposalsEl = document.getElementById('stat-proposals');
+      const approvalEl = document.getElementById('stat-approval');
+
+      if (weeksEl) weeksEl.textContent = String(stats.weeksRunning ?? '—');
+      if (proposalsEl) proposalsEl.textContent = String(stats.proposalsSent ?? '—');
+      if (approvalEl) approvalEl.textContent = stats.approvalRate != null
+        ? `${Math.round(stats.approvalRate * 100)}%`
+        : '—';
+
+      loadingEl?.style && (loadingEl.style.display = 'none');
+      loadedEl?.style && (loadedEl.style.display = 'grid');
+    } catch {
+      // Stats not available yet — hide the loading indicator cleanly
+      if (loadingEl) loadingEl.textContent = 'stats coming soon';
+    }
+  }
+
+  loadFamilyOsStats();
+</script>
+
+<style>
+  .fade-in {
+    animation: fadeIn 0.4s ease-out both;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>

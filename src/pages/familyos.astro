@@ -1,0 +1,205 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+---
+
+<Base
+  title="FamilyOS — Adrian Lumley"
+  description="A multi-agent system for family coordination. Built for real use, not for show."
+>
+  <Header />
+  <main class="mx-auto max-w-2xl px-6 py-12 font-mono">
+
+    <!-- Header -->
+    <section class="mb-12 fade-in">
+      <div class="flex items-start justify-between mb-4">
+        <div>
+          <h1 class="text-2xl font-normal mb-2">familyos</h1>
+          <p class="text-sm text-muted-foreground uppercase tracking-wider">multi-agent family coordination</p>
+        </div>
+        <span class="text-xs border border-foreground/20 rounded px-2 py-1 text-muted-foreground mt-1">v0.1 · active</span>
+      </div>
+      <p class="text-base leading-relaxed text-foreground/80">
+        two agents, one shared calendar, zero coordination overhead. built because corporate parents
+        deserve better than spreadsheets and group texts.
+      </p>
+    </section>
+
+    <!-- The Problem -->
+    <section class="mb-12 fade-in">
+      <h2 class="text-xs uppercase tracking-wider text-muted-foreground mb-4">the problem</h2>
+      <div class="border border-foreground/10 rounded-xl p-6">
+        <p class="text-base leading-relaxed mb-4">
+          you're a parent with a demanding job. your partner is too. every week, the same
+          questions: who does daycare pickup? when do we actually have a date night?
+          who's getting groceries?
+        </p>
+        <p class="text-base leading-relaxed mb-4">
+          the tools don't help. google calendar gives you shared visibility, not coordination.
+          spreadsheets require maintenance. whiteboards don't follow you around.
+          the result: ten small negotiations per week, invisible mental load, and date nights
+          that never happen.
+        </p>
+        <p class="text-base leading-relaxed text-foreground/70">
+          every corporate parent knows this. nobody has solved it.
+        </p>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="mb-12 fade-in">
+      <h2 class="text-xs uppercase tracking-wider text-muted-foreground mb-4">how it works</h2>
+      <div class="space-y-4">
+
+        <div class="border border-foreground/10 rounded-xl p-5">
+          <div class="flex items-start gap-4">
+            <span class="text-lg mt-0.5">📅</span>
+            <div>
+              <h3 class="text-sm font-medium mb-1">monday morning scan</h3>
+              <p class="text-sm leading-relaxed text-foreground/70">
+                agent scans the week's calendar, identifies coordination needs — daycare, meals, errands,
+                date nights — and proposes assignments based on preferences and load balancing.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="border border-foreground/10 rounded-xl p-5">
+          <div class="flex items-start gap-4">
+            <span class="text-lg mt-0.5">💬</span>
+            <div>
+              <h3 class="text-sm font-medium mb-1">one-tap approval</h3>
+              <p class="text-sm leading-relaxed text-foreground/70">
+                proposal arrives via telegram. approve with one word or tell it what to change.
+                no app to open, no dashboard to check. it's just a message.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="border border-foreground/10 rounded-xl p-5">
+          <div class="flex items-start gap-4">
+            <span class="text-lg mt-0.5">🧠</span>
+            <div>
+              <h3 class="text-sm font-medium mb-1">learns over time</h3>
+              <p class="text-sm leading-relaxed text-foreground/70">
+                tracks approvals and rejections. adjusts proposals based on what actually works.
+                week 4 looks nothing like week 1 — the system figures out your rhythm.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="border border-foreground/10 rounded-xl p-5">
+          <div class="flex items-start gap-4">
+            <span class="text-lg mt-0.5">🤫</span>
+            <div>
+              <h3 class="text-sm font-medium mb-1">invisible when it works</h3>
+              <p class="text-sm leading-relaxed text-foreground/70">
+                day-of reminders only. no dashboards to check, no feeds to monitor. it runs in
+                the background and surfaces only what needs your attention.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Architecture -->
+    <section class="mb-12 fade-in">
+      <h2 class="text-xs uppercase tracking-wider text-muted-foreground mb-4">architecture</h2>
+      <div class="border border-foreground/10 rounded-xl p-6">
+        <pre class="text-xs leading-relaxed text-foreground/70 overflow-x-auto whitespace-pre">
+google calendar  ←→  agent  ←→  telegram
+      ↑                ↑
+  source of         sqlite
+    truth          (memory)
+        </pre>
+        <div class="mt-4 pt-4 border-t border-foreground/10 space-y-2">
+          <div class="flex gap-3 text-sm">
+            <span class="text-muted-foreground w-28 shrink-0">runtime</span>
+            <span>node.js 25 · built-in sqlite · no external dependencies</span>
+          </div>
+          <div class="flex gap-3 text-sm">
+            <span class="text-muted-foreground w-28 shrink-0">calendar</span>
+            <span>google calendar api (read + write)</span>
+          </div>
+          <div class="flex gap-3 text-sm">
+            <span class="text-muted-foreground w-28 shrink-0">notifications</span>
+            <span>telegram (with quiet hours, rate limiting)</span>
+          </div>
+          <div class="flex gap-3 text-sm">
+            <span class="text-muted-foreground w-28 shrink-0">scheduling</span>
+            <span>cron — monday 7am scan, daily 7am reminders</span>
+          </div>
+          <div class="flex gap-3 text-sm">
+            <span class="text-muted-foreground w-28 shrink-0">self-hosted</span>
+            <span>runs on a mac mini · zero cloud cost</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Roadmap -->
+    <section class="mb-12 fade-in">
+      <h2 class="text-xs uppercase tracking-wider text-muted-foreground mb-4">roadmap</h2>
+      <div class="space-y-2">
+        {[
+          { version: 'v0.1', label: 'single-agent coordination (daycare + date nights)', done: true },
+          { version: 'v0.2', label: 'preference learning from approval history', done: false },
+          { version: 'v0.3', label: 'second agent (nicole) + agent-to-agent negotiation', done: false },
+          { version: 'v0.4', label: 'meal planning + grocery coordination', done: false },
+          { version: 'v1.0', label: 'open source release + self-hosting guide', done: false },
+        ].map(({ version, label, done }) => (
+          <div class="flex items-start gap-3 text-sm py-2 border-b border-foreground/5 last:border-0">
+            <span class="text-muted-foreground w-10 shrink-0 pt-0.5">{version}</span>
+            <span class:list={['leading-relaxed', done ? 'text-foreground' : 'text-foreground/50']}>
+              {done ? '✓ ' : ''}{label}
+            </span>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Principles -->
+    <section class="mb-12 fade-in">
+      <h2 class="text-xs uppercase tracking-wider text-muted-foreground mb-4">principles</h2>
+      <div class="space-y-3 text-sm leading-relaxed text-foreground/70">
+        <p>built for my family first. if it helps others, great.</p>
+        <p>no app. no dashboard. if it needs one, the design is wrong.</p>
+        <p>agents handle coordination. humans handle living.</p>
+        <p>never autonomous for things that matter. always a human in the loop.</p>
+        <p>simple and working beats clever and fragile.</p>
+      </div>
+    </section>
+
+    <!-- Footer CTA -->
+    <section class="fade-in">
+      <div class="border border-foreground/10 rounded-xl p-6 text-center">
+        <p class="text-sm text-muted-foreground mb-3">
+          open source when it's ready. no launch date. just when it works well enough to share.
+        </p>
+        <a
+          href="https://github.com/prime3679"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-sm underline hover:no-underline"
+        >
+          follow along on github ↗
+        </a>
+      </div>
+    </section>
+
+  </main>
+</Base>
+
+<style>
+  .fade-in {
+    animation: fadeIn 0.4s ease-out both;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>

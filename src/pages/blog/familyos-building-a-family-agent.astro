@@ -1,0 +1,181 @@
+---
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+
+const title = "I gave an AI agent two weeks to coordinate my family";
+const date = "2026-02-18";
+const description = "What I learned building a multi-agent family coordination system from scratch. Not a product pitch — just what happened when I stopped managing logistics manually.";
+---
+
+<Base title={`${title} — Adrian Lumley`} description={description}>
+  <Header />
+  <main class="mx-auto max-w-2xl px-6 py-12 font-mono">
+
+    <!-- Header -->
+    <section class="mb-10 fade-in">
+      <a href="/blog" class="text-xs text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">← blog</a>
+      <h1 class="text-2xl font-normal mt-4 mb-3 leading-relaxed">{title}</h1>
+      <time class="text-xs text-muted-foreground uppercase tracking-wider">
+        {new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+      </time>
+    </section>
+
+    <!-- Body -->
+    <article class="fade-in prose-custom space-y-6 text-sm leading-relaxed">
+
+      <p>
+        My daughter is 2. My partner and I both have demanding jobs. We have a second kid on the way.
+        Every week, the same invisible work: who does daycare pickup? When do we actually have a date night?
+        Who's getting groceries?
+      </p>
+      <p>
+        We were managing it with group texts and a shared Google Calendar. It worked, technically.
+        But it was friction — small, constant, cumulative.
+      </p>
+      <p>
+        I've been a product manager for 14 years. I know what "good enough" looks like.
+        This wasn't good enough.
+      </p>
+      <p>So I built something.</p>
+
+      <hr class="border-foreground/10 my-8" />
+
+      <h2 class="text-base font-medium mt-8 mb-3">the idea</h2>
+      <p>
+        I wanted a system that would handle the coordination layer entirely. Not remind me to coordinate
+        — actually coordinate. Scan the week, look at both our calendars, figure out who should do what,
+        and ask for a single confirmation.
+      </p>
+      <p>
+        The thing that made this feel possible now is agents. Not chatbots. Autonomous systems that can
+        reason about context, use tools, and take action.
+      </p>
+      <p>The architecture I landed on:</p>
+      <ul class="space-y-1.5 my-4">
+        {[
+          'Adrian-agent runs on a Mac Mini at home, 24/7',
+          'Every Monday at 7am, it scans the week\'s calendar',
+          'Identifies coordination needs: daycare, meals, errands, date nights',
+          'Proposes assignments based on preferences and load balancing',
+          'Sends a proposal via Telegram',
+          'I reply APPROVE or tell it what to change',
+          'It learns from the pattern over time',
+        ].map(item => (
+          <li class="flex items-start gap-2 text-foreground/70">
+            <span class="shrink-0 mt-0.5">→</span>
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+      <p>One message per week. Done.</p>
+
+      <hr class="border-foreground/10 my-8" />
+
+      <h2 class="text-base font-medium mt-8 mb-3">what I actually built</h2>
+      <p>
+        The stack is deliberately boring: Node.js 25 (with built-in SQLite, no dependencies),
+        TypeScript, and the Google Calendar API. The whole thing runs as a cron job.
+        There's no app. No dashboard. No notification center to check.
+      </p>
+      <p>The agent does four things well:</p>
+
+      <div class="space-y-4 my-6">
+        {[
+          { n: '01', title: 'calendar scanning', desc: 'Reads the shared calendar, identifies gaps. If there\'s no one assigned to Tuesday pickup, that\'s a coordination need.' },
+          { n: '02', title: 'load balancing', desc: 'Tracks who\'s been assigned what. If I\'ve done three dropoffs this week, it proposes Nicole for the fourth.' },
+          { n: '03', title: 'preference learning', desc: 'Every approval and rejection gets logged. After a few weeks, it knows that Mondays are mine and Fridays are workout days. It stops asking.' },
+          { n: '04', title: 'date night detection', desc: 'Scans for when we last had one. If it\'s been two weeks, it finds a Friday with no conflicts and puts it in the proposal. This one alone might justify the project.' },
+        ].map(({ n, title, desc }) => (
+          <div class="border border-foreground/10 rounded-xl p-4">
+            <div class="flex items-baseline gap-3 mb-1.5">
+              <span class="text-xs text-muted-foreground">{n}</span>
+              <span class="text-sm font-medium">{title}</span>
+            </div>
+            <p class="text-sm text-foreground/60 leading-relaxed">{desc}</p>
+          </div>
+        ))}
+      </div>
+
+      <hr class="border-foreground/10 my-8" />
+
+      <h2 class="text-base font-medium mt-8 mb-3">what surprised me</h2>
+      <p>
+        <strong>The hard part wasn't the code.</strong> The agent logic took a weekend.
+        The hard part was defining preferences. Which days do you prefer pickup? What are your
+        hard-blocked times? How many times a week do you want to cook?
+      </p>
+      <p>
+        These seem like simple questions. They're not. They surface implicit negotiation that was
+        previously happening in real-time via text. Making it explicit is uncomfortable at first.
+        It's also exactly the point.
+      </p>
+      <p>
+        <strong>The second agent is the interesting problem.</strong> Right now this is
+        single-agent — my agent, my preferences, proposals sent to both of us. The next phase
+        is Nicole's agent: her own preferences, her own constraints, agent-to-agent negotiation
+        before a proposal hits us. Not AI managing humans — AI managing AI on behalf of humans.
+        That's the piece I'm most curious about.
+      </p>
+      <p>
+        <strong>It changes the texture of the conversation.</strong> Before: "Can you get Evelyn today?"
+        After: a calendar entry appears and neither of us had to discuss it. That's the win.
+        Not the automation — the reclaimed attention.
+      </p>
+
+      <hr class="border-foreground/10 my-8" />
+
+      <h2 class="text-base font-medium mt-8 mb-3">what's next</h2>
+      <ul class="space-y-1.5 my-4">
+        {[
+          'Preference learning kicks in around week 4',
+          'Nicole\'s agent (v0.3)',
+          'Meal planning with grocery assignment (v0.4)',
+          'Open source release when it\'s working well enough to share (v1.0)',
+        ].map(item => (
+          <li class="flex items-start gap-2 text-foreground/70">
+            <span class="shrink-0 mt-0.5">→</span>
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+      <p>
+        The repo is <a href="https://github.com/prime3679/familyos" target="_blank" rel="noopener noreferrer" class="underline hover:no-underline">public on GitHub</a> if you want to follow along.
+        No launch announcement, no waitlist.
+      </p>
+
+      <hr class="border-foreground/10 my-8" />
+
+      <h2 class="text-base font-medium mt-8 mb-3">why I'm writing this</h2>
+      <p>
+        Not to pitch a product. Not to build an audience. I've been burned by internet attention
+        before and I don't miss it.
+      </p>
+      <p>
+        I'm writing this because I genuinely think this is a more useful application of AI than
+        another chatbot wrapper. The value isn't in any single conversation — it's in systems
+        that run quietly in the background and free up attention for things that actually matter.
+      </p>
+      <p>
+        If you're a working parent with the technical chops to self-host this, you might find it useful.
+        That's enough.
+      </p>
+
+    </article>
+
+    <!-- Footer -->
+    <footer class="mt-16 pt-8 border-t border-foreground/10 fade-in">
+      <a href="/blog" class="text-xs text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">← all posts</a>
+    </footer>
+
+  </main>
+</Base>
+
+<style>
+  .fade-in {
+    animation: fadeIn 0.4s ease-out both;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>

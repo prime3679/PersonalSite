@@ -5,8 +5,14 @@ import Header from '../components/Header.astro';
 const title = "Blog";
 const description = "Monthly musings on product leadership, systems thinking, and building scalable platforms.";
 
-// Sample posts - will be replaced with real content
 const posts = [
+  {
+    slug: 'familyos-building-a-family-agent',
+    title: 'I gave an AI agent two weeks to coordinate my family',
+    date: '2026-02-18',
+    excerpt: 'What I learned building a multi-agent family coordination system from scratch. Not a product pitch — just what happened when I stopped managing logistics manually.',
+    published: true
+  },
   {
     slug: 'ai-cost-optimization-lessons',
     title: 'What I learned cutting AI costs 70% in one weekend',
@@ -16,7 +22,7 @@ const posts = [
   },
   {
     slug: 'systems-thinking-product-orgs',
-    title: 'Second-order effects in product organizations', 
+    title: 'Second-order effects in product organizations',
     date: '2026-02-01',
     excerpt: 'Why the best product decisions consider what happens after what happens. Lessons from scaling at Salesforce, SiriusXM, and Disney+.',
     published: false

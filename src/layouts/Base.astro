@@ -6,7 +6,7 @@ interface Props {
   description?: string;
 }
 
-const { title = 'Adrian Lumley — Product @ Salesforce', description = 'Product leader building scalable platforms and AI systems. Previously SiriusXM, Disney+, EA.' } = Astro.props;
+const { title = 'Adrian Lumley', description = 'Product leader building scalable platforms and AI systems. Previously SiriusXM, Disney+, EA.' } = Astro.props;
 const fullTitle = title === 'Adrian Lumley' ? title : `${title} — Adrian Lumley`;
 ---
 
@@ -20,7 +20,7 @@ const fullTitle = title === 'Adrian Lumley' ? title : `${title} — Adrian Lumle
   <meta property="og:title" content={fullTitle} />
   <meta property="og:description" content={description} />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://adrianlumley.co" />
+  <meta property="og:url" content={Astro.url.href} />
   <meta property="og:image" content="https://adrianlumley.co/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={fullTitle} />

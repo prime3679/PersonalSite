@@ -82,7 +82,7 @@ const description = "What I learned building a multi-agent family coordination s
       <div class="space-y-4 my-6">
         {[
           { n: '01', title: 'calendar scanning', desc: 'Reads the shared calendar, identifies gaps. If there\'s no one assigned to Tuesday pickup, that\'s a coordination need.' },
-          { n: '02', title: 'load balancing', desc: 'Tracks who\'s been assigned what. If I\'ve done three dropoffs this week, it proposes Nicole for the fourth.' },
+          { n: '02', title: 'load balancing', desc: 'Tracks who\'s been assigned what. If I\'ve done three dropoffs this week, it proposes my partner for the fourth.' },
           { n: '03', title: 'preference learning', desc: 'Every approval and rejection gets logged. After a few weeks, it knows that Mondays are mine and Fridays are workout days. It stops asking.' },
           { n: '04', title: 'date night detection', desc: 'Scans for when we last had one. If it\'s been two weeks, it finds a Friday with no conflicts and puts it in the proposal. This one alone might justify the project.' },
         ].map(({ n, title, desc }) => (
@@ -112,12 +112,12 @@ const description = "What I learned building a multi-agent family coordination s
       <p>
         <strong>The second agent is the interesting problem.</strong> Right now this is
         single-agent — my agent, my preferences, proposals sent to both of us. The next phase
-        is Nicole's agent: her own preferences, her own constraints, agent-to-agent negotiation
+        is my partner's agent: her own preferences, her own constraints, agent-to-agent negotiation
         before a proposal hits us. Not AI managing humans — AI managing AI on behalf of humans.
         That's the piece I'm most curious about.
       </p>
       <p>
-        <strong>It changes the texture of the conversation.</strong> Before: "Can you get Evelyn today?"
+        <strong>It changes the texture of the conversation.</strong> Before: "Can you get her today?"
         After: a calendar entry appears and neither of us had to discuss it. That's the win.
         Not the automation — the reclaimed attention.
       </p>
@@ -128,7 +128,7 @@ const description = "What I learned building a multi-agent family coordination s
       <ul class="space-y-1.5 my-4">
         {[
           'Preference learning kicks in around week 4',
-          'Nicole\'s agent (v0.3)',
+          'Partner agent (v0.3)',
           'Meal planning with grocery assignment (v0.4)',
           'Open source release when it\'s working well enough to share (v1.0)',
         ].map(item => (
@@ -139,7 +139,7 @@ const description = "What I learned building a multi-agent family coordination s
         ))}
       </ul>
       <p>
-        The repo is <a href="https://github.com/prime3679/familyos" target="_blank" rel="noopener noreferrer" class="underline hover:no-underline">public on GitHub</a> if you want to follow along.
+        The template is <a href="https://github.com/prime3679/familyos-template" target="_blank" rel="noopener noreferrer" class="underline hover:no-underline">open source on GitHub</a> if you want to build your own.
         No launch announcement, no waitlist.
       </p>
 

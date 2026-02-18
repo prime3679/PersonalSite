@@ -188,7 +188,7 @@ import Header from '../components/Header.astro';
       if (proposalsEl) proposalsEl.textContent = String(stats.proposalsSent ?? '—');
       if (approvalEl) approvalEl.textContent = stats.approvalRate != null
         ? `${Math.round(stats.approvalRate * 100)}%`
-        : '—';
+        : 'pending';
 
       loadingEl?.style && (loadingEl.style.display = 'none');
       loadedEl?.style && (loadedEl.style.display = 'grid');

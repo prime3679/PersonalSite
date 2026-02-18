@@ -5,7 +5,7 @@ import Header from '../components/Header.astro';
 
 <Base
   title="Services — Adrian Lumley"
-  description="Free AI optimization tools. Reduce your API costs without the enterprise pricing."
+  description="AI cost optimization consulting. Reduce your API spend without the enterprise pricing."
 >
   <Header />
   <main class="mx-auto max-w-2xl px-6 py-12 font-mono">
@@ -14,141 +14,74 @@ import Header from '../components/Header.astro';
     <section class="mb-12 fade-in">
       <h1 class="text-2xl font-normal mb-3">services</h1>
       <p class="text-sm leading-relaxed text-foreground/60">
-        free tools to reduce ai costs. based on the same methodology that cut my own
-        spend by 70%. no enterprise pricing, no waitlist.
+        occasional consulting on ai cost optimization and product strategy.
+        based on real experience cutting a production ai stack 70% in cost.
       </p>
     </section>
 
     <!-- Services -->
     <section class="space-y-4 fade-in">
 
-      <!-- API Cost Audit -->
+      <!-- AI Cost Audit -->
       <article class="border border-foreground/10 rounded-xl p-6">
         <div class="flex items-start justify-between mb-3">
-          <h2 class="text-base font-medium">api cost audit</h2>
-          <span class="text-xs px-2 py-0.5 rounded border border-foreground/10 text-muted-foreground shrink-0 ml-4">free</span>
+          <h2 class="text-base font-medium">ai cost audit</h2>
+          <span class="text-xs px-2 py-0.5 rounded border border-foreground/10 text-muted-foreground shrink-0 ml-4">by request</span>
         </div>
         <p class="text-sm leading-relaxed text-foreground/70 mb-5">
-          upload your openai or anthropic usage logs. get a report showing exactly where
-          you're overspending and what a multi-model routing setup would save you.
+          review your openai or anthropic usage and identify where multi-model routing
+          would reduce spend. most teams overpay because they route everything through
+          their most expensive model. the fix is usually straightforward.
         </p>
-
         <div class="mb-5 space-y-1.5">
-          {['current spend breakdown by model + task type', 'routing recommendations with projected savings', 'implementation roadmap (copy-paste configs)'].map(item => (
+          {['spend breakdown by model and task type', 'routing recommendations with projected savings', 'implementation guidance — no vendor lock-in'].map(item => (
             <div class="flex items-start gap-2 text-sm text-foreground/60">
               <span class="mt-0.5 shrink-0">→</span>
               <span>{item}</span>
             </div>
           ))}
         </div>
-
-        <div class="space-y-3">
-          <input
-            type="file"
-            id="usage-file"
-            accept=".csv,.json,.txt"
-            class="w-full text-sm text-foreground/70 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border file:border-foreground/20 file:text-xs file:font-mono file:bg-transparent file:text-foreground hover:file:border-foreground/40 file:cursor-pointer cursor-pointer"
-          />
-          <button
-            onclick="submitAudit()"
-            class="w-full py-2.5 px-4 text-sm border border-foreground/20 rounded hover:border-foreground/60 transition-colors duration-200"
-          >
-            generate audit report
-          </button>
-        </div>
-        <p class="text-xs text-muted-foreground mt-3">your data stays private. report delivered by email within 24h.</p>
-      </article>
-
-      <!-- Model Router Proxy -->
-      <article class="border border-foreground/10 rounded-xl p-6">
-        <div class="flex items-start justify-between mb-3">
-          <h2 class="text-base font-medium">model routing proxy</h2>
-          <span class="text-xs px-2 py-0.5 rounded border border-foreground/10 text-muted-foreground shrink-0 ml-4">free tier</span>
-        </div>
-        <p class="text-sm leading-relaxed text-foreground/70 mb-5">
-          drop-in replacement for the openai api. automatically routes each request to the
-          most cost-effective model without changing your code.
-        </p>
-
-        <div class="mb-5 space-y-1.5">
-          {['change one line of code — just the base url', 'automatic routing by request complexity', '70% average cost reduction', 'same api interface, better economics'].map(item => (
-            <div class="flex items-start gap-2 text-sm text-foreground/60">
-              <span class="mt-0.5 shrink-0">→</span>
-              <span>{item}</span>
-            </div>
-          ))}
-        </div>
-
-        <div class="bg-muted/40 rounded-lg p-3 mb-5 overflow-x-auto">
-          <p class="text-xs text-muted-foreground mb-1">endpoint</p>
-          <code class="text-xs font-mono break-all">https://api.adrianlumley.co/v1/chat/completions</code>
-        </div>
-
-        <button
-          onclick="requestApiKey()"
-          class="w-full py-2.5 px-4 text-sm border border-foreground/20 rounded hover:border-foreground/60 transition-colors duration-200"
+        <a
+          href="/contact"
+          class="inline-block w-full text-center py-2.5 px-4 text-sm border border-foreground/20 rounded hover:border-foreground/60 transition-colors duration-200"
         >
-          get free api key
-        </button>
-        <p class="text-xs text-muted-foreground mt-3">free tier: 10,000 requests/month. no credit card.</p>
+          get in touch
+        </a>
+      </article>
+
+      <!-- Product Advisory -->
+      <article class="border border-foreground/10 rounded-xl p-6">
+        <div class="flex items-start justify-between mb-3">
+          <h2 class="text-base font-medium">product advisory</h2>
+          <span class="text-xs px-2 py-0.5 rounded border border-foreground/10 text-muted-foreground shrink-0 ml-4">selective</span>
+        </div>
+        <p class="text-sm leading-relaxed text-foreground/70 mb-5">
+          occasional advisory for early-stage teams building ai-native products.
+          particularly useful if you're navigating 0-to-1, figuring out what to measure,
+          or need someone who's actually shipped at scale to pressure-test your thinking.
+        </p>
+        <div class="mb-5 space-y-1.5">
+          {['product strategy and roadmap clarity', 'team and org design for ai products', 'investor narrative and positioning'].map(item => (
+            <div class="flex items-start gap-2 text-sm text-foreground/60">
+              <span class="mt-0.5 shrink-0">→</span>
+              <span>{item}</span>
+            </div>
+          ))}
+        </div>
+        <a
+          href="/contact"
+          class="inline-block w-full text-center py-2.5 px-4 text-sm border border-foreground/20 rounded hover:border-foreground/60 transition-colors duration-200"
+        >
+          get in touch
+        </a>
       </article>
 
     </section>
 
-    <!-- Contact -->
-    <section class="mt-16 fade-in">
-      <p class="text-xs text-muted-foreground">
-        questions →
-        <a href="mailto:adrian@adrianlumley.co" class="underline hover:no-underline ml-1">
-          adrian@adrianlumley.co
-        </a>
-      </p>
-    </section>
+    <!-- Footer note -->
+    <p class="text-xs text-muted-foreground mt-10 fade-in">
+      i take on a limited number of projects. if the fit is right, i'll say yes.
+    </p>
 
   </main>
 </Base>
-
-<script>
-  async function submitAudit() {
-    const fileInput = document.getElementById('usage-file') as HTMLInputElement;
-    const file = fileInput?.files?.[0];
-    if (!file) { alert('select a usage file first'); return; }
-    const email = prompt('email for the audit report:');
-    if (!email) return;
-    try {
-      const formData = new FormData();
-      formData.append('email', email);
-      formData.append('usage_file', file);
-      const res = await fetch('/api/audit', { method: 'POST', body: formData });
-      const result = await res.json();
-      alert(res.ok ? result.message : `error: ${result.error}`);
-    } catch { alert('failed to submit. try again.'); }
-  }
-
-  async function requestApiKey() {
-    const email = prompt('email for api key delivery:');
-    if (!email) return;
-    try {
-      const res = await fetch('/api/generate-key', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
-      });
-      const result = await res.json();
-      alert(res.ok
-        ? `api key: ${result.apiKey}\nendpoint: ${result.endpoint}\nfree limit: ${result.freeLimit}`
-        : `error: ${result.error}`
-      );
-    } catch { alert('failed to generate key. try again.'); }
-  }
-</script>
-
-<style>
-  .fade-in {
-    animation: fadeIn 0.4s ease-out both;
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-</style>

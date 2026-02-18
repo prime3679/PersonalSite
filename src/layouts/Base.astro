@@ -26,7 +26,7 @@ const fullTitle = title === 'Adrian Lumley' ? title : `${title} — Adrian Lumle
   <meta name="twitter:title" content={fullTitle} />
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content="https://adrianlumley.co/og-image.png" />
-  <link rel="canonical" href="https://adrianlumley.co" />
+  <link rel="canonical" href={Astro.url.href} />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/site.webmanifest" />
@@ -45,5 +45,16 @@ const fullTitle = title === 'Adrian Lumley' ? title : `${title} — Adrian Lumle
 </head>
 <body class="min-h-screen">
   <slot />
+  <footer class="border-t border-border mt-16 py-8 font-mono">
+    <div class="mx-auto max-w-2xl px-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-muted-foreground">
+      <span>adrian lumley · nyc</span>
+      <nav class="flex gap-5">
+        <a href="/work" class="hover:text-foreground transition-colors">work</a>
+        <a href="/lab" class="hover:text-foreground transition-colors">lab</a>
+        <a href="/blog" class="hover:text-foreground transition-colors">blog</a>
+        <a href="/contact" class="hover:text-foreground transition-colors">contact</a>
+      </nav>
+    </div>
+  </footer>
 </body>
 </html>

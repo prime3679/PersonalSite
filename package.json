@@ -6,7 +6,6 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "test": "npx playwright test",
     "astro": "astro"
   },
   "dependencies": {

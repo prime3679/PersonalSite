@@ -6,8 +6,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "test": "playwright test",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "npx playwright test",
+    "test:ui": "npx playwright test --ui"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^6.3.10",

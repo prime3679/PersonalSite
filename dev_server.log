@@ -1,0 +1,16 @@
+
+> personal-site@0.0.1 dev
+> astro dev
+
+19:46:09 [types] Generated 1ms
+19:46:09 [content] Syncing content
+19:46:09 [content] Synced content
+
+ astro  v5.17.2 ready in 566 ms
+
+┃ Local    http://localhost:4321/
+┃ Network  use --host to expose
+
+19:46:09 watching for file changes...
+19:46:47 [200] /lab 419ms
+19:47:03 [200] /familyos 8ms

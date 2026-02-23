@@ -13,4 +13,9 @@ test('Homepage has correct title and content', async ({ page }) => {
   const link = page.locator('a', { hasText: 'salesforce' });
   await expect(link).toBeVisible();
   await expect(link).toHaveAttribute('href', 'https://www.salesforce.com');
+
+  // Check for the contact link
+  const contactLink = page.locator('a', { hasText: 'email me' });
+  await expect(contactLink).toBeVisible();
+  await expect(contactLink).toHaveAttribute('href', '/contact');
 });

@@ -1,35 +1,16 @@
 ---
 import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
+import { getCollection } from 'astro:content';
 
 const title = "Blog";
 const description = "Monthly musings on product leadership, systems thinking, and building scalable platforms.";
 
-const posts = [
-  {
-    slug: 'familyos-building-a-family-agent',
-    title: 'I gave an AI agent two weeks to coordinate my family',
-    date: '2026-02-18',
-    excerpt: 'What I learned building a multi-agent family coordination system from scratch. Not a product pitch — just what happened when I stopped managing logistics manually.',
-    published: true
-  },
-  {
-    slug: 'ai-cost-70-percent',
-    title: 'I cut my AI costs 70% in a weekend. Here\'s the only thing that mattered.',
-    date: '2026-02-18',
-    excerpt: 'Not prompt compression. Not batching. Routing. How I went from $45/day to under $15 by asking one question: does this task actually need my best model?',
-    published: true
-  },
-  {
-    slug: 'systems-thinking-product-orgs',
-    title: 'Second-order effects in product organizations',
-    date: '2026-02-01',
-    excerpt: 'Why the best product decisions consider what happens after what happens. Lessons from scaling at Salesforce, SiriusXM, and Disney+.',
-    published: false
-  }
-];
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
 
-const publishedPosts = posts.filter(post => post.published);
+const publishedPosts = posts.filter(post => post.data.published !== false);
 ---
 
 <Base title={title} description={description}>
@@ -54,18 +35,18 @@ const publishedPosts = posts.filter(post => post.published);
               <div class="mb-4">
                 <h2 class="text-lg font-normal mb-2 leading-relaxed">
                   <a href={`/blog/${post.slug}`} class="underline hover:no-underline">
-                    {post.title}
+                    {post.data.title}
                   </a>
                 </h2>
                 <time class="text-sm text-muted-foreground uppercase tracking-wider">
-                  {new Date(post.date).toLocaleDateString('en-US', { 
+                  {post.data.date.toLocaleDateString('en-US', {
                     year: 'numeric', 
                     month: 'long' 
                   })}
                 </time>
               </div>
               <p class="text-base leading-relaxed text-muted-foreground">
-                {post.excerpt}
+                {post.data.description || post.data.excerpt}
               </p>
             </article>
           ))}

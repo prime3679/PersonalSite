@@ -12,6 +12,10 @@ test.describe('Base Layout Meta Tags', () => {
     const charset = await page.locator('meta[charset]').getAttribute('charset');
     expect(charset).toBe('UTF-8');
 
+    // Referrer Policy
+    const referrer = await page.locator('meta[name="referrer"]').getAttribute('content');
+    expect(referrer).toBe('strict-origin-when-cross-origin');
+
     // Viewport
     const viewport = await page.locator('meta[name="viewport"]').getAttribute('content');
     expect(viewport).toBe('width=device-width, initial-scale=1.0, maximum-scale=1');

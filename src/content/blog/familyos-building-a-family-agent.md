@@ -2,6 +2,7 @@
 title: "I gave an AI agent two weeks to coordinate my family"
 date: 2026-02-18
 description: "What I learned building a multi-agent family coordination system from scratch. Not a product pitch — just what happened when I stopped managing logistics manually."
+published: true
 ---
 
 <p>

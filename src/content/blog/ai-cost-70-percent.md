@@ -2,6 +2,7 @@
 title: "I cut my AI costs 70% in a weekend. Here's the only thing that mattered."
 date: 2026-02-18
 description: "Not prompt compression. Not batching. Routing. How I went from $45/day to under $15 by asking one question: does this task actually need my best model?"
+published: true
 ---
 
 <p>

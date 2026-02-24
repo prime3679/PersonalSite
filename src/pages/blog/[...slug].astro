@@ -1,19 +1,51 @@
 ---
 import { getCollection } from 'astro:content';
-import BlogPost from '../../layouts/BlogPost.astro';
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
-  return posts.map((post) => ({
-    params: { slug: post.slug },
-    props: post,
-  }));
+  return posts
+    .filter(post => post.data.published !== false)
+    .map(post => ({
+      params: { slug: post.slug },
+      props: { post },
+    }));
 }
 
-const post = Astro.props;
+const { post } = Astro.props;
 const { Content } = await post.render();
+
+const dateFormatted = new Date(post.data.date).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
+
+// Use full title for meta tag
+const fullTitle = `${post.data.title} — Adrian Lumley`;
 ---
 
-<BlogPost {...post.data}>
-  <Content />
-</BlogPost>
+<Base title={fullTitle} description={post.data.description}>
+  <Header />
+  <main class="mx-auto max-w-2xl px-6 py-12 font-mono">
+    <!-- Header -->
+    <section class="mb-10 fade-in">
+      <a href="/blog" class="text-xs text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">← blog</a>
+      <h1 class="text-2xl font-normal mt-4 mb-3 leading-relaxed">{post.data.title}</h1>
+      <time class="text-xs text-muted-foreground uppercase tracking-wider">
+        {dateFormatted}
+      </time>
+    </section>
+
+    <!-- Content -->
+    <article class="fade-in prose space-y-6 text-sm leading-relaxed">
+      <Content />
+    </article>
+
+    <!-- Footer -->
+    <footer class="mt-16 pt-8 border-t border-foreground/10 fade-in">
+      <a href="/blog" class="text-xs text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">← all posts</a>
+    </footer>
+  </main>
+</Base>

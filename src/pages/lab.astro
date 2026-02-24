@@ -216,15 +216,12 @@ import Header from '../components/Header.astro';
   async function loadFamilyOsStats() {
     const loadingEl = document.getElementById('familyos-stats-loading');
     const loadedEl = document.getElementById('familyos-stats-loaded');
+    const CACHE_KEY = 'familyos-stats-v1';
 
-    try {
-      const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), 5000);
-      const res = await fetch('/familyos-stats.json', { signal: controller.signal });
-      clearTimeout(timer);
-      if (!res.ok) throw new Error('not found');
-      const stats = await res.json();
+    let hasRendered = false;
 
+    function renderStats(stats) {
+      if (!stats) return;
       const weeksEl = document.getElementById('stat-weeks');
       const proposalsEl = document.getElementById('stat-proposals');
       const approvalEl = document.getElementById('stat-approval');
@@ -235,11 +232,45 @@ import Header from '../components/Header.astro';
         ? `${Math.round(stats.approvalRate * 100)}%`
         : 'pending';
 
-      loadingEl?.style && (loadingEl.style.display = 'none');
-      loadedEl?.style && (loadedEl.style.display = 'grid');
-    } catch {
-      // Stats not available yet — hide the loading indicator cleanly
-      if (loadingEl) loadingEl.textContent = 'stats coming soon';
+      if (loadingEl) loadingEl.style.display = 'none';
+      if (loadedEl) loadedEl.style.display = 'grid';
+      hasRendered = true;
+    }
+
+    try {
+      // 1. Try Cache
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) {
+        renderStats(JSON.parse(cached));
+      }
+    } catch (e) {
+      console.warn('Cache read failed', e);
+    }
+
+    try {
+      // 2. Fetch Network
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 5000);
+      const res = await fetch('/familyos-stats.json', { signal: controller.signal });
+      clearTimeout(timer);
+      if (!res.ok) throw new Error('not found');
+
+      const stats = await res.json();
+      renderStats(stats);
+
+      // 3. Update Cache
+      try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify(stats));
+      } catch (e) {
+        console.warn('Cache write failed', e);
+      }
+
+    } catch (err) {
+      // If we haven't shown anything yet, show error state
+      if (!hasRendered && loadingEl) {
+        loadingEl.textContent = 'stats coming soon';
+      }
+      // If we already rendered from cache, do nothing (keep showing stale data)
     }
   }
 

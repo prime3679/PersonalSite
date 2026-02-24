@@ -1,0 +1,157 @@
+---
+title: "I cut my AI costs 70% in a weekend. Here's the only thing that mattered."
+date: 2026-02-18
+description: "Not prompt compression. Not batching. Routing. How I went from $45/day to under $15 by asking one question: does this task actually need my best model?"
+---
+
+<p>
+  I built an AI agent to run my life — morning briefings, calendar coordination,
+  cron jobs, family logistics, the works. After three days it was costing me $45/day.
+</p>
+
+<p>
+  That's $1,350/month. More than my rent when I was 22.
+</p>
+
+<p>
+  The obvious fixes didn't work. I compressed prompts. I reduced context. I cached
+  aggressively. It barely moved. Then I looked at where the money was actually going
+  and the problem became obvious: I was routing every single request — a 7am weather
+  check, a heartbeat ping, a status update — through Claude Opus. My most expensive
+  model, doing my least important work.
+</p>
+
+<h2 class="text-lg font-normal mt-10 mb-4 uppercase tracking-wider">the fix isn't what you think</h2>
+
+<p>
+  Every article about AI cost optimization talks about prompt engineering, token
+  budgets, and caching strategies. Those are fine. But they're rounding errors compared
+  to the one decision that actually matters: <strong>which model handles which task.</strong>
+</p>
+
+<p>
+  I ran the same task — summarize and prioritize today's calendar — through four models
+  and measured the real cost:
+</p>
+
+<div class="border border-foreground/10 rounded-xl p-5 my-6 space-y-3">
+  <div class="grid grid-cols-3 gap-4 text-xs text-muted-foreground pb-2 border-b border-foreground/10">
+    <span>model</span>
+    <span>cost per task</span>
+    <span>quality</span>
+  </div>
+  <div class="grid grid-cols-3 gap-4 text-sm">
+    <span>haiku 3.5</span>
+    <span>$0.001</span>
+    <span>good enough</span>
+  </div>
+  <div class="grid grid-cols-3 gap-4 text-sm">
+    <span>sonnet 4.6</span>
+    <span>$0.010</span>
+    <span>strong</span>
+  </div>
+  <div class="grid grid-cols-3 gap-4 text-sm">
+    <span>opus 4.6</span>
+    <span>$0.040</span>
+    <span>excellent</span>
+  </div>
+  <div class="text-xs text-muted-foreground pt-2 border-t border-foreground/10">
+    40x cost delta between haiku and opus. same task.
+  </div>
+</div>
+
+<p>
+  Forty times more expensive. For a calendar summary that Haiku handles fine.
+</p>
+
+<p>
+  When I audited every cron job and every request type, the pattern was clear:
+  roughly 80% of what my agent does is simple, repetitive, and low-stakes.
+  Weather checks. Heartbeat pings. Daily reminders. Status updates. None of it
+  needs a frontier model. All of it was getting one.
+</p>
+
+<h2 class="text-lg font-normal mt-10 mb-4 uppercase tracking-wider">the routing architecture</h2>
+
+<p>
+  The fix was a three-tier model: assign each task type to the cheapest model that
+  can handle it reliably.
+</p>
+
+<div class="border border-foreground/10 rounded-xl p-5 my-6 space-y-4">
+  <div>
+    <p class="text-sm font-medium mb-1">tier 1 — haiku 3.5</p>
+    <p class="text-xs text-muted-foreground">heartbeat checks, security audits, health monitoring, status pings</p>
+    <p class="text-xs text-muted-foreground mt-1">rule: if the task fails, nothing bad happens</p>
+  </div>
+  <div class="border-t border-foreground/10 pt-4">
+    <p class="text-sm font-medium mb-1">tier 2 — sonnet 4.6</p>
+    <p class="text-xs text-muted-foreground">morning briefings, weekly planning, calendar analysis, emails, most writing</p>
+    <p class="text-xs text-muted-foreground mt-1">rule: tasks with real output that someone will read</p>
+  </div>
+  <div class="border-t border-foreground/10 pt-4">
+    <p class="text-sm font-medium mb-1">tier 3 — opus 4.6</p>
+    <p class="text-xs text-muted-foreground">strategy docs, executive deliverables, complex multi-step reasoning, anything that needs to be excellent</p>
+    <p class="text-xs text-muted-foreground mt-1">rule: when the output quality materially changes the outcome</p>
+  </div>
+</div>
+
+<p>
+  I also added auto-escalation: certain keywords and task types trigger a model
+  upgrade automatically. If the agent detects "executive," "board," "high stakes,"
+  or "strategy" in the task context, it steps up to the next tier. No manual
+  switching, no guessing.
+</p>
+
+<h2 class="text-lg font-normal mt-10 mb-4 uppercase tracking-wider">the result — and the honest asterisk</h2>
+
+<p>
+  Background operational costs dropped dramatically. Cron jobs — briefings, heartbeat
+  checks, weekly scans, security audits — now run on Haiku or Sonnet instead of Opus.
+  That slice of the bill is down over 70%.
+</p>
+
+<p>
+  The honest version: total daily spend still varies a lot based on how much interactive
+  work the agent does. A quiet day with only crons running costs $15-20. A heavy build
+  session — shipping features, running audits, iterating on code — can hit $80-100+.
+  That's not a routing problem, that's the cost of actually using the tool for real work.
+</p>
+
+<p>
+  The distinction that matters: <strong>operational costs are now controlled and predictable.
+  Session costs scale with value delivered.</strong> I'm not burning $45/day on autopilot
+  anymore. When I spend $100, it's because something real got built.
+</p>
+
+<h2 class="text-lg font-normal mt-10 mb-4 uppercase tracking-wider">what this means if you're building with AI</h2>
+
+<p>
+  The mistake I made — and I see it constantly — is treating all tasks as equivalent
+  because they're all "AI tasks." They're not. A frontier model reasoning about strategy
+  is different from a frontier model telling you it's 42 degrees and cloudy. One earns
+  its cost. One is waste.
+</p>
+
+<p>
+  Before you optimize anything else, audit what your most expensive model is actually
+  doing all day. The answer is usually humbling. Most of it could be done by a model
+  that costs 40x less, and your users — or your agent — wouldn't notice the difference.
+</p>
+
+<p>
+  The single question worth asking: <em>does this task require excellence, or does it
+  just require correctness?</em>
+</p>
+
+<p>
+  Correctness is cheap. Price accordingly.
+</p>
+
+<hr class="border-foreground/10 my-10" />
+
+<p class="text-sm text-muted-foreground">
+  I validated the cost numbers using <a href="https://github.com/prime3679/bishop-bench" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">bishop-bench</a> —
+  a simple eval runner that tests the same task across models simultaneously and
+  compares outputs and costs side-by-side. Open source if you want to run your own numbers.
+</p>

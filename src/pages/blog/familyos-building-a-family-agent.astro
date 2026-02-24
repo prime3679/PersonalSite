@@ -7,7 +7,7 @@ const date = "2026-02-18";
 const description = "What I learned building a multi-agent family coordination system from scratch. Not a product pitch — just what happened when I stopped managing logistics manually.";
 ---
 
-<Base title={`${title} — Adrian Lumley`} description={description}>
+<Base title={title} description={description}>
   <Header />
   <main class="mx-auto max-w-2xl px-6 py-12 font-mono">
 
@@ -170,12 +170,3 @@ const description = "What I learned building a multi-agent family coordination s
   </main>
 </Base>
 
-<style>
-  .fade-in {
-    animation: fadeIn 0.4s ease-out both;
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-</style>

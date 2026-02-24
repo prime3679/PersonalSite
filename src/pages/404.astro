@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+---
+
+<Base title="Not Found" description="Page not found.">
+  <Header />
+  <main class="mx-auto max-w-2xl px-6 py-12 font-mono">
+    <section class="text-center py-16 fade-in">
+      <h1 class="text-2xl font-normal mb-4">404</h1>
+      <p class="text-base text-muted-foreground mb-8">
+        this page doesn't exist. maybe it did once. maybe it never will.
+      </p>
+      <a href="/" class="text-sm underline hover:no-underline">go home</a>
+    </section>
+  </main>
+</Base>

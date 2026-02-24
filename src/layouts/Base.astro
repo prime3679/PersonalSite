@@ -14,7 +14,7 @@ const fullTitle = title === 'Adrian Lumley' ? title : `${title} — Adrian Lumle
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{fullTitle}</title>
   <meta name="description" content={description} />
   <meta property="og:title" content={fullTitle} />
@@ -57,14 +57,18 @@ const fullTitle = title === 'Adrian Lumley' ? title : `${title} — Adrian Lumle
   </script>
 </head>
 <body class="min-h-screen">
-  <slot />
+  <div id="main-content">
+    <slot />
+  </div>
   <footer class="border-t border-border mt-16 py-8 font-mono">
     <div class="mx-auto max-w-2xl px-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-muted-foreground">
       <span>adrian lumley · nyc</span>
-      <nav class="flex gap-5">
+      <nav class="flex gap-5" aria-label="Footer navigation">
         <a href="/work" class="hover:text-foreground transition-colors">work</a>
-        <a href="/lab" class="hover:text-foreground transition-colors">lab</a>
         <a href="/blog" class="hover:text-foreground transition-colors">blog</a>
+        <a href="/services" class="hover:text-foreground transition-colors">services</a>
+        <a href="/lab" class="hover:text-foreground transition-colors">lab</a>
+        <a href="/bishop-development" class="hover:text-foreground transition-colors">log</a>
         <a href="/contact" class="hover:text-foreground transition-colors">contact</a>
       </nav>
     </div>

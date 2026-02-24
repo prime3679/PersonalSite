@@ -9,18 +9,28 @@ const navItems = [
   { href: '/bishop-development', label: 'log' },
   { href: '/contact', label: 'contact' },
 ];
+
+function isActive(href: string, pathname: string) {
+  if (href === '/') return pathname === '/';
+  return pathname === href || pathname.startsWith(href + '/');
+}
 ---
 
+<a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-2 focus:left-2 focus:px-4 focus:py-2 focus:bg-background focus:text-foreground focus:border focus:border-border focus:rounded font-mono text-sm">
+  Skip to content
+</a>
+
 <header class="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-colors">
-  <div class="mx-auto flex max-w-3xl items-center justify-between px-4 py-3 text-sm">
+  <div class="mx-auto flex max-w-2xl items-center justify-between px-6 py-3 text-sm">
     <!-- Desktop nav -->
-    <nav class="hidden sm:flex gap-5 font-medium font-mono">
+    <nav class="hidden sm:flex gap-5 font-medium font-mono" aria-label="Main navigation">
       {navItems.map((item) => (
         <a
           href={item.href}
+          aria-current={isActive(item.href, pathname) ? 'page' : undefined}
           class:list={[
             'transition-colors duration-200 uppercase tracking-wider text-xs',
-            pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
+            isActive(item.href, pathname)
               ? 'text-foreground'
               : 'text-muted-foreground hover:text-foreground',
           ]}
@@ -67,13 +77,14 @@ const navItems = [
   </div>
 
   <!-- Mobile nav dropdown -->
-  <nav id="mobile-nav" class="hidden sm:hidden border-t border-border px-4 pb-4 pt-2 space-y-3 font-mono">
+  <nav id="mobile-nav" class="hidden sm:hidden border-t border-border px-4 pb-4 pt-2 space-y-3 font-mono" aria-label="Mobile navigation">
     {navItems.map((item) => (
       <a
         href={item.href}
+        aria-current={isActive(item.href, pathname) ? 'page' : undefined}
         class:list={[
           'block text-sm uppercase tracking-wider py-1',
-          pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
+          isActive(item.href, pathname)
             ? 'text-foreground'
             : 'text-muted-foreground',
         ]}

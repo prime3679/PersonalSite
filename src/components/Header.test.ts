@@ -14,3 +14,19 @@ test('Header renders navigation links', async () => {
   expect(result).toContain('href="/bishop-development"');
   expect(result).toContain('href="/contact"');
 });
+
+test('Header includes skip-to-content link', async () => {
+  const container = await AstroContainer.create();
+  const result = await container.renderToString(Header);
+
+  expect(result).toContain('href="#main-content"');
+  expect(result).toContain('Skip to content');
+});
+
+test('Header has aria-label on nav elements', async () => {
+  const container = await AstroContainer.create();
+  const result = await container.renderToString(Header);
+
+  expect(result).toContain('aria-label="Main navigation"');
+  expect(result).toContain('aria-label="Mobile navigation"');
+});

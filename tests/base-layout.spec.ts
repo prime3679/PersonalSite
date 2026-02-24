@@ -12,9 +12,10 @@ test.describe('Base Layout Meta Tags', () => {
     const charset = await page.locator('meta[charset]').getAttribute('charset');
     expect(charset).toBe('UTF-8');
 
-    // Viewport
+    // Viewport — should NOT have maximum-scale (accessibility)
     const viewport = await page.locator('meta[name="viewport"]').getAttribute('content');
-    expect(viewport).toBe('width=device-width, initial-scale=1.0, maximum-scale=1');
+    expect(viewport).toBe('width=device-width, initial-scale=1.0');
+    expect(viewport).not.toContain('maximum-scale');
 
     // Description
     const description = await page.locator('meta[name="description"]').getAttribute('content');
@@ -42,6 +43,20 @@ test.describe('Base Layout Meta Tags', () => {
     // OG Title
     const ogTitle = await page.locator('meta[property="og:title"]').getAttribute('content');
     expect(ogTitle).toBe('Work — Adrian Lumley');
+  });
+
+  test('Pages should not have double title suffix', async ({ page }) => {
+    // Lab page
+    await page.goto('/lab');
+    await expect(page).toHaveTitle('Lab — Adrian Lumley');
+
+    // Services page
+    await page.goto('/services');
+    await expect(page).toHaveTitle('Services — Adrian Lumley');
+
+    // FamilyOS page
+    await page.goto('/familyos');
+    await expect(page).toHaveTitle('FamilyOS — Adrian Lumley');
   });
 
 });

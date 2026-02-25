@@ -1,7 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
-import { caseStudies } from '../data/caseStudies';
 ---
 
 <Base description="Director of Product at Salesforce, building at the intersection of AI and enterprise. Previously SiriusXM, Disney+, EA. Based in NYC.">
@@ -12,59 +11,18 @@ import { caseStudies } from '../data/caseStudies';
     <section class="mb-16 fade-in">
       <h1 class="text-2xl font-normal mb-6 leading-relaxed">hello, i'm adrian.</h1>
       <p class="text-base leading-relaxed mb-4">
-        i'm a director of product management at <a href="https://www.salesforce.com" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">salesforce</a>, working at the intersection of ai and enterprise product — figuring out how large organizations actually adopt new technology, and what it takes to make that stick.
-      </p>
-      <p class="text-base leading-relaxed mb-4">
-        previously at siriusxm, where a cross-platform listening revamp added <span class="font-semibold">18%</span> more daily sessions and reduced voluntary churn by <span class="font-semibold">12%</span> for 34+ million subscribers.
-      </p>
-      <p class="text-base leading-relaxed mb-4">
-        at disney+, i helped stand up international launch tooling that enabled day-one availability in <span class="font-semibold">60+</span> markets and cut localization cycle time by <span class="font-semibold">35%</span>.
+        director of product at <a href="https://www.salesforce.com" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">salesforce</a>, working at the intersection of ai and enterprise — figuring out how large organizations actually adopt new technology, and what it takes to make that stick.
       </p>
       <p class="text-base leading-relaxed">
-        at ea, i ran 0-to-1 on a genZ sports companion app — hired a 40-person team, defined the vision, designed the core reward loops. <span class="font-semibold">90% CSAT</span>, <span class="font-semibold">86% weekly retention</span>. it became the ea sports app. 14 years in tech, based in nyc.
+        14 years in tech. previously siriusxm, disney+, ea. based in nyc. → <a href="/work" class="underline hover:no-underline">see the work</a>
       </p>
-    </section>
-
-    <!-- Featured Work -->
-    <section class="mb-16 fade-in">
-      <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">featured work:</h2>
-      <div class="grid gap-6">
-        {caseStudies.map((cs) => (
-          <article class="border border-foreground/10 rounded-xl p-6 hover:border-foreground/40 transition-colors duration-300">
-            <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between mb-2 text-sm uppercase tracking-wide text-foreground/70">
-              <span>{cs.company}</span>
-              <span class="font-semibold">{cs.headline}</span>
-            </div>
-            <p class="text-base leading-relaxed mb-4 text-foreground/90">{cs.blurb}</p>
-            <a href={`/work#${cs.id}`} class="inline-flex items-center text-sm font-medium underline hover:no-underline">
-              dive into the case study ↗
-            </a>
-          </article>
-        ))}
-      </div>
-    </section>
-
-    <!-- Building -->
-    <section class="mb-16 fade-in">
-      <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">building:</h2>
-      <div class="space-y-3">
-        <a href="/lab" class="flex items-start justify-between group border border-foreground/10 rounded-xl p-5 hover:border-foreground/40 transition-colors duration-300">
-          <div>
-            <h3 class="text-sm font-medium mb-1 group-hover:underline">lab →</h3>
-            <p class="text-sm leading-relaxed text-foreground/70">
-              things i'm building. familyos, bishop, and whatever comes next.
-            </p>
-          </div>
-          <span class="text-xs text-muted-foreground border border-foreground/10 rounded px-2 py-0.5 ml-4 mt-0.5 shrink-0">active</span>
-        </a>
-      </div>
     </section>
 
     <!-- Currently -->
     <section class="mb-16 fade-in">
       <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">currently:</h2>
       <div class="space-y-3 text-base leading-relaxed">
-        <p>director of product at salesforce, 8 weeks in. figuring out how large enterprises actually adopt ai — not the pitch, the messy reality.</p>
+        <p>8 weeks into salesforce. figuring out how large enterprises actually adopt ai — not the pitch, the messy reality.</p>
         <p>building <a href="/lab" class="underline hover:no-underline">familyos</a> — a multi-agent system that coordinates family logistics so i can focus on being present, not managing a spreadsheet.</p>
         <p>slowly writing a scifi novel about what happens when ai develops consciousness. no deadline. that's the point.</p>
         <div class="pt-2 space-y-2 text-sm text-foreground/60">
@@ -84,7 +42,7 @@ import { caseStudies } from '../data/caseStudies';
         <div class="space-y-2 mt-6">
           <p>— <a href="/contact" class="underline hover:no-underline">email me</a></p>
           <p>— <a href="https://minoritymusings.substack.com/?r=4evku&utm_campaign=pub-share-checklist" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">read my writing</a></p>
-          <p>— <a href="https://www.linkedin.com/in/adrianlumley/" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">find me on linkedin</a></p>
+          <p>— <a href="https://www.linkedin.com/in/adrianlumley/" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">linkedin</a></p>
           <p>— <a href="https://github.com/prime3679" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">github</a></p>
         </div>
       </div>

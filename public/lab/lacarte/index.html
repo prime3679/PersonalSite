@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>La Carte</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #faf9f7;
+  --surface: #ffffff;
+  --border: #e8e4de;
+  --text: #1a1a18;
+  --muted: #8a8780;
+  --accent: #2c2c2a;
+  --gold: #b8924a;
+  --gold-bg: rgba(184,146,74,0.08);
+  --green: #3a7d55;
+  --green-bg: rgba(58,125,85,0.08);
+  --red: #c0392b;
+  --red-bg: rgba(192,57,43,0.08);
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --mono: 'SF Mono', 'Fira Mono', monospace;
+  --radius: 14px;
+  --shadow: 0 2px 16px rgba(0,0,0,0.06);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.5;
+  min-height: 100vh;
+  max-width: 430px;
+  margin: 0 auto;
+}
+
+/* ── NAV ── */
+.top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px 12px;
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 100;
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  font-family: var(--mono);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.nav-logo span { color: var(--gold); }
+
+.view-toggle {
+  display: flex;
+  background: var(--border);
+  border-radius: 20px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.view-btn {
+  padding: 5px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  transition: all 0.15s;
+}
+
+.view-btn.active {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+/* ── SCREENS ── */
+.screen { display: none; animation: fadeIn 0.2s ease; }
+.screen.active { display: block; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── RESERVATION HEADER ── */
+.reservation-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 20px;
+}
+
+.res-restaurant { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+.res-detail { font-size: 13px; color: var(--muted); }
+.res-detail span { color: var(--text); font-weight: 500; }
+
+/* ── CATEGORY TABS ── */
+.category-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 14px 20px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  background: var(--bg);
+  position: sticky;
+  top: 57px;
+  z-index: 90;
+  border-bottom: 1px solid var(--border);
+}
+
+.category-tabs::-webkit-scrollbar { display: none; }
+
+.cat-btn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+
+.cat-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* ── MENU ITEMS ── */
+.menu-list { padding: 12px 20px 120px; }
+
+.menu-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 16px 0 8px;
+}
+
+.dish-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 10px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  box-shadow: var(--shadow);
+  transition: border-color 0.15s;
+}
+
+.dish-card.selected {
+  border-color: var(--gold);
+  background: var(--gold-bg);
+}
+
+.dish-emoji {
+  font-size: 28px;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  border-radius: 10px;
+}
+
+.dish-info { flex: 1; min-width: 0; }
+
+.dish-name { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+.dish-desc { font-size: 13px; color: var(--muted); line-height: 1.4; margin-bottom: 6px; }
+
+.dish-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.dish-price { font-size: 14px; font-weight: 600; color: var(--text); }
+
+.dish-badge {
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.badge-popular { background: var(--gold-bg); color: var(--gold); }
+.badge-sellout { background: var(--red-bg); color: var(--red); }
+.badge-seasonal { background: var(--green-bg); color: var(--green); }
+
+.dish-stepper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.stepper-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  line-height: 1;
+  transition: all 0.1s;
+  flex-shrink: 0;
+}
+
+.stepper-btn.add-btn {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.stepper-count {
+  font-size: 15px;
+  font-weight: 600;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* ── CART BAR ── */
+.cart-bar {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 40px);
+  max-width: 390px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 14px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  z-index: 200;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.cart-bar.hidden { opacity: 0; pointer-events: none; transform: translateX(-50%) translateY(10px); }
+
+.cart-bar-left { display: flex; align-items: center; gap: 10px; }
+.cart-count {
+  background: var(--gold);
+  color: #fff;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700;
+}
+.cart-label { font-size: 15px; font-weight: 600; }
+.cart-total { font-size: 15px; font-weight: 600; color: rgba(255,255,255,0.8); }
+
+/* ── CART SCREEN ── */
+.cart-header {
+  padding: 20px 20px 4px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.back-btn {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 18px; flex-shrink: 0;
+}
+
+.cart-title { font-size: 20px; font-weight: 700; }
+
+.cart-items { padding: 16px 20px; }
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  gap: 10px;
+}
+
+.cart-item:last-child { border-bottom: none; }
+
+.cart-item-info { flex: 1; }
+.cart-item-name { font-size: 14px; font-weight: 600; }
+.cart-item-qty { font-size: 13px; color: var(--muted); }
+.cart-item-price { font-size: 14px; font-weight: 600; }
+
+.cart-remove {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 14px;
+}
+
+.cart-summary {
+  margin: 0 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  padding: 4px 0;
+  color: var(--muted);
+}
+
+.summary-row.total {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  border-top: 1px solid var(--border);
+  margin-top: 8px;
+  padding-top: 10px;
+}
+
+.note-card {
+  margin: 16px 20px;
+  background: var(--gold-bg);
+  border: 1px solid rgba(184,146,74,0.2);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--gold);
+  line-height: 1.5;
+}
+
+.confirm-btn {
+  margin: 16px 20px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  width: calc(100% - 40px);
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  transition: opacity 0.15s;
+}
+
+.confirm-btn:hover { opacity: 0.88; }
+
+/* ── CONFIRMATION SCREEN ── */
+.confirmation {
+  padding: 60px 20px 40px;
+  text-align: center;
+}
+
+.confirm-icon {
+  width: 80px; height: 80px;
+  background: var(--green-bg);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px;
+  margin: 0 auto 24px;
+}
+
+.confirm-title { font-size: 26px; font-weight: 700; margin-bottom: 10px; }
+.confirm-sub { font-size: 15px; color: var(--muted); line-height: 1.6; margin-bottom: 32px; }
+
+.confirm-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  text-align: left;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+
+.confirm-card-title {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.confirm-dish-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.confirm-dish-row:last-child { border-bottom: none; }
+
+.confirm-total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 15px;
+  font-weight: 700;
+  padding-top: 12px;
+  margin-top: 4px;
+  border-top: 1px solid var(--border);
+}
+
+.done-btn {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  width: 100%;
+  cursor: pointer;
+  color: var(--text);
+  transition: background 0.15s;
+}
+
+.done-btn:hover { background: var(--border); }
+
+/* ── RESTAURANT DASHBOARD ── */
+.dash-content { padding: 16px 20px 40px; }
+
+.dash-kpi-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.kpi-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 10px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+.kpi-num { font-size: 24px; font-weight: 700; color: var(--accent); line-height: 1.1; }
+.kpi-label { font-size: 10px; color: var(--muted); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.08em; }
+
+.section-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+  margin-top: 20px;
+}
+
+.demand-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
+
+.demand-row {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+}
+
+.demand-row:last-child { border-bottom: none; }
+
+.demand-emoji { font-size: 22px; flex-shrink: 0; }
+
+.demand-info { flex: 1; min-width: 0; }
+.demand-name { font-size: 14px; font-weight: 600; }
+.demand-note { font-size: 12px; color: var(--muted); margin-top: 1px; }
+
+.demand-count {
+  font-size: 13px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.count-normal { background: var(--gold-bg); color: var(--gold); }
+.count-warning { background: var(--red-bg); color: var(--red); }
+.count-ok { background: var(--green-bg); color: var(--green); }
+
+.order-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.order-row {
+  display: flex;
+  align-items: flex-start;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  gap: 10px;
+}
+
+.order-row:last-child { border-bottom: none; }
+
+.order-num {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.order-info { flex: 1; }
+.order-guest { font-size: 13px; font-weight: 600; }
+.order-dishes { font-size: 12px; color: var(--muted); margin-top: 2px; line-height: 1.5; }
+
+.order-total { font-size: 14px; font-weight: 700; color: var(--green); }
+
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--green);
+  background: var(--green-bg);
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(58,125,85,0.2);
+  margin-bottom: 16px;
+}
+
+.live-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<div class="top-nav">
+  <div class="nav-logo">la<span>·</span>carte</div>
+  <div class="view-toggle">
+    <button class="view-btn active" id="btn-patron" onclick="switchView('patron')">Patron</button>
+    <button class="view-btn" id="btn-restaurant" onclick="switchView('restaurant')">Restaurant</button>
+  </div>
+</div>
+
+<!-- ══════════════ PATRON VIEW ══════════════ -->
+<div id="view-patron">
+
+  <!-- MENU SCREEN -->
+  <div class="screen active" id="screen-menu">
+    <div class="reservation-header">
+      <div class="res-restaurant">Boqueria West 40th</div>
+      <div class="res-detail">
+        <span>Sat Mar 7</span> · <span>7:30 PM</span> · Party of <span>2</span>
+      </div>
+    </div>
+
+    <div class="category-tabs">
+      <button class="cat-btn active" onclick="filterCat('all', this)">All</button>
+      <button class="cat-btn" onclick="filterCat('tapas', this)">Tapas</button>
+      <button class="cat-btn" onclick="filterCat('mains', this)">Mains</button>
+      <button class="cat-btn" onclick="filterCat('dessert', this)">Dessert</button>
+      <button class="cat-btn" onclick="filterCat('drinks', this)">Drinks</button>
+    </div>
+
+    <div class="menu-list" id="menu-list"></div>
+  </div>
+
+  <!-- CART SCREEN -->
+  <div class="screen" id="screen-cart">
+    <div class="cart-header">
+      <div class="back-btn" onclick="showScreen('menu')">←</div>
+      <div class="cart-title">Your Order</div>
+    </div>
+    <div class="cart-items" id="cart-items-list"></div>
+    <div class="cart-summary" id="cart-summary"></div>
+    <div class="note-card">
+      Your dishes will be reserved and pre-authorized. Charge posts after dining. Cancel up to 2 hours before your reservation.
+    </div>
+    <button class="confirm-btn" onclick="confirmOrder()">Pre-pay & Confirm →</button>
+  </div>
+
+  <!-- CONFIRMATION SCREEN -->
+  <div class="screen" id="screen-confirm">
+    <div class="confirmation">
+      <div class="confirm-icon">✓</div>
+      <div class="confirm-title">You're all set.</div>
+      <div class="confirm-sub">Your dishes are reserved at<br><strong>Boqueria West 40th</strong> tonight at 7:30 PM.</div>
+      <div class="confirm-card">
+        <div class="confirm-card-title">Order Summary</div>
+        <div id="confirm-dish-list"></div>
+        <div class="confirm-total">
+          <span>Total pre-authorized</span>
+          <span id="confirm-total-amount"></span>
+        </div>
+      </div>
+      <div class="confirm-card" style="margin-top:0">
+        <div class="confirm-card-title">What happens next</div>
+        <div style="font-size:13px; color: var(--muted); line-height:1.7">
+          · Show your name at the host stand<br>
+          · Your table will have your order ready to go<br>
+          · Final charge posts after you dine<br>
+          · Add more at the table anytime
+        </div>
+      </div>
+      <button class="done-btn" onclick="startOver()">Back to Menu</button>
+    </div>
+  </div>
+
+  <!-- CART BAR -->
+  <div class="cart-bar hidden" id="cart-bar" onclick="showScreen('cart')">
+    <div class="cart-bar-left">
+      <div class="cart-count" id="cart-bar-count">0</div>
+      <div class="cart-label">Review Order</div>
+    </div>
+    <div class="cart-total" id="cart-bar-total">$0</div>
+  </div>
+
+</div>
+
+<!-- ══════════════ RESTAURANT VIEW ══════════════ -->
+<div id="view-restaurant" style="display:none">
+  <div class="dash-content">
+    <div style="padding: 4px 0 8px">
+      <div class="live-badge"><div class="live-dot"></div>Live · Service tonight 5–11 PM</div>
+    </div>
+
+    <div class="dash-kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-num">18</div>
+        <div class="kpi-label">Covers</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-num">11</div>
+        <div class="kpi-label">Pre-ordered</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-num">$1,240</div>
+        <div class="kpi-label">Committed</div>
+      </div>
+    </div>
+
+    <div class="section-label">Dish demand tonight</div>
+    <div class="demand-card">
+      <div class="demand-row">
+        <div class="demand-emoji">🥔</div>
+        <div class="demand-info">
+          <div class="demand-name">Patatas Bravas</div>
+          <div class="demand-note">Prep 14 portions · ample stock</div>
+        </div>
+        <div class="demand-count count-ok">×11</div>
+      </div>
+      <div class="demand-row">
+        <div class="demand-emoji">🥩</div>
+        <div class="demand-info">
+          <div class="demand-name">Jamón Ibérico</div>
+          <div class="demand-note">Current stock: 7 portions ⚠ order more</div>
+        </div>
+        <div class="demand-count count-warning">×10</div>
+      </div>
+      <div class="demand-row">
+        <div class="demand-emoji">🦑</div>
+        <div class="demand-info">
+          <div class="demand-name">Pulpo a la Gallega</div>
+          <div class="demand-note">Prep 8 portions · sufficient</div>
+        </div>
+        <div class="demand-count count-normal">×8</div>
+      </div>
+      <div class="demand-row">
+        <div class="demand-emoji">🍮</div>
+        <div class="demand-info">
+          <div class="demand-name">Crema Catalana</div>
+          <div class="demand-note">Prep 9 portions · sufficient</div>
+        </div>
+        <div class="demand-count count-ok">×9</div>
+      </div>
+      <div class="demand-row">
+        <div class="demand-emoji">🥩</div>
+        <div class="demand-info">
+          <div class="demand-name">Chuletón de Buey</div>
+          <div class="demand-note">Prep 3 portions · confirm with kitchen</div>
+        </div>
+        <div class="demand-count count-normal">×3</div>
+      </div>
+    </div>
+
+    <div class="section-label">Pre-orders by table</div>
+    <div class="order-card">
+      <div class="order-row">
+        <div class="order-num">1</div>
+        <div class="order-info">
+          <div class="order-guest">Lumley · 2 guests · 7:30 PM</div>
+          <div class="order-dishes">Patatas Bravas · Jamón Ibérico × 2 · Crema Catalana</div>
+        </div>
+        <div class="order-total">$98</div>
+      </div>
+      <div class="order-row">
+        <div class="order-num">2</div>
+        <div class="order-info">
+          <div class="order-guest">Chen · 4 guests · 7:00 PM</div>
+          <div class="order-dishes">Pulpo × 2 · Chuletón · Patatas Bravas × 2 · Crema × 2</div>
+        </div>
+        <div class="order-total">$187</div>
+      </div>
+      <div class="order-row">
+        <div class="order-num">3</div>
+        <div class="order-info">
+          <div class="order-guest">Martinez · 3 guests · 8:00 PM</div>
+          <div class="order-dishes">Jamón Ibérico × 3 · Pulpo · Patatas Bravas</div>
+        </div>
+        <div class="order-total">$134</div>
+      </div>
+      <div class="order-row">
+        <div class="order-num">4</div>
+        <div class="order-info">
+          <div class="order-guest">Thompson · 2 guests · 8:30 PM</div>
+          <div class="order-dishes">Chuletón × 2 · Jamón Ibérico · Crema Catalana × 2</div>
+        </div>
+        <div class="order-total">$211</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──
+const menu = [
+  { id: 1, cat: 'tapas', emoji: '🥔', name: 'Patatas Bravas', desc: 'Crispy potatoes with bravas sauce and aioli', price: 12, badge: 'popular', badgeLabel: '↑ ordered by 84% of tables' },
+  { id: 2, cat: 'tapas', emoji: '🥩', name: 'Jamón Ibérico', desc: 'Hand-carved 36-month aged Iberian ham', price: 28, badge: 'sellout', badgeLabel: 'Sells out most nights' },
+  { id: 3, cat: 'tapas', emoji: '🦑', name: 'Pulpo a la Gallega', desc: 'Galician octopus, paprika oil, sea salt', price: 22, badge: 'popular', badgeLabel: '↑ Staff favourite' },
+  { id: 4, cat: 'tapas', emoji: '🫙', name: 'Croquetas de Jamón', desc: 'Crispy ham and béchamel croquettes (4 pc)', price: 14, badge: null, badgeLabel: null },
+  { id: 5, cat: 'tapas', emoji: '🍳', name: 'Huevos Rotos', desc: 'Broken eggs with Iberian ham and potatoes', price: 16, badge: 'popular', badgeLabel: '↑ Weekend favourite' },
+  { id: 6, cat: 'mains', emoji: '🥩', name: 'Chuletón de Buey', desc: '28-day dry-aged bone-in ribeye for two', price: 64, badge: 'seasonal', badgeLabel: 'Limited nightly' },
+  { id: 7, cat: 'mains', emoji: '🐟', name: 'Branzino a la Plancha', desc: 'Whole grilled sea bass, lemon, capers', price: 38, badge: null, badgeLabel: null },
+  { id: 8, cat: 'mains', emoji: '🍗', name: 'Pollo Asado', desc: 'Roasted half chicken, romesco, herbs', price: 28, badge: 'popular', badgeLabel: '↑ Most ordered main' },
+  { id: 9, cat: 'dessert', emoji: '🍮', name: 'Crema Catalana', desc: 'House-made crème brûlée with citrus zest', price: 11, badge: 'popular', badgeLabel: '↑ 9 pre-ordered tonight' },
+  { id: 10, cat: 'dessert', emoji: '🍫', name: 'Churros con Chocolate', desc: 'Crispy churros, dark chocolate dipping sauce', price: 10, badge: null, badgeLabel: null },
+  { id: 11, cat: 'drinks', emoji: '🍷', name: 'Cava Toast', desc: 'Sparkling wine, house selection', price: 14, badge: null, badgeLabel: null },
+  { id: 12, cat: 'drinks', emoji: '🍸', name: 'Sangria de la Casa', desc: 'Red wine, brandy, seasonal fruit, cinnamon', price: 12, badge: 'popular', badgeLabel: '↑ Most ordered drink' },
+];
+
+const cart = {};
+let currentCat = 'all';
+
+// ── RENDER MENU ──
+function renderMenu() {
+  const list = document.getElementById('menu-list');
+  const cats = currentCat === 'all'
+    ? [...new Set(menu.map(d => d.cat))]
+    : [currentCat];
+
+  let html = '';
+  for (const cat of cats) {
+    const items = menu.filter(d => d.cat === cat);
+    if (!items.length) continue;
+    const labels = { tapas: 'Tapas', mains: 'Mains', dessert: 'Dessert', drinks: 'Drinks' };
+    if (currentCat === 'all') html += `<div class="menu-section-title">${labels[cat]}</div>`;
+    for (const d of items) {
+      const qty = cart[d.id] || 0;
+      const selected = qty > 0 ? 'selected' : '';
+      const badgeHtml = d.badge
+        ? `<span class="dish-badge badge-${d.badge}">${d.badgeLabel}</span>`
+        : '';
+      html += `
+        <div class="dish-card ${selected}" id="dish-${d.id}">
+          <div class="dish-emoji">${d.emoji}</div>
+          <div class="dish-info">
+            <div class="dish-name">${d.name}</div>
+            <div class="dish-desc">${d.desc}</div>
+            <div class="dish-meta">
+              <span class="dish-price">$${d.price}</span>
+              ${badgeHtml}
+            </div>
+          </div>
+          <div class="dish-stepper">
+            ${qty > 0 ? `
+              <button class="stepper-btn" onclick="changeQty(${d.id}, -1)">−</button>
+              <span class="stepper-count">${qty}</span>
+            ` : ''}
+            <button class="stepper-btn add-btn" onclick="changeQty(${d.id}, 1)">+</button>
+          </div>
+        </div>`;
+    }
+  }
+  list.innerHTML = html;
+}
+
+// ── CART LOGIC ──
+function changeQty(id, delta) {
+  const cur = cart[id] || 0;
+  const next = Math.max(0, cur + delta);
+  if (next === 0) delete cart[id]; else cart[id] = next;
+  renderMenu();
+  updateCartBar();
+}
+
+function updateCartBar() {
+  const bar = document.getElementById('cart-bar');
+  const total = getCartTotal();
+  const count = getCartCount();
+  document.getElementById('cart-bar-count').textContent = count;
+  document.getElementById('cart-bar-total').textContent = `$${total}`;
+  if (count > 0) bar.classList.remove('hidden');
+  else bar.classList.add('hidden');
+}
+
+function getCartTotal() {
+  return Object.entries(cart).reduce((sum, [id, qty]) => {
+    const dish = menu.find(d => d.id === parseInt(id));
+    return sum + (dish ? dish.price * qty : 0);
+  }, 0);
+}
+
+function getCartCount() {
+  return Object.values(cart).reduce((s, q) => s + q, 0);
+}
+
+// ── CART SCREEN ──
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  if (name === 'cart') renderCartScreen();
+}
+
+function renderCartScreen() {
+  const items = Object.entries(cart).map(([id, qty]) => ({
+    ...menu.find(d => d.id === parseInt(id)), qty
+  }));
+
+  const itemsHtml = items.map(d => `
+    <div class="cart-item">
+      <div class="cart-item-info">
+        <div class="cart-item-name">${d.name}</div>
+        <div class="cart-item-qty">qty: ${d.qty}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="cart-item-price">$${d.price * d.qty}</div>
+        <div class="cart-remove" onclick="removeItem(${d.id})">×</div>
+      </div>
+    </div>`).join('');
+  document.getElementById('cart-items-list').innerHTML = itemsHtml;
+
+  const subtotal = getCartTotal();
+  const tip = Math.round(subtotal * 0.18);
+  document.getElementById('cart-summary').innerHTML = `
+    <div class="summary-row"><span>Subtotal</span><span>$${subtotal}</span></div>
+    <div class="summary-row"><span>Suggested gratuity (18%)</span><span>~$${tip}</span></div>
+    <div class="summary-row"><span>Tax</span><span>Calculated at close</span></div>
+    <div class="summary-row total"><span>Pre-authorized</span><span>$${subtotal}</span></div>`;
+}
+
+function removeItem(id) {
+  delete cart[id];
+  renderCartScreen();
+  updateCartBar();
+  if (getCartCount() === 0) showScreen('menu');
+}
+
+function confirmOrder() {
+  const items = Object.entries(cart).map(([id, qty]) => ({
+    ...menu.find(d => d.id === parseInt(id)), qty
+  }));
+  const dishHtml = items.map(d =>
+    `<div class="confirm-dish-row"><span>${d.name} × ${d.qty}</span><span>$${d.price * d.qty}</span></div>`
+  ).join('');
+  document.getElementById('confirm-dish-list').innerHTML = dishHtml;
+  document.getElementById('confirm-total-amount').textContent = `$${getCartTotal()}`;
+  showScreen('confirm');
+}
+
+function startOver() {
+  Object.keys(cart).forEach(k => delete cart[k]);
+  updateCartBar();
+  renderMenu();
+  showScreen('menu');
+}
+
+// ── CATEGORY FILTER ──
+function filterCat(cat, btn) {
+  currentCat = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMenu();
+}
+
+// ── VIEW SWITCH ──
+function switchView(view) {
+  document.getElementById('view-patron').style.display = view === 'patron' ? 'block' : 'none';
+  document.getElementById('view-restaurant').style.display = view === 'restaurant' ? 'block' : 'none';
+  document.getElementById('btn-patron').classList.toggle('active', view === 'patron');
+  document.getElementById('btn-restaurant').classList.toggle('active', view === 'restaurant');
+}
+
+// ── INIT ──
+renderMenu();
+</script>
+</body>
+</html>

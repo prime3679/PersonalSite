@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Iron Log ♟️</title>
+<style>
+  :root {
+    --bg: #0d0d0d;
+    --surface: #181818;
+    --surface2: #222;
+    --border: #333;
+    --accent: #e8ff00;
+    --accent2: #00d4ff;
+    --green: #22c55e;
+    --orange: #f97316;
+    --red: #ef4444;
+    --text: #f0f0f0;
+    --muted: #888;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; }
+
+  /* NAV */
+  nav { background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; position: sticky; top: 0; z-index: 100; }
+  .logo { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; }
+  .logo span { color: var(--accent); }
+  .nav-tabs { display: flex; gap: 6px; }
+  .nav-tab { background: transparent; border: 1px solid var(--border); border-radius: 6px; color: var(--muted); cursor: pointer; font-size: 13px; padding: 6px 14px; transition: all .15s; }
+  .nav-tab.active, .nav-tab:hover { background: var(--accent); border-color: var(--accent); color: #000; font-weight: 600; }
+
+  /* LAYOUT */
+  main { max-width: 700px; margin: 0 auto; padding: 20px 16px 80px; }
+  .page { display: none; }
+  .page.active { display: block; }
+  h2 { font-size: 20px; margin-bottom: 16px; }
+  h3 { font-size: 15px; color: var(--muted); font-weight: 500; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .5px; }
+
+  /* CARDS */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; }
+  .card-title { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
+
+  /* BUTTONS */
+  .btn { background: var(--accent); border: none; border-radius: 8px; color: #000; cursor: pointer; font-size: 14px; font-weight: 700; padding: 10px 20px; transition: opacity .15s; }
+  .btn:hover { opacity: .85; }
+  .btn.secondary { background: var(--surface2); border: 1px solid var(--border); color: var(--text); font-weight: 500; }
+  .btn.danger { background: var(--red); color: #fff; }
+  .btn.small { font-size: 12px; padding: 5px 12px; }
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+
+  /* FORMS */
+  label { color: var(--muted); display: block; font-size: 12px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: .4px; }
+  input, select, textarea { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 14px; padding: 9px 12px; width: 100%; outline: none; transition: border-color .15s; }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+  textarea { resize: vertical; min-height: 60px; }
+  .form-row { display: grid; gap: 10px; margin-bottom: 12px; }
+  .form-row.cols2 { grid-template-columns: 1fr 1fr; }
+  .form-row.cols3 { grid-template-columns: 1fr 1fr 1fr; }
+
+  /* TYPE SELECTOR */
+  .type-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+  .type-btn { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--muted); cursor: pointer; font-size: 13px; font-weight: 500; padding: 10px 6px; text-align: center; transition: all .15s; }
+  .type-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(232,255,0,.08); }
+  .type-btn .type-icon { display: block; font-size: 22px; margin-bottom: 4px; }
+
+  /* EXERCISE TABLE */
+  .exercise-list { margin-bottom: 10px; }
+  .exercise-row { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 30px; gap: 6px; align-items: center; margin-bottom: 6px; }
+  .exercise-row input { font-size: 13px; padding: 7px 8px; }
+  .ex-header { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .4px; margin-bottom: 4px; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 30px; gap: 6px; }
+  .del-btn { background: none; border: none; color: var(--red); cursor: pointer; font-size: 16px; padding: 0; }
+
+  /* SUPPLEMENTS */
+  .supps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .supp-check { align-items: center; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; display: flex; gap: 10px; padding: 10px 14px; transition: all .15s; }
+  .supp-check.checked { border-color: var(--green); background: rgba(34,197,94,.08); }
+  .supp-check input { display: none; }
+  .supp-icon { font-size: 18px; }
+  .supp-label { font-size: 13px; font-weight: 500; }
+  .supp-note { font-size: 11px; color: var(--muted); }
+  .check-mark { margin-left: auto; font-size: 16px; opacity: 0; }
+  .supp-check.checked .check-mark { opacity: 1; color: var(--green); }
+
+  /* SCAPULAR REHAB */
+  .rehab-grid { display: flex; flex-direction: column; gap: 6px; }
+  .rehab-item { align-items: flex-start; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; display: flex; gap: 10px; padding: 10px 14px; transition: all .15s; }
+  .rehab-item.checked { border-color: var(--accent2); background: rgba(0,212,255,.06); }
+  .rehab-item .check-mark { margin-left: auto; min-width: 18px; }
+  .rehab-item.checked .check-mark { color: var(--accent2); opacity: 1; }
+  .rehab-name { font-size: 13px; font-weight: 600; }
+  .rehab-detail { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* HISTORY */
+  .session-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; }
+  .session-header { align-items: center; display: flex; justify-content: space-between; margin-bottom: 8px; }
+  .session-type-badge { align-items: center; border-radius: 20px; display: inline-flex; font-size: 12px; font-weight: 600; gap: 5px; padding: 3px 10px; }
+  .badge-muay  { background: rgba(239,68,68,.15); color: #ef4444; }
+  .badge-weights { background: rgba(232,255,0,.12); color: var(--accent); }
+  .badge-jiu { background: rgba(0,212,255,.12); color: var(--accent2); }
+  .badge-rest { background: rgba(136,136,136,.12); color: var(--muted); }
+  .badge-conditioning { background: rgba(249,115,22,.15); color: var(--orange); }
+  .session-date { color: var(--muted); font-size: 12px; }
+  .session-notes { color: var(--muted); font-size: 13px; margin-top: 6px; font-style: italic; }
+  .ex-summary { font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .ex-summary span { color: var(--text); margin-right: 8px; }
+
+  /* STATS */
+  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+  .stat-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; text-align: center; }
+  .stat-num { font-size: 28px; font-weight: 700; color: var(--accent); }
+  .stat-label { color: var(--muted); font-size: 11px; margin-top: 4px; text-transform: uppercase; letter-spacing: .4px; }
+  .week-bar-row { display: flex; align-items: flex-end; gap: 4px; height: 60px; margin-bottom: 16px; }
+  .week-bar-col { display: flex; flex-direction: column; align-items: center; flex: 1; gap: 4px; }
+  .week-bar { background: var(--accent); border-radius: 3px 3px 0 0; width: 100%; transition: height .3s; }
+  .week-bar.rest { background: var(--surface2); }
+  .week-bar.muay { background: var(--red); opacity: .8; }
+  .week-bar.jiu { background: var(--accent2); opacity: .8; }
+  .week-bar.conditioning { background: var(--orange); opacity: .8; }
+  .week-bar-day { color: var(--muted); font-size: 10px; }
+  .streak-display { align-items: center; display: flex; gap: 6px; }
+  .streak-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--surface2); }
+  .streak-dot.hit { background: var(--green); }
+  .streak-dot.today { background: var(--accent); }
+
+  /* TOAST */
+  #toast { background: var(--green); border-radius: 8px; bottom: 24px; color: #000; display: none; font-size: 14px; font-weight: 600; left: 50%; padding: 10px 20px; position: fixed; transform: translateX(-50%); z-index: 999; }
+
+  /* EMPTY STATE */
+  .empty { color: var(--muted); font-size: 14px; text-align: center; padding: 40px 0; }
+
+  /* SECTION DIVIDER */
+  .section-gap { margin-top: 20px; }
+
+  @media (max-width: 480px) {
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .type-grid { grid-template-columns: repeat(3, 1fr); }
+    .supps-grid { grid-template-columns: 1fr; }
+    .exercise-row { grid-template-columns: 2fr 1fr 1fr 1fr 26px; }
+  }
+
+  /* PROGRAM TAB */
+  .prog-header { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 16px; }
+  .prog-session-label { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+  .prog-session-sub { color: var(--muted); font-size: 13px; }
+  .prog-session-label.rest { color: var(--muted); }
+  .prog-session-label.muay { color: var(--red); }
+  .prog-session-label.weights { color: var(--accent); }
+  .week-selector { display: flex; gap: 6px; margin-bottom: 16px; }
+  .week-btn { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; color: var(--muted); cursor: pointer; flex: 1; font-size: 13px; font-weight: 500; padding: 8px 4px; text-align: center; transition: all .15s; }
+  .week-btn.active { background: var(--accent); border-color: var(--accent); color: #000; font-weight: 700; }
+  .prog-section-title { color: var(--muted); font-size: 11px; font-weight: 600; letter-spacing: .6px; margin: 16px 0 8px; text-transform: uppercase; }
+  .prog-ex-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 8px; overflow: hidden; }
+  .prog-ex-card.rehab { border-color: rgba(0,212,255,.3); }
+  .prog-ex-row { align-items: center; display: flex; justify-content: space-between; padding: 12px 14px 8px; }
+  .prog-ex-name { font-size: 14px; font-weight: 600; }
+  .prog-ex-prescription { background: rgba(232,255,0,.1); border: 1px solid rgba(232,255,0,.25); border-radius: 20px; color: var(--accent); font-size: 12px; font-weight: 700; padding: 3px 10px; white-space: nowrap; }
+  .prog-ex-card.rehab .prog-ex-prescription { background: rgba(0,212,255,.1); border-color: rgba(0,212,255,.25); color: var(--accent2); }
+  .prog-ex-cue { border-top: 1px solid var(--border); color: var(--muted); font-size: 12px; line-height: 1.5; padding: 8px 14px; }
+  .prog-rest-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); color: var(--muted); font-size: 14px; padding: 24px; text-align: center; }
+  .prog-rest-icon { font-size: 36px; margin-bottom: 8px; }
+  .prog-deload-banner { background: rgba(249,115,22,.1); border: 1px solid rgba(249,115,22,.3); border-radius: 8px; color: var(--orange); font-size: 12px; margin-bottom: 12px; padding: 8px 14px; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Iron <span>Log</span> ♟️</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('log')">Log</button>
+    <button class="nav-tab" onclick="showPage('today')">Today</button>
+    <button class="nav-tab" onclick="showPage('history')">History</button>
+    <button class="nav-tab" onclick="showPage('stats')">Stats</button>
+    <button class="nav-tab" onclick="showPage('program')">Program</button>
+  </div>
+</nav>
+
+<main>
+
+  <!-- ===== LOG PAGE ===== -->
+  <div class="page active" id="page-log">
+    <h2>Log Workout</h2>
+
+    <div class="card">
+      <div class="card-title">Session Type</div>
+      <div class="type-grid">
+        <button class="type-btn active" onclick="setType('weights')" id="type-weights">
+          <span class="type-icon">🏋️</span>Weights
+        </button>
+        <button class="type-btn" onclick="setType('muay')" id="type-muay">
+          <span class="type-icon">🥊</span>Muay Thai
+        </button>
+        <button class="type-btn" onclick="setType('jiu')" id="type-jiu">
+          <span class="type-icon">🥋</span>Jiu Jitsu
+        </button>
+        <button class="type-btn" onclick="setType('conditioning')" id="type-conditioning">
+          <span class="type-icon">🏃</span>Conditioning
+        </button>
+        <button class="type-btn" onclick="setType('rehab')" id="type-rehab">
+          <span class="type-icon">🩻</span>Rehab Only
+        </button>
+        <button class="type-btn" onclick="setType('rest')" id="type-rest">
+          <span class="type-icon">😴</span>Rest
+        </button>
+      </div>
+
+      <div class="form-row cols2">
+        <div>
+          <label>Date</label>
+          <input type="date" id="log-date">
+        </div>
+        <div>
+          <label>Duration (min)</label>
+          <input type="number" id="log-duration" placeholder="60" min="1" max="300">
+        </div>
+      </div>
+
+      <!-- WEIGHT TRAINING EXERCISES -->
+      <div id="section-exercises" style="margin-bottom:14px;">
+        <div class="ex-header">
+          <span>Exercise</span><span>Sets</span><span>Reps</span><span>Weight (lb)</span><span></span>
+        </div>
+        <div class="exercise-list" id="exercise-list"></div>
+        <button class="btn secondary small" onclick="addExercise()">+ Add Exercise</button>
+      </div>
+
+      <div class="form-row">
+        <div>
+          <label>Notes (optional)</label>
+          <textarea id="log-notes" placeholder="How did it feel? PRs? Fatigue?"></textarea>
+        </div>
+      </div>
+
+      <div class="form-row" id="section-intensity">
+        <div>
+          <label>Intensity (1–10)</label>
+          <input type="range" id="log-intensity" min="1" max="10" value="7" oninput="document.getElementById('intensity-val').textContent=this.value">
+          <div style="display:flex;justify-content:space-between;margin-top:4px;">
+            <span style="color:var(--muted);font-size:11px;">Easy</span>
+            <span style="color:var(--accent);font-size:14px;font-weight:700;" id="intensity-val">7</span>
+            <span style="color:var(--muted);font-size:11px;">Max</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn" style="width:100%" onclick="saveSession()">Save Session</button>
+    </div>
+  </div>
+
+  <!-- ===== TODAY PAGE ===== -->
+  <div class="page" id="page-today">
+    <h2>Today's Checklist</h2>
+
+    <div class="card">
+      <div class="card-title">💊 Supplements</div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:10px;">Tap to check off. Resets at midnight.</p>
+      <div class="supps-grid" id="supps-grid"></div>
+    </div>
+
+    <div class="card section-gap">
+      <div class="card-title">🩻 Scapular Rehab</div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:10px;">Aim for 4–5x/week. Fixes the winging over time.</p>
+      <div class="rehab-grid" id="rehab-grid"></div>
+    </div>
+
+    <div class="card section-gap" id="today-program-card">
+      <div class="card-title">📅 Today's Program</div>
+      <div id="today-program-content"></div>
+    </div>
+
+    <div class="card section-gap" id="today-session-card">
+      <div class="card-title">📋 Today's Session</div>
+      <div id="today-session-content"><p class="empty">No session logged today.<br>Go to <strong>Log</strong> tab.</p></div>
+    </div>
+  </div>
+
+  <!-- ===== HISTORY PAGE ===== -->
+  <div class="page" id="page-history">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <h2 style="margin:0">History</h2>
+      <select id="history-filter" onchange="renderHistory()" style="width:auto;">
+        <option value="all">All Types</option>
+        <option value="weights">Weights</option>
+        <option value="muay">Muay Thai</option>
+        <option value="jiu">Jiu Jitsu</option>
+        <option value="conditioning">Conditioning</option>
+        <option value="rest">Rest</option>
+        <option value="rehab">Rehab</option>
+      </select>
+    </div>
+    <div id="history-list"></div>
+  </div>
+
+  <!-- ===== STATS PAGE ===== -->
+  <div class="page" id="page-stats">
+    <h2>Stats</h2>
+    <div class="stats-grid" id="stats-grid"></div>
+    <div class="card">
+      <div class="card-title">This Week</div>
+      <div class="week-bar-row" id="week-bars"></div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:6px;">
+        <span style="font-size:11px;color:var(--accent)">■ Weights</span>
+        <span style="font-size:11px;color:#ef4444">■ Muay Thai</span>
+        <span style="font-size:11px;color:var(--accent2)">■ Jiu Jitsu</span>
+        <span style="font-size:11px;color:var(--orange)">■ Conditioning</span>
+      </div>
+    </div>
+    <div class="card section-gap">
+      <div class="card-title">Last 14 Days — Training Streak</div>
+      <div class="streak-display" id="streak-dots"></div>
+    </div>
+    <div class="card section-gap">
+      <div class="card-title">Session Type Breakdown</div>
+      <div id="type-breakdown"></div>
+    </div>
+    <div style="margin-top:20px;text-align:center;">
+      <button class="btn danger small" onclick="clearData()">Clear All Data</button>
+    </div>
+  </div>
+
+
+  <!-- ===== PROGRAM PAGE ===== -->
+  <div class="page" id="page-program">
+    <h2>Program</h2>
+    <div class="prog-header" id="prog-today-header">
+      <!-- filled by JS -->
+    </div>
+    <div class="week-selector" id="week-selector">
+      <button class="week-btn active" onclick="selectWeek(1,this)">Week 1</button>
+      <button class="week-btn" onclick="selectWeek(2,this)">Week 2</button>
+      <button class="week-btn" onclick="selectWeek(3,this)">Week 3</button>
+      <button class="week-btn" onclick="selectWeek(4,this)">Week 4</button>
+    </div>
+    <div id="prog-content">
+      <!-- filled by JS -->
+    </div>
+  </div>
+
+</main>
+
+<div id="toast">Session saved! 💪</div>
+
+<script>
+// ===== DATA =====
+const STORAGE_KEY = 'ironlog_v1';
+const SUPP_KEY = 'ironlog_supps_';
+const REHAB_KEY = 'ironlog_rehab_';
+
+const SUPPLEMENTS = [
+  { id: 'creatine',    label: 'Creatine',      note: 'Training days', icon: '⚡' },
+  { id: 'protein',     label: 'Protein',        note: 'Training days', icon: '🥩' },
+  { id: 'multivit',   label: 'Multivitamin',   note: 'Daily',         icon: '🌈' },
+  { id: 'fishoil',    label: 'Fish Oil',        note: 'Daily',         icon: '🐟' },
+  { id: 'coq10',      label: 'CoQ10',           note: 'Daily',         icon: '❤️' },
+  { id: 'vitamind',   label: 'Vitamin D',       note: 'Daily',         icon: '☀️' },
+  { id: 'b6',         label: 'B6',              note: 'Daily',         icon: '🔵' },
+  { id: 'b12',        label: 'B12',             note: 'Daily',         icon: '🟣' },
+];
+
+const REHAB_EXERCISES = [
+  { id: 'wallslide',    name: 'Wall Slides',          detail: '3×12 — scapular retraction + upward rotation' },
+  { id: 'facepull',     name: 'Face Pulls',            detail: '3×15 — external rotation + rear delts' },
+  { id: 'ytw',          name: 'Y-T-W Raises',          detail: '3×10 each — prone, light weight or bands' },
+  { id: 'serratus',     name: 'Serratus Punches',      detail: '3×15 — key for winging, protract fully at top' },
+  { id: 'rowband',      name: 'Band Pull-Aparts',      detail: '3×20 — rear delt + rhomboid activation' },
+  { id: 'deadbug',      name: 'Dead Bugs',             detail: '3×10/side — core stability, spine neutral' },
+];
+
+const PRESET_EXERCISES = [
+  'Bench Press', 'Incline DB Press', 'Cable Fly',
+  'Barbell Row', 'Lat Pulldown', 'Seated Cable Row',
+  'Overhead Press', 'Lateral Raise', 'Front Raise',
+  'Squat', 'Romanian Deadlift', 'Leg Press', 'Leg Curl',
+  'Bicep Curl', 'Tricep Pushdown', 'Skull Crushers',
+  'Face Pull', 'Band Pull-Apart', 'Serratus Punch',
+  'Wall Slide', 'Y-T-W Raise',
+];
+
+// ===== PROGRAM DATA =====
+// sets[] index = [week1, week2, week3, week4-deload]
+const PROGRAM_START_KEY = 'ironlog_program_start';
+const PROGRAM = {
+  // day-of-week -> session type (0=Sun,1=Mon,...,6=Sat)
+  schedule: { 1: 'push', 3: 'pull', 4: 'legs', 5: 'muay' },
+
+  weeks: [
+    { label: 'Week 1 — Foundation', rpe: '6–7', deload: false,
+      note: 'Establish movement patterns. Leave 2–3 reps in reserve every set. Note starting weights.' },
+    { label: 'Week 2 — Build',      rpe: '7–8', deload: false,
+      note: 'Add 2.5–5 lb on compounds if you hit the top of the rep range last week. RPE up ~1.' },
+    { label: 'Week 3 — Peak',       rpe: '8–9', deload: false,
+      note: 'Highest effort week. Push compound lifts close to failure on the last set. Stop before form breaks.' },
+    { label: 'Week 4 — Deload',     rpe: '5–6', deload: true,
+      note: 'Reduce sets ~40% and load ~30%. Same movements, same technique. This is where adaptation lands.' },
+  ],
+
+  days: {
+    push: {
+      label: 'Push — Chest / Shoulders / Triceps',
+      icon: '🏋️',
+      exercises: [
+        { name: 'DB Incline Press',
+          sets: [4, 4, 4, 3], reps: '8–10',
+          cue: 'Elbows 45–60° from torso. 3-second eccentric. Increase load each week if top of range felt easy.' },
+        { name: 'DB Flat Press',
+          sets: [3, 3, 3, 2], reps: '10–12',
+          cue: 'Full ROM. Touch chest, full lockout. Control the descent — no bouncing.' },
+        { name: 'Cable Chest Fly (Low-to-High)',
+          sets: [3, 3, 3, 2], reps: '12–15',
+          cue: 'Soft elbow bend throughout. Squeeze hard at midline. Slow return — don\'t let the cable snap back.' },
+        { name: 'DB Seated Overhead Press',
+          sets: [3, 3, 4, 2], reps: '10–12',
+          cue: 'Brace core, don\'t flare ribs. Press to full extension — this trains scapular upward rotation.' },
+        { name: 'DB Lateral Raise',
+          sets: [3, 4, 4, 2], reps: '15–20',
+          cue: 'Lead with elbow, not wrist. 3 seconds on the way down. Don\'t go past shoulder height.' },
+        { name: 'Cable Tricep Pushdown (Rope)',
+          sets: [3, 3, 3, 2], reps: '12–15',
+          cue: 'Elbows pinned to sides. Spread rope at full extension for peak contraction.' },
+      ]
+    },
+
+    pull: {
+      label: 'Pull — Back / Biceps',
+      icon: '🏋️',
+      exercises: [
+        { name: 'Cable Lat Pulldown',
+          sets: [4, 4, 4, 3], reps: '10–12',
+          cue: 'Lean back ~15°. Initiate with scapular depression BEFORE bending elbow. Pause at chest.' },
+        { name: 'Seated Cable Row (Neutral Grip)',
+          sets: [3, 4, 4, 2], reps: '10–12',
+          cue: 'Initiate by pinching shoulder blades, then pull elbows back. Full stretch at front. No momentum.' },
+        { name: 'DB Single-Arm Row',
+          sets: [3, 3, 3, 2], reps: '10–12 /side',
+          cue: 'Long ROM. Elbow goes back and slightly up. Squeeze the lat at peak — don\'t shrug.' },
+        { name: 'Cable Face Pull',
+          sets: [3, 3, 4, 2], reps: '15–20',
+          cue: 'Pull to forehead. External rotation at the end — elbows stay high and wide. Never go heavy.' },
+        { name: 'DB Incline Curl',
+          sets: [3, 3, 3, 2], reps: '10–12',
+          cue: 'Arm behind body = long-head stretch. Supinate fully at top. No swinging.' },
+        { name: 'Hammer Curl',
+          sets: [3, 3, 3, 2], reps: '12',
+          cue: 'Neutral grip = brachialis focus. Controlled tempo. Adds arm thickness.' },
+      ]
+    },
+
+    legs: {
+      label: 'Legs — Quads / Hamstrings / Glutes',
+      icon: '🏋️',
+      exercises: [
+        { name: 'DB Romanian Deadlift',
+          sets: [4, 4, 4, 3], reps: '10–12',
+          cue: 'Hip hinge — push hips back, soft knee, neutral spine. Feel the hamstring load. Key longevity lift.' },
+        { name: 'DB Goblet Squat',
+          sets: [4, 4, 4, 3], reps: '10–12',
+          cue: 'Chest tall, elbows inside knees. Heel drive on ascent. Deep as mobility allows.' },
+        { name: 'Leg Curl Machine',
+          sets: [3, 3, 4, 2], reps: '12–15',
+          cue: '3-second eccentric every rep. Toes slightly in for more bicep femoris. Don\'t let hips rise.' },
+        { name: 'DB Bulgarian Split Squat',
+          sets: [3, 3, 3, 2], reps: '8–10 /side',
+          cue: 'Front shin vertical. Drop straight down. Best single-leg glute stimulus in the program.' },
+        { name: 'Standing Calf Raise (DB)',
+          sets: [4, 4, 4, 3], reps: '15–20',
+          cue: 'Full stretch at bottom (1s pause). Slow concentric. Calves need slow, high-rep work.' },
+        { name: 'Cable Woodchop',
+          sets: [3, 3, 3, 2], reps: '12 /side',
+          cue: 'Rotate from hips, not lumbar. Arms relatively straight. Core braced throughout.' },
+      ]
+    },
+
+    muay: {
+      label: 'Muay Thai',
+      icon: '🥊',
+      exercises: []
+    }
+  }
+};
+
+function getData() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { return []; }
+}
+function saveData(d) { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); }
+function todayStr() { return new Date().toISOString().slice(0,10); }
+function formatDate(s) {
+  const d = new Date(s + 'T12:00:00');
+  return d.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
+}
+
+// ===== STATE =====
+let currentType = 'weights';
+let exercises = [];
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('log-date').value = todayStr();
+  addExercise(); // start with one row
+  renderSupps();
+  renderRehab();
+  renderTodaySession();
+  renderTodayProgram();
+  updateExerciseSection();
+  // Init program page
+  currentProgWeek = getCurrentProgramWeek();
+  renderProgramPage(currentProgWeek);
+  document.querySelectorAll('.week-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i + 1 === currentProgWeek);
+  });
+});
+
+// ===== PAGES =====
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  event.target.classList.add('active');
+  if (name === 'history') renderHistory();
+  if (name === 'stats') renderStats();
+  if (name === 'today') { renderSupps(); renderRehab(); renderTodaySession(); renderTodayProgram(); }
+  if (name === 'program') renderProgramPage(currentProgWeek);
+}
+
+// ===== TYPE =====
+function setType(t) {
+  currentType = t;
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('type-' + t).classList.add('active');
+  updateExerciseSection();
+}
+function updateExerciseSection() {
+  const showEx = ['weights'].includes(currentType);
+  document.getElementById('section-exercises').style.display = showEx ? 'block' : 'none';
+}
+
+// ===== EXERCISES =====
+function addExercise(name='', sets='3', reps='10', weight='') {
+  const id = Date.now() + Math.random();
+  exercises.push({ id });
+  const list = document.getElementById('exercise-list');
+  const row = document.createElement('div');
+  row.className = 'exercise-row';
+  row.id = 'ex-' + id;
+
+  // Name with datalist
+  const nameInp = document.createElement('input');
+  nameInp.list = 'ex-presets';
+  nameInp.placeholder = 'Exercise name';
+  nameInp.value = name;
+  nameInp.setAttribute('data-field', 'name');
+
+  const setsInp = document.createElement('input');
+  setsInp.type = 'number'; setsInp.placeholder = '3'; setsInp.min = '1'; setsInp.max = '20';
+  setsInp.value = sets; setsInp.setAttribute('data-field', 'sets');
+
+  const repsInp = document.createElement('input');
+  repsInp.type = 'number'; repsInp.placeholder = '10'; repsInp.min = '1'; repsInp.max = '100';
+  repsInp.value = reps; repsInp.setAttribute('data-field', 'reps');
+
+  const weightInp = document.createElement('input');
+  weightInp.type = 'number'; weightInp.placeholder = '—'; weightInp.min = '0';
+  weightInp.value = weight; weightInp.setAttribute('data-field', 'weight');
+
+  const del = document.createElement('button');
+  del.className = 'del-btn';
+  del.textContent = '✕';
+  del.onclick = () => { row.remove(); exercises = exercises.filter(e => e.id !== id); };
+
+  row.appendChild(nameInp); row.appendChild(setsInp); row.appendChild(repsInp);
+  row.appendChild(weightInp); row.appendChild(del);
+  list.appendChild(row);
+
+  // Datalist
+  if (!document.getElementById('ex-presets')) {
+    const dl = document.createElement('datalist');
+    dl.id = 'ex-presets';
+    PRESET_EXERCISES.forEach(e => {
+      const opt = document.createElement('option');
+      opt.value = e; dl.appendChild(opt);
+    });
+    document.body.appendChild(dl);
+  }
+}
+
+function getExercises() {
+  return [...document.querySelectorAll('.exercise-row')].map(row => ({
+    name: row.querySelector('[data-field="name"]').value.trim(),
+    sets: row.querySelector('[data-field="sets"]').value,
+    reps: row.querySelector('[data-field="reps"]').value,
+    weight: row.querySelector('[data-field="weight"]').value,
+  })).filter(e => e.name);
+}
+
+// ===== SAVE SESSION =====
+function saveSession() {
+  const date = document.getElementById('log-date').value;
+  const duration = parseInt(document.getElementById('log-duration').value) || null;
+  const notes = document.getElementById('log-notes').value.trim();
+  const intensity = parseInt(document.getElementById('log-intensity').value);
+  const exs = currentType === 'weights' ? getExercises() : [];
+
+  const session = {
+    id: Date.now(),
+    date, type: currentType, duration, notes, intensity, exercises: exs,
+  };
+
+  const data = getData();
+  data.unshift(session);
+  saveData(data);
+
+  // Reset
+  document.getElementById('log-notes').value = '';
+  document.getElementById('log-duration').value = '';
+  document.getElementById('log-intensity').value = 7;
+  document.getElementById('intensity-val').textContent = '7';
+  document.getElementById('exercise-list').innerHTML = '';
+  exercises = [];
+  addExercise();
+  document.getElementById('log-date').value = todayStr();
+
+  showToast('Session saved! 💪');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 2000);
+}
+
+// ===== SUPPLEMENTS =====
+function getSuppKey() { return SUPP_KEY + todayStr(); }
+function getSuppState() {
+  try { return JSON.parse(localStorage.getItem(getSuppKey())) || {}; } catch { return {}; }
+}
+function saveSuppState(s) { localStorage.setItem(getSuppKey(), JSON.stringify(s)); }
+
+function renderSupps() {
+  const state = getSuppState();
+  const grid = document.getElementById('supps-grid');
+  grid.innerHTML = '';
+  SUPPLEMENTS.forEach(s => {
+    const checked = !!state[s.id];
+    const div = document.createElement('label');
+    div.className = 'supp-check' + (checked ? ' checked' : '');
+    div.innerHTML = `
+      <span class="supp-icon">${s.icon}</span>
+      <div>
+        <div class="supp-label">${s.label}</div>
+        <div class="supp-note">${s.note}</div>
+      </div>
+      <span class="check-mark">✓</span>
+    `;
+    div.onclick = () => {
+      const st = getSuppState();
+      st[s.id] = !st[s.id];
+      saveSuppState(st);
+      renderSupps();
+    };
+    grid.appendChild(div);
+  });
+}
+
+// ===== REHAB =====
+function getRehabKey() { return REHAB_KEY + todayStr(); }
+function getRehabState() {
+  try { return JSON.parse(localStorage.getItem(getRehabKey())) || {}; } catch { return {}; }
+}
+function saveRehabState(s) { localStorage.setItem(getRehabKey(), JSON.stringify(s)); }
+
+function renderRehab() {
+  const state = getRehabState();
+  const grid = document.getElementById('rehab-grid');
+  grid.innerHTML = '';
+  REHAB_EXERCISES.forEach(r => {
+    const checked = !!state[r.id];
+    const div = document.createElement('div');
+    div.className = 'rehab-item' + (checked ? ' checked' : '');
+    div.innerHTML = `
+      <div>
+        <div class="rehab-name">${r.name}</div>
+        <div class="rehab-detail">${r.detail}</div>
+      </div>
+      <span class="check-mark">✓</span>
+    `;
+    div.onclick = () => {
+      const st = getRehabState();
+      st[r.id] = !st[r.id];
+      saveRehabState(st);
+      renderRehab();
+    };
+    grid.appendChild(div);
+  });
+}
+
+// ===== TODAY SESSION =====
+function renderTodaySession() {
+  const data = getData();
+  const today = todayStr();
+  const todaySessions = data.filter(s => s.date === today);
+  const el = document.getElementById('today-session-content');
+  if (!todaySessions.length) {
+    el.innerHTML = '<p class="empty">No session logged today.<br>Go to <strong>Log</strong> tab.</p>';
+    return;
+  }
+  el.innerHTML = todaySessions.map(s => renderSessionCard(s)).join('');
+}
+
+// ===== HISTORY =====
+function renderHistory() {
+  const filter = document.getElementById('history-filter').value;
+  let data = getData();
+  if (filter !== 'all') data = data.filter(s => s.type === filter);
+  const el = document.getElementById('history-list');
+  if (!data.length) { el.innerHTML = '<p class="empty">No sessions yet. Start logging!</p>'; return; }
+  el.innerHTML = data.map(renderSessionCard).join('');
+}
+
+function renderSessionCard(s) {
+  const typeLabels = { weights:'Weights', muay:'Muay Thai', jiu:'Jiu Jitsu', conditioning:'Conditioning', rest:'Rest Day', rehab:'Rehab Only' };
+  const typeIcons = { weights:'🏋️', muay:'🥊', jiu:'🥋', conditioning:'🏃', rest:'😴', rehab:'🩻' };
+  const badgeClass = { weights:'badge-weights', muay:'badge-muay', jiu:'badge-jiu', conditioning:'badge-conditioning', rest:'badge-rest', rehab:'badge-rest' };
+  const label = typeLabels[s.type] || s.type;
+  const icon = typeIcons[s.type] || '';
+  const badge = badgeClass[s.type] || '';
+
+  let exHtml = '';
+  if (s.exercises && s.exercises.length) {
+    const exStr = s.exercises.map(e => `<span>${e.name}${e.weight ? ' ' + e.weight + 'lb' : ''} (${e.sets}×${e.reps})</span>`).join('');
+    exHtml = `<div class="ex-summary">${exStr}</div>`;
+  }
+
+  return `<div class="session-card">
+    <div class="session-header">
+      <span class="session-type-badge ${badge}">${icon} ${label}</span>
+      <div style="text-align:right">
+        <div class="session-date">${formatDate(s.date)}</div>
+        ${s.duration ? `<div style="font-size:11px;color:var(--muted)">${s.duration} min · RPE ${s.intensity}</div>` : ''}
+      </div>
+    </div>
+    ${exHtml}
+    ${s.notes ? `<div class="session-notes">"${s.notes}"</div>` : ''}
+  </div>`;
+}
+
+// ===== STATS =====
+function renderStats() {
+  const data = getData();
+  const nonRest = data.filter(s => s.type !== 'rest');
+  const thisWeek = getThisWeekSessions(data);
+  const streak = calcStreak(data);
+
+  // Stat boxes
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat-box"><div class="stat-num">${nonRest.length}</div><div class="stat-label">Total Sessions</div></div>
+    <div class="stat-box"><div class="stat-num">${thisWeek.filter(s=>s.type!=='rest').length}</div><div class="stat-label">This Week</div></div>
+    <div class="stat-box"><div class="stat-num">${streak}</div><div class="stat-label">Day Streak 🔥</div></div>
+  `;
+
+  // Week bars
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const today = new Date();
+  const weekStart = new Date(today);
+  weekStart.setDate(today.getDate() - today.getDay());
+  const barHtml = days.map((day, i) => {
+    const d = new Date(weekStart);
+    d.setDate(weekStart.getDate() + i);
+    const dateStr = d.toISOString().slice(0,10);
+    const s = data.find(s => s.date === dateStr);
+    const type = s ? s.type : 'none';
+    const barClass = type === 'none' ? '' : (type === 'rest' ? 'rest' : type);
+    const height = s && s.type !== 'rest' ? Math.max(20, (s.duration||45) / 90 * 60) : (s ? 15 : 5);
+    const isToday = dateStr === todayStr();
+    return `<div class="week-bar-col">
+      <div class="week-bar ${barClass}" style="height:${height}px;${isToday?'outline:2px solid var(--accent);':''}" title="${s ? typeLabel(s.type) + (s.duration?' · '+s.duration+'min':'') : 'No session'}"></div>
+      <div class="week-bar-day" style="${isToday?'color:var(--accent);font-weight:700;':''}">${day[0]}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('week-bars').innerHTML = barHtml;
+
+  // Streak dots (14 days)
+  const dots = [...Array(14)].map((_,i) => {
+    const d = new Date(today);
+    d.setDate(today.getDate() - 13 + i);
+    const ds = d.toISOString().slice(0,10);
+    const hit = data.some(s => s.date === ds && s.type !== 'rest');
+    const isT = ds === todayStr();
+    return `<div class="streak-dot ${isT?'today':''} ${hit&&!isT?'hit':''}" title="${ds}"></div>`;
+  }).join('');
+  document.getElementById('streak-dots').innerHTML = dots + `<span style="color:var(--muted);font-size:12px;margin-left:6px;">last 14 days</span>`;
+
+  // Type breakdown
+  const types = {};
+  nonRest.forEach(s => { types[s.type] = (types[s.type]||0) + 1; });
+  const total = nonRest.length || 1;
+  const typeLabels2 = { weights:'🏋️ Weights', muay:'🥊 Muay Thai', jiu:'🥋 Jiu Jitsu', conditioning:'🏃 Conditioning', rehab:'🩻 Rehab' };
+  const bHtml = Object.entries(types).sort((a,b)=>b[1]-a[1]).map(([t,n]) => {
+    const pct = Math.round(n/total*100);
+    return `<div style="margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span>${typeLabels2[t]||t}</span><span style="color:var(--muted)">${n} session${n!==1?'s':''} · ${pct}%</span>
+      </div>
+      <div style="background:var(--surface2);border-radius:4px;height:6px;overflow:hidden;">
+        <div style="background:var(--accent);height:100%;width:${pct}%;border-radius:4px;transition:width .4s;"></div>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('type-breakdown').innerHTML = bHtml || '<p class="empty" style="padding:10px">No sessions yet.</p>';
+}
+
+function typeLabel(t) {
+  const m = { weights:'Weights', muay:'Muay Thai', jiu:'Jiu Jitsu', conditioning:'Conditioning', rest:'Rest', rehab:'Rehab' };
+  return m[t] || t;
+}
+
+function getThisWeekSessions(data) {
+  const today = new Date();
+  const weekStart = new Date(today);
+  weekStart.setDate(today.getDate() - today.getDay());
+  const ws = weekStart.toISOString().slice(0,10);
+  return data.filter(s => s.date >= ws);
+}
+
+function calcStreak(data) {
+  if (!data.length) return 0;
+  const hits = new Set(data.filter(s=>s.type!=='rest').map(s=>s.date));
+  let streak = 0;
+  const today = new Date();
+  for (let i = 0; i < 365; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+    const ds = d.toISOString().slice(0,10);
+    if (hits.has(ds)) { streak++; } else if (i > 0) { break; }
+  }
+  return streak;
+}
+
+function clearData() {
+  if (confirm('Clear ALL workout data? This cannot be undone.')) {
+    localStorage.removeItem(STORAGE_KEY);
+    renderHistory(); renderStats(); renderTodaySession();
+    showToast('All data cleared.');
+  }
+}
+
+// ===== PROGRAM HELPERS =====
+function getScheduleType(dow) {
+  return PROGRAM.schedule[dow] || 'rest';
+}
+
+function getCurrentProgramWeek() {
+  const startStr = localStorage.getItem(PROGRAM_START_KEY);
+  if (!startStr) return 1;
+  const start = new Date(startStr + 'T00:00:00');
+  const now = new Date();
+  const diffDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+  return Math.min(4, Math.max(1, Math.floor(diffDays / 7) + 1));
+}
+
+// ===== TODAY'S PROGRAM PANEL =====
+function renderTodayProgram() {
+  const el = document.getElementById('today-program-content');
+  if (!el) return;
+  const dow = new Date().getDay();
+  const type = getScheduleType(dow);
+  const week = getCurrentProgramWeek();
+  const weekData = PROGRAM.weeks[week - 1];
+  const dayData = PROGRAM.days[type];
+
+  if (type === 'rest') {
+    el.innerHTML = `
+      <div style="color:var(--muted);font-size:14px;padding:12px 0;text-align:center;">
+        <div style="font-size:28px;margin-bottom:8px;">🌀</div>
+        Rest day. Walk, stretch, easy Peloton Z2, or do nothing.<br>
+        <span style="font-size:12px;">Recovery is training.</span>
+      </div>`;
+    return;
+  }
+
+  let html = `<div style="margin-bottom:12px;">
+    <div style="font-size:15px;font-weight:700;color:${type==='muay'?'var(--red)':'var(--accent)'};margin-bottom:4px;">
+      ${dayData.icon} ${dayData.label}
+    </div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.5;">
+      Week ${week} &nbsp;·&nbsp; RPE ${weekData.rpe} &nbsp;·&nbsp; ${weekData.note}
+    </div>
+  </div>`;
+
+  if (type === 'muay') {
+    html += `
+      <div style="color:var(--muted);font-size:13px;padding:8px 0;line-height:1.6;">
+        Log your Muay Thai session in the Log tab.<br>
+        Focus on technique, footwork, and breathing.
+      </div>
+      <div style="margin-top:12px;">
+        <button class="btn" onclick="loadTodayWorkout()" style="width:100%">Log Muay Thai →</button>
+      </div>`;
+  } else {
+    // Main exercises
+    dayData.exercises.forEach(ex => {
+      const sets = ex.sets[week - 1];
+      html += `<div style="display:flex;justify-content:space-between;align-items:baseline;padding:7px 0;border-bottom:1px solid var(--border);">
+        <span style="font-size:13px;font-weight:500;">${ex.name}</span>
+        <span style="font-size:12px;color:var(--accent);font-weight:700;white-space:nowrap;margin-left:8px;">${sets}×${ex.reps}</span>
+      </div>`;
+    });
+
+    // Rehab indicator
+    html += `<div style="margin-top:10px;padding:8px 10px;background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.2);border-radius:6px;font-size:12px;color:var(--accent2);font-weight:600;">
+      🩻 Scapular Rehab Circuit follows (see Rehab checklist above)
+    </div>`;
+
+    // Load button
+    html += `<div style="margin-top:12px;">
+      <button class="btn" onclick="loadTodayWorkout()" style="width:100%">Load Today's Workout →</button>
+    </div>`;
+  }
+
+  el.innerHTML = html;
+}
+
+// ===== LOAD TODAY'S WORKOUT INTO LOG TAB =====
+function loadTodayWorkout() {
+  const dow = new Date().getDay();
+  const type = getScheduleType(dow);
+  const week = getCurrentProgramWeek();
+
+  // Switch to log tab
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-log').classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t => {
+    if (t.getAttribute('onclick') && t.getAttribute('onclick').includes("'log'")) t.classList.add('active');
+  });
+
+  if (type === 'muay') {
+    setType('muay');
+    showToast('Muay Thai ready to log! 🥊');
+    return;
+  }
+
+  if (type === 'rest') {
+    setType('rest');
+    showToast('Rest day loaded.');
+    return;
+  }
+
+  // Weights day — pre-fill exercises
+  setType('weights');
+  document.getElementById('exercise-list').innerHTML = '';
+  exercises = [];
+
+  const dayData = PROGRAM.days[type];
+  dayData.exercises.forEach(ex => {
+    const sets = ex.sets[week - 1];
+    const repsNum = ex.reps.split(/[–\s\/]/)[0];
+    addExercise(ex.name, String(sets), repsNum, '');
+  });
+
+  // Add rehab exercises
+  REHAB_EXERCISES.forEach(r => {
+    const repsMatch = r.detail.match(/×(\d+)/);
+    const reps = repsMatch ? repsMatch[1] : '15';
+    addExercise(r.name, '3', reps, '');
+  });
+
+  showToast('Workout loaded! 💪');
+}
+
+// ===== PROGRAM PAGE =====
+let currentProgWeek = 1;
+
+function selectWeek(w, btn) {
+  currentProgWeek = w;
+  document.querySelectorAll('.week-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderProgramPage(w);
+}
+
+function renderProgramPage(week) {
+  const weekData = PROGRAM.weeks[week - 1];
+  const dow = new Date().getDay();
+  const todayType = getScheduleType(dow);
+  const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const typeLabel = { push:'Push Day', pull:'Pull Day', legs:'Legs Day', muay:'Muay Thai', rest:'Rest Day' };
+  const typeIcon  = { push:'🏋️', pull:'🏋️', legs:'🏋️', muay:'🥊', rest:'😴' };
+  const typeClass = { push:'weights', pull:'weights', legs:'weights', muay:'muay', rest:'rest' };
+
+  // Today header
+  const header = document.getElementById('prog-today-header');
+  header.innerHTML = `
+    <div class="prog-session-label ${typeClass[todayType]||'rest'}">${typeIcon[todayType]||'😴'} ${typeLabel[todayType]||'Rest Day'}</div>
+    <div class="prog-session-sub">${dayNames[dow]} · Week ${getCurrentProgramWeek()} of 4 active &nbsp;·&nbsp; Viewing: ${weekData.label}</div>
+  `;
+
+  // Program content
+  const content = document.getElementById('prog-content');
+  let html = '';
+
+  if (weekData.deload) {
+    html += `<div class="prog-deload-banner">🔄 Deload Week — Reduce weight ~30% and cut sets ~40%. Same movements, same technique. This is where Weeks 1–3 adapt.</div>`;
+  }
+
+  html += `<div style="color:var(--muted);font-size:13px;margin-bottom:16px;line-height:1.5;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);">${weekData.note}</div>`;
+
+  const dayOrder = [
+    { d: 1, type: 'push' },
+    { d: 3, type: 'pull' },
+    { d: 4, type: 'legs' },
+    { d: 5, type: 'muay' },
+  ];
+  const shortDay = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  dayOrder.forEach(({ d, type }) => {
+    const dayData = PROGRAM.days[type];
+    html += `<div class="prog-section-title">${shortDay[d]} — ${dayData.label}</div>`;
+
+    if (type === 'muay') {
+      html += `<div class="prog-rest-card">
+        <div class="prog-rest-icon">🥊</div>
+        Muay Thai class — log in the Log tab.<br>
+        <span style="font-size:12px;color:var(--muted)">Technique, conditioning, mental game. No weight training today.</span>
+      </div>`;
+    } else {
+      dayData.exercises.forEach(ex => {
+        const sets = ex.sets[week - 1];
+        html += `<div class="prog-ex-card">
+          <div class="prog-ex-row">
+            <div class="prog-ex-name">${ex.name}</div>
+            <div class="prog-ex-prescription">${sets}×${ex.reps}</div>
+          </div>
+          <div class="prog-ex-cue">${ex.cue}</div>
+        </div>`;
+      });
+
+      // Scapular rehab circuit
+      html += `<div class="prog-section-title" style="color:var(--accent2);margin-top:18px;">🩻 Scapular Rehab Circuit</div>`;
+      REHAB_EXERCISES.forEach(r => {
+        const [prescription, ...rest] = r.detail.split('—');
+        html += `<div class="prog-ex-card rehab">
+          <div class="prog-ex-row">
+            <div class="prog-ex-name">${r.name}</div>
+            <div class="prog-ex-prescription">${prescription.trim()}</div>
+          </div>
+          <div class="prog-ex-cue">${rest.join('—').trim()}</div>
+        </div>`;
+      });
+    }
+  });
+
+  // Rest days
+  html += `<div class="prog-section-title">Tue / Sat / Sun — Rest or Active Recovery</div>`;
+  html += `<div class="prog-rest-card">
+    <div class="prog-rest-icon">🌀</div>
+    Walk, stretch, foam roll, or easy Peloton/rowing (Z2 pace). No structured training required.
+  </div>`;
+
+  // Program start setter
+  const currentStart = localStorage.getItem(PROGRAM_START_KEY) || '';
+  html += `<div style="margin-top:24px;padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);">
+    <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;">Program Start Date</div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <input type="date" id="prog-start-input" value="${currentStart}" style="flex:1;">
+      <button class="btn small" onclick="saveProgramStart()">Set</button>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-top:6px;">Sets which week you're currently on for Today's Program.</div>
+  </div>`;
+
+  content.innerHTML = html;
+}
+
+function saveProgramStart() {
+  const val = document.getElementById('prog-start-input').value;
+  if (val) {
+    localStorage.setItem(PROGRAM_START_KEY, val);
+    currentProgWeek = getCurrentProgramWeek();
+    renderProgramPage(currentProgWeek);
+    renderTodayProgram();
+    document.querySelectorAll('.week-btn').forEach((btn, i) => {
+      btn.classList.toggle('active', i + 1 === currentProgWeek);
+    });
+    showToast('Program start saved!');
+  }
+}
+</script>
+</body>
+</html>

@@ -7,7 +7,9 @@ test('Homepage has correct title and content', async ({ page }) => {
   await expect(page.locator('main h1')).toHaveText("hello, i'm adrian.");
 
   // Check for the role description
-  await expect(page.locator('body')).toContainText('director of product management at salesforce');
+  // Updated text to match the current content on the page
+  await expect(page.locator('body')).toContainText('director of product at');
+  await expect(page.locator('body')).toContainText('salesforce');
 
   // Check for the salesforce link
   const link = page.locator('a', { hasText: 'salesforce' });

@@ -14,6 +14,7 @@ import Header from '../components/Header.astro';
     </div>
 
     <form action="https://formspree.io/f/xjgewgoq" method="POST" class="space-y-6 fade-in mb-12">
+      <input type="text" name="_gotcha" style="display:none" />
       <div>
         <label for="name" class="block text-xs uppercase tracking-wider text-muted-foreground mb-2">name *</label>
         <input type="text" id="name" name="name" required class="w-full border border-border rounded-xl px-4 py-3 bg-transparent font-mono text-base focus:outline-none focus:border-foreground/40 transition-colors" placeholder="your name" />

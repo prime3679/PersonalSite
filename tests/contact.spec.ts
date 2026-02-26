@@ -26,4 +26,8 @@ test('contact form is present with all fields', async ({ page }) => {
   // Verify the submit button is present
   const submitButton = page.locator('button[type="submit"]');
   await expect(submitButton).toBeVisible();
+
+  // Verify the honeypot field is present but hidden
+  const honeypotInput = page.locator('input[name="_gotcha"]');
+  await expect(honeypotInput).toBeHidden();
 });

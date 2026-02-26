@@ -319,15 +319,31 @@ import Header from '../components/Header.astro';
       hasRendered = true;
     }
 
+    let shouldFetch = true;
+
     try {
       // 1. Try Cache
-      const cached = localStorage.getItem(CACHE_KEY);
-      if (cached) {
-        renderStats(JSON.parse(cached));
+      const cachedRaw = localStorage.getItem(CACHE_KEY);
+      if (cachedRaw) {
+        const cached = JSON.parse(cachedRaw);
+
+        // Handle both old format (direct object) and new format ({ timestamp, data })
+        const stats = cached.timestamp ? cached.data : cached;
+        renderStats(stats);
+
+        // Check if cache is fresh (< 5 minutes)
+        if (cached.timestamp) {
+          const age = Date.now() - cached.timestamp;
+          if (age < 5 * 60 * 1000) {
+            shouldFetch = false;
+          }
+        }
       }
     } catch (e) {
       console.warn('Cache read failed', e);
     }
+
+    if (!shouldFetch) return;
 
     try {
       // 2. Fetch Network
@@ -342,12 +358,17 @@ import Header from '../components/Header.astro';
 
       // 3. Update Cache
       try {
-        localStorage.setItem(CACHE_KEY, JSON.stringify(stats));
+        const cacheData = {
+          timestamp: Date.now(),
+          data: stats
+        };
+        localStorage.setItem(CACHE_KEY, JSON.stringify(cacheData));
       } catch (e) {
         console.warn('Cache write failed', e);
       }
 
     } catch (err) {
+      if (err.name === 'AbortError' && hasRendered) return;
       // If we haven't shown anything yet, show error state
       if (!hasRendered && loadingEl) {
         loadingEl.textContent = 'stats coming soon';

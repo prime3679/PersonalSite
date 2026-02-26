@@ -1,19 +1,25 @@
 import { test, expect } from '@playwright/test';
 
-test('Homepage features case studies', async ({ page }) => {
+test('Homepage features current work and reading', async ({ page }) => {
   await page.goto('/');
 
-  // Verify the "Featured Work" section heading
-  // Note: The heading text is "featured work:", but headings are often normalized by accessibility role.
-  // However, looking at index.astro: <h2 class="...">featured work:</h2>
-  await expect(page.getByRole('heading', { name: 'featured work:' })).toBeVisible();
+  // Verify the "currently" section heading
+  await expect(page.getByRole('heading', { name: 'currently:' })).toBeVisible();
 
-  // Verify that the case studies are present
-  await expect(page.getByText('SiriusXM', { exact: true })).toBeVisible();
-  await expect(page.getByText('Disney+', { exact: true })).toBeVisible();
-  await expect(page.getByText('Electronic Arts', { exact: true })).toBeVisible();
+  // Verify the "FamilyOS" project link
+  const familyOSLink = page.getByRole('link', { name: 'familyos' });
+  await expect(familyOSLink).toBeVisible();
+  await expect(familyOSLink).toHaveAttribute('href', '/lab');
 
-  // Verify a headline to ensure data is mapped correctly
-  await expect(page.getByText('18% lift in daily sessions')).toBeVisible();
-  await expect(page.getByText('60+ market launch toolkit')).toBeVisible();
+  // Verify the "stack" information
+  await expect(page.getByText('stack:')).toBeVisible();
+  await expect(page.getByText('astro, typescript, node.js')).toBeVisible();
+
+  // Verify the "reading" section
+  await expect(page.getByText('reading:')).toBeVisible();
+  await expect(page.getByRole('link', { name: 'goodreads' })).toBeVisible();
+
+  // Verify the "training" section
+  await expect(page.getByText('training:')).toBeVisible();
+  await expect(page.getByText('muay thai + jiu jitsu')).toBeVisible();
 });

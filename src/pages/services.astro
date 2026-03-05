@@ -1,6 +1,18 @@
 ---
 import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
+
+const auditItems = [
+  'spend breakdown by model and task type',
+  'routing recommendations with projected savings',
+  'implementation guidance — no vendor lock-in'
+];
+
+const advisoryItems = [
+  'product strategy and roadmap clarity',
+  'team and org design for ai products',
+  'investor narrative and positioning'
+];
 ---
 
 <Base
@@ -34,7 +46,7 @@ import Header from '../components/Header.astro';
           their most expensive model. the fix is usually straightforward.
         </p>
         <div class="mb-5 space-y-1.5">
-          {['spend breakdown by model and task type', 'routing recommendations with projected savings', 'implementation guidance — no vendor lock-in'].map(item => (
+          {auditItems.map(item => (
             <div class="flex items-start gap-2 text-sm text-foreground/60">
               <span class="mt-0.5 shrink-0">→</span>
               <span>{item}</span>
@@ -61,7 +73,7 @@ import Header from '../components/Header.astro';
           or need someone who's actually shipped at scale to pressure-test your thinking.
         </p>
         <div class="mb-5 space-y-1.5">
-          {['product strategy and roadmap clarity', 'team and org design for ai products', 'investor narrative and positioning'].map(item => (
+          {advisoryItems.map(item => (
             <div class="flex items-start gap-2 text-sm text-foreground/60">
               <span class="mt-0.5 shrink-0">→</span>
               <span>{item}</span>

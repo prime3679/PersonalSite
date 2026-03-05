@@ -1,6 +1,14 @@
 ---
 import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
+
+const ROADMAP_ITEMS = [
+  { version: 'v0.1', label: 'single-agent coordination (daycare + date nights)', done: true },
+  { version: 'v0.2', label: 'preference learning from approval history', done: false },
+  { version: 'v0.3', label: 'second agent (nicole) + agent-to-agent negotiation', done: false },
+  { version: 'v0.4', label: 'meal planning + grocery coordination', done: false },
+  { version: 'v1.0', label: 'open source release + self-hosting guide', done: false },
+];
 ---
 
 <Base
@@ -145,13 +153,7 @@ google calendar  ←→  agent  ←→  telegram
     <section class="mb-12 fade-in">
       <h2 class="text-xs uppercase tracking-wider text-muted-foreground mb-4">roadmap</h2>
       <div class="space-y-2">
-        {[
-          { version: 'v0.1', label: 'single-agent coordination (daycare + date nights)', done: true },
-          { version: 'v0.2', label: 'preference learning from approval history', done: false },
-          { version: 'v0.3', label: 'second agent (nicole) + agent-to-agent negotiation', done: false },
-          { version: 'v0.4', label: 'meal planning + grocery coordination', done: false },
-          { version: 'v1.0', label: 'open source release + self-hosting guide', done: false },
-        ].map(({ version, label, done }) => (
+        {ROADMAP_ITEMS.map(({ version, label, done }) => (
           <div class="flex items-start gap-3 text-sm py-2 border-b border-foreground/5 last:border-0">
             <span class="text-muted-foreground w-10 shrink-0 pt-0.5">{version}</span>
             <span class:list={['leading-relaxed', done ? 'text-foreground' : 'text-foreground/50']}>

@@ -314,7 +314,13 @@
       <div id="type-breakdown"></div>
     </div>
     <div style="margin-top:20px;text-align:center;">
-      <button class="btn danger small" onclick="clearData()">Clear All Data</button>
+      <div class="btn-row" style="justify-content:center;">
+        <button class="btn secondary small" onclick="exportData()">Export data</button>
+        <button class="btn secondary small" onclick="document.getElementById('import-file').click()">Import data</button>
+        <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+        <button class="btn danger small" onclick="clearData()">Clear All Data</button>
+      </div>
+      <p style="font-size:11px;color:var(--muted);margin-top:8px;">Export to back up your data. Import will overwrite your current data.</p>
     </div>
   </div>
 
@@ -833,6 +839,48 @@ function calcStreak(data) {
     if (hits.has(ds)) { streak++; } else if (i > 0) { break; }
   }
   return streak;
+}
+
+function exportData() {
+  const keys = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k === STORAGE_KEY || k === PROGRAM_START_KEY || k.startsWith('ironlog')) {
+      try { keys[k] = JSON.parse(localStorage.getItem(k)); } catch { keys[k] = localStorage.getItem(k); }
+    }
+  }
+  const blob = new Blob([JSON.stringify({ exportedAt: new Date().toISOString(), keys }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  const d = new Date();
+  a.download = `iron-log-backup-${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showToast('Data exported.');
+}
+
+function importData(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (!data.keys || typeof data.keys !== 'object') {
+        showToast('Invalid backup file.');
+        return;
+      }
+      if (!confirm('This will overwrite your current data. Continue?')) return;
+      Object.entries(data.keys).forEach(([k, v]) => {
+        localStorage.setItem(k, typeof v === 'string' ? v : JSON.stringify(v));
+      });
+      location.reload();
+    } catch {
+      showToast('Could not read file.');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
 }
 
 function clearData() {

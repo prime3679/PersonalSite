@@ -571,6 +571,8 @@ body {
   animation: pulse 1.5s infinite;
 }
 
+.order-row.new-order { background: var(--green-bg); }
+
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.3; }
@@ -670,105 +672,18 @@ body {
       <div class="live-badge"><div class="live-dot"></div>Live · Service tonight 5–11 PM</div>
     </div>
 
-    <div class="dash-kpi-grid">
-      <div class="kpi-card">
-        <div class="kpi-num">18</div>
-        <div class="kpi-label">Covers</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-num">11</div>
-        <div class="kpi-label">Pre-ordered</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-num">$1,240</div>
-        <div class="kpi-label">Committed</div>
-      </div>
-    </div>
+    <div class="dash-kpi-grid" id="dash-kpis"></div>
 
     <div class="section-label">Dish demand tonight</div>
-    <div class="demand-card">
-      <div class="demand-row">
-        <div class="demand-emoji">🥔</div>
-        <div class="demand-info">
-          <div class="demand-name">Patatas Bravas</div>
-          <div class="demand-note">Prep 14 portions · ample stock</div>
-        </div>
-        <div class="demand-count count-ok">×11</div>
-      </div>
-      <div class="demand-row">
-        <div class="demand-emoji">🥩</div>
-        <div class="demand-info">
-          <div class="demand-name">Jamón Ibérico</div>
-          <div class="demand-note">Current stock: 7 portions ⚠ order more</div>
-        </div>
-        <div class="demand-count count-warning">×10</div>
-      </div>
-      <div class="demand-row">
-        <div class="demand-emoji">🦑</div>
-        <div class="demand-info">
-          <div class="demand-name">Pulpo a la Gallega</div>
-          <div class="demand-note">Prep 8 portions · sufficient</div>
-        </div>
-        <div class="demand-count count-normal">×8</div>
-      </div>
-      <div class="demand-row">
-        <div class="demand-emoji">🍮</div>
-        <div class="demand-info">
-          <div class="demand-name">Crema Catalana</div>
-          <div class="demand-note">Prep 9 portions · sufficient</div>
-        </div>
-        <div class="demand-count count-ok">×9</div>
-      </div>
-      <div class="demand-row">
-        <div class="demand-emoji">🥩</div>
-        <div class="demand-info">
-          <div class="demand-name">Chuletón de Buey</div>
-          <div class="demand-note">Prep 3 portions · confirm with kitchen</div>
-        </div>
-        <div class="demand-count count-normal">×3</div>
-      </div>
-    </div>
+    <div class="demand-card" id="demand-list"></div>
 
     <div class="section-label">Pre-orders by table</div>
-    <div class="order-card">
-      <div class="order-row">
-        <div class="order-num">1</div>
-        <div class="order-info">
-          <div class="order-guest">Lumley · 2 guests · 7:30 PM</div>
-          <div class="order-dishes">Patatas Bravas · Jamón Ibérico × 2 · Crema Catalana</div>
-        </div>
-        <div class="order-total">$98</div>
-      </div>
-      <div class="order-row">
-        <div class="order-num">2</div>
-        <div class="order-info">
-          <div class="order-guest">Chen · 4 guests · 7:00 PM</div>
-          <div class="order-dishes">Pulpo × 2 · Chuletón · Patatas Bravas × 2 · Crema × 2</div>
-        </div>
-        <div class="order-total">$187</div>
-      </div>
-      <div class="order-row">
-        <div class="order-num">3</div>
-        <div class="order-info">
-          <div class="order-guest">Martinez · 3 guests · 8:00 PM</div>
-          <div class="order-dishes">Jamón Ibérico × 3 · Pulpo · Patatas Bravas</div>
-        </div>
-        <div class="order-total">$134</div>
-      </div>
-      <div class="order-row">
-        <div class="order-num">4</div>
-        <div class="order-info">
-          <div class="order-guest">Thompson · 2 guests · 8:30 PM</div>
-          <div class="order-dishes">Chuletón × 2 · Jamón Ibérico · Crema Catalana × 2</div>
-        </div>
-        <div class="order-total">$211</div>
-      </div>
-    </div>
+    <div class="order-card" id="order-list"></div>
   </div>
 </div>
 
 <script>
-// ── DATA ──
+// ── MENU DATA ──
 const menu = [
   { id: 1, cat: 'tapas', emoji: '🥔', name: 'Patatas Bravas', desc: 'Crispy potatoes with bravas sauce and aioli', price: 12, badge: 'popular', badgeLabel: '↑ ordered by 84% of tables' },
   { id: 2, cat: 'tapas', emoji: '🥩', name: 'Jamón Ibérico', desc: 'Hand-carved 36-month aged Iberian ham', price: 28, badge: 'sellout', badgeLabel: 'Sells out most nights' },
@@ -784,8 +699,24 @@ const menu = [
   { id: 12, cat: 'drinks', emoji: '🍸', name: 'Sangria de la Casa', desc: 'Red wine, brandy, seasonal fruit, cinnamon', price: 12, badge: 'popular', badgeLabel: '↑ Most ordered drink' },
 ];
 
+// ── SEED ORDERS (existing restaurant data before patron interacts) ──
+const seedOrders = [
+  // Chen: Pulpo×2(44) + Chuletón(64) + Bravas×2(24) + Crema×2(22) = 154
+  { guest: 'Chen', party: 4, time: '7:00 PM', items: { 3: 2, 6: 1, 1: 2, 9: 2 }, total: 154 },
+  // Martinez: Jamón×3(84) + Pulpo(22) + Bravas(12) = 118
+  { guest: 'Martinez', party: 3, time: '8:00 PM', items: { 2: 3, 3: 1, 1: 1 }, total: 118 },
+  // Thompson: Chuletón×2(128) + Jamón(28) + Crema×2(22) = 178
+  { guest: 'Thompson', party: 2, time: '8:30 PM', items: { 6: 2, 2: 1, 9: 2 }, total: 178 },
+  // Nakamura: Pollo×2(56) + Sangria×2(24) + Churros(10) = 90
+  { guest: 'Nakamura', party: 2, time: '9:00 PM', items: { 8: 2, 12: 2, 10: 1 }, total: 90 },
+];
+
+// Stock levels for demand notes (portions available)
+const stockLevels = { 1: 20, 2: 7, 3: 12, 4: 16, 5: 10, 6: 4, 7: 8, 8: 12, 9: 14, 10: 10, 11: 20, 12: 20 };
+
 const cart = {};
 let currentCat = 'all';
+let patronOrder = null; // placed order from patron side
 
 // ── RENDER MENU ──
 function renderMenu() {
@@ -860,10 +791,16 @@ function getCartCount() {
   return Object.values(cart).reduce((s, q) => s + q, 0);
 }
 
-// ── CART SCREEN ──
+// ── SCREENS ──
 function showScreen(name) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById('screen-' + name).classList.add('active');
+  const bar = document.getElementById('cart-bar');
+  if (name === 'cart' || name === 'confirm') {
+    bar.classList.add('hidden');
+  } else {
+    updateCartBar();
+  }
   if (name === 'cart') renderCartScreen();
 }
 
@@ -910,11 +847,16 @@ function confirmOrder() {
   ).join('');
   document.getElementById('confirm-dish-list').innerHTML = dishHtml;
   document.getElementById('confirm-total-amount').textContent = `$${getCartTotal()}`;
+
+  // Save patron order for restaurant view
+  patronOrder = { guest: 'You', party: 2, time: '7:30 PM', items: { ...cart }, total: getCartTotal() };
+
   showScreen('confirm');
 }
 
 function startOver() {
   Object.keys(cart).forEach(k => delete cart[k]);
+  patronOrder = null;
   updateCartBar();
   renderMenu();
   showScreen('menu');
@@ -934,10 +876,102 @@ function switchView(view) {
   document.getElementById('view-restaurant').style.display = view === 'restaurant' ? 'block' : 'none';
   document.getElementById('btn-patron').classList.toggle('active', view === 'patron');
   document.getElementById('btn-restaurant').classList.toggle('active', view === 'restaurant');
+  if (view === 'restaurant') renderDashboard();
+}
+
+// ── RESTAURANT DASHBOARD ──
+function getAllOrders() {
+  const orders = [...seedOrders];
+  if (patronOrder) orders.unshift(patronOrder);
+  return orders;
+}
+
+function getDishDemand() {
+  const demand = {};
+  for (const order of getAllOrders()) {
+    for (const [id, qty] of Object.entries(order.items)) {
+      demand[id] = (demand[id] || 0) + qty;
+    }
+  }
+  // Sort by demand descending
+  return Object.entries(demand)
+    .map(([id, count]) => ({ dish: menu.find(d => d.id === parseInt(id)), count }))
+    .filter(d => d.dish)
+    .sort((a, b) => b.count - a.count);
+}
+
+function renderDashboard() {
+  const orders = getAllOrders();
+  const demand = getDishDemand();
+
+  // KPIs
+  const totalCovers = orders.reduce((s, o) => s + o.party, 0) + (patronOrder ? 0 : 7); // walk-ins
+  const preOrdered = orders.length;
+  const committed = orders.reduce((s, o) => s + o.total, 0);
+
+  document.getElementById('dash-kpis').innerHTML = `
+    <div class="kpi-card">
+      <div class="kpi-num">${totalCovers}</div>
+      <div class="kpi-label">Covers</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-num">${preOrdered}</div>
+      <div class="kpi-label">Pre-ordered</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-num">$${committed.toLocaleString()}</div>
+      <div class="kpi-label">Committed</div>
+    </div>`;
+
+  // Demand rows
+  const demandHtml = demand.map(({ dish, count }) => {
+    const stock = stockLevels[dish.id] || 10;
+    let countClass, note;
+    if (count > stock) {
+      countClass = 'count-warning';
+      note = `Stock: ${stock} portions — order more`;
+    } else if (count >= stock * 0.7) {
+      countClass = 'count-normal';
+      note = `Prep ${count} portions — monitor stock`;
+    } else {
+      countClass = 'count-ok';
+      note = `Prep ${count} portions — ample stock`;
+    }
+    return `
+      <div class="demand-row">
+        <div class="demand-emoji">${dish.emoji}</div>
+        <div class="demand-info">
+          <div class="demand-name">${dish.name}</div>
+          <div class="demand-note">${note}</div>
+        </div>
+        <div class="demand-count ${countClass}">×${count}</div>
+      </div>`;
+  }).join('');
+  document.getElementById('demand-list').innerHTML = demandHtml;
+
+  // Order rows
+  const orderHtml = orders.map((o, i) => {
+    const dishNames = Object.entries(o.items).map(([id, qty]) => {
+      const d = menu.find(d => d.id === parseInt(id));
+      return d ? (qty > 1 ? `${d.name} × ${qty}` : d.name) : '';
+    }).filter(Boolean).join(' · ');
+    const isNew = patronOrder && i === 0;
+    return `
+      <div class="order-row${isNew ? ' new-order' : ''}">
+        <div class="order-num">${i + 1}</div>
+        <div class="order-info">
+          <div class="order-guest">${o.guest} · ${o.party} guests · ${o.time}${isNew ? ' <span style="font-size:11px;color:var(--green);font-weight:600">NEW</span>' : ''}</div>
+          <div class="order-dishes">${dishNames}</div>
+        </div>
+        <div class="order-total">$${o.total}</div>
+      </div>`;
+  }).join('');
+  document.getElementById('order-list').innerHTML = orderHtml;
 }
 
 // ── INIT ──
 renderMenu();
+renderDashboard();
 </script>
 </body>
 </html>

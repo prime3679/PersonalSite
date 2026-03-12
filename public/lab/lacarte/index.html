@@ -21,6 +21,7 @@
   --red: #c0392b;
   --red-bg: rgba(192,57,43,0.08);
   --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --serif: Georgia, 'Times New Roman', serif;
   --mono: 'SF Mono', 'Fira Mono', monospace;
   --radius: 14px;
   --shadow: 0 2px 16px rgba(0,0,0,0.06);
@@ -35,6 +36,7 @@ body {
   min-height: 100vh;
   max-width: 430px;
   margin: 0 auto;
+  overflow-x: hidden;
 }
 
 /* ── NAV ── */
@@ -87,10 +89,144 @@ body {
 }
 
 /* ── SCREENS ── */
-.screen { display: none; animation: fadeIn 0.2s ease; }
+.screen-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.screen { display: none; }
 .screen.active { display: block; }
 
-@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+/* Slide transitions */
+.screen.slide-enter-right {
+  display: block;
+  animation: slideInRight 250ms ease-in-out forwards;
+}
+.screen.slide-enter-left {
+  display: block;
+  animation: slideInLeft 250ms ease-in-out forwards;
+}
+.screen.slide-exit-right {
+  display: block;
+  animation: slideOutRight 250ms ease-in-out forwards;
+}
+.screen.slide-exit-left {
+  display: block;
+  animation: slideOutLeft 250ms ease-in-out forwards;
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideInLeft {
+  from { transform: translateX(-100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideOutRight {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(100%); opacity: 0; }
+}
+@keyframes slideOutLeft {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(-100%); opacity: 0; }
+}
+
+/* ── INTRO SCREEN ── */
+.intro-hero {
+  padding: 48px 20px 32px;
+  text-align: center;
+  background: linear-gradient(180deg, var(--gold-bg) 0%, var(--bg) 100%);
+}
+
+.intro-cuisine {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+
+.intro-restaurant {
+  font-family: var(--serif);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.15;
+  margin-bottom: 8px;
+}
+
+.intro-tagline {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 36px;
+}
+
+.intro-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px 20px;
+  margin: 0 20px 16px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.intro-date {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.intro-details {
+  font-size: 15px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.intro-details span {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.intro-divider {
+  width: 40px;
+  height: 1px;
+  background: var(--border);
+  margin: 16px auto;
+}
+
+.intro-urgency {
+  font-size: 13px;
+  color: var(--gold);
+  font-weight: 500;
+}
+
+.intro-cta {
+  display: block;
+  margin: 24px 20px 40px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  width: calc(100% - 40px);
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  transition: opacity 0.15s;
+}
+
+.intro-cta:hover { opacity: 0.88; }
+
+.intro-footnote {
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+  padding-bottom: 40px;
+}
 
 /* ── RESERVATION HEADER ── */
 .reservation-header {
@@ -99,7 +235,7 @@ body {
   padding: 16px 20px;
 }
 
-.res-restaurant { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+.res-restaurant { font-family: var(--serif); font-size: 18px; font-weight: 600; margin-bottom: 4px; }
 .res-detail { font-size: 13px; color: var(--muted); }
 .res-detail span { color: var(--text); font-weight: 500; }
 
@@ -160,12 +296,24 @@ body {
   gap: 12px;
   align-items: flex-start;
   box-shadow: var(--shadow);
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, transform 0.2s;
 }
 
 .dish-card.selected {
   border-color: var(--gold);
   background: var(--gold-bg);
+}
+
+/* Spring bounce on add */
+@keyframes springBounce {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.03); }
+  70% { transform: scale(0.99); }
+  100% { transform: scale(1); }
+}
+
+.dish-card.bounce {
+  animation: springBounce 200ms ease-out;
 }
 
 .dish-emoji {
@@ -260,6 +408,18 @@ body {
 }
 
 .cart-bar.hidden { opacity: 0; pointer-events: none; transform: translateX(-50%) translateY(10px); }
+
+@keyframes cartJiggle {
+  0% { transform: translateX(-50%) rotate(0); }
+  25% { transform: translateX(-50%) rotate(-1deg); }
+  50% { transform: translateX(-50%) rotate(1deg); }
+  75% { transform: translateX(-50%) rotate(-0.5deg); }
+  100% { transform: translateX(-50%) rotate(0); }
+}
+
+.cart-bar.jiggle {
+  animation: cartJiggle 300ms ease-out;
+}
 
 .cart-bar-left { display: flex; align-items: center; gap: 10px; }
 .cart-count {
@@ -377,19 +537,57 @@ body {
 .confirmation {
   padding: 60px 20px 40px;
   text-align: center;
+  position: relative;
+  overflow: hidden;
 }
 
-.confirm-icon {
+.confirm-check-wrap {
   width: 80px; height: 80px;
-  background: var(--green-bg);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 36px;
   margin: 0 auto 24px;
+  position: relative;
+}
+
+.confirm-check-circle {
+  fill: none;
+  stroke: var(--green);
+  stroke-width: 3;
+  stroke-dasharray: 227;
+  stroke-dashoffset: 227;
+  animation: drawCircle 0.5s ease-out 0.1s forwards;
+}
+
+.confirm-check-mark {
+  fill: none;
+  stroke: var(--green);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 36;
+  stroke-dashoffset: 36;
+  animation: drawCheck 0.3s ease-out 0.5s forwards;
+}
+
+.confirm-check-bg {
+  fill: var(--green-bg);
+  opacity: 0;
+  animation: fadeCheckBg 0.3s ease-out 0.3s forwards;
+}
+
+@keyframes drawCircle {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes drawCheck {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes fadeCheckBg {
+  to { opacity: 1; }
 }
 
 .confirm-title { font-size: 26px; font-weight: 700; margin-bottom: 10px; }
 .confirm-sub { font-size: 15px; color: var(--muted); line-height: 1.6; margin-bottom: 32px; }
+.confirm-sub strong { font-family: var(--serif); }
 
 .confirm-card {
   background: var(--surface);
@@ -445,8 +643,39 @@ body {
 
 .done-btn:hover { background: var(--border); }
 
+/* Confetti */
+.confetti-piece {
+  position: absolute;
+  width: 8px;
+  height: 14px;
+  border-radius: 2px;
+  top: 60px;
+  left: 50%;
+  opacity: 0;
+  animation: confettiBurst 1.2s ease-out forwards;
+}
+
+@keyframes confettiBurst {
+  0% { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(1); }
+  100% { opacity: 0; transform: translate(var(--cx), var(--cy)) rotate(var(--cr)) scale(0.4); }
+}
+
 /* ── RESTAURANT DASHBOARD ── */
 .dash-content { padding: 16px 20px 40px; }
+
+.countdown-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 5px 12px;
+  border-radius: 20px;
+  margin-left: 10px;
+}
 
 .dash-kpi-grid {
   display: grid;
@@ -590,15 +819,32 @@ body {
   </div>
 </div>
 
-<!-- ══════════════ PATRON VIEW ══════════════ -->
+<!-- PATRON VIEW -->
 <div id="view-patron">
 
+  <!-- INTRO SCREEN -->
+  <div class="screen active" id="screen-intro">
+    <div class="intro-hero">
+      <div class="intro-cuisine">Spanish · Tapas Bar</div>
+      <div class="intro-restaurant">Boqueria West 40th</div>
+      <div class="intro-tagline">Your table is waiting. Lock in your order before you arrive.</div>
+    </div>
+    <div class="intro-card">
+      <div class="intro-date">Tonight</div>
+      <div class="intro-details"><span>8:00 PM</span> · Party of <span>2</span></div>
+      <div class="intro-divider"></div>
+      <div class="intro-urgency">Pre-order closes at 6:00 PM</div>
+    </div>
+    <button class="intro-cta" onclick="navigateTo('menu')">Browse Menu & Pre-Order →</button>
+    <div class="intro-footnote">Cancel or modify up to 2 hours before your reservation</div>
+  </div>
+
   <!-- MENU SCREEN -->
-  <div class="screen active" id="screen-menu">
+  <div class="screen" id="screen-menu">
     <div class="reservation-header">
       <div class="res-restaurant">Boqueria West 40th</div>
       <div class="res-detail">
-        <span>Sat Mar 7</span> · <span>7:30 PM</span> · Party of <span>2</span>
+        <span>Tonight</span> · <span>8:00 PM</span> · Party of <span>2</span>
       </div>
     </div>
 
@@ -616,7 +862,7 @@ body {
   <!-- CART SCREEN -->
   <div class="screen" id="screen-cart">
     <div class="cart-header">
-      <div class="back-btn" onclick="showScreen('menu')">←</div>
+      <div class="back-btn" onclick="navigateTo('menu')">←</div>
       <div class="cart-title">Your Order</div>
     </div>
     <div class="cart-items" id="cart-items-list"></div>
@@ -629,10 +875,16 @@ body {
 
   <!-- CONFIRMATION SCREEN -->
   <div class="screen" id="screen-confirm">
-    <div class="confirmation">
-      <div class="confirm-icon">✓</div>
-      <div class="confirm-title">You're all set.</div>
-      <div class="confirm-sub">Your dishes are reserved at<br><strong>Boqueria West 40th</strong> tonight at 7:30 PM.</div>
+    <div class="confirmation" id="confirmation-area">
+      <div class="confirm-check-wrap">
+        <svg viewBox="0 0 80 80" width="80" height="80">
+          <circle class="confirm-check-bg" cx="40" cy="40" r="38"/>
+          <circle class="confirm-check-circle" cx="40" cy="40" r="36"/>
+          <polyline class="confirm-check-mark" points="24,42 35,53 56,30"/>
+        </svg>
+      </div>
+      <div class="confirm-title">Order Locked In</div>
+      <div class="confirm-sub">Kitchen confirmed. See you tonight at<br><strong>Boqueria West 40th</strong>, 8:00 PM.</div>
       <div class="confirm-card">
         <div class="confirm-card-title">Order Summary</div>
         <div id="confirm-dish-list"></div>
@@ -655,7 +907,7 @@ body {
   </div>
 
   <!-- CART BAR -->
-  <div class="cart-bar hidden" id="cart-bar" onclick="showScreen('cart')">
+  <div class="cart-bar hidden" id="cart-bar" onclick="navigateTo('cart')">
     <div class="cart-bar-left">
       <div class="cart-count" id="cart-bar-count">0</div>
       <div class="cart-label">Review Order</div>
@@ -665,11 +917,12 @@ body {
 
 </div>
 
-<!-- ══════════════ RESTAURANT VIEW ══════════════ -->
+<!-- RESTAURANT VIEW -->
 <div id="view-restaurant" style="display:none">
   <div class="dash-content">
-    <div style="padding: 4px 0 8px">
+    <div style="padding: 4px 0 8px; display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
       <div class="live-badge"><div class="live-dot"></div>Live · Service tonight 5–11 PM</div>
+      <div class="countdown-badge" id="service-countdown"></div>
     </div>
 
     <div class="dash-kpi-grid" id="dash-kpis"></div>
@@ -699,24 +952,64 @@ const menu = [
   { id: 12, cat: 'drinks', emoji: '🍸', name: 'Sangria de la Casa', desc: 'Red wine, brandy, seasonal fruit, cinnamon', price: 12, badge: 'popular', badgeLabel: '↑ Most ordered drink' },
 ];
 
-// ── SEED ORDERS (existing restaurant data before patron interacts) ──
+// ── SEED ORDERS ──
 const seedOrders = [
-  // Chen: Pulpo×2(44) + Chuletón(64) + Bravas×2(24) + Crema×2(22) = 154
   { guest: 'Chen', party: 4, time: '7:00 PM', items: { 3: 2, 6: 1, 1: 2, 9: 2 }, total: 154 },
-  // Martinez: Jamón×3(84) + Pulpo(22) + Bravas(12) = 118
   { guest: 'Martinez', party: 3, time: '8:00 PM', items: { 2: 3, 3: 1, 1: 1 }, total: 118 },
-  // Thompson: Chuletón×2(128) + Jamón(28) + Crema×2(22) = 178
   { guest: 'Thompson', party: 2, time: '8:30 PM', items: { 6: 2, 2: 1, 9: 2 }, total: 178 },
-  // Nakamura: Pollo×2(56) + Sangria×2(24) + Churros(10) = 90
   { guest: 'Nakamura', party: 2, time: '9:00 PM', items: { 8: 2, 12: 2, 10: 1 }, total: 90 },
 ];
 
-// Stock levels for demand notes (portions available)
 const stockLevels = { 1: 20, 2: 7, 3: 12, 4: 16, 5: 10, 6: 4, 7: 8, 8: 12, 9: 14, 10: 10, 11: 20, 12: 20 };
 
 const cart = {};
 let currentCat = 'all';
-let patronOrder = null; // placed order from patron side
+let patronOrder = null;
+let currentScreen = 'intro';
+let kpiAnimated = false;
+
+// Screen order for determining slide direction
+const screenOrder = ['intro', 'menu', 'cart', 'confirm'];
+
+// ── SCREEN NAVIGATION WITH SLIDE TRANSITIONS ──
+function navigateTo(name) {
+  if (name === currentScreen) return;
+
+  const fromIdx = screenOrder.indexOf(currentScreen);
+  const toIdx = screenOrder.indexOf(name);
+  const forward = toIdx > fromIdx;
+
+  const fromEl = document.getElementById('screen-' + currentScreen);
+  const toEl = document.getElementById('screen-' + name);
+
+  // Exit animation on old screen
+  fromEl.classList.remove('active');
+  fromEl.classList.add(forward ? 'slide-exit-left' : 'slide-exit-right');
+
+  // Enter animation on new screen
+  toEl.classList.add(forward ? 'slide-enter-right' : 'slide-enter-left');
+
+  // Clean up after animation
+  setTimeout(() => {
+    fromEl.classList.remove('slide-exit-left', 'slide-exit-right');
+    fromEl.style.display = 'none';
+    toEl.classList.remove('slide-enter-right', 'slide-enter-left');
+    toEl.classList.add('active');
+  }, 250);
+
+  currentScreen = name;
+
+  // Cart bar visibility
+  const bar = document.getElementById('cart-bar');
+  if (name === 'cart' || name === 'confirm' || name === 'intro') {
+    bar.classList.add('hidden');
+  } else {
+    updateCartBar();
+  }
+
+  if (name === 'cart') renderCartScreen();
+  if (name === 'confirm') spawnConfetti();
+}
 
 // ── RENDER MENU ──
 function renderMenu() {
@@ -766,6 +1059,24 @@ function changeQty(id, delta) {
   const cur = cart[id] || 0;
   const next = Math.max(0, cur + delta);
   if (next === 0) delete cart[id]; else cart[id] = next;
+
+  // Spring bounce on add
+  if (delta > 0) {
+    const card = document.getElementById('dish-' + id);
+    if (card) {
+      card.classList.remove('bounce');
+      void card.offsetWidth; // force reflow
+      card.classList.add('bounce');
+    }
+    // Cart bar jiggle
+    const bar = document.getElementById('cart-bar');
+    if (!bar.classList.contains('hidden')) {
+      bar.classList.remove('jiggle');
+      void bar.offsetWidth;
+      bar.classList.add('jiggle');
+    }
+  }
+
   renderMenu();
   updateCartBar();
 }
@@ -791,19 +1102,7 @@ function getCartCount() {
   return Object.values(cart).reduce((s, q) => s + q, 0);
 }
 
-// ── SCREENS ──
-function showScreen(name) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-' + name).classList.add('active');
-  const bar = document.getElementById('cart-bar');
-  if (name === 'cart' || name === 'confirm') {
-    bar.classList.add('hidden');
-  } else {
-    updateCartBar();
-  }
-  if (name === 'cart') renderCartScreen();
-}
-
+// ── CART SCREEN ──
 function renderCartScreen() {
   const items = Object.entries(cart).map(([id, qty]) => ({
     ...menu.find(d => d.id === parseInt(id)), qty
@@ -835,7 +1134,7 @@ function removeItem(id) {
   delete cart[id];
   renderCartScreen();
   updateCartBar();
-  if (getCartCount() === 0) showScreen('menu');
+  if (getCartCount() === 0) navigateTo('menu');
 }
 
 function confirmOrder() {
@@ -848,10 +1147,37 @@ function confirmOrder() {
   document.getElementById('confirm-dish-list').innerHTML = dishHtml;
   document.getElementById('confirm-total-amount').textContent = `$${getCartTotal()}`;
 
-  // Save patron order for restaurant view
-  patronOrder = { guest: 'You', party: 2, time: '7:30 PM', items: { ...cart }, total: getCartTotal() };
+  patronOrder = { guest: 'You', party: 2, time: '8:00 PM', items: { ...cart }, total: getCartTotal() };
 
-  showScreen('confirm');
+  navigateTo('confirm');
+}
+
+// ── CONFETTI ──
+function spawnConfetti() {
+  const area = document.getElementById('confirmation-area');
+  // Remove old confetti
+  area.querySelectorAll('.confetti-piece').forEach(el => el.remove());
+
+  const colors = ['#b8924a', '#3a7d55', '#d4a95a', '#5aad7a', '#e8c876', '#2c2c2a'];
+  for (let i = 0; i < 28; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    const angle = (Math.random() * 360) * (Math.PI / 180);
+    const dist = 80 + Math.random() * 160;
+    const cx = Math.cos(angle) * dist;
+    const cy = Math.sin(angle) * dist - 40;
+    const cr = (Math.random() - 0.5) * 720;
+    piece.style.cssText = `
+      --cx: ${cx}px;
+      --cy: ${cy}px;
+      --cr: ${cr}deg;
+      background: ${colors[i % colors.length]};
+      animation-delay: ${Math.random() * 0.15}s;
+      width: ${5 + Math.random() * 6}px;
+      height: ${8 + Math.random() * 10}px;
+    `;
+    area.appendChild(piece);
+  }
 }
 
 function startOver() {
@@ -859,7 +1185,7 @@ function startOver() {
   patronOrder = null;
   updateCartBar();
   renderMenu();
-  showScreen('menu');
+  navigateTo('intro');
 }
 
 // ── CATEGORY FILTER ──
@@ -893,33 +1219,72 @@ function getDishDemand() {
       demand[id] = (demand[id] || 0) + qty;
     }
   }
-  // Sort by demand descending
   return Object.entries(demand)
     .map(([id, count]) => ({ dish: menu.find(d => d.id === parseInt(id)), count }))
     .filter(d => d.dish)
     .sort((a, b) => b.count - a.count);
 }
 
+// ── SERVICE COUNTDOWN ──
+function updateCountdown() {
+  const now = new Date();
+  const target = new Date(now);
+  target.setHours(18, 30, 0, 0); // 6:30 PM kitchen prep
+  if (now >= target) {
+    document.getElementById('service-countdown').textContent = 'Service underway';
+    return;
+  }
+  const diff = target - now;
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  document.getElementById('service-countdown').textContent = `Service starts in ${h}h ${m}m`;
+}
+
+// ── KPI TICK-UP ANIMATION ──
+function animateKPIs() {
+  if (kpiAnimated) return;
+  kpiAnimated = true;
+
+  document.querySelectorAll('.kpi-num[data-target]').forEach(el => {
+    const raw = el.getAttribute('data-target');
+    const prefix = raw.startsWith('$') ? '$' : '';
+    const target = parseInt(raw.replace(/[^0-9]/g, ''));
+    const duration = 600;
+    const start = performance.now();
+
+    function tick(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(target * eased);
+      el.textContent = prefix + current.toLocaleString();
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    el.textContent = prefix + '0';
+    requestAnimationFrame(tick);
+  });
+}
+
 function renderDashboard() {
   const orders = getAllOrders();
   const demand = getDishDemand();
 
-  // KPIs
-  const totalCovers = orders.reduce((s, o) => s + o.party, 0) + (patronOrder ? 0 : 7); // walk-ins
+  const totalCovers = orders.reduce((s, o) => s + o.party, 0) + (patronOrder ? 0 : 7);
   const preOrdered = orders.length;
   const committed = orders.reduce((s, o) => s + o.total, 0);
 
   document.getElementById('dash-kpis').innerHTML = `
     <div class="kpi-card">
-      <div class="kpi-num">${totalCovers}</div>
+      <div class="kpi-num" data-target="${totalCovers}">0</div>
       <div class="kpi-label">Covers</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-num">${preOrdered}</div>
+      <div class="kpi-num" data-target="${preOrdered}">0</div>
       <div class="kpi-label">Pre-ordered</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-num">$${committed.toLocaleString()}</div>
+      <div class="kpi-num" data-target="$${committed}">$0</div>
       <div class="kpi-label">Committed</div>
     </div>`;
 
@@ -967,11 +1332,18 @@ function renderDashboard() {
       </div>`;
   }).join('');
   document.getElementById('order-list').innerHTML = orderHtml;
+
+  // Countdown
+  updateCountdown();
+
+  // Animate KPIs after DOM update
+  requestAnimationFrame(animateKPIs);
 }
 
 // ── INIT ──
 renderMenu();
 renderDashboard();
+setInterval(updateCountdown, 60000);
 </script>
 </body>
 </html>

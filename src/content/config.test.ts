@@ -1,5 +1,20 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { blogSchema } from './blogSchema';
+
+// Mock astro:content before importing config
+vi.mock('astro:content', () => ({
+  defineCollection: vi.fn((config) => config),
+}));
+
+import { collections } from './config';
+
+describe('collections config', () => {
+  it('should export a blog collection with correct type and schema', () => {
+    expect(collections.blog).toBeDefined();
+    expect(collections.blog.type).toBe('content');
+    expect(collections.blog.schema).toBe(blogSchema);
+  });
+});
 
 describe('blogSchema', () => {
   it('should parse valid data with all fields', () => {

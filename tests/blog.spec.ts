@@ -8,7 +8,9 @@ test.describe('Blog', () => {
     await expect(page.getByText('I gave an AI agent two weeks to coordinate my family')).toBeVisible();
 
     // Check that an unpublished post is NOT visible
-    await expect(page.getByText('Second-order effects in product organizations')).not.toBeVisible();
+    // There are two posts with this title, one published and one unpublished.
+    // The unpublished one has description: "Why the best product decisions consider what happens after what happens. Lessons from scaling at Salesforce, SiriusXM, and Disney+."
+    await expect(page.getByText('Lessons from scaling at Salesforce, SiriusXM, and Disney+.')).not.toBeVisible();
   });
 
   test('ai-cost-70-percent page has only one global footer', async ({ page }) => {

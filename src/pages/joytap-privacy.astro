@@ -1,0 +1,49 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+---
+
+<Base
+  title="JoyTap Privacy Policy"
+  description="Privacy policy for JoyTap, a sensory play app for toddlers."
+>
+  <Header />
+  <main class="mx-auto max-w-2xl px-6 py-12 font-mono">
+    <section class="mb-12 fade-in">
+      <h1 class="text-2xl font-normal mb-6">joytap privacy policy</h1>
+      <p class="text-sm text-foreground/60 mb-8">last updated: march 12, 2026</p>
+
+      <div class="space-y-8 text-sm leading-relaxed text-foreground/80">
+        <div>
+          <h2 class="text-xs uppercase tracking-wider text-muted-foreground mb-3">summary</h2>
+          <p>JoyTap collects no personal data. No accounts, no tracking, no analytics, no ads. It's a sensory play app for toddlers, built for one family.</p>
+        </div>
+
+        <div>
+          <h2 class="text-xs uppercase tracking-wider text-muted-foreground mb-3">data collection</h2>
+          <p>JoyTap does not collect, store, or transmit any personal information. The app runs entirely on your device with no network requests.</p>
+        </div>
+
+        <div>
+          <h2 class="text-xs uppercase tracking-wider text-muted-foreground mb-3">local storage</h2>
+          <p>The app stores a single preference (sound on/off) using the device's local storage. This data never leaves your device and is not accessible to anyone else.</p>
+        </div>
+
+        <div>
+          <h2 class="text-xs uppercase tracking-wider text-muted-foreground mb-3">third-party services</h2>
+          <p>JoyTap uses no third-party SDKs, analytics, advertising, or tracking services.</p>
+        </div>
+
+        <div>
+          <h2 class="text-xs uppercase tracking-wider text-muted-foreground mb-3">children's privacy</h2>
+          <p>JoyTap is designed for use by toddlers under parental supervision. The app does not collect any information from children or anyone else.</p>
+        </div>
+
+        <div>
+          <h2 class="text-xs uppercase tracking-wider text-muted-foreground mb-3">contact</h2>
+          <p>Questions about this policy? Reach out via the <a href="/contact" class="underline hover:no-underline">contact page</a>.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</Base>

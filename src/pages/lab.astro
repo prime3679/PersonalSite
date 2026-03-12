@@ -420,7 +420,7 @@ import Header from '../components/Header.astro';
         }
       }
     } catch (e) {
-      console.warn('Cache read failed', e);
+      // Ignore cache read errors
     }
 
     if (!shouldFetch) return;
@@ -444,7 +444,7 @@ import Header from '../components/Header.astro';
         };
         localStorage.setItem(CACHE_KEY, JSON.stringify(cacheData));
       } catch (e) {
-        console.warn('Cache write failed', e);
+        // Ignore cache write errors
       }
 
     } catch (err) {
@@ -475,7 +475,7 @@ import Header from '../components/Header.astro';
       const cached = localStorage.getItem(CACHE_KEY);
       if (cached) renderStats(JSON.parse(cached));
     } catch (e) {
-      console.warn('Cache read failed', e);
+      // Ignore cache read errors
     }
 
     try {
@@ -491,7 +491,7 @@ import Header from '../components/Header.astro';
       try {
         localStorage.setItem(CACHE_KEY, JSON.stringify(stats));
       } catch (e) {
-        console.warn('Cache write failed', e);
+        // Ignore cache write errors
       }
     } catch (err) {
       // Keep showing cached or fallback "—"

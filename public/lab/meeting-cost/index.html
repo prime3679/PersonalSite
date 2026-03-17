@@ -5,23 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Meeting Price Tag</title>
 <meta name="description" content="How much is this meeting costing? A real-time meeting cost calculator.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #08080c;
-    --surface: #111118;
-    --surface2: #1a1a24;
-    --border: #2a2a3a;
-    --amber: #f59e0b;
-    --amber-bright: #fbbf24;
-    --amber-dim: #92400e;
-    --amber-glow: rgba(245, 158, 11, 0.15);
+    --bg: #000;
+    --surface: #0a0a0a;
+    --surface2: #111;
+    --border: #222;
+    --text: #fff;
+    --text-dim: #999;
+    --text-muted: #555;
     --green: #22c55e;
-    --red: #ef4444;
-    --text: #f0f0f5;
-    --muted: #6b7280;
-    --muted2: #4b5563;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -29,7 +22,7 @@
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
     min-height: 100dvh;
     display: flex;
     justify-content: center;
@@ -57,7 +50,7 @@
   .screen.active { display: flex; }
 
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(12px); }
+    from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
@@ -67,25 +60,21 @@
     padding: 32px 0 24px;
   }
   .setup-header h1 {
-    font-size: 28px;
-    font-weight: 900;
-    letter-spacing: -1px;
-    background: linear-gradient(135deg, var(--amber-bright) 0%, var(--amber) 50%, #d97706 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--text);
   }
   .setup-header .tagline {
     font-size: 13px;
-    color: var(--muted);
+    color: var(--text-muted);
     margin-top: 8px;
-    font-weight: 500;
   }
 
   .tiers {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
     margin-bottom: 24px;
   }
 
@@ -94,13 +83,12 @@
     align-items: center;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 14px 16px;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    border-radius: 8px;
+    padding: 12px 14px;
+    transition: border-color 0.2s;
   }
   .tier.has-people {
-    border-color: var(--amber);
-    box-shadow: 0 0 0 1px var(--amber), 0 0 20px var(--amber-glow);
+    border-color: var(--text);
   }
 
   .tier-info {
@@ -108,13 +96,13 @@
     min-width: 0;
   }
   .tier-label {
-    font-size: 14px;
-    font-weight: 700;
+    font-size: 13px;
+    font-weight: 600;
     color: var(--text);
   }
   .tier-salary {
-    font-size: 12px;
-    color: var(--muted);
+    font-size: 11px;
+    color: var(--text-muted);
     margin-top: 2px;
   }
 
@@ -123,18 +111,18 @@
     align-items: center;
     gap: 0;
     background: var(--surface2);
-    border-radius: 10px;
+    border-radius: 6px;
     overflow: hidden;
     border: 1px solid var(--border);
   }
   .tier-stepper button {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     background: transparent;
     border: none;
-    color: var(--muted);
-    font-size: 20px;
-    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 18px;
+    font-weight: 500;
     cursor: pointer;
     transition: all 0.15s;
     display: flex;
@@ -144,22 +132,22 @@
     -webkit-user-select: none;
   }
   .tier-stepper button:hover { background: var(--border); color: var(--text); }
-  .tier-stepper button:active { background: var(--amber); color: var(--bg); }
+  .tier-stepper button:active { background: var(--text); color: var(--bg); }
   .tier-stepper .count {
-    width: 36px;
+    width: 32px;
     text-align: center;
-    font-size: 16px;
-    font-weight: 700;
+    font-size: 14px;
+    font-weight: 600;
     color: var(--text);
     font-variant-numeric: tabular-nums;
   }
-  .tier-stepper .count.zero { color: var(--muted2); }
+  .tier-stepper .count.zero { color: var(--text-muted); }
 
   .preview {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 18px;
+    border-radius: 8px;
+    padding: 16px;
     display: flex;
     justify-content: space-around;
     text-align: center;
@@ -171,36 +159,36 @@
     gap: 4px;
   }
   .preview-value {
-    font-size: 22px;
-    font-weight: 800;
-    color: var(--amber-bright);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
     font-variant-numeric: tabular-nums;
   }
   .preview-label {
-    font-size: 11px;
-    color: var(--muted);
+    font-size: 10px;
+    color: var(--text-muted);
     text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 600;
+    letter-spacing: 1.5px;
   }
 
   .start-btn {
     width: 100%;
-    padding: 18px;
-    background: linear-gradient(135deg, var(--amber) 0%, #d97706 100%);
+    padding: 16px;
+    background: var(--text);
     border: none;
-    border-radius: 14px;
-    color: #000;
-    font-size: 16px;
-    font-weight: 800;
-    letter-spacing: 1px;
+    border-radius: 8px;
+    color: var(--bg);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
     cursor: pointer;
     transition: all 0.2s;
     text-transform: uppercase;
   }
-  .start-btn:hover { filter: brightness(1.1); transform: translateY(-1px); box-shadow: 0 8px 30px var(--amber-glow); }
-  .start-btn:active { transform: translateY(0); }
-  .start-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; filter: none; box-shadow: none; }
+  .start-btn:hover { opacity: 0.85; }
+  .start-btn:active { opacity: 0.7; }
+  .start-btn:disabled { opacity: 0.15; cursor: not-allowed; }
 
   /* ─── TICKER SCREEN ────────────────────── */
   .ticker-screen {
@@ -212,51 +200,48 @@
   }
 
   .ticker-time {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--muted);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
     letter-spacing: 4px;
     font-variant-numeric: tabular-nums;
-    margin-bottom: 16px;
+    margin-bottom: 24px;
   }
 
   .ticker-dollar {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--muted);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-muted);
     margin-bottom: 4px;
   }
 
   .ticker-amount {
-    font-size: 64px;
-    font-weight: 900;
-    letter-spacing: -3px;
+    font-size: 72px;
+    font-weight: 700;
+    letter-spacing: -4px;
     font-variant-numeric: tabular-nums;
-    background: linear-gradient(180deg, var(--amber-bright) 0%, var(--amber) 40%, #d97706 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    filter: drop-shadow(0 0 40px var(--amber-glow));
+    color: var(--text);
     line-height: 1;
     margin-bottom: 8px;
   }
 
   .ticker-rate {
-    font-size: 13px;
-    color: var(--muted);
+    font-size: 12px;
+    color: var(--text-muted);
     font-weight: 500;
-    margin-bottom: 32px;
+    margin-bottom: 40px;
     font-variant-numeric: tabular-nums;
   }
 
   .ticker-message {
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--amber-bright);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-dim);
     min-height: 24px;
     transition: opacity 0.3s ease;
     max-width: 320px;
     line-height: 1.5;
+    font-style: italic;
   }
   .ticker-message.fading { opacity: 0; }
 
@@ -265,51 +250,49 @@
     bottom: 32px;
     left: 50%;
     transform: translateX(-50%);
-    padding: 14px 48px;
-    background: var(--surface);
-    border: 2px solid var(--border);
-    border-radius: 14px;
-    color: var(--muted);
-    font-size: 14px;
-    font-weight: 700;
+    padding: 12px 40px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
     letter-spacing: 2px;
     cursor: pointer;
     transition: all 0.2s;
     text-transform: uppercase;
   }
-  .end-btn:hover { border-color: var(--red); color: var(--red); background: rgba(239, 68, 68, 0.08); }
+  .end-btn:hover { border-color: var(--text); color: var(--text); }
 
   /* ─── RESULTS SCREEN ───────────────────── */
   .results-screen {
     justify-content: center;
     align-items: center;
     text-align: center;
-    gap: 20px;
+    gap: 16px;
   }
 
   .results-header {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--muted);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
     letter-spacing: 3px;
     text-transform: uppercase;
   }
 
   .results-total {
     font-size: 56px;
-    font-weight: 900;
-    letter-spacing: -2px;
+    font-weight: 700;
+    letter-spacing: -3px;
     font-variant-numeric: tabular-nums;
-    background: linear-gradient(180deg, var(--amber-bright) 0%, var(--amber) 40%, #d97706 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--text);
   }
 
   .results-verdict {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--amber-bright);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-dim);
     font-style: italic;
     max-width: 300px;
     line-height: 1.5;
@@ -318,7 +301,7 @@
   .results-stats {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: 8px;
     width: 100%;
     max-width: 320px;
     margin: 8px 0;
@@ -326,28 +309,27 @@
   .results-stat {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 14px;
+    border-radius: 8px;
+    padding: 12px;
   }
   .results-stat-value {
-    font-size: 20px;
-    font-weight: 800;
+    font-size: 18px;
+    font-weight: 700;
     color: var(--text);
     font-variant-numeric: tabular-nums;
   }
   .results-stat-label {
-    font-size: 11px;
-    color: var(--muted);
+    font-size: 10px;
+    color: var(--text-muted);
     text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 600;
+    letter-spacing: 1.5px;
     margin-top: 4px;
   }
 
   .results-actions {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
     width: 100%;
     max-width: 320px;
     margin-top: 8px;
@@ -355,31 +337,33 @@
 
   .copy-btn {
     width: 100%;
-    padding: 16px;
-    background: linear-gradient(135deg, var(--amber) 0%, #d97706 100%);
+    padding: 14px;
+    background: var(--text);
     border: none;
-    border-radius: 14px;
-    color: #000;
-    font-size: 14px;
-    font-weight: 800;
-    letter-spacing: 1px;
+    border-radius: 8px;
+    color: var(--bg);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
     cursor: pointer;
     transition: all 0.2s;
     text-transform: uppercase;
   }
-  .copy-btn:hover { filter: brightness(1.1); }
-  .copy-btn.copied { background: var(--green); }
+  .copy-btn:hover { opacity: 0.85; }
+  .copy-btn.copied { background: var(--green); color: #000; }
 
   .reset-btn {
     width: 100%;
-    padding: 14px;
+    padding: 12px;
     background: transparent;
-    border: 2px solid var(--border);
-    border-radius: 14px;
-    color: var(--muted);
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 1px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
     cursor: pointer;
     transition: all 0.2s;
     text-transform: uppercase;
@@ -388,11 +372,11 @@
 
   .credit {
     font-size: 11px;
-    color: var(--muted2);
+    color: var(--text-muted);
     margin-top: 16px;
   }
-  .credit a { color: var(--muted); text-decoration: none; }
-  .credit a:hover { color: var(--amber); }
+  .credit a { color: var(--text-muted); text-decoration: none; }
+  .credit a:hover { color: var(--text); }
 </style>
 </head>
 <body>
@@ -402,9 +386,9 @@
   <!-- SETUP -->
   <div id="setup" class="screen active">
     <div class="setup-header">
-      <h1>Meeting Price Tag</h1>
-      <div class="tagline">Should this meeting be an email?</div>
-      <div class="tagline" style="margin-top:4px; font-size:11px; color:var(--muted2)">Total comp (base + equity + bonus) · Big Tech median</div>
+      <h1>meeting price tag</h1>
+      <div class="tagline">should this meeting be an email?</div>
+      <div class="tagline" style="margin-top:4px; font-size:10px; color:var(--text-muted)">total comp (base + equity + bonus) · big tech median</div>
     </div>
 
     <div class="tiers" id="tiers"></div>
@@ -536,7 +520,7 @@ function buildTiers() {
     el.innerHTML = `
       <div class="tier-info">
         <div class="tier-label">${tier.label}</div>
-        <div class="tier-salary">${formatSalary(tier.salary)}/yr &middot; $${(tier.salary / HOURS_PER_YEAR).toFixed(0)}/hr</div>
+        <div class="tier-salary">${formatSalary(tier.salary)}/yr · $${(tier.salary / HOURS_PER_YEAR).toFixed(0)}/hr</div>
       </div>
       <div class="tier-stepper">
         <button data-tier="${tier.id}" data-dir="-1">&minus;</button>

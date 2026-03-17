@@ -404,6 +404,7 @@
     <div class="setup-header">
       <h1>Meeting Price Tag</h1>
       <div class="tagline">Should this meeting be an email?</div>
+      <div class="tagline" style="margin-top:4px; font-size:11px; color:var(--muted2)">Total comp (base + equity + bonus) · Big Tech median</div>
     </div>
 
     <div class="tiers" id="tiers"></div>
@@ -480,26 +481,26 @@
 <script>
 // ─── CONFIG ────────────────────────────────
 const TIERS = [
-  { id: "ic",  label: "Individual Contributor", salary: 120000 },
-  { id: "mgr", label: "People Manager",        salary: 180000 },
-  { id: "dir", label: "Senior Director",        salary: 250000 },
-  { id: "vp",  label: "Vice President",         salary: 350000 },
-  { id: "c",   label: "C-Suite",                salary: 500000 },
+  { id: "ic",  label: "IC / Senior Engineer",   salary: 280000 },
+  { id: "staff", label: "Staff+ / Eng Manager", salary: 420000 },
+  { id: "dir", label: "Director",               salary: 600000 },
+  { id: "vp",  label: "VP / Senior Director",   salary: 900000 },
+  { id: "c",   label: "C-Suite / SVP",          salary: 2000000 },
 ];
 
 const HOURS_PER_YEAR = 2080;
 
 const MESSAGES = [
-  { threshold: 0,     text: "The clock is ticking..." },
-  { threshold: 50,    text: "\u201CThat\u2019s a team lunch.\u201D" },
-  { threshold: 150,   text: "\u201CThat\u2019s a month of ChatGPT Team.\u201D" },
-  { threshold: 300,   text: "\u201CThis should have been an email.\u201D" },
-  { threshold: 500,   text: "\u201CThat\u2019s a junior engineer for a day.\u201D" },
-  { threshold: 1000,  text: "\u201CThis should have been a Slack message.\u201D" },
-  { threshold: 2000,  text: "\u201CThat\u2019s a month of Figma for the whole team.\u201D" },
-  { threshold: 5000,  text: "\u201CThis should have been a calendar decline.\u201D" },
-  { threshold: 10000, text: "\u201CSomeone could have shipped a feature.\u201D" },
-  { threshold: 25000, text: "\u201CYou just burned a quarter\u2019s intern budget.\u201D" },
+  { threshold: 0,     text: "The clock is ticking\u2026" },
+  { threshold: 100,   text: "\u201CThat\u2019s a nice team lunch.\u201D" },
+  { threshold: 250,   text: "\u201CThat\u2019s a year of Claude Pro.\u201D" },
+  { threshold: 500,   text: "\u201CThis should have been an email.\u201D" },
+  { threshold: 1000,  text: "\u201CThat\u2019s a MacBook Air.\u201D" },
+  { threshold: 2500,  text: "\u201CThis should have been a Slack message.\u201D" },
+  { threshold: 5000,  text: "\u201CThat\u2019s a junior engineer for a week.\u201D" },
+  { threshold: 10000, text: "\u201CThis should have been a calendar decline.\u201D" },
+  { threshold: 25000, text: "\u201CSomeone could have shipped an entire feature.\u201D" },
+  { threshold: 50000, text: "\u201CYou just burned a quarter\u2019s intern budget.\u201D" },
 ];
 
 // ─── STATE ─────────────────────────────────
@@ -522,6 +523,7 @@ const costPerHourEl = document.getElementById("costPerHour");
 const startBtn = document.getElementById("startBtn");
 
 function formatSalary(n) {
+  if (n >= 1000000) return "$" + (n / 1000000).toFixed(n % 1000000 === 0 ? 0 : 1) + "M";
   return "$" + (n / 1000) + "k";
 }
 

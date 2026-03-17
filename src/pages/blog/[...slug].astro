@@ -22,11 +22,19 @@ const dateFormatted = new Date(post.data.date).toLocaleDateString('en-US', {
   day: 'numeric'
 });
 
-// Use full title for meta tag
-const fullTitle = `${post.data.title} — Adrian Lumley`;
+// Pass raw title — Base.astro handles the suffix
+
+const articleData = {
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: new Date(post.data.date).toISOString(),
+  url: `https://adrianlumley.co/blog/${post.slug}`,
+};
+
+const ogImagePath = `/og/${post.slug}.png`;
 ---
 
-<Base title={fullTitle} description={post.data.description}>
+<Base title={post.data.title} description={post.data.description} article={articleData} ogImage={ogImagePath}>
   <Header />
   <main class="mx-auto max-w-2xl px-6 py-12 font-mono">
     <!-- Header -->

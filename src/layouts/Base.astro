@@ -4,22 +4,68 @@ import { getImage } from 'astro:assets';
 import ogImage from '../assets/og-image.png';
 import { siteMetadata } from '../data/siteMetadata';
 
+interface ArticleData {
+  headline: string;
+  description: string;
+  datePublished: string;
+  url: string;
+}
+
 interface Props {
   title?: string;
   description?: string;
+  ogImage?: string;
+  article?: ArticleData;
 }
 
-const { title = siteMetadata.title, description = siteMetadata.description } = Astro.props;
+const { title = siteMetadata.title, description = siteMetadata.description, ogImage: ogImageOverride, article } = Astro.props;
 const fullTitle = title === siteMetadata.title ? title : `${title} — ${siteMetadata.title}`;
 
-const optimizedImage = await getImage({
-  src: ogImage,
-  format: 'png',
-  width: 1200,
-  height: 630,
-});
+let ogImageUrl: string;
+if (ogImageOverride) {
+  ogImageUrl = new URL(ogImageOverride, Astro.site).href;
+} else {
+  const optimizedImage = await getImage({
+    src: ogImage,
+    format: 'png',
+    width: 1200,
+    height: 630,
+  });
+  ogImageUrl = new URL(optimizedImage.src, Astro.site).href;
+}
 
-const ogImageUrl = new URL(optimizedImage.src, Astro.site).href;
+const structuredData: Record<string, unknown> = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": `${siteMetadata.url}/#person`,
+      "name": siteMetadata.author,
+      "url": siteMetadata.url,
+      "jobTitle": siteMetadata.jobTitle,
+      "worksFor": { "@type": "Organization", "name": siteMetadata.worksFor.name },
+      "sameAs": siteMetadata.social,
+      "description": "Director of Product at Salesforce, working at the intersection of AI and enterprise. Previously SiriusXM, Disney+, EA. Based in NYC.",
+      "knowsAbout": ["Product Management", "Artificial Intelligence", "Enterprise Software", "Emerging Technology"]
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${siteMetadata.url}/#website`,
+      "url": siteMetadata.url,
+      "name": siteMetadata.title,
+      "publisher": { "@id": `${siteMetadata.url}/#person` }
+    },
+    ...(article ? [{
+      "@type": "Article",
+      "headline": article.headline,
+      "datePublished": article.datePublished,
+      "description": article.description,
+      "author": { "@id": `${siteMetadata.url}/#person` },
+      "publisher": { "@id": `${siteMetadata.url}/#person` },
+      "url": article.url
+    }] : [])
+  ]
+};
 ---
 
 <!DOCTYPE html>
@@ -48,15 +94,7 @@ const ogImageUrl = new URL(optimizedImage.src, Astro.site).href;
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="author" content={siteMetadata.author} />
-  <script type="application/ld+json" set:html={JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": siteMetadata.author,
-    "url": siteMetadata.url,
-    "jobTitle": siteMetadata.jobTitle,
-    "worksFor": { "@type": "Organization", "name": siteMetadata.worksFor.name },
-    "sameAs": siteMetadata.social
-  })} />
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
   <script is:inline>
     // Prevent flash of wrong theme
     (function() {

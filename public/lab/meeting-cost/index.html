@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Meeting Price Tag</title>
+<meta name="description" content="How much is this meeting costing? A real-time meeting cost calculator.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #08080c;
+    --surface: #111118;
+    --surface2: #1a1a24;
+    --border: #2a2a3a;
+    --amber: #f59e0b;
+    --amber-bright: #fbbf24;
+    --amber-dim: #92400e;
+    --amber-glow: rgba(245, 158, 11, 0.15);
+    --green: #22c55e;
+    --red: #ef4444;
+    --text: #f0f0f5;
+    --muted: #6b7280;
+    --muted2: #4b5563;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    min-height: 100dvh;
+    display: flex;
+    justify-content: center;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .app {
+    width: 100%;
+    max-width: 480px;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  /* ─── SCREENS ──────────────────────────── */
+  .screen {
+    display: none;
+    flex-direction: column;
+    flex: 1;
+    padding: 24px 20px;
+    animation: fadeIn 0.4s ease;
+  }
+  .screen.active { display: flex; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── SETUP SCREEN ─────────────────────── */
+  .setup-header {
+    text-align: center;
+    padding: 32px 0 24px;
+  }
+  .setup-header h1 {
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, var(--amber-bright) 0%, var(--amber) 50%, #d97706 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .setup-header .tagline {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 8px;
+    font-weight: 500;
+  }
+
+  .tiers {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .tier {
+    display: flex;
+    align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 16px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .tier.has-people {
+    border-color: var(--amber);
+    box-shadow: 0 0 0 1px var(--amber), 0 0 20px var(--amber-glow);
+  }
+
+  .tier-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .tier-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .tier-salary {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .tier-stepper {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: var(--surface2);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .tier-stepper button {
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .tier-stepper button:hover { background: var(--border); color: var(--text); }
+  .tier-stepper button:active { background: var(--amber); color: var(--bg); }
+  .tier-stepper .count {
+    width: 36px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+  .tier-stepper .count.zero { color: var(--muted2); }
+
+  .preview {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .preview-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .preview-value {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--amber-bright);
+    font-variant-numeric: tabular-nums;
+  }
+  .preview-label {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+
+  .start-btn {
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, var(--amber) 0%, #d97706 100%);
+    border: none;
+    border-radius: 14px;
+    color: #000;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+  .start-btn:hover { filter: brightness(1.1); transform: translateY(-1px); box-shadow: 0 8px 30px var(--amber-glow); }
+  .start-btn:active { transform: translateY(0); }
+  .start-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; filter: none; box-shadow: none; }
+
+  /* ─── TICKER SCREEN ────────────────────── */
+  .ticker-screen {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 0;
+    padding-bottom: 100px;
+  }
+
+  .ticker-time {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 4px;
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 16px;
+  }
+
+  .ticker-dollar {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .ticker-amount {
+    font-size: 64px;
+    font-weight: 900;
+    letter-spacing: -3px;
+    font-variant-numeric: tabular-nums;
+    background: linear-gradient(180deg, var(--amber-bright) 0%, var(--amber) 40%, #d97706 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 40px var(--amber-glow));
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .ticker-rate {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 500;
+    margin-bottom: 32px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ticker-message {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--amber-bright);
+    min-height: 24px;
+    transition: opacity 0.3s ease;
+    max-width: 320px;
+    line-height: 1.5;
+  }
+  .ticker-message.fading { opacity: 0; }
+
+  .end-btn {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 14px 48px;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+  .end-btn:hover { border-color: var(--red); color: var(--red); background: rgba(239, 68, 68, 0.08); }
+
+  /* ─── RESULTS SCREEN ───────────────────── */
+  .results-screen {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+  }
+
+  .results-header {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .results-total {
+    font-size: 56px;
+    font-weight: 900;
+    letter-spacing: -2px;
+    font-variant-numeric: tabular-nums;
+    background: linear-gradient(180deg, var(--amber-bright) 0%, var(--amber) 40%, #d97706 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .results-verdict {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--amber-bright);
+    font-style: italic;
+    max-width: 300px;
+    line-height: 1.5;
+  }
+
+  .results-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    width: 100%;
+    max-width: 320px;
+    margin: 8px 0;
+  }
+  .results-stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+  }
+  .results-stat-value {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+  .results-stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+
+  .results-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 320px;
+    margin-top: 8px;
+  }
+
+  .copy-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--amber) 0%, #d97706 100%);
+    border: none;
+    border-radius: 14px;
+    color: #000;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+  .copy-btn:hover { filter: brightness(1.1); }
+  .copy-btn.copied { background: var(--green); }
+
+  .reset-btn {
+    width: 100%;
+    padding: 14px;
+    background: transparent;
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+  .reset-btn:hover { border-color: var(--text); color: var(--text); }
+
+  .credit {
+    font-size: 11px;
+    color: var(--muted2);
+    margin-top: 16px;
+  }
+  .credit a { color: var(--muted); text-decoration: none; }
+  .credit a:hover { color: var(--amber); }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- SETUP -->
+  <div id="setup" class="screen active">
+    <div class="setup-header">
+      <h1>Meeting Price Tag</h1>
+      <div class="tagline">Should this meeting be an email?</div>
+    </div>
+
+    <div class="tiers" id="tiers"></div>
+
+    <div class="preview">
+      <div class="preview-stat">
+        <div class="preview-value" id="totalPeople">0</div>
+        <div class="preview-label">Attendees</div>
+      </div>
+      <div class="preview-stat">
+        <div class="preview-value" id="costPerMin">$0.00</div>
+        <div class="preview-label">Per Minute</div>
+      </div>
+      <div class="preview-stat">
+        <div class="preview-value" id="costPerHour">$0</div>
+        <div class="preview-label">Per Hour</div>
+      </div>
+    </div>
+
+    <button class="start-btn" id="startBtn" disabled>Start Meeting</button>
+
+    <div class="credit" style="text-align:center; margin-top:24px;">
+      <a href="https://adrianlumley.co">adrianlumley.co</a>
+    </div>
+  </div>
+
+  <!-- TICKER -->
+  <div id="ticker" class="screen ticker-screen">
+    <div class="ticker-time" id="tickerTime">00:00</div>
+    <div class="ticker-dollar">$</div>
+    <div class="ticker-amount" id="tickerAmount">0.00</div>
+    <div class="ticker-rate" id="tickerRate">$0.00/min</div>
+    <div class="ticker-message" id="tickerMessage">The clock is ticking...</div>
+    <button class="end-btn" id="endBtn">End Meeting</button>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results" class="screen results-screen">
+    <div class="results-header">Meeting Adjourned</div>
+    <div class="results-total" id="resultTotal">$0.00</div>
+    <div class="results-verdict" id="resultVerdict"></div>
+
+    <div class="results-stats">
+      <div class="results-stat">
+        <div class="results-stat-value" id="resultDuration">0:00</div>
+        <div class="results-stat-label">Duration</div>
+      </div>
+      <div class="results-stat">
+        <div class="results-stat-value" id="resultAttendees">0</div>
+        <div class="results-stat-label">Attendees</div>
+      </div>
+      <div class="results-stat">
+        <div class="results-stat-value" id="resultPerMin">$0</div>
+        <div class="results-stat-label">Per Minute</div>
+      </div>
+      <div class="results-stat">
+        <div class="results-stat-value" id="resultPerPerson">$0</div>
+        <div class="results-stat-label">Per Person</div>
+      </div>
+    </div>
+
+    <div class="results-actions">
+      <button class="copy-btn" id="copyBtn">Copy Results</button>
+      <button class="reset-btn" id="resetBtn">New Meeting</button>
+    </div>
+
+    <div class="credit">
+      <a href="https://adrianlumley.co">adrianlumley.co</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ─── CONFIG ────────────────────────────────
+const TIERS = [
+  { id: "ic",  label: "Individual Contributor", salary: 120000 },
+  { id: "mgr", label: "People Manager",        salary: 180000 },
+  { id: "dir", label: "Senior Director",        salary: 250000 },
+  { id: "vp",  label: "Vice President",         salary: 350000 },
+  { id: "c",   label: "C-Suite",                salary: 500000 },
+];
+
+const HOURS_PER_YEAR = 2080;
+
+const MESSAGES = [
+  { threshold: 0,     text: "The clock is ticking..." },
+  { threshold: 50,    text: "\u201CThat\u2019s a team lunch.\u201D" },
+  { threshold: 150,   text: "\u201CThat\u2019s a month of ChatGPT Team.\u201D" },
+  { threshold: 300,   text: "\u201CThis should have been an email.\u201D" },
+  { threshold: 500,   text: "\u201CThat\u2019s a junior engineer for a day.\u201D" },
+  { threshold: 1000,  text: "\u201CThis should have been a Slack message.\u201D" },
+  { threshold: 2000,  text: "\u201CThat\u2019s a month of Figma for the whole team.\u201D" },
+  { threshold: 5000,  text: "\u201CThis should have been a calendar decline.\u201D" },
+  { threshold: 10000, text: "\u201CSomeone could have shipped a feature.\u201D" },
+  { threshold: 25000, text: "\u201CYou just burned a quarter\u2019s intern budget.\u201D" },
+];
+
+// ─── STATE ─────────────────────────────────
+const counts = {};
+TIERS.forEach(t => counts[t.id] = 0);
+
+let startTime = null;
+let tickerRAF = null;
+let costPerSecond = 0;
+let currentMessageIdx = 0;
+let finalCost = 0;
+let finalDuration = 0;
+let totalPeople = 0;
+
+// ─── SETUP ─────────────────────────────────
+const tiersEl = document.getElementById("tiers");
+const totalPeopleEl = document.getElementById("totalPeople");
+const costPerMinEl = document.getElementById("costPerMin");
+const costPerHourEl = document.getElementById("costPerHour");
+const startBtn = document.getElementById("startBtn");
+
+function formatSalary(n) {
+  return "$" + (n / 1000) + "k";
+}
+
+function buildTiers() {
+  tiersEl.innerHTML = "";
+  TIERS.forEach(tier => {
+    const el = document.createElement("div");
+    el.className = "tier";
+    el.id = "tier-" + tier.id;
+    el.innerHTML = `
+      <div class="tier-info">
+        <div class="tier-label">${tier.label}</div>
+        <div class="tier-salary">${formatSalary(tier.salary)}/yr &middot; $${(tier.salary / HOURS_PER_YEAR).toFixed(0)}/hr</div>
+      </div>
+      <div class="tier-stepper">
+        <button data-tier="${tier.id}" data-dir="-1">&minus;</button>
+        <div class="count zero" id="count-${tier.id}">0</div>
+        <button data-tier="${tier.id}" data-dir="1">+</button>
+      </div>
+    `;
+    tiersEl.appendChild(el);
+  });
+
+  tiersEl.addEventListener("click", e => {
+    const btn = e.target.closest("button[data-tier]");
+    if (!btn) return;
+    const id = btn.dataset.tier;
+    const dir = parseInt(btn.dataset.dir);
+    counts[id] = Math.max(0, counts[id] + dir);
+    updatePreview();
+  });
+}
+
+function updatePreview() {
+  totalPeople = Object.values(counts).reduce((a, b) => a + b, 0);
+  let totalHourly = 0;
+  TIERS.forEach(t => {
+    totalHourly += counts[t.id] * (t.salary / HOURS_PER_YEAR);
+    const countEl = document.getElementById("count-" + t.id);
+    countEl.textContent = counts[t.id];
+    countEl.className = "count" + (counts[t.id] === 0 ? " zero" : "");
+    const tierEl = document.getElementById("tier-" + t.id);
+    tierEl.className = "tier" + (counts[t.id] > 0 ? " has-people" : "");
+  });
+
+  costPerSecond = totalHourly / 3600;
+  const perMin = totalHourly / 60;
+  const perHour = totalHourly;
+
+  totalPeopleEl.textContent = totalPeople;
+  costPerMinEl.textContent = "$" + perMin.toFixed(2);
+  costPerHourEl.textContent = "$" + Math.round(perHour).toLocaleString();
+  startBtn.disabled = totalPeople === 0;
+}
+
+buildTiers();
+
+// ─── TICKER ────────────────────────────────
+const tickerTimeEl = document.getElementById("tickerTime");
+const tickerAmountEl = document.getElementById("tickerAmount");
+const tickerRateEl = document.getElementById("tickerRate");
+const tickerMessageEl = document.getElementById("tickerMessage");
+const endBtn = document.getElementById("endBtn");
+
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+function formatTime(seconds) {
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return m.toString().padStart(2, "0") + ":" + s.toString().padStart(2, "0");
+}
+
+function formatCost(amount) {
+  if (amount < 10) return amount.toFixed(2);
+  if (amount < 1000) return amount.toFixed(2);
+  return amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function getMessageForCost(cost) {
+  let msg = MESSAGES[0];
+  for (let i = MESSAGES.length - 1; i >= 0; i--) {
+    if (cost >= MESSAGES[i].threshold) { msg = MESSAGES[i]; break; }
+  }
+  return msg;
+}
+
+function tickerLoop() {
+  const elapsed = (performance.now() - startTime) / 1000;
+  const cost = elapsed * costPerSecond;
+
+  tickerTimeEl.textContent = formatTime(elapsed);
+  tickerAmountEl.textContent = formatCost(cost);
+
+  const msg = getMessageForCost(cost);
+  const msgIdx = MESSAGES.indexOf(msg);
+  if (msgIdx !== currentMessageIdx) {
+    currentMessageIdx = msgIdx;
+    tickerMessageEl.classList.add("fading");
+    setTimeout(() => {
+      tickerMessageEl.textContent = msg.text;
+      tickerMessageEl.classList.remove("fading");
+    }, 300);
+  }
+
+  finalCost = cost;
+  finalDuration = elapsed;
+  tickerRAF = requestAnimationFrame(tickerLoop);
+}
+
+function startMeeting() {
+  currentMessageIdx = 0;
+  tickerMessageEl.textContent = MESSAGES[0].text;
+  tickerMessageEl.classList.remove("fading");
+  tickerRateEl.textContent = "$" + (costPerSecond * 60).toFixed(2) + "/min";
+  showScreen("ticker");
+  startTime = performance.now();
+  tickerRAF = requestAnimationFrame(tickerLoop);
+}
+
+function endMeeting() {
+  cancelAnimationFrame(tickerRAF);
+  showResults();
+}
+
+startBtn.addEventListener("click", startMeeting);
+endBtn.addEventListener("click", endMeeting);
+
+// ─── RESULTS ───────────────────────────────
+const resultTotalEl = document.getElementById("resultTotal");
+const resultVerdictEl = document.getElementById("resultVerdict");
+const resultDurationEl = document.getElementById("resultDuration");
+const resultAttendeesEl = document.getElementById("resultAttendees");
+const resultPerMinEl = document.getElementById("resultPerMin");
+const resultPerPersonEl = document.getElementById("resultPerPerson");
+const copyBtn = document.getElementById("copyBtn");
+const resetBtn = document.getElementById("resetBtn");
+
+function showResults() {
+  const minutes = finalDuration / 60;
+  const perMin = minutes > 0 ? finalCost / minutes : 0;
+  const perPerson = totalPeople > 0 ? finalCost / totalPeople : 0;
+  const verdict = getMessageForCost(finalCost);
+
+  resultTotalEl.textContent = "$" + formatCost(finalCost);
+  resultVerdictEl.textContent = verdict.text;
+  resultDurationEl.textContent = formatTime(finalDuration);
+  resultAttendeesEl.textContent = totalPeople;
+  resultPerMinEl.textContent = "$" + perMin.toFixed(2);
+  resultPerPersonEl.textContent = "$" + perPerson.toFixed(2);
+  showScreen("results");
+}
+
+copyBtn.addEventListener("click", () => {
+  const minutes = Math.round(finalDuration / 60);
+  const perMin = minutes > 0 ? finalCost / minutes : 0;
+  const verdict = getMessageForCost(finalCost);
+  const text = [
+    "Meeting Price Tag",
+    "\uD83D\uDCB8 $" + formatCost(finalCost) + " | " + minutes + "min | " + totalPeople + " people",
+    "\uD83D\uDCCA $" + perMin.toFixed(2) + "/min",
+    verdict.text,
+    "adrianlumley.co/lab/meeting-cost",
+  ].join("\n");
+
+  navigator.clipboard.writeText(text).then(() => {
+    copyBtn.textContent = "Copied!";
+    copyBtn.classList.add("copied");
+    setTimeout(() => {
+      copyBtn.textContent = "Copy Results";
+      copyBtn.classList.remove("copied");
+    }, 2000);
+  });
+});
+
+resetBtn.addEventListener("click", () => {
+  TIERS.forEach(t => counts[t.id] = 0);
+  updatePreview();
+  showScreen("setup");
+});
+</script>
+</body>
+</html>

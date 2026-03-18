@@ -102,7 +102,7 @@
   }
   .tier-salary {
     font-size: 11px;
-    color: var(--text-muted);
+    color: var(--text-dim);
     margin-top: 2px;
   }
 
@@ -550,14 +550,15 @@ function buildPresetSelector() {
     btn.textContent = preset.label;
     btn.style.cssText = `
       background: ${key === currentPreset ? "var(--text)" : "var(--surface2)"};
-      color: ${key === currentPreset ? "var(--bg)" : "var(--text-dim)"};
-      border: 1px solid ${key === currentPreset ? "var(--text)" : "var(--border)"};
+      color: ${key === currentPreset ? "var(--bg)" : "#aaa"};
+      border: 1px solid ${key === currentPreset ? "var(--text)" : "#333"};
       border-radius: 4px;
-      padding: 5px 10px;
+      padding: 6px 12px;
       font-family: inherit;
-      font-size: 11px;
+      font-size: 12px;
       cursor: pointer;
       transition: all 0.15s ease;
+      letter-spacing: 0.01em;
     `;
     btn.addEventListener("click", () => {
       currentPreset = key;
@@ -612,15 +613,17 @@ function buildTiers() {
     tiersEl.appendChild(el);
   });
 
-  tiersEl.addEventListener("click", e => {
-    const btn = e.target.closest("button[data-tier]");
-    if (!btn) return;
-    const id = btn.dataset.tier;
-    const dir = parseInt(btn.dataset.dir);
-    counts[id] = Math.max(0, counts[id] + dir);
-    updatePreview();
-  });
 }
+
+// Single delegated listener — outside buildTiers so it's never duplicated
+tiersEl.addEventListener("click", e => {
+  const btn = e.target.closest("button[data-tier]");
+  if (!btn) return;
+  const id = btn.dataset.tier;
+  const dir = parseInt(btn.dataset.dir);
+  counts[id] = Math.max(0, (counts[id] || 0) + dir);
+  updatePreview();
+});
 
 function updatePreview() {
   totalPeople = Object.values(counts).reduce((a, b) => a + b, 0);

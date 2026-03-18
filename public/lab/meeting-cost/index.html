@@ -388,8 +388,9 @@
     <div class="setup-header">
       <h1>meeting price tag</h1>
       <div class="tagline">should this meeting be an email?</div>
-      <div class="tagline" style="margin-top:4px; font-size:10px; color:var(--text-muted)">total comp (base + equity + bonus) · big tech median</div>
     </div>
+
+    <div id="presetSelector" style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px;"></div>
 
     <div class="tiers" id="tiers"></div>
 
@@ -464,13 +465,61 @@
 
 <script>
 // ─── CONFIG ────────────────────────────────
-const TIERS = [
-  { id: "ic",  label: "IC / Senior Engineer",   salary: 280000 },
-  { id: "staff", label: "Staff+ / Eng Manager", salary: 420000 },
-  { id: "dir", label: "Director",               salary: 600000 },
-  { id: "vp",  label: "VP / Senior Director",   salary: 900000 },
-  { id: "c",   label: "C-Suite / SVP",          salary: 2000000 },
-];
+const PRESETS = {
+  bigtech: {
+    label: "Big Tech",
+    tiers: [
+      { id: "ic",    label: "IC / Senior Engineer",   salary: 280000 },
+      { id: "staff", label: "Staff+ / Eng Manager",   salary: 420000 },
+      { id: "dir",   label: "Director",               salary: 600000 },
+      { id: "vp",    label: "VP / Senior Director",   salary: 900000 },
+      { id: "c",     label: "C-Suite / SVP",          salary: 2000000 },
+    ]
+  },
+  startup: {
+    label: "Startup",
+    tiers: [
+      { id: "ic",    label: "IC / Senior Engineer",   salary: 160000 },
+      { id: "staff", label: "Staff+ / Eng Manager",   salary: 220000 },
+      { id: "dir",   label: "Director",               salary: 280000 },
+      { id: "vp",    label: "VP",                     salary: 380000 },
+      { id: "c",     label: "C-Suite / Founder",      salary: 600000 },
+    ]
+  },
+  enterprise: {
+    label: "Enterprise",
+    tiers: [
+      { id: "ic",    label: "IC / Senior",            salary: 120000 },
+      { id: "staff", label: "Manager",                salary: 160000 },
+      { id: "dir",   label: "Director",               salary: 220000 },
+      { id: "vp",    label: "VP / Senior Director",   salary: 320000 },
+      { id: "c",     label: "C-Suite / SVP",          salary: 600000 },
+    ]
+  },
+  agency: {
+    label: "Agency / Media",
+    tiers: [
+      { id: "ic",    label: "Senior / Lead",          salary: 90000 },
+      { id: "staff", label: "Manager / Supervisor",   salary: 120000 },
+      { id: "dir",   label: "Director",               salary: 160000 },
+      { id: "vp",    label: "VP / Group Director",    salary: 220000 },
+      { id: "c",     label: "C-Suite / Partner",      salary: 400000 },
+    ]
+  },
+  nonprofit: {
+    label: "Nonprofit / Gov",
+    tiers: [
+      { id: "ic",    label: "Senior Staff",           salary: 70000 },
+      { id: "staff", label: "Manager",                salary: 95000 },
+      { id: "dir",   label: "Director",               salary: 130000 },
+      { id: "vp",    label: "VP / Deputy Director",   salary: 180000 },
+      { id: "c",     label: "Executive Director",     salary: 280000 },
+    ]
+  },
+};
+
+let currentPreset = "bigtech";
+let TIERS = PRESETS[currentPreset].tiers;
 
 const HOURS_PER_YEAR = 2080;
 
@@ -490,6 +539,38 @@ const MESSAGES = [
 // ─── STATE ─────────────────────────────────
 const counts = {};
 TIERS.forEach(t => counts[t.id] = 0);
+
+// ─── PRESET SELECTOR ───────────────────────
+const presetSelectorEl = document.getElementById("presetSelector");
+
+function buildPresetSelector() {
+  presetSelectorEl.innerHTML = "";
+  Object.entries(PRESETS).forEach(([key, preset]) => {
+    const btn = document.createElement("button");
+    btn.textContent = preset.label;
+    btn.style.cssText = `
+      background: ${key === currentPreset ? "var(--text)" : "var(--surface2)"};
+      color: ${key === currentPreset ? "var(--bg)" : "var(--text-dim)"};
+      border: 1px solid ${key === currentPreset ? "var(--text)" : "var(--border)"};
+      border-radius: 4px;
+      padding: 5px 10px;
+      font-family: inherit;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    `;
+    btn.addEventListener("click", () => {
+      currentPreset = key;
+      TIERS = PRESETS[key].tiers;
+      // Reset counts for new tier set
+      TIERS.forEach(t => counts[t.id] = 0);
+      buildPresetSelector();
+      buildTiers();
+      updatePreview();
+    });
+    presetSelectorEl.appendChild(btn);
+  });
+}
 
 let startTime = null;
 let tickerRAF = null;
@@ -562,8 +643,6 @@ function updatePreview() {
   costPerHourEl.textContent = "$" + Math.round(perHour).toLocaleString();
   startBtn.disabled = totalPeople === 0;
 }
-
-buildTiers();
 
 // ─── TICKER ────────────────────────────────
 const tickerTimeEl = document.getElementById("tickerTime");
@@ -690,6 +769,11 @@ resetBtn.addEventListener("click", () => {
   updatePreview();
   showScreen("setup");
 });
+
+// ─── INIT ───────────────────────────────────
+buildPresetSelector();
+buildTiers();
+updatePreview();
 </script>
 </body>
 </html>

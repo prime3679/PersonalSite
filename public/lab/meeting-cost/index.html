@@ -497,7 +497,7 @@ const PRESETS = {
     ]
   },
   agency: {
-    label: "Agency / Media",
+    label: "Agency",
     tiers: [
       { id: "ic",    label: "Senior / Lead",          salary: 90000 },
       { id: "staff", label: "Manager / Supervisor",   salary: 120000 },
@@ -507,7 +507,7 @@ const PRESETS = {
     ]
   },
   nonprofit: {
-    label: "Nonprofit / Gov",
+    label: "Nonprofit",
     tiers: [
       { id: "ic",    label: "Senior Staff",           salary: 70000 },
       { id: "staff", label: "Manager",                salary: 95000 },
@@ -553,12 +553,13 @@ function buildPresetSelector() {
       color: ${key === currentPreset ? "var(--bg)" : "#aaa"};
       border: 1px solid ${key === currentPreset ? "var(--text)" : "#333"};
       border-radius: 4px;
-      padding: 6px 12px;
+      padding: 5px 10px;
       font-family: inherit;
-      font-size: 12px;
+      font-size: 11px;
       cursor: pointer;
       transition: all 0.15s ease;
       letter-spacing: 0.01em;
+      white-space: nowrap;
     `;
     btn.addEventListener("click", () => {
       currentPreset = key;

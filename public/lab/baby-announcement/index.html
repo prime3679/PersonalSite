@@ -9,159 +9,85 @@
   <meta property="og:description" content="A special announcement from the Lumley family">
   <meta property="og:image" content="./screen3.png">
   <meta property="og:type" content="website">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --pixel: 'Press Start 2P', monospace;
-      --sky: #3BA8F5;
-      --sky-light: #7DD3FC;
-      --gold: #ffd64d;
-      --gold-shadow: #9d7600;
-    }
-
     html, body {
       height: 100%;
+      width: 100%;
       overflow: hidden;
-      font-family: var(--pixel);
+      background: #4AB8FF;
       -webkit-tap-highlight-color: transparent;
     }
 
-    /* ══════════════════════════════
-       SHARED SCREEN
-       ══════════════════════════════ */
+    /*
+      Each screen is a full-viewport layer.
+      Only ONE is visible at a time — no opacity fading that
+      causes bleedthrough. We use a quick JS class swap.
+    */
     .screen {
       position: fixed;
       inset: 0;
-      display: flex;
+      display: none;            /* fully removed from rendering */
       align-items: center;
       justify-content: center;
-      flex-direction: column;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .5s ease;
+      z-index: 0;
     }
-    .screen.active { opacity: 1; pointer-events: auto; }
-
-    /* ══════════════════════════════
-       SCREEN 1 — TITLE
-       ══════════════════════════════ */
-    #screen1 {
-      background: url('./screen1.png') center center / cover no-repeat;
-      background-color: var(--sky);
-      cursor: pointer;
-    }
-
-    .s1-content {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      padding: 24px;
-    }
-
-    .hearts {
-      font-size: clamp(22px, 5vw, 38px);
-      margin-bottom: 20px;
+    .screen.active {
       display: flex;
-      justify-content: center;
-      gap: 10px;
-    }
-    .hearts span {
-      display: inline-block;
-      animation: heartPulse 1.4s ease infinite;
-    }
-    .hearts span:nth-child(2) { animation-delay: .15s; }
-    .hearts span:nth-child(3) { animation-delay: .3s; }
-
-    .title {
-      color: var(--gold);
-      font-size: clamp(20px, 5.5vw, 48px);
-      text-shadow:
-        3px 3px 0 var(--gold-shadow),
-        6px 6px 0 rgba(0,0,0,.3);
-      line-height: 1.5;
-      margin-bottom: 36px;
+      z-index: 10;
     }
 
-    .cta {
-      color: #fff;
-      font-size: clamp(10px, 2.2vw, 16px);
-      text-shadow: 2px 2px 0 rgba(0,0,0,.5);
-      animation: blink 1s steps(1) infinite;
+    /* ─── Screen 1: Title (landscape image, centered) ─── */
+    #screen1 {
+      background: #4AB8FF;
+      cursor: pointer;
+      flex-direction: column;
     }
-
-    /* ══════════════════════════════
-       SCREEN 2 — LOADING
-       ══════════════════════════════ */
-    #screen2 {
-      background: url('./screen2.png') center center / cover no-repeat;
-      background-color: var(--sky);
-    }
-
-    .s2-content {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      padding: 24px;
-    }
-
-    .loading-text {
-      color: #fff;
-      font-size: clamp(14px, 3.5vw, 28px);
-      text-shadow: 3px 3px 0 rgba(0,0,0,.4);
-      margin-bottom: 20px;
-    }
-
-    .bar-wrap {
-      width: min(80vw, 460px);
-      height: clamp(22px, 4.5vw, 38px);
-      border: 4px solid #1a1a2e;
-      border-radius: 2px;
-      background: rgba(255,255,255,.2);
-      box-shadow:
-        0 0 0 3px rgba(255,255,255,.45),
-        inset 0 2px 6px rgba(0,0,0,.2);
-      overflow: hidden;
-    }
-
-    .bar-fill {
-      width: 0;
-      height: 100%;
-      background: linear-gradient(180deg, #ffe566 0%, #ffc800 50%, #e6a800 100%);
-      box-shadow: inset 0 -3px 0 rgba(0,0,0,.15);
-    }
-    .bar-fill.go {
-      animation: loadBar 1.8s cubic-bezier(.4,0,.2,1) forwards;
-    }
-
-    /* ══════════════════════════════
-       SCREEN 3 — REVEAL
-       ══════════════════════════════ */
-    #screen3 {
-      background: var(--sky);
-      padding: 0;
-    }
-
-    #screen3 img {
+    #screen1 img {
       display: block;
+      width: 100%;
+      height: auto;
+      max-height: 100vh;
+      max-height: 100dvh;
       object-fit: contain;
       image-rendering: pixelated;
       image-rendering: crisp-edges;
-      animation: revealPop .5s cubic-bezier(.175,.885,.32,1.275) both;
     }
 
-    /* Default: height-constrained (most viewports) */
+    /* ─── Screen 2: Loading (landscape image, centered) ─── */
+    #screen2 {
+      background: #4AB8FF;
+      flex-direction: column;
+    }
+    #screen2 img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 100vh;
+      max-height: 100dvh;
+      object-fit: contain;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+
+    /* ─── Screen 3: Reveal (portrait image) ─── */
+    #screen3 {
+      background: #4AB8FF;
+    }
+    #screen3 img {
+      display: block;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+
+    /* Default: height is the constraint */
     #screen3 img {
       height: 100vh;
       height: 100dvh;
       width: auto;
     }
-
-    /* Narrow portrait phones where width becomes the constraint
-       Image ratio is 768/1376 ≈ 0.558 */
+    /* Very narrow phones where width is the constraint (image aspect ≈ 0.558) */
     @media (max-aspect-ratio: 56/100) {
       #screen3 img {
         width: 100vw;
@@ -169,75 +95,29 @@
       }
     }
 
-    /* ══════════════════════════════
-       ANIMATIONS
-       ══════════════════════════════ */
-    @keyframes blink {
-      50% { opacity: .2; }
+    /* ─── Fade-in animation for the reveal ─── */
+    @keyframes revealIn {
+      from { opacity: 0; transform: scale(.88); }
+      to   { opacity: 1; transform: scale(1); }
     }
-
-    @keyframes heartPulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.15); }
-    }
-
-    @keyframes loadBar {
-      0%   { width: 0; }
-      12%  { width: 15%; }
-      35%  { width: 42%; }
-      60%  { width: 68%; }
-      80%  { width: 85%; }
-      100% { width: 100%; }
-    }
-
-    @keyframes revealPop {
-      0%   { opacity: 0; transform: scale(.82); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-
-    /* ══════════════════════════════
-       RESPONSIVE TWEAKS
-       ══════════════════════════════ */
-
-    /* Landscape phones */
-    @media (max-height: 500px) and (orientation: landscape) {
-      .title { font-size: clamp(14px, 4vh, 26px); margin-bottom: 16px; }
-      .hearts { font-size: clamp(16px, 4vh, 28px); margin-bottom: 10px; }
-      .cta { font-size: clamp(8px, 2vh, 13px); }
-      .loading-text { font-size: clamp(10px, 3vh, 18px); margin-bottom: 12px; }
-      .bar-wrap { height: clamp(14px, 4vh, 26px); }
-    }
-
-    /* Small phones */
-    @media (max-width: 360px) {
-      .title { font-size: 17px; }
+    #screen3.active img {
+      animation: revealIn .45s cubic-bezier(.2,.8,.3,1) both;
     }
   </style>
 </head>
 <body>
 
-  <!-- ── SCREEN 1: Title ── -->
+  <!-- Screen 1: tap to enter — the image itself contains all the text -->
   <section id="screen1" class="screen active">
-    <div class="s1-content">
-      <div class="hearts">
-        <span>🧡</span><span>🧡</span><span>🧡</span>
-      </div>
-      <h1 class="title">PLAYER 4<br>HAS ENTERED<br>THE GAME</h1>
-      <div class="cta">TAP TO ENTER</div>
-    </div>
+    <img src="./screen1.png" alt="Player 4 Has Entered the Game — Tap to Enter" draggable="false">
   </section>
 
-  <!-- ── SCREEN 2: Loading ── -->
+  <!-- Screen 2: loading — the image itself contains loading bar + text -->
   <section id="screen2" class="screen">
-    <div class="s2-content">
-      <div class="loading-text">LOADING...</div>
-      <div class="bar-wrap">
-        <div id="barFill" class="bar-fill"></div>
-      </div>
-    </div>
+    <img src="./screen2.png" alt="Loading..." draggable="false">
   </section>
 
-  <!-- ── SCREEN 3: Reveal ── -->
+  <!-- Screen 3: the big reveal -->
   <section id="screen3" class="screen" aria-live="polite">
     <img src="./screen3.png" alt="It's a Boy! Lumley family baby announcement" draggable="false">
   </section>
@@ -246,27 +126,26 @@
     const s1 = document.getElementById('screen1');
     const s2 = document.getElementById('screen2');
     const s3 = document.getElementById('screen3');
-    const barFill = document.getElementById('barFill');
     let started = false;
 
-    // Preload images
-    new Image().src = './screen2.png';
-    new Image().src = './screen3.png';
+    // Preload so transitions are instant
+    const preload2 = new Image(); preload2.src = './screen2.png';
+    const preload3 = new Image(); preload3.src = './screen3.png';
+
+    function show(screen) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      screen.classList.add('active');
+    }
 
     function go() {
       if (started) return;
       started = true;
 
-      // → Loading
-      s1.classList.remove('active');
-      s2.classList.add('active');
-      requestAnimationFrame(() => barFill.classList.add('go'));
+      // Screen 1 → Screen 2 (loading)
+      show(s2);
 
-      // → Reveal
-      setTimeout(() => {
-        s2.classList.remove('active');
-        s3.classList.add('active');
-      }, 2200);
+      // Screen 2 → Screen 3 (reveal) after a beat
+      setTimeout(() => show(s3), 2000);
     }
 
     s1.addEventListener('click', go);

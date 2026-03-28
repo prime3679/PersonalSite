@@ -1,136 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
   <title>Player 4 Has Entered the Game</title>
-  <meta name="description" content="A special announcement from the Lumley family" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <meta name="description" content="A special announcement from the Lumley family">
+
+  <!-- OG / Social -->
+  <meta property="og:title" content="Player 4 Has Entered the Game">
+  <meta property="og:description" content="A special announcement from the Lumley family">
+  <meta property="og:image" content="./screen3.png">
+  <meta property="og:type" content="website">
+
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --pixel: 'Press Start 2P', monospace;
-      --bg-dark: #0a2f87;
-      --bg-mid: #1b63e7;
-      --gold: #ffd64d;
-      --white: #ffffff;
-      --shadow: #14337d;
-    }
-    body {
-      min-height: 100vh;
-      font-family: var(--pixel);
-      background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-mid) 55%, #66d2ff 100%);
-      color: var(--white);
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
       overflow: hidden;
+      background: #3BA8F5;
       -webkit-tap-highlight-color: transparent;
     }
+
+    /* ── Screen (shared) ── */
     .screen {
       position: fixed;
       inset: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-direction: column;
-      padding: 24px;
-    }
-    #entry {
-      z-index: 2;
-      background: radial-gradient(circle at center, rgba(46,114,255,.18), transparent 45%), linear-gradient(180deg, #051d57 0%, #0a2f87 100%);
-      transition: opacity .45s ease;
-      text-align: center;
-      cursor: pointer;
-    }
-    #entry.hidden { opacity: 0; pointer-events: none; }
-    .hearts { display: flex; gap: 12px; margin-bottom: 28px; font-size: clamp(20px, 5vw, 34px); }
-    .title {
-      color: var(--gold);
-      text-shadow: 4px 4px 0 #9d7600, 8px 8px 0 rgba(0,0,0,.25);
-      line-height: 1.4;
-      text-align: center;
-      margin-bottom: 28px;
-      font-size: clamp(16px, 3vw, 30px);
-      max-width: 900px;
-    }
-    .cta { font-size: clamp(12px, 2vw, 18px); animation: blink 1.1s steps(1) infinite; }
-    .loading { display:none; text-align:center; }
-    .loading.show { display:block; }
-    .loading-bar {
-      width: min(70vw, 420px);
-      height: 22px;
-      border: 4px solid white;
-      background: rgba(255,255,255,.12);
-      margin-top: 18px;
-      box-shadow: 0 0 0 4px rgba(0,0,0,.15);
-      overflow: hidden;
-    }
-    .loading-fill {
-      width: 0;
-      height: 100%;
-      background: linear-gradient(90deg, #ffd64d 0%, #fff49c 100%);
-      animation: load 1.2s ease forwards;
-    }
-    #card {
       opacity: 0;
       pointer-events: none;
-      background: linear-gradient(180deg, #0f3db7 0%, #2691ff 50%, #70c9ff 100%);
-      padding: 12px;
-      transition: opacity .35s ease;
+      transition: opacity .4s ease;
     }
-    #card.show { opacity: 1; pointer-events: auto; }
-    #card img {
+    .screen.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* ── Full-bleed responsive image ── */
+    .screen img {
       display: block;
-      width: min(100%, 820px);
-      max-height: calc(100vh - 24px);
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
       object-fit: contain;
-      margin: 0 auto;
       image-rendering: pixelated;
       image-rendering: crisp-edges;
-      box-shadow: 0 12px 0 #0b2460, 0 24px 40px rgba(0,0,0,.28);
     }
-    @keyframes blink { 50% { opacity: .35; } }
-    @keyframes load { from { width: 0; } to { width: 100%; } }
-    @media (max-width: 640px) {
-      #card { padding: 0; }
-      #card img { width: 100%; max-height: 100vh; box-shadow: none; }
-      .title { font-size: 18px; }
+
+    /*
+      Landscape images (screens 1 & 2): 1600x669 ≈ 2.39:1
+      On portrait phones the width is the constraint → fill width.
+      On landscape/desktop the height is the constraint → fill height.
+    */
+    .screen--landscape img {
+      width: 100vw;
+      height: auto;
     }
+    @media (min-aspect-ratio: 24/10) {
+      .screen--landscape img {
+        width: auto;
+        height: 100vh;
+      }
+    }
+
+    /*
+      Portrait image (screen 3): 768x1376 ≈ 0.558:1
+      On portrait phones the height is the constraint → fill height.
+      On landscape/desktop the height is still usually the constraint.
+    */
+    .screen--portrait img {
+      height: 100vh;
+      height: 100dvh;
+      width: auto;
+    }
+    /* Very narrow portrait where width becomes the constraint */
+    @media (max-aspect-ratio: 56/100) {
+      .screen--portrait img {
+        width: 100vw;
+        height: auto;
+      }
+    }
+
+    /* ── Tap cursor on entry screen ── */
+    #screen1 { cursor: pointer; }
   </style>
 </head>
 <body>
-  <section id="entry" class="screen">
-    <div class="hearts"><span>🧡</span><span>🧡</span><span>🧡</span></div>
-    <h1 class="title">PLAYER 4 HAS ENTERED THE GAME</h1>
-    <div id="cta" class="cta">TAP TO ENTER</div>
-    <div id="loading" class="loading">
-      <div>LOADING...</div>
-      <div class="loading-bar"><div class="loading-fill"></div></div>
-    </div>
+  <!-- Screen 1: Title / Tap to enter -->
+  <section id="screen1" class="screen screen--landscape active">
+    <img src="./screen1.png" alt="Player 4 Has Entered the Game - Tap to Enter" draggable="false">
   </section>
 
-  <section id="card" class="screen" aria-live="polite">
-    <img src="./announcement-v2.jpg" alt="Lumley family pixel-art baby announcement" />
+  <!-- Screen 2: Loading bar -->
+  <section id="screen2" class="screen screen--landscape">
+    <img src="./screen2.png" alt="Loading..." draggable="false">
+  </section>
+
+  <!-- Screen 3: The reveal -->
+  <section id="screen3" class="screen screen--portrait" aria-live="polite">
+    <img src="./screen3.png" alt="It's a Boy! Lumley family baby announcement" draggable="false">
   </section>
 
   <script>
-    const entry = document.getElementById('entry');
-    const card = document.getElementById('card');
-    const cta = document.getElementById('cta');
-    const loading = document.getElementById('loading');
+    const s1 = document.getElementById('screen1');
+    const s2 = document.getElementById('screen2');
+    const s3 = document.getElementById('screen3');
     let started = false;
-    function start() {
+
+    // Preload screen 2 & 3 images
+    new Image().src = './screen2.png';
+    new Image().src = './screen3.png';
+
+    function go() {
       if (started) return;
       started = true;
-      cta.style.display = 'none';
-      loading.classList.add('show');
+
+      // → Screen 2 (loading)
+      s1.classList.remove('active');
+      s2.classList.add('active');
+
+      // → Screen 3 (reveal) after loading duration
       setTimeout(() => {
-        entry.classList.add('hidden');
-        card.classList.add('show');
-      }, 1350);
+        s2.classList.remove('active');
+        s3.classList.add('active');
+      }, 2000);
     }
-    entry.addEventListener('click', start);
-    entry.addEventListener('touchstart', start, { passive: true });
+
+    s1.addEventListener('click', go);
+    s1.addEventListener('touchstart', go, { passive: true });
   </script>
 </body>
 </html>

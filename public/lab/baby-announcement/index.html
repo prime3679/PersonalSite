@@ -9,147 +9,269 @@
   <meta property="og:description" content="A special announcement from the Lumley family">
   <meta property="og:image" content="./screen3.png">
   <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html, body {
-      height: 100%;
-      width: 100%;
+    :root {
+      --pixel: 'Press Start 2P', monospace;
+      --bg-dark: #051d57;
+      --bg-mid: #0a2f87;
+      --bg-light: #1b63e7;
+      --gold: #ffd64d;
+      --gold-dark: #9d7600;
+      --white: #ffffff;
+    }
+
+    body {
+      min-height: 100vh;
+      min-height: 100dvh;
+      font-family: var(--pixel);
+      background: var(--bg-dark);
+      color: var(--white);
       overflow: hidden;
-      background: #4AB8FF;
       -webkit-tap-highlight-color: transparent;
     }
 
-    /*
-      Each screen is a full-viewport layer.
-      Only ONE is visible at a time — no opacity fading that
-      causes bleedthrough. We use a quick JS class swap.
-    */
+    /* ═══════════════════════════════════
+       SCREEN LAYER
+       ═══════════════════════════════════ */
     .screen {
       position: fixed;
       inset: 0;
-      display: none;            /* fully removed from rendering */
+      display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 0;
-    }
-    .screen.active {
-      display: flex;
-      z-index: 10;
+      flex-direction: column;
     }
 
-    /* ─── Screen 1: Title (landscape image, centered) ─── */
-    #screen1 {
-      background: #4AB8FF;
+    /* ═══════════════════════════════════
+       ENTRY SCREEN — dark retro title
+       ═══════════════════════════════════ */
+    #entry {
+      z-index: 2;
+      background:
+        radial-gradient(ellipse at 50% 40%, rgba(46,114,255,.15) 0%, transparent 60%),
+        linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-mid) 100%);
+      text-align: center;
       cursor: pointer;
-      flex-direction: column;
+      padding: 24px;
+      transition: opacity .5s ease;
     }
-    #screen1 img {
+    #entry.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Hearts */
+    .hearts {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      font-size: clamp(22px, 5vw, 36px);
+    }
+    .hearts span {
+      display: inline-block;
+      animation: pulse 1.4s ease infinite;
+    }
+    .hearts span:nth-child(2) { animation-delay: .12s; }
+    .hearts span:nth-child(3) { animation-delay: .24s; }
+
+    /* Title */
+    .title {
+      color: var(--gold);
+      font-size: clamp(18px, 4.5vw, 36px);
+      line-height: 1.45;
+      text-align: center;
+      margin-bottom: 32px;
+      text-shadow:
+        4px 4px 0 var(--gold-dark),
+        8px 8px 0 rgba(0,0,0,.25);
+      max-width: 800px;
+    }
+
+    /* CTA / Loading toggle */
+    .cta {
+      font-size: clamp(11px, 2vw, 16px);
+      animation: blink 1.1s steps(1) infinite;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+    }
+    .loading.show { display: block; }
+
+    .loading-label {
+      font-size: clamp(11px, 2vw, 16px);
+      margin-bottom: 16px;
+    }
+
+    .loading-bar {
+      width: min(70vw, 420px);
+      height: 22px;
+      border: 4px solid var(--white);
+      background: rgba(255,255,255,.1);
+      margin: 0 auto;
+      box-shadow: 0 0 0 4px rgba(0,0,0,.15);
+      overflow: hidden;
+    }
+
+    .loading-fill {
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold) 0%, #fff49c 100%);
+    }
+    .loading-fill.go {
+      animation: fillBar 1.3s ease forwards;
+    }
+
+    /* ═══════════════════════════════════
+       CARD SCREEN — the reveal
+       ═══════════════════════════════════ */
+    #card {
+      z-index: 1;
+      opacity: 0;
+      pointer-events: none;
+      background: linear-gradient(180deg, #0f3db7 0%, #2691ff 50%, #70c9ff 100%);
+      padding: 12px;
+      transition: opacity .4s ease;
+    }
+    #card.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #card img {
       display: block;
-      width: 100%;
-      height: auto;
-      max-height: 100vh;
-      max-height: 100dvh;
+      margin: 0 auto;
       object-fit: contain;
       image-rendering: pixelated;
       image-rendering: crisp-edges;
+      box-shadow:
+        0 8px 0 #0b2460,
+        0 16px 32px rgba(0,0,0,.3);
     }
 
-    /* ─── Screen 2: Loading (landscape image, centered) ─── */
-    #screen2 {
-      background: #4AB8FF;
-      flex-direction: column;
-    }
-    #screen2 img {
-      display: block;
-      width: 100%;
-      height: auto;
-      max-height: 100vh;
-      max-height: 100dvh;
-      object-fit: contain;
-      image-rendering: pixelated;
-      image-rendering: crisp-edges;
-    }
-
-    /* ─── Screen 3: Reveal (portrait image) ─── */
-    #screen3 {
-      background: #4AB8FF;
-    }
-    #screen3 img {
-      display: block;
-      image-rendering: pixelated;
-      image-rendering: crisp-edges;
-    }
-
-    /* Default: height is the constraint */
-    #screen3 img {
-      height: 100vh;
-      height: 100dvh;
+    /* Default: constrained by height */
+    #card img {
+      height: calc(100vh - 24px);
+      height: calc(100dvh - 24px);
       width: auto;
+      max-width: calc(100vw - 24px);
     }
-    /* Very narrow phones where width is the constraint (image aspect ≈ 0.558) */
-    @media (max-aspect-ratio: 56/100) {
-      #screen3 img {
+
+    /* Mobile: let it fill edge-to-edge */
+    @media (max-width: 640px) {
+      #card { padding: 0; }
+      #card img {
         width: 100vw;
         height: auto;
+        max-height: 100vh;
+        max-height: 100dvh;
+        box-shadow: none;
       }
     }
 
-    /* ─── Fade-in animation for the reveal ─── */
-    @keyframes revealIn {
-      from { opacity: 0; transform: scale(.88); }
-      to   { opacity: 1; transform: scale(1); }
+    /* Very narrow phones (narrower than image aspect ratio) */
+    @media (max-aspect-ratio: 56/100) {
+      #card img {
+        width: 100vw;
+        height: auto;
+        max-height: none;
+      }
     }
-    #screen3.active img {
-      animation: revealIn .45s cubic-bezier(.2,.8,.3,1) both;
+
+    /* ═══════════════════════════════════
+       RESPONSIVE — entry screen
+       ═══════════════════════════════════ */
+    @media (max-width: 400px) {
+      .title { font-size: 16px; }
+    }
+
+    @media (max-height: 500px) and (orientation: landscape) {
+      .title {
+        font-size: clamp(12px, 3.5vh, 22px);
+        margin-bottom: 16px;
+      }
+      .hearts {
+        font-size: clamp(16px, 4vh, 28px);
+        margin-bottom: 12px;
+      }
+    }
+
+    /* ═══════════════════════════════════
+       ANIMATIONS
+       ═══════════════════════════════════ */
+    @keyframes blink {
+      50% { opacity: .3; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+
+    @keyframes fillBar {
+      0%   { width: 0; }
+      100% { width: 100%; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Screen 1: tap to enter — the image itself contains all the text -->
-  <section id="screen1" class="screen active">
-    <img src="./screen1.png" alt="Player 4 Has Entered the Game — Tap to Enter" draggable="false">
+  <!-- ─── Entry Screen ─── -->
+  <section id="entry" class="screen">
+    <div class="hearts">
+      <span>🧡</span><span>🧡</span><span>🧡</span>
+    </div>
+    <h1 class="title">PLAYER 4 HAS ENTERED THE GAME</h1>
+    <div id="cta" class="cta">TAP TO ENTER</div>
+    <div id="loading" class="loading">
+      <div class="loading-label">LOADING...</div>
+      <div class="loading-bar">
+        <div id="loadFill" class="loading-fill"></div>
+      </div>
+    </div>
   </section>
 
-  <!-- Screen 2: loading — the image itself contains loading bar + text -->
-  <section id="screen2" class="screen">
-    <img src="./screen2.png" alt="Loading..." draggable="false">
-  </section>
-
-  <!-- Screen 3: the big reveal -->
-  <section id="screen3" class="screen" aria-live="polite">
-    <img src="./screen3.png" alt="It's a Boy! Lumley family baby announcement" draggable="false">
+  <!-- ─── Reveal Card ─── -->
+  <section id="card" class="screen" aria-live="polite">
+    <img src="./screen3.png" alt="It's a Boy! Lumley family baby announcement">
   </section>
 
   <script>
-    const s1 = document.getElementById('screen1');
-    const s2 = document.getElementById('screen2');
-    const s3 = document.getElementById('screen3');
+    const entry   = document.getElementById('entry');
+    const card    = document.getElementById('card');
+    const cta     = document.getElementById('cta');
+    const loading = document.getElementById('loading');
+    const fill    = document.getElementById('loadFill');
     let started = false;
 
-    // Preload so transitions are instant
-    const preload2 = new Image(); preload2.src = './screen2.png';
-    const preload3 = new Image(); preload3.src = './screen3.png';
+    // Preload reveal image
+    new Image().src = './screen3.png';
 
-    function show(screen) {
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      screen.classList.add('active');
-    }
-
-    function go() {
+    function start() {
       if (started) return;
       started = true;
 
-      // Screen 1 → Screen 2 (loading)
-      show(s2);
+      // Hide CTA, show loading bar
+      cta.style.display = 'none';
+      loading.classList.add('show');
+      requestAnimationFrame(() => fill.classList.add('go'));
 
-      // Screen 2 → Screen 3 (reveal) after a beat
-      setTimeout(() => show(s3), 2000);
+      // After bar fills → reveal
+      setTimeout(() => {
+        entry.classList.add('hidden');
+        card.classList.add('show');
+      }, 1500);
     }
 
-    s1.addEventListener('click', go);
-    s1.addEventListener('touchstart', go, { passive: true });
+    entry.addEventListener('click', start);
+    entry.addEventListener('touchstart', start, { passive: true });
   </script>
 </body>
 </html>

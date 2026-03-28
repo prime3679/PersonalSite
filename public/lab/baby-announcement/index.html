@@ -189,58 +189,25 @@
   .cloud-3::before { width: 18px; height: 18px; top: -8px; left: 6px; }
   .cloud-3::after { width: 14px; height: 14px; top: -5px; left: 18px; }
 
-  /* Characters */
-  .characters {
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    gap: clamp(6px, 2vw, 16px);
+  /* Family Image */
+  .family-image {
     position: relative;
     z-index: 2;
-    min-height: clamp(100px, 20vh, 180px);
-  }
-
-  .character {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    justify-content: center;
     opacity: 0;
     transform: translateY(20px);
   }
-  .character.show {
-    animation: bounceIn 0.5s ease forwards;
+  .family-image.show {
+    animation: bounceIn 0.6s ease forwards;
   }
-  .character:nth-child(2).show { animation-delay: 0.15s; }
-  .character:nth-child(3).show { animation-delay: 0.3s; }
-
-  .char-sprite {
-    font-size: clamp(48px, 10vw, 80px);
-    filter: drop-shadow(2px 4px 2px rgba(0,0,0,0.3));
-    line-height: 1;
-  }
-  .char-sprite.child-sprite {
-    font-size: clamp(36px, 8vw, 60px);
-  }
-
-  .char-label {
-    font-size: clamp(6px, 1.5vw, 8px);
-    color: var(--white);
-    text-shadow: 1px 1px 0 #000;
-    margin-top: 4px;
-    text-align: center;
-  }
-
-  /* Sparkle around child */
-  .sparkle-wrap {
-    position: relative;
-  }
-  .sparkle-wrap::before {
-    content: '';
-    font-size: clamp(12px, 3vw, 18px);
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    animation: twinkle 1.5s ease-in-out infinite;
+  .family-image img {
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+    border-radius: 8px;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+    image-rendering: auto;
   }
 
   /* Big Announcement */
@@ -583,22 +550,9 @@
     <div class="cloud cloud-2"></div>
     <div class="cloud cloud-3"></div>
 
-    <!-- Characters -->
-    <div class="characters">
-      <div class="character" id="char1">
-        <div class="char-sprite">&#x1F9D1;&#x200D;&#x1F4BB;</div>
-        <div class="char-label">DAD</div>
-      </div>
-      <div class="character" id="char2">
-        <div class="sparkle-wrap">
-          <div class="char-sprite child-sprite">&#x1F467;</div>
-        </div>
-        <div class="char-label">BIG SIS</div>
-      </div>
-      <div class="character" id="char3">
-        <div class="char-sprite">&#x1F469;</div>
-        <div class="char-label">MOM</div>
-      </div>
+    <!-- Family Image -->
+    <div class="family-image" id="familyImage">
+      <img src="./family.png" alt="The Lumley Family">
     </div>
 
     <!-- Announcement -->
@@ -717,26 +671,10 @@ function spawnConfetti() {
   setTimeout(() => { container.innerHTML = ''; }, 5000);
 }
 
-// ── Floating Items ──
+// ── Floating Coins ──
 function spawnFloatingItems() {
-  const container = document.getElementById('floatingItems');
-  const items = ['\uD83C\uDF7C', '\uD83D\uDC76', '\u2B50', '\uD83C\uDF1F', '\uD83D\uDC99', '\uD83C\uDF89', '\uD83C\uDF80', '\uD83D\uDC63'];
-  let idx = 0;
-  function spawn() {
-    if (idx > 20) return;
-    const el = document.createElement('div');
-    el.classList.add('float-item');
-    el.textContent = items[Math.floor(Math.random() * items.length)];
-    el.style.left = (Math.random() * 80 + 10) + '%';
-    el.style.bottom = '5%';
-    el.style.animationDelay = '0s';
-    container.appendChild(el);
-    idx++;
-    setTimeout(() => el.remove(), 3500);
-  }
-  // Spawn a burst, then periodically
-  for (let i = 0; i < 6; i++) setTimeout(spawn, i * 200);
-  setInterval(spawn, 2000);
+  // Extra confetti burst — no emojis
+  spawnConfetti();
 }
 
 // ── Loading Bar Progress ──
@@ -799,7 +737,7 @@ function runSequence() {
   const header = document.getElementById('header');
   const headerHearts = document.getElementById('headerHearts');
   const gameScene = document.getElementById('gameScene');
-  const chars = [document.getElementById('char1'), document.getElementById('char2'), document.getElementById('char3')];
+  const familyImage = document.getElementById('familyImage');
   const announcement = document.getElementById('announcement');
   const infoPanel = document.getElementById('infoPanel');
   const statsBar = document.getElementById('statsBar');
@@ -824,19 +762,11 @@ function runSequence() {
     playPowerUp();
   }, 1200);
 
-  // Step 4: Characters bounce in
+  // Step 4: Family image bounces in
   setTimeout(() => {
-    chars.forEach(c => c.classList.add('show'));
+    familyImage.classList.add('show');
     playCoinSound();
   }, 1800);
-
-  // Add gentle bounce to characters after they appear
-  setTimeout(() => {
-    chars.forEach((c, i) => {
-      c.style.animationDelay = (i * 0.3) + 's';
-      c.classList.add('bounce-gentle');
-    });
-  }, 2800);
 
   // Step 5: IT'S A BOY!
   setTimeout(() => {

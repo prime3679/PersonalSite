@@ -30,9 +30,103 @@
       background: radial-gradient(circle at top, rgba(96,165,250,0.25), transparent 35%), linear-gradient(to bottom, #1d4ed8, #071a52 35%, #041133);
       z-index: 0;
     }
-    .shell {
+    .entry,
+    .main {
       position: relative;
       z-index: 1;
+      min-height: 100vh;
+      width: 100%;
+    }
+    .entry {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: opacity .45s ease, visibility .45s ease;
+      background: radial-gradient(circle at center, rgba(96,165,250,0.16), transparent 35%);
+    }
+    .entry.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+    }
+    .entry-card {
+      max-width: 34rem;
+      width: 100%;
+      border: 4px solid #93c5fd;
+      background: rgba(11,42,120,0.88);
+      border-radius: 28px;
+      box-shadow: 0 24px 60px rgba(0,0,0,.45);
+      padding: 2.5rem 1.5rem;
+    }
+    .entry-title {
+      font-size: clamp(1.5rem, 5vw, 2.75rem);
+      font-weight: 900;
+      line-height: 1.15;
+      color: var(--gold-soft);
+      text-shadow: 3px 3px 0 #1e3a8a;
+      margin-bottom: 1rem;
+    }
+    .entry-sub {
+      color: #dbeafe;
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+      font-size: 1rem;
+    }
+    .tap-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: .95rem 1.4rem;
+      border-radius: 999px;
+      border: 4px solid rgba(255,255,255,.6);
+      background: #0f172a;
+      box-shadow: 0 14px 30px rgba(0,0,0,.28);
+      font-weight: 800;
+      letter-spacing: .04em;
+      animation: pulse 1.8s infinite;
+    }
+    .loader-wrap {
+      display: none;
+      margin-top: 1.5rem;
+    }
+    .loader-wrap.show { display: block; }
+    .loader-label {
+      font-size: .8rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--blue-pale);
+      margin-bottom: .8rem;
+    }
+    .loader-bar {
+      width: min(100%, 360px);
+      height: 16px;
+      margin: 0 auto;
+      border-radius: 999px;
+      background: rgba(15,23,42,.9);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.25);
+    }
+    .loader-fill {
+      width: 0;
+      height: 100%;
+      background: linear-gradient(to right, #facc15, #60a5fa, #22c55e);
+    }
+    .loader-wrap.show .loader-fill { animation: load 1.25s ease forwards; }
+    .main {
+      display: none;
+      opacity: 0;
+      transition: opacity .35s ease;
+    }
+    .main.show {
+      display: block;
+      opacity: 1;
+    }
+    .shell {
       max-width: 80rem;
       margin: 0 auto;
       padding: 2rem 1rem;
@@ -56,16 +150,6 @@
       padding: 3rem 2.5rem 1.5rem;
       text-align: center;
     }
-    .decor {
-      position: absolute;
-      font-size: clamp(1.2rem, 2vw, 2rem);
-      user-select: none;
-      pointer-events: none;
-    }
-    .d1 { top: 20px; left: 18px; animation: bob 1.8s infinite; }
-    .d2 { top: 28px; right: 20px; animation: pulse 1.8s infinite; }
-    .d3 { top: 86px; right: 62px; animation: bob 1.8s .25s infinite; }
-    .d4 { top: 84px; left: 42px; animation: pulse 1.8s .35s infinite; }
     .hearts {
       display: flex;
       justify-content: center;
@@ -104,7 +188,7 @@
       background: #2563eb;
       padding: .95rem 1.4rem;
       box-shadow: 0 14px 32px rgba(0,0,0,.28);
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.1rem;
       animation: pulse 1.8s infinite;
     }
     .pill span {
@@ -113,11 +197,12 @@
       letter-spacing: -0.03em;
     }
     .sub {
-      max-width: 42rem;
+      max-width: 100%;
       margin: 0 auto;
       color: #dbeafe;
-      font-size: clamp(.95rem, 2vw, 1.15rem);
-      line-height: 1.75;
+      font-size: clamp(.92rem, 1.8vw, 1.08rem);
+      line-height: 1.6;
+      white-space: nowrap;
     }
     .grid {
       padding: 0 2.5rem 2rem;
@@ -204,102 +289,119 @@
     }
     .stat strong { font-weight: 800; }
     .footer {
-      padding: 0 2.5rem 2.5rem;
+      padding: 0 2.5rem 2.2rem;
       text-align: center;
     }
-    .button {
-      display: inline-flex;
-      align-items: center;
-      gap: .8rem;
-      border-radius: 999px;
-      border: 4px solid rgba(255,255,255,.6);
-      background: #0f172a;
-      padding: .9rem 1.5rem;
-      box-shadow: 0 14px 30px rgba(0,0,0,.28);
-      transition: transform .2s ease;
-      cursor: default;
-    }
-    .button:hover { transform: scale(1.03); }
-    .button .play { font-size: 1.2rem; animation: bob 1.8s infinite; }
-    .button .label { font-size: clamp(1.1rem, 2.5vw, 1.7rem); font-weight: 900; letter-spacing: .03em; }
     .coming {
-      margin-top: 1rem;
       color: var(--blue-pale);
       font-size: .75rem;
       letter-spacing: .25em;
       text-transform: uppercase;
     }
     @keyframes pulse { 50% { opacity: .72; } }
-    @keyframes bob { 50% { transform: translateY(-6px); } }
+    @keyframes load { from { width: 0; } to { width: 100%; } }
     @media (max-width: 900px) {
       .grid { grid-template-columns: 1fr; }
+      .sub { white-space: normal; }
     }
     @media (max-width: 640px) {
       .shell { padding: 1rem .5rem; }
       .hero, .grid, .footer { padding-left: 1rem; padding-right: 1rem; }
       .hero { padding-top: 2.6rem; }
-      .eyebrow, .tag, .coming { letter-spacing: .18em; }
+      .eyebrow, .tag, .coming, .loader-label { letter-spacing: .18em; }
       .stat { flex-direction: column; align-items: flex-start; }
+      .sub { white-space: normal; }
     }
   </style>
 </head>
 <body>
   <div class="page-bg"></div>
-  <div class="shell">
-    <div class="frame">
-      <div class="top-bar"></div>
 
-      <section class="hero">
-        <div class="decor d1">🍼</div>
-        <div class="decor d2">🪙</div>
-        <div class="decor d3">✨</div>
-        <div class="decor d4">🎮</div>
+  <section id="entry" class="entry">
+    <div class="entry-card">
+      <div class="hearts"><span>💛</span><span>💛</span><span>💛</span><span>💛</span></div>
+      <h1 class="entry-title">A new player is joining the Lumley family</h1>
+      <p class="entry-sub">Tap to reveal the announcement.</p>
+      <div id="tapPill" class="tap-pill">Tap to open</div>
+      <div id="loader" class="loader-wrap">
+        <div class="loader-label">Loading surprise…</div>
+        <div class="loader-bar"><div class="loader-fill"></div></div>
+      </div>
+    </div>
+  </section>
 
-        <div class="hearts"><span>💛</span><span>💛</span><span>💛</span><span>💛</span></div>
-        <p class="eyebrow">The Lumley Family Expansion Pack</p>
-        <h1 class="h1">PLAYER 4</h1>
-        <h2 class="h2">HAS ENTERED THE GAME!</h2>
-        <div class="pill"><span>IT’S A BOY!</span></div>
-        <p class="sub">Nicole, Adrian, and Evelyn are leveling up. Baby boy arrives <strong style="color:#fff">10.8.26</strong>.</p>
-      </section>
+  <main id="main" class="main">
+    <div class="shell">
+      <div class="frame">
+        <div class="top-bar"></div>
 
-      <section class="grid">
-        <div class="panel">
-          <div class="img-wrap">
-            <img src="./announcement-v2.jpg" alt="Baby boy announcement art" />
-          </div>
-        </div>
+        <section class="hero">
+          <div class="hearts"><span>💛</span><span>💛</span><span>💛</span><span>💛</span></div>
+          <p class="eyebrow">The Lumley Family Expansion Pack</p>
+          <h1 class="h1">PLAYER 4</h1>
+          <h2 class="h2">HAS ENTERED THE GAME!</h2>
+          <div class="pill"><span>IT’S A BOY!</span></div>
+          <p class="sub">Nicole, Adrian, and Evelyn are leveling up. Baby boy arrives <strong style="color:#fff">10.8.26</strong>.</p>
+        </section>
 
-        <div class="stack">
-          <div class="card">
-            <div class="row"><span class="icon">🧸</span><span class="tag">Quest Update</span></div>
-            <h3>Baby Loading…</h3>
-            <p>Due date: <strong style="color:#fff">10/8</strong></p>
-            <div class="bar"><div></div></div>
-          </div>
-
-          <div class="card">
-            <div class="row"><span class="icon">⭐</span><span class="tag">Achievement Unlocked</span></div>
-            <h3>Big Sister Level Up</h3>
-            <p>Evelyn is officially stepping into her next main-character arc.</p>
-          </div>
-
-          <div class="card">
-            <div class="tag" style="margin-bottom:.8rem">Player Stats</div>
-            <div class="stats">
-              <div class="stat"><span>Nicole</span><strong style="color:#fde68a">⭐ MVP Energy</strong></div>
-              <div class="stat"><span>Evelyn</span><strong style="color:#f9a8d4">❤️ Level 2 → 3</strong></div>
-              <div class="stat"><span>Dad</span><strong style="color:#93c5fd">🏋️ Support Class</strong></div>
+        <section class="grid">
+          <div class="panel">
+            <div class="img-wrap">
+              <img src="./announcement-v2.jpg" alt="Baby boy announcement art" />
             </div>
           </div>
-        </div>
-      </section>
 
-      <section class="footer">
-        <div class="button"><span class="play">▶</span><span class="label">PRESS START</span></div>
-        <p class="coming">Coming soon: Baby Boy Lumley</p>
-      </section>
+          <div class="stack">
+            <div class="card">
+              <div class="row"><span class="icon">🧸</span><span class="tag">Quest Update</span></div>
+              <h3>Baby Loading…</h3>
+              <p>Due date: <strong style="color:#fff">10/8</strong></p>
+              <div class="bar"><div></div></div>
+            </div>
+
+            <div class="card">
+              <div class="row"><span class="icon">⭐</span><span class="tag">Achievement Unlocked</span></div>
+              <h3>Big Sister Level Up</h3>
+              <p>Evelyn is officially stepping into her next main-character arc.</p>
+            </div>
+
+            <div class="card">
+              <div class="tag" style="margin-bottom:.8rem">Player Stats</div>
+              <div class="stats">
+                <div class="stat"><span>Nicole</span><strong style="color:#fde68a">⭐ MVP Energy</strong></div>
+                <div class="stat"><span>Evelyn</span><strong style="color:#f9a8d4">❤️ Level 2 → 3</strong></div>
+                <div class="stat"><span>Dad</span><strong style="color:#93c5fd">🏋️ Support Class</strong></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="footer">
+          <p class="coming">Coming soon: Baby Boy Lumley</p>
+        </section>
+      </div>
     </div>
-  </div>
+  </main>
+
+  <script>
+    const entry = document.getElementById('entry');
+    const main = document.getElementById('main');
+    const tapPill = document.getElementById('tapPill');
+    const loader = document.getElementById('loader');
+    let opened = false;
+    function openCard() {
+      if (opened) return;
+      opened = true;
+      tapPill.style.display = 'none';
+      loader.classList.add('show');
+      setTimeout(() => {
+        entry.classList.add('hidden');
+        main.classList.add('show');
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      }, 1350);
+    }
+    entry.addEventListener('click', openCard);
+    entry.addEventListener('touchstart', openCard, { passive: true });
+  </script>
 </body>
 </html>

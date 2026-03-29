@@ -5,29 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Player 4 Has Entered the Game!</title>
   <meta name="description" content="A special announcement from the Lumley family" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg-navy: #071a52;
-      --bg-deep: #041133;
-      --blue: #1d4ed8;
-      --blue-light: #60a5fa;
-      --blue-pale: #bfdbfe;
-      --gold: #facc15;
-      --gold-soft: #fde68a;
+      --bg-navy: #0b1d51;
+      --bg-deep: #050e2b;
+      --blue: #2855d9;
+      --blue-light: #69a7ff;
+      --blue-pale: #d7e8ff;
+      --gold: #ffd54a;
+      --gold-soft: #fff1a6;
       --white: #ffffff;
+      --pixel: 'Press Start 2P', monospace;
+      --panel-blue: #2048b5;
+      --panel-line: #94c8ff;
+      --ink: #10275f;
     }
     body {
       min-height: 100vh;
       color: var(--white);
       overflow-x: hidden;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #071a52;
+      background: var(--bg-navy);
     }
     .page-bg {
       position: fixed;
       inset: 0;
-      background: radial-gradient(circle at top, rgba(96,165,250,0.25), transparent 35%), linear-gradient(to bottom, #1d4ed8, #071a52 35%, #041133);
+      background:
+        radial-gradient(circle at 15% 12%, rgba(255,255,255,0.18), transparent 12%),
+        radial-gradient(circle at 84% 18%, rgba(255,255,255,0.12), transparent 10%),
+        linear-gradient(to bottom, #2f67e8 0%, #1a47bf 30%, #0b1d51 60%, #050e2b 100%);
       z-index: 0;
     }
     .entry,
@@ -57,25 +67,25 @@
     .entry-card {
       max-width: 34rem;
       width: 100%;
-      border: 4px solid #93c5fd;
-      background: rgba(11,42,120,0.88);
-      border-radius: 28px;
-      box-shadow: 0 24px 60px rgba(0,0,0,.45);
+      border: 6px solid var(--panel-line);
+      background: linear-gradient(180deg, #2048b5 0%, #16388f 100%);
+      border-radius: 18px;
+      box-shadow: 0 10px 0 #0b1845, 0 24px 60px rgba(0,0,0,.45);
       padding: 2.5rem 1.5rem;
     }
     .entry-title {
-      font-size: clamp(1.5rem, 5vw, 2.75rem);
-      font-weight: 900;
-      line-height: 1.15;
+      font-size: clamp(1.1rem, 3.5vw, 1.8rem);
+      font-family: var(--pixel);
+      line-height: 1.5;
       color: var(--gold-soft);
       text-shadow: 3px 3px 0 #1e3a8a;
       margin-bottom: 1rem;
     }
     .entry-sub {
       color: #dbeafe;
-      line-height: 1.7;
+      line-height: 1.8;
       margin-bottom: 1.5rem;
-      font-size: 1rem;
+      font-size: .95rem;
     }
     .tap-pill {
       display: inline-flex;
@@ -83,11 +93,12 @@
       justify-content: center;
       padding: .95rem 1.4rem;
       border-radius: 999px;
-      border: 4px solid rgba(255,255,255,.6);
-      background: #0f172a;
-      box-shadow: 0 14px 30px rgba(0,0,0,.28);
-      font-weight: 800;
-      letter-spacing: .04em;
+      border: 4px solid #fff7cc;
+      background: linear-gradient(180deg, #2b61e6 0%, #173c9c 100%);
+      box-shadow: 0 6px 0 #0c1d53, 0 14px 30px rgba(0,0,0,.28);
+      font-family: var(--pixel);
+      font-size: .85rem;
+      letter-spacing: .06em;
       animation: pulse 1.8s infinite;
     }
     .loader-wrap {
@@ -96,8 +107,9 @@
     }
     .loader-wrap.show { display: block; }
     .loader-label {
-      font-size: .8rem;
-      letter-spacing: .22em;
+      font-size: .7rem;
+      font-family: var(--pixel);
+      letter-spacing: .18em;
       text-transform: uppercase;
       color: var(--blue-pale);
       margin-bottom: .8rem;
@@ -114,7 +126,7 @@
     .loader-fill {
       width: 0;
       height: 100%;
-      background: linear-gradient(to right, #facc15, #60a5fa, #22c55e);
+      background: repeating-linear-gradient(90deg, #ffd54a 0 16px, #69a7ff 16px 32px, #34d399 32px 48px);
     }
     .loader-wrap.show .loader-fill { animation: load 1.25s ease forwards; }
     .main {
@@ -134,15 +146,16 @@
     .frame {
       max-width: 56rem;
       margin: 0 auto;
-      border: 4px solid #93c5fd;
-      background: rgba(11,42,120,0.9);
-      border-radius: 28px;
-      box-shadow: 0 24px 60px rgba(0,0,0,.45);
+      border: 6px solid var(--panel-line);
+      background: linear-gradient(180deg, #2048b5 0%, #13337f 100%);
+      border-radius: 18px;
+      box-shadow: 0 10px 0 #0b1845, 0 24px 60px rgba(0,0,0,.45);
       overflow: hidden;
     }
     .top-bar {
       height: 12px;
-      background: linear-gradient(to right, #60a5fa, #facc15, #60a5fa);
+      background: repeating-linear-gradient(90deg, #69a7ff 0 18px, #ffd54a 18px 36px, #69a7ff 36px 54px);
+      border-bottom: 4px solid #0f2464;
       animation: pulse 1.8s infinite;
     }
     .hero {
@@ -154,28 +167,29 @@
       display: flex;
       justify-content: center;
       gap: .5rem;
-      font-size: clamp(1.5rem, 2.5vw, 2rem);
+      font-size: clamp(1.1rem, 2vw, 1.4rem);
       margin-bottom: 1rem;
     }
     .hearts span { animation: pulse 1.8s infinite; }
     .eyebrow {
-      font-size: .8rem;
+      font-size: .62rem;
+      font-family: var(--pixel);
       text-transform: uppercase;
-      letter-spacing: .35em;
+      letter-spacing: .24em;
       color: var(--blue-pale);
-      margin-bottom: .85rem;
+      margin-bottom: 1rem;
     }
     .h1 {
-      font-size: clamp(2.3rem, 7vw, 4.7rem);
-      font-weight: 900;
-      line-height: 1;
+      font-size: clamp(1.6rem, 5vw, 3.1rem);
+      font-family: var(--pixel);
+      line-height: 1.2;
       margin-bottom: .5rem;
       text-shadow: 4px 4px 0 #1e3a8a, 8px 8px 0 rgba(0,0,0,.25);
     }
     .h2 {
-      font-size: clamp(1.5rem, 4.8vw, 3rem);
-      font-weight: 900;
-      line-height: 1.15;
+      font-size: clamp(1rem, 3.4vw, 1.85rem);
+      font-family: var(--pixel);
+      line-height: 1.5;
       color: var(--gold-soft);
       margin-bottom: 1.25rem;
       text-shadow: 3px 3px 0 #1e3a8a;
@@ -183,24 +197,24 @@
     .pill {
       display: inline-flex;
       align-items: center;
-      border-radius: 18px;
-      border: 4px solid rgba(255,255,255,.6);
-      background: #2563eb;
+      border-radius: 14px;
+      border: 4px solid #fff6c7;
+      background: linear-gradient(180deg, #2f67e8 0%, #173c9c 100%);
       padding: .95rem 1.4rem;
-      box-shadow: 0 14px 32px rgba(0,0,0,.28);
+      box-shadow: 0 6px 0 #10275f, 0 14px 32px rgba(0,0,0,.28);
       margin-bottom: 1.1rem;
       animation: pulse 1.8s infinite;
     }
     .pill span {
-      font-size: clamp(1.7rem, 5vw, 3rem);
-      font-weight: 900;
-      letter-spacing: -0.03em;
+      font-size: clamp(1rem, 3.8vw, 1.95rem);
+      font-family: var(--pixel);
+      letter-spacing: 0;
     }
     .sub {
       max-width: 100%;
       margin: 0 auto;
       color: #dbeafe;
-      font-size: clamp(.92rem, 1.8vw, 1.08rem);
+      font-size: clamp(.9rem, 1.7vw, 1rem);
       line-height: 1.6;
       white-space: nowrap;
     }
@@ -212,16 +226,16 @@
       align-items: stretch;
     }
     .panel, .card {
-      border: 4px solid #93c5fd;
-      background: rgba(96,165,250,.15);
-      border-radius: 24px;
-      box-shadow: 0 12px 24px rgba(0,0,0,.18);
+      border: 4px solid var(--panel-line);
+      background: linear-gradient(180deg, rgba(54,104,232,.55) 0%, rgba(27,61,154,.55) 100%);
+      border-radius: 16px;
+      box-shadow: 0 6px 0 #10275f, 0 12px 24px rgba(0,0,0,.18);
     }
     .panel { padding: .8rem; }
     .img-wrap {
-      border-radius: 18px;
+      border-radius: 12px;
       overflow: hidden;
-      border: 2px solid rgba(255,255,255,.3);
+      border: 4px solid rgba(255,255,255,.26);
       background: rgba(147,197,253,.1);
     }
     .img-wrap img {
@@ -237,25 +251,26 @@
       align-items: center;
       justify-content: space-between;
       gap: .75rem;
-      margin-bottom: .75rem;
+      margin-bottom: .9rem;
     }
-    .icon { font-size: 1.65rem; }
+    .icon { font-size: 1.25rem; }
     .tag {
-      font-size: .68rem;
+      font-size: .58rem;
+      font-family: var(--pixel);
       text-transform: uppercase;
-      letter-spacing: .25em;
+      letter-spacing: .18em;
       color: var(--blue-pale);
     }
     .card h3 {
-      font-size: 1.7rem;
-      line-height: 1.15;
-      font-weight: 900;
-      margin-bottom: .65rem;
+      font-size: 1rem;
+      line-height: 1.5;
+      font-family: var(--pixel);
+      margin-bottom: .75rem;
     }
     .card p {
       color: #dbeafe;
       line-height: 1.65;
-      font-size: 1rem;
+      font-size: .95rem;
     }
     .bar {
       width: 100%;
@@ -263,13 +278,13 @@
       border-radius: 999px;
       background: #0f172a;
       overflow: hidden;
-      border: 1px solid rgba(255,255,255,.2);
+      border: 2px solid rgba(255,255,255,.2);
       margin-top: 1rem;
     }
     .bar > div {
       height: 100%;
       width: 75%;
-      background: linear-gradient(to right, #facc15, #60a5fa, #22c55e);
+      background: repeating-linear-gradient(90deg, #ffd54a 0 16px, #69a7ff 16px 32px, #22c55e 32px 48px);
       animation: pulse 1.8s infinite;
     }
     .stats {
@@ -282,10 +297,11 @@
       align-items: center;
       justify-content: space-between;
       gap: .75rem;
-      border-radius: 12px;
-      background: rgba(0,0,0,.2);
+      border-radius: 10px;
+      background: rgba(8,19,56,.58);
+      border: 2px solid rgba(255,255,255,.16);
       padding: .9rem 1rem;
-      font-size: .98rem;
+      font-size: .92rem;
     }
     .stat strong { font-weight: 800; }
     .footer {
@@ -294,8 +310,9 @@
     }
     .coming {
       color: var(--blue-pale);
-      font-size: .75rem;
-      letter-spacing: .25em;
+      font-size: .62rem;
+      font-family: var(--pixel);
+      letter-spacing: .18em;
       text-transform: uppercase;
     }
     @keyframes pulse { 50% { opacity: .72; } }
@@ -308,7 +325,7 @@
       .shell { padding: 1rem .5rem; }
       .hero, .grid, .footer { padding-left: 1rem; padding-right: 1rem; }
       .hero { padding-top: 2.6rem; }
-      .eyebrow, .tag, .coming, .loader-label { letter-spacing: .18em; }
+      .eyebrow, .tag, .coming, .loader-label { letter-spacing: .12em; }
       .stat { flex-direction: column; align-items: flex-start; }
       .sub { white-space: normal; }
     }
@@ -319,10 +336,10 @@
 
   <section id="entry" class="entry">
     <div class="entry-card">
-      <div class="hearts"><span>💛</span><span>💛</span><span>💛</span><span>💛</span></div>
-      <h1 class="entry-title">A new player is joining the Lumley family</h1>
+      <div class="hearts"><span>◆</span><span>◆</span><span>◆</span><span>◆</span></div>
+      <h1 class="entry-title">A NEW PLAYER IS JOINING THE LUMLEY FAMILY</h1>
       <p class="entry-sub">Tap to reveal the announcement.</p>
-      <div id="tapPill" class="tap-pill">Tap to open</div>
+      <div id="tapPill" class="tap-pill">TAP TO OPEN</div>
       <div id="loader" class="loader-wrap">
         <div class="loader-label">Loading surprise…</div>
         <div class="loader-bar"><div class="loader-fill"></div></div>
@@ -336,7 +353,7 @@
         <div class="top-bar"></div>
 
         <section class="hero">
-          <div class="hearts"><span>💛</span><span>💛</span><span>💛</span><span>💛</span></div>
+          <div class="hearts"><span>◆</span><span>◆</span><span>◆</span><span>◆</span></div>
           <p class="eyebrow">The Lumley Family Expansion Pack</p>
           <h1 class="h1">PLAYER 4</h1>
           <h2 class="h2">HAS ENTERED THE GAME!</h2>
@@ -353,24 +370,24 @@
 
           <div class="stack">
             <div class="card">
-              <div class="row"><span class="icon">🧸</span><span class="tag">Quest Update</span></div>
-              <h3>Baby Loading…</h3>
+              <div class="row"><span class="icon">◉</span><span class="tag">Quest Update</span></div>
+              <h3>BABY LOADING…</h3>
               <p>Due date: <strong style="color:#fff">10/8</strong></p>
               <div class="bar"><div></div></div>
             </div>
 
             <div class="card">
-              <div class="row"><span class="icon">⭐</span><span class="tag">Achievement Unlocked</span></div>
-              <h3>Big Sister Level Up</h3>
+              <div class="row"><span class="icon">★</span><span class="tag">Achievement Unlocked</span></div>
+              <h3>BIG SISTER LEVEL UP</h3>
               <p>Evelyn is officially stepping into her next main-character arc.</p>
             </div>
 
             <div class="card">
               <div class="tag" style="margin-bottom:.8rem">Player Stats</div>
               <div class="stats">
-                <div class="stat"><span>Nicole</span><strong style="color:#fde68a">⭐ MVP Energy</strong></div>
-                <div class="stat"><span>Evelyn</span><strong style="color:#f9a8d4">❤️ Level 2 → 3</strong></div>
-                <div class="stat"><span>Dad</span><strong style="color:#93c5fd">🏋️ Support Class</strong></div>
+                <div class="stat"><span>Nicole</span><strong style="color:#fde68a">★ MVP Energy</strong></div>
+                <div class="stat"><span>Evelyn</span><strong style="color:#f9a8d4">♥ Level 2 → 3</strong></div>
+                <div class="stat"><span>Dad</span><strong style="color:#93c5fd">◆ Support Class</strong></div>
               </div>
             </div>
           </div>

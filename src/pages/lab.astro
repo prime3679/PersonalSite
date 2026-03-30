@@ -22,6 +22,47 @@ import Header from '../components/Header.astro';
     <!-- Projects -->
     <section class="space-y-4 fade-in">
 
+      <!-- 90-Day OS -->
+      <article class="border border-foreground/10 rounded-xl overflow-hidden" id="90-day-os">
+        <div class="p-6">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <a href="/90-day-os" class="text-base font-medium hover:underline">90-day os</a>
+              <p class="text-xs text-muted-foreground mt-0.5">built march 2026</p>
+            </div>
+            <span class="status-badge text-xs px-2 py-0.5 rounded border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-500/5 shrink-0 ml-4">
+              active
+            </span>
+          </div>
+          <p class="text-sm leading-relaxed text-foreground/70 mb-4">
+            a simple 90-day operating system for identity, goals, habit replacement, daily check-ins,
+            dashboard reset, and weekly review. built as a concrete way to run a quarter on purpose
+            instead of letting it dissolve into reactive weeks.
+          </p>
+
+          <div class="border-t border-foreground/5 pt-4 mt-4">
+            <div class="grid grid-cols-3 gap-4 text-center">
+              <div>
+                <div class="text-lg font-medium">90</div>
+                <div class="text-xs text-muted-foreground mt-0.5">day cycle</div>
+              </div>
+              <div>
+                <div class="text-lg font-medium">8</div>
+                <div class="text-xs text-muted-foreground mt-0.5">core sections</div>
+              </div>
+              <div>
+                <div class="text-lg font-medium">mvp</div>
+                <div class="text-xs text-muted-foreground mt-0.5">review-ready</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-4 mt-4 pt-4 border-t border-foreground/5">
+            <a href="/90-day-os" class="text-xs underline hover:no-underline text-muted-foreground">open app ↗</a>
+          </div>
+        </div>
+      </article>
+
       <!-- FamilyOS -->
       <article class="border border-foreground/10 rounded-xl overflow-hidden" id="familyos">
         <div class="p-6">
@@ -557,7 +598,7 @@ import Header from '../components/Header.astro';
     const daysEl = document.getElementById('bishop-stat-days');
     const cronsEl = document.getElementById('bishop-stat-crons');
 
-    function renderStats(stats: any) {
+    function renderStats(stats) {
       if (!stats) return;
       if (daysEl) daysEl.textContent = String(stats.daysRunning ?? '—');
       if (cronsEl) cronsEl.textContent = String(stats.cronCount ?? '—');
@@ -577,4 +618,3 @@ import Header from '../components/Header.astro';
 
   loadBishopStats();
 </script>
-

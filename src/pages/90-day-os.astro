@@ -60,16 +60,20 @@ const reviewPrompts = [
 >
   <Header />
   <main class="bg-background text-foreground">
-    <section class="border-b border-border">
-      <div class="mx-auto max-w-6xl px-6 py-16 lg:grid lg:grid-cols-[280px_1fr] lg:gap-10 lg:py-20">
+    <section class="border-b border-border bg-gradient-to-b from-foreground/[0.03] to-transparent">
+      <div class="mx-auto max-w-6xl px-6 py-16 lg:grid lg:grid-cols-[260px_1fr] lg:gap-12 lg:py-20">
         <aside class="mb-10 lg:mb-0">
           <div class="lg:sticky lg:top-24">
-            <p class="mb-3 text-xs uppercase tracking-[0.28em] text-muted-foreground">90-Day OS</p>
+            <p class="mb-3 text-xs uppercase tracking-[0.28em] text-muted-foreground">Lab / 90-Day OS</p>
             <h1 class="mb-4 max-w-xs text-4xl font-normal leading-tight md:text-5xl">Run the quarter on purpose.</h1>
             <p class="max-w-sm text-sm leading-7 text-foreground/70">
               A working operating system for the next 90 days — built around identity, execution,
               review, and a daily floor that survives real life.
             </p>
+            <div class="mt-6 flex flex-wrap gap-3 text-xs uppercase tracking-[0.18em] text-muted-foreground">
+              <span class="rounded-full border border-border px-3 py-2">MVP shipped</span>
+              <span class="rounded-full border border-border px-3 py-2">Review-ready</span>
+            </div>
             <nav class="mt-8 hidden flex-col gap-3 text-xs uppercase tracking-[0.2em] text-muted-foreground lg:flex">
               <a href="#onboarding" class="hover:text-foreground">onboarding</a>
               <a href="#identity" class="hover:text-foreground">identity / vision / why</a>
@@ -226,7 +230,15 @@ const reviewPrompts = [
           </section>
 
           <section id="dashboard" class="rounded-[28px] border border-border p-7 md:p-9">
-            <p class="mb-3 text-xs uppercase tracking-[0.24em] text-muted-foreground">Dashboard</p>
+            <div class="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+              <div>
+                <p class="mb-3 text-xs uppercase tracking-[0.24em] text-muted-foreground">Dashboard</p>
+                <h2 class="text-2xl font-normal">See the system at a glance.</h2>
+              </div>
+              <p class="max-w-xl text-sm leading-7 text-foreground/70">
+                Identity, current must-win, quarter goals, and daily floor in one place — enough to reset fast without opening a spreadsheet.
+              </p>
+            </div>
             <div class="grid gap-4 md:grid-cols-2">
               <div class="rounded-2xl border border-border p-5">
                 <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground">Current identity</p>
@@ -254,8 +266,26 @@ const reviewPrompts = [
           </section>
 
           <section id="review" class="rounded-[28px] border border-border p-7 md:p-9">
-            <p class="mb-3 text-xs uppercase tracking-[0.24em] text-muted-foreground">Review screen</p>
+            <div class="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+              <div>
+                <p class="mb-3 text-xs uppercase tracking-[0.24em] text-muted-foreground">Review screen</p>
+                <h2 class="text-2xl font-normal">Close the loop every week.</h2>
+              </div>
+              <p class="max-w-xl text-sm leading-7 text-foreground/70">
+                The point is not journaling for its own sake. The point is finding where the system held and where it broke.
+              </p>
+            </div>
             <div class="grid gap-4 md:grid-cols-2">
+              <div class="rounded-2xl border border-border p-5">
+                <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground">What is working</p>
+                <p class="mt-3 text-lg leading-8">Choose the next must-win before context changes.</p>
+                <p class="mt-3 text-sm leading-7 text-foreground/70">Keep the behaviors that reduce friction and preserve momentum under pressure.</p>
+              </div>
+              <div class="rounded-2xl border border-border p-5">
+                <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground">What needs adjustment</p>
+                <p class="mt-3 text-lg leading-8">Missing one workout and losing the week.</p>
+                <p class="mt-3 text-sm leading-7 text-foreground/70">Where the plan breaks under stress is exactly where the next refinement belongs.</p>
+              </div>
               <div class="rounded-2xl border border-border p-5 md:col-span-2">
                 <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground">Weekly review prompts</p>
                 <ul class="mt-4 space-y-3 text-sm leading-7 text-foreground/75">

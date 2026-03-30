@@ -1,0 +1,271 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+
+const goals = [
+  {
+    number: '01',
+    title: 'Identity first',
+    copy: 'Anchor the next 90 days in a version of yourself that can hold pressure without drifting.',
+  },
+  {
+    number: '02',
+    title: 'Three outcomes only',
+    copy: 'Reduce the quarter to the few things that actually move work, health, and family forward.',
+  },
+  {
+    number: '03',
+    title: 'Daily floor',
+    copy: 'Make the minimum day strong enough to matter and simple enough to repeat under load.',
+  },
+];
+
+const habitSwaps = [
+  {
+    from: 'Reactive task switching',
+    to: 'Choose the next must-win before context changes',
+    trigger: 'Before meetings end or work blocks close',
+  },
+  {
+    from: 'Missing one workout and losing the week',
+    to: 'Run a 20-minute fallback session the same day',
+    trigger: 'Any missed planned training slot',
+  },
+  {
+    from: 'Carrying friction into tomorrow',
+    to: 'Do a 5-minute shutdown and reset every night',
+    trigger: 'Before laptop close',
+  },
+];
+
+const nonNegotiables = [
+  'Write the day’s must-win before deep work starts',
+  'Complete rehab or training work that protects long-term health',
+  'Have one real family touchpoint without a device in hand',
+  'Reset calendar and priorities before ending the day',
+];
+
+const reviewPrompts = [
+  'What actually compounded this week?',
+  'Where did the system break under stress?',
+  'Which bad habit showed back up, and why?',
+  'Which non-negotiable saved the day?',
+  'What gets cut or simplified before next week?',
+];
+---
+
+<Base
+  title="90-Day OS — Adrian Lumley"
+  description="A 90-day operating system for identity, focus, habit change, and daily execution."
+>
+  <Header />
+  <main class="bg-background text-foreground">
+    <section class="border-b border-border">
+      <div class="mx-auto max-w-6xl px-6 py-16 lg:grid lg:grid-cols-[280px_1fr] lg:gap-10 lg:py-20">
+        <aside class="mb-10 lg:mb-0">
+          <div class="lg:sticky lg:top-24">
+            <p class="mb-3 text-xs uppercase tracking-[0.28em] text-muted-foreground">90-Day OS</p>
+            <h1 class="mb-4 max-w-xs text-4xl font-normal leading-tight md:text-5xl">Run the quarter on purpose.</h1>
+            <p class="max-w-sm text-sm leading-7 text-foreground/70">
+              A working operating system for the next 90 days — built around identity, execution,
+              review, and a daily floor that survives real life.
+            </p>
+            <nav class="mt-8 hidden flex-col gap-3 text-xs uppercase tracking-[0.2em] text-muted-foreground lg:flex">
+              <a href="#onboarding" class="hover:text-foreground">onboarding</a>
+              <a href="#identity" class="hover:text-foreground">identity / vision / why</a>
+              <a href="#goals" class="hover:text-foreground">90-day goals</a>
+              <a href="#habits" class="hover:text-foreground">habit swaps</a>
+              <a href="#non-negotiables" class="hover:text-foreground">daily floor</a>
+              <a href="#check-in" class="hover:text-foreground">daily check-in</a>
+              <a href="#dashboard" class="hover:text-foreground">dashboard</a>
+              <a href="#review" class="hover:text-foreground">review</a>
+            </nav>
+          </div>
+        </aside>
+
+        <div class="space-y-6">
+          <section class="rounded-[28px] border border-border bg-foreground/[0.03] p-7 md:p-9">
+            <div class="grid gap-6 md:grid-cols-3">
+              <div class="md:col-span-2">
+                <p class="mb-3 text-xs uppercase tracking-[0.24em] text-muted-foreground">App shell + navigation</p>
+                <h2 class="mb-4 text-2xl font-normal md:text-3xl">Replace drift with a deliberate system.</h2>
+                <p class="max-w-2xl text-sm leading-7 text-foreground/75">
+                  Start with who you are, lock the three outcomes that matter, define the bad habits
+                  getting in the way, then build a minimum day that still counts when life gets messy.
+                </p>
+              </div>
+              <div class="grid gap-4 text-sm">
+                <div class="rounded-2xl border border-border p-4">
+                  <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground">Plan complete</p>
+                  <p class="mt-2 text-3xl text-foreground">100%</p>
+                  <p class="mt-2 text-foreground/65">All core MVP sections shipped.</p>
+                </div>
+                <div class="rounded-2xl border border-border p-4">
+                  <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground">Cycle length</p>
+                  <p class="mt-2 text-3xl text-foreground">90</p>
+                  <p class="mt-2 text-foreground/65">Days of intentional execution.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="onboarding" class="rounded-[28px] border border-border p-7 md:p-9">
+            <p class="mb-3 text-xs uppercase tracking-[0.24em] text-muted-foreground">Onboarding</p>
+            <h2 class="mb-5 text-2xl font-normal">Set the frame.</h2>
+            <div class="grid gap-4 md:grid-cols-2">
+              <div class="rounded-2xl border border-border p-5">
+                <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground">Cycle name</p>
+                <p class="mt-3 text-lg">Spring Reset</p>
+              </div>
+              <div class="rounded-2xl border border-border p-5">
+                <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground">Start date</p>
+                <p class="mt-3 text-lg">April 1, 2026</p>
+              </div>
+              <div class="rounded-2xl border border-border p-5 md:col-span-2">
+                <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground">Operating note</p>
+                <p class="mt-3 max-w-2xl leading-7 text-foreground/75">
+                  Make the system durable first. Make it ambitious second. If the daily floor is fake,
+                  the quarter falls apart under the first busy week.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section id="identity" class="rounded-[28px] border border-border p-7 md:p-9">
+            <p class="mb-3 text-xs uppercase tracking-[0.24em] text-muted-foreground">Identity / vision / why</p>
+            <div class="space-y-4">
+              <div class="rounded-2xl border border-border p-5">
+                <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground">Identity</p>
+                <p class="mt-3 text-lg leading-8">I am a disciplined operator who turns clarity into consistent execution.</p>
+              </div>
+              <div class="rounded-2xl border border-border p-5">
+                <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground">Vision</p>
+                <p class="mt-3 leading-7 text-foreground/75">
+                  Build a calmer, stronger operating system for the next 90 days so work, family, and health
+                  all compound instead of competing.
+                </p>
+              </div>
+              <div class="rounded-2xl border border-border p-5">
+                <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground">Why now</p>
+                <p class="mt-3 leading-7 text-foreground/75">
+                  The next quarter needs tighter focus, cleaner habits, and a system that survives busy weeks
+                  without slipping.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section id="goals" class="rounded-[28px] border border-border p-7 md:p-9">
+            <p class="mb-3 text-xs uppercase tracking-[0.24em] text-muted-foreground">90-day goals</p>
+            <div class="grid gap-4 md:grid-cols-3">
+              {goals.map((goal) => (
+                <article class="rounded-2xl border border-border p-5">
+                  <p class="text-xs uppercase tracking-[0.24em] text-muted-foreground">Goal {goal.number}</p>
+                  <h3 class="mt-3 text-lg font-normal">{goal.title}</h3>
+                  <p class="mt-3 text-sm leading-7 text-foreground/70">{goal.copy}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section id="habits" class="rounded-[28px] border border-border p-7 md:p-9">
+            <p class="mb-3 text-xs uppercase tracking-[0.24em] text-muted-foreground">Bad habits + replacements</p>
+            <div class="space-y-4">
+              {habitSwaps.map((swap) => (
+                <article class="grid gap-4 rounded-2xl border border-border p-5 md:grid-cols-[1fr_1fr]">
+                  <div>
+                    <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground">Bad habit</p>
+                    <p class="mt-3 leading-7 text-foreground/75">{swap.from}</p>
+                  </div>
+                  <div>
+                    <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground">Replacement</p>
+                    <p class="mt-3 leading-7 text-foreground/75">{swap.to}</p>
+                    <p class="mt-3 text-xs uppercase tracking-[0.18em] text-muted-foreground">Trigger · {swap.trigger}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section id="non-negotiables" class="rounded-[28px] border border-border p-7 md:p-9">
+            <p class="mb-3 text-xs uppercase tracking-[0.24em] text-muted-foreground">Daily non-negotiables</p>
+            <div class="grid gap-4 md:grid-cols-2">
+              {nonNegotiables.map((item, index) => (
+                <div class="rounded-2xl border border-border p-5">
+                  <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground">Floor {index + 1}</p>
+                  <p class="mt-3 leading-7 text-foreground/75">{item}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section id="check-in" class="rounded-[28px] border border-border p-7 md:p-9">
+            <p class="mb-3 text-xs uppercase tracking-[0.24em] text-muted-foreground">Daily check-in</p>
+            <div class="grid gap-4 md:grid-cols-3">
+              <div class="rounded-2xl border border-border p-5">
+                <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground">Energy</p>
+                <p class="mt-3 text-4xl">7/10</p>
+              </div>
+              <div class="rounded-2xl border border-border p-5">
+                <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground">Focus</p>
+                <p class="mt-3 text-4xl">8/10</p>
+              </div>
+              <div class="rounded-2xl border border-border p-5">
+                <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground">Discipline</p>
+                <p class="mt-3 text-4xl">7/10</p>
+              </div>
+              <div class="rounded-2xl border border-border p-5 md:col-span-2">
+                <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground">Today’s must-win</p>
+                <p class="mt-3 leading-7 text-foreground/75">Clear the week’s highest-leverage work deliverable.</p>
+              </div>
+              <div class="rounded-2xl border border-border p-5">
+                <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground">Main friction</p>
+                <p class="mt-3 leading-7 text-foreground/75">Context switching after meetings.</p>
+              </div>
+            </div>
+          </section>
+
+          <section id="dashboard" class="rounded-[28px] border border-border p-7 md:p-9">
+            <p class="mb-3 text-xs uppercase tracking-[0.24em] text-muted-foreground">Dashboard</p>
+            <div class="grid gap-4 md:grid-cols-2">
+              <div class="rounded-2xl border border-border p-5">
+                <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground">Current identity</p>
+                <p class="mt-3 text-lg leading-8">I am a disciplined operator who turns clarity into consistent execution.</p>
+              </div>
+              <div class="rounded-2xl border border-border p-5">
+                <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground">Current must-win</p>
+                <p class="mt-3 text-lg leading-8">Clear the week’s highest-leverage work deliverable.</p>
+              </div>
+              <div class="rounded-2xl border border-border p-5">
+                <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground">This quarter</p>
+                <ul class="mt-3 space-y-3 text-sm leading-7 text-foreground/75">
+                  <li>Ship one high-signal work artifact every week.</li>
+                  <li>Train with intent and protect shoulder rehab.</li>
+                  <li>Run family logistics from one simple system.</li>
+                </ul>
+              </div>
+              <div class="rounded-2xl border border-border p-5">
+                <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground">Daily floor</p>
+                <ul class="mt-3 space-y-3 text-sm leading-7 text-foreground/75">
+                  {nonNegotiables.map((item) => <li>{item}</li>)}
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section id="review" class="rounded-[28px] border border-border p-7 md:p-9">
+            <p class="mb-3 text-xs uppercase tracking-[0.24em] text-muted-foreground">Review screen</p>
+            <div class="grid gap-4 md:grid-cols-2">
+              <div class="rounded-2xl border border-border p-5 md:col-span-2">
+                <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground">Weekly review prompts</p>
+                <ul class="mt-4 space-y-3 text-sm leading-7 text-foreground/75">
+                  {reviewPrompts.map((prompt) => <li>{prompt}</li>)}
+                </ul>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+</Base>

@@ -44,7 +44,11 @@ const navItems = [
     </button>
 
     <div class="flex items-center gap-3">
-      <span class="text-xs text-muted-foreground hidden sm:inline">nyc</span>
+      <div class="flex items-center gap-2 text-[10px] sm:text-xs text-muted-foreground font-mono tracking-wide uppercase">
+        <span>nyc</span>
+        <span aria-hidden="true" class="text-border">·</span>
+        <span id="nyc-clock" data-timezone="America/New_York">--:-- -- ET</span>
+      </div>
       <!-- Dark mode toggle -->
       <button
         id="theme-toggle"
@@ -115,4 +119,24 @@ const navItems = [
     localStorage.setItem('theme', isDark ? 'light' : 'dark');
     updateIcons();
   });
+
+  const nycClock = document.getElementById('nyc-clock');
+
+  function updateClock() {
+    if (!nycClock) return;
+
+    const timezone = nycClock.getAttribute('data-timezone') || 'America/New_York';
+    const formatted = new Intl.DateTimeFormat('en-US', {
+      timeZone: timezone,
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+      timeZoneName: 'short',
+    }).format(new Date());
+
+    nycClock.textContent = formatted.replace(/\sGMT-?\d+/, ' ET');
+  }
+
+  updateClock();
+  window.setInterval(updateClock, 1000 * 30);
 </script>

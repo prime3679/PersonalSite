@@ -1,0 +1,120 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+
+const purchaseUrl = 'https://www.shopclawmart.com/listings/la-carte-2e6c1705';
+
+const picks = [
+  {
+    name: 'atomix',
+    area: 'nomad',
+    price: '$285–385',
+    note: 'special occasion, fully shaped before you arrive.'
+  },
+  {
+    name: 'frevo',
+    area: 'west village',
+    price: '$175–250',
+    note: 'one of the cleanest date-night formats in the city.'
+  },
+  {
+    name: 'sushi on me',
+    area: 'williamsburg',
+    price: '$159',
+    note: 'show up hungry. chef handles the rest.'
+  },
+  {
+    name: 'la grande boucherie',
+    area: 'midtown',
+    price: '$45–75',
+    note: 'good pre-theater move when you want less drag.'
+  }
+];
+---
+
+<Base
+  title="La Carte — Adrian Lumley"
+  description="A small NYC dining guide for nights when you want less friction."
+>
+  <Header />
+  <main class="mx-auto max-w-2xl px-6 py-12 font-mono">
+    <section class="mb-16 fade-in">
+      <h1 class="text-2xl font-normal mb-6 leading-relaxed">la carte.</h1>
+      <p class="text-base leading-relaxed mb-4">
+        i like dinners where the good part starts early.
+      </p>
+      <p class="text-base leading-relaxed mb-4">
+        too many nights out still have the same dead zone at the front: menus, indecision,
+        waiting around, another round of deciding, then finally the night starts.
+      </p>
+      <p class="text-base leading-relaxed mb-6">
+        la carte is a small nyc guide to restaurants where enough is already decided that the
+        evening moves. prepaid counters. deposit-backed reservations. menu-known spots where you
+        show up understanding the shape of the meal.
+      </p>
+      <p class="text-base leading-relaxed">
+        <a href={purchaseUrl} class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">buy la carte — $7</a>
+      </p>
+    </section>
+
+    <section class="mb-16 fade-in">
+      <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">what's in it:</h2>
+      <div class="space-y-3 text-base leading-relaxed text-foreground/80">
+        <p>— a tighter shortlist of nyc restaurants where the night feels pre-arranged enough to flow</p>
+        <p>— three simple tiers: full pre-pay, deposit + confirm, and menu-known</p>
+        <p>— neighborhood and price context so you know what kind of night you're buying</p>
+        <p>— booking tips for the places where timing matters</p>
+      </div>
+    </section>
+
+    <section class="mb-16 fade-in">
+      <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">a few good picks:</h2>
+      <div class="space-y-6 text-base leading-relaxed">
+        {picks.map((pick) => (
+          <div>
+            <p class="font-semibold text-foreground/80">{pick.name} <span class="font-normal text-muted-foreground text-sm">— {pick.area} — {pick.price}</span></p>
+            <p class="text-foreground/70 mt-1">{pick.note}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="mb-16 fade-in">
+      <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">good for:</h2>
+      <div class="space-y-2 text-base leading-relaxed text-foreground/80">
+        <p>— date nights</p>
+        <p>— special occasions</p>
+        <p>— pre-theater dinners</p>
+        <p>— people who want less menu scanning and more actual night</p>
+      </div>
+    </section>
+
+    <section class="mb-16 fade-in">
+      <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">before you buy:</h2>
+      <div class="space-y-4 text-base leading-relaxed">
+        <p>
+          this is a downloadable guide, not an app.
+        </p>
+        <p>
+          it is nyc-specific.
+        </p>
+        <p>
+          source notes were last refreshed in february 2026, so reservation formats and prices can move.
+          the point is the shortlist and the angle, not pretending the city stands still.
+        </p>
+      </div>
+    </section>
+
+    <section class="mb-16 fade-in">
+      <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">buy:</h2>
+      <div class="space-y-4 text-base leading-relaxed">
+        <p>
+          <a href={purchaseUrl} class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">buy la carte on claw mart</a>
+        </p>
+        <p class="text-foreground/60 text-sm">
+          small file. simple idea. meant to be useful fast.
+        </p>
+      </div>
+    </section>
+  </main>
+</Base>

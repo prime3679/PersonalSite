@@ -1,0 +1,114 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+
+const products = [
+  {
+    name: 'Morning Brief Generator',
+    href: 'https://www.shopclawmart.com/listings/morning-brief-generator-d6441723',
+    fit: 'start here if mornings start scattered.',
+    use: 'drop in loose notes, tasks, and context. get back a short brief for the day.',
+    prompt: 'make me a morning brief from these notes',
+  },
+  {
+    name: 'Weekly Review Operator',
+    href: 'https://www.shopclawmart.com/listings/weekly-review-operator-6f7c1b22',
+    fit: 'start here if the week ends messier than it should.',
+    use: 'turn wins, misses, and residue into a cleaner reset and next-week plan.',
+    prompt: 'run a weekly review on this week',
+  },
+  {
+    name: 'Morning Operator',
+    href: 'https://www.shopclawmart.com/listings/morning-operator-517ef2dd',
+    fit: 'start here if the whole operating picture feels loose.',
+    use: 'get the fuller layer: brief, open loops, waiting-fors, and clearer next actions.',
+    prompt: 'help me get organized for the day',
+  },
+  {
+    name: 'Meeting Prep Operator',
+    href: 'https://www.shopclawmart.com/listings/meeting-prep-operator-87a3a87c',
+    fit: 'start here if a meeting matters and you do not want to wing it.',
+    use: 'turn an invite, stakeholder context, and rough notes into a sharp brief.',
+    prompt: 'prep me for this meeting',
+  },
+];
+
+const steps = [
+  'pick the one that fits your problem right now.',
+  'grab it from Claw Mart and download the file.',
+  'put the downloaded skill folder in your OpenClaw workspace `skills/` directory. for most setups that is `~/.openclaw/workspace/skills/`.',
+  'start a new OpenClaw session. workspace skills are picked up from there on the next session.',
+  'ask for the outcome you want in plain english. do not overthink the prompt.',
+];
+---
+
+<Base
+  title="Start Here — Adrian Lumley"
+  description="How to start using the free operator tools with OpenClaw."
+>
+  <Header />
+
+  <main class="mx-auto max-w-2xl px-6 py-12 font-mono space-y-16">
+    <section class="fade-in">
+      <h1 class="text-2xl font-normal mb-5 leading-relaxed">start here.</h1>
+      <div class="space-y-4 text-base leading-relaxed text-foreground/80">
+        <p>
+          this is the shortest path into the operator stack.
+        </p>
+        <p>
+          these are small OpenClaw tools for founders, executives, chiefs of staff,
+          and product or ops people carrying too much at once.
+        </p>
+        <p>
+          do not install all four at once. pick the one that matches the problem you already have.
+        </p>
+      </div>
+    </section>
+
+    <section class="fade-in">
+      <h2 class="text-xs font-normal mb-5 uppercase tracking-[0.24em] text-foreground/60">pick your first one:</h2>
+      <div class="divide-y divide-border/60 text-base leading-relaxed">
+        {products.map((product) => (
+          <article class="py-5 sm:py-6">
+            <h3 class="text-base font-normal text-foreground">{product.name}</h3>
+            <div class="mt-3 space-y-2 text-foreground/80">
+              <p>{product.fit}</p>
+              <p>{product.use}</p>
+              <p class="text-foreground/70">try: “{product.prompt}”</p>
+            </div>
+            <p class="mt-4 text-foreground/90">
+              → <a href={product.href} class="underline decoration-foreground/40 underline-offset-4 hover:decoration-foreground/70" target="_blank" rel="noopener noreferrer">get it on Claw Mart</a>
+            </p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="fade-in">
+      <h2 class="text-xs font-normal mb-5 uppercase tracking-[0.24em] text-foreground/60">how to use one:</h2>
+      <ol class="space-y-3 text-base leading-relaxed text-foreground/80 list-decimal pl-5">
+        {steps.map((step) => (
+          <li>{step}</li>
+        ))}
+      </ol>
+    </section>
+
+    <section class="fade-in">
+      <h2 class="text-xs font-normal mb-5 uppercase tracking-[0.24em] text-foreground/60">important:</h2>
+      <ul class="space-y-3 text-base leading-relaxed text-foreground/80">
+        <li class="relative pl-4">
+          <span class="absolute left-0 text-foreground/60">—</span>
+          if you are not already using OpenClaw, do not start here yet.
+        </li>
+        <li class="relative pl-4">
+          <span class="absolute left-0 text-foreground/60">—</span>
+          the best first signal is not installs. it is whether one of these actually makes your day cleaner.
+        </li>
+        <li class="relative pl-4">
+          <span class="absolute left-0 text-foreground/60">—</span>
+          if you want to see the full stack first, go to <a href="/operator-stack/" class="underline decoration-foreground/40 underline-offset-4 hover:decoration-foreground/70">operator stack</a>.
+        </li>
+      </ul>
+    </section>
+  </main>
+</Base>

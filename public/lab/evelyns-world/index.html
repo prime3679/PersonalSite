@@ -673,15 +673,15 @@
 
   <script>
     const animals = [
-      { name: 'Dog', emoji: '🐶', soundText: 'woof', icon: '🦴', freq: [196, 246.94], wave: 'square', prompt: 'The puppy wants a pat.', cardClass: 'c1', sparkle: '☀️' },
-      { name: 'Cat', emoji: '🐱', soundText: 'meow', icon: '🧶', freq: [329.63, 392], wave: 'triangle', prompt: 'The kitten is feeling cozy.', cardClass: 'c2', sparkle: '🌸' },
-      { name: 'Cow', emoji: '🐮', soundText: 'moo', icon: '🌾', freq: [130.81, 98], wave: 'sine', prompt: 'The cow is by the hay.', cardClass: 'c3', sparkle: '🌼' },
-      { name: 'Duck', emoji: '🦆', soundText: 'quack', icon: '💦', freq: [523.25, 392], wave: 'square', prompt: 'The duck is splashing near the pond.', cardClass: 'c4', sparkle: '💧' },
-      { name: 'Sheep', emoji: '🐑', soundText: 'baa', icon: '☁️', freq: [261.63, 220], wave: 'sawtooth', prompt: 'The sheep feels soft and fluffy.', cardClass: 'c5', sparkle: '☁️' },
-      { name: 'Lion', emoji: '🦁', soundText: 'roar', icon: '👑', freq: [110, 82.41], wave: 'sawtooth', prompt: 'The lion gives a gentle brave roar.', cardClass: 'c6', sparkle: '⭐' },
-      { name: 'Elephant', emoji: '🐘', soundText: 'pawoo', icon: '🌿', freq: [164.81, 123.47], wave: 'triangle', prompt: 'The elephant swings by the trees.', cardClass: 'c7', sparkle: '🍃' },
-      { name: 'Monkey', emoji: '🐵', soundText: 'ooh-ooh', icon: '🍌', freq: [392, 493.88], wave: 'square', prompt: 'The monkey is ready to play.', cardClass: 'c8', sparkle: '🍌' },
-      { name: 'Frog', emoji: '🐸', soundText: 'ribbit', icon: '🌱', freq: [220, 174.61], wave: 'triangle', prompt: 'The frog is hopping in the grass.', cardClass: 'c9', sparkle: '🫧' }
+      { name: 'Dog', slug: 'dog', emoji: '🐶', soundText: 'woof', icon: '🦴', prompt: 'The puppy wants a pat.', cardClass: 'c1', sparkle: '☀️' },
+      { name: 'Cat', slug: 'cat', emoji: '🐱', soundText: 'meow', icon: '🧶', prompt: 'The kitten is feeling cozy.', cardClass: 'c2', sparkle: '🌸' },
+      { name: 'Cow', slug: 'cow', emoji: '🐮', soundText: 'moo', icon: '🌾', prompt: 'The cow is by the hay.', cardClass: 'c3', sparkle: '🌼' },
+      { name: 'Duck', slug: 'duck', emoji: '🦆', soundText: 'quack', icon: '💦', prompt: 'The duck is splashing near the pond.', cardClass: 'c4', sparkle: '💧' },
+      { name: 'Sheep', slug: 'sheep', emoji: '🐑', soundText: 'baa', icon: '☁️', prompt: 'The sheep feels soft and fluffy.', cardClass: 'c5', sparkle: '☁️' },
+      { name: 'Lion', slug: 'lion', emoji: '🦁', soundText: 'roar', icon: '👑', prompt: 'The lion gives a gentle brave roar.', cardClass: 'c6', sparkle: '⭐' },
+      { name: 'Elephant', slug: 'elephant', emoji: '🐘', soundText: 'pawoo', icon: '🌿', prompt: 'The elephant swings by the trees.', cardClass: 'c7', sparkle: '🍃' },
+      { name: 'Monkey', slug: 'monkey', emoji: '🐵', soundText: 'ooh-ooh', icon: '🍌', prompt: 'The monkey is ready to play.', cardClass: 'c8', sparkle: '🍌' },
+      { name: 'Frog', slug: 'frog', emoji: '🐸', soundText: 'ribbit', icon: '🌱', prompt: 'The frog is hopping in the grass.', cardClass: 'c9', sparkle: '🫧' }
     ];
 
     const cardsEl = document.getElementById('cards');
@@ -696,6 +696,8 @@
     const scoreValue = document.getElementById('score-value');
     const statusValue = document.getElementById('status-value');
 
+    const soundPlayers = new Map();
+    const voicePlayers = new Map();
     let audioCtx;
     let taps = Object.fromEntries(animals.map(({ name }) => [name, 0]));
     let gameMode = false;
@@ -710,39 +712,73 @@
       if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
     }
 
+    function makeAudio(src) {
+      const audio = new Audio(src);
+      audio.preload = 'auto';
+      audio.playsInline = true;
+      audio.crossOrigin = 'anonymous';
+      return audio;
+    }
+
+    function stopAllAudio() {
+      [...soundPlayers.values(), ...voicePlayers.values()].forEach(audio => {
+        audio.pause();
+        audio.currentTime = 0;
+      });
+      window.speechSynthesis?.cancel();
+    }
+
+    function warmAudioAssets() {
+      animals.forEach(animal => {
+        if (!soundPlayers.has(animal.slug)) soundPlayers.set(animal.slug, makeAudio('./audio/sounds/' + animal.slug + '.wav'));
+        if (!voicePlayers.has(animal.slug)) voicePlayers.set(animal.slug, makeAudio('./audio/voice/' + animal.slug + '.m4a'));
+      });
+    }
+
+    async function playAudio(audio) {
+      if (!audio) return false;
+      try {
+        audio.pause();
+        audio.currentTime = 0;
+        await audio.play();
+        return true;
+      } catch (_) {
+        return false;
+      }
+    }
+
     function speak(text) {
-      if (!('speechSynthesis' in window)) return;
+      if (!('speechSynthesis' in window)) return false;
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.86;
-      utterance.pitch = 1.1;
+      utterance.rate = 0.9;
+      utterance.pitch = 1.05;
       utterance.volume = 1;
       const voices = window.speechSynthesis.getVoices();
-      const preferred = voices.find(v => /samantha|karen|moira|ava|zira/i.test(v.name)) || voices.find(v => /en/i.test(v.lang));
+      const preferred = voices.find(v => /flo|samantha|karen|moira|ava|zira/i.test(v.name)) || voices.find(v => /^en(-|_)/i.test(v.lang));
       if (preferred) utterance.voice = preferred;
       utterance.lang = 'en-US';
       window.speechSynthesis.speak(utterance);
+      return true;
     }
 
-    function playAnimalTone(animal) {
+    async function playAnimalSound(animal) {
       ensureAudio();
-      if (!audioCtx) return;
-      const now = audioCtx.currentTime;
-      const gain = audioCtx.createGain();
-      gain.gain.setValueAtTime(0.0001, now);
-      gain.gain.exponentialRampToValueAtTime(0.18, now + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.44);
-      gain.connect(audioCtx.destination);
+      stopAllAudio();
+      const didPlay = await playAudio(soundPlayers.get(animal.slug));
+      if (didPlay) return true;
+      return false;
+    }
 
-      animal.freq.forEach((freq, index) => {
-        const osc = audioCtx.createOscillator();
-        osc.type = animal.wave;
-        osc.frequency.setValueAtTime(freq, now + index * 0.03);
-        osc.frequency.exponentialRampToValueAtTime(Math.max(80, freq * 0.84), now + 0.24 + index * 0.03);
-        osc.connect(gain);
-        osc.start(now + index * 0.03);
-        osc.stop(now + 0.32 + index * 0.07);
-      });
+    async function playAnimalName(animal, overrideText) {
+      ensureAudio();
+      stopAllAudio();
+      const voiceAsset = overrideText ? null : voicePlayers.get(animal.slug);
+      if (voiceAsset) {
+        const didPlay = await playAudio(voiceAsset);
+        if (didPlay) return true;
+      }
+      return speak(overrideText || animal.name);
     }
 
     function celebrate(card, marks) {
@@ -812,8 +848,9 @@
       }
     }
 
-    function handleTap(animal, card) {
+    async function handleTap(animal, card) {
       ensureAudio();
+      warmAudioAssets();
       resetCardStates();
       card.classList.add('active');
       window.setTimeout(() => card.classList.remove('active'), 420);
@@ -823,14 +860,22 @@
       card.querySelector('.tap-badge').textContent = count % 2 === 1 ? 'next tap: name' : 'first tap: sound';
 
       if (count % 2 === 1) {
-        playAnimalTone(animal);
-        setFeedback(animal.soundText + '!', animal.name + ' says ' + animal.soundText + '. ' + animal.prompt, animal.emoji);
-        statusValue.textContent = animal.soundText + ' time';
+        const didPlay = await playAnimalSound(animal);
+        setFeedback(
+          animal.soundText + '!',
+          didPlay ? animal.name + ' says ' + animal.soundText + '. ' + animal.prompt : animal.name + ' is ready, but your device blocked audio. Tap again after unmuting.',
+          animal.emoji
+        );
+        statusValue.textContent = didPlay ? animal.soundText + ' time' : 'sound blocked';
         celebrate(card, ['✨', '💫', '🎵', animal.icon, animal.sparkle]);
       } else {
-        speak(animal.name);
-        setFeedback(animal.name, 'Hello, ' + animal.name + '! Tap again to hear the sound first.', animal.icon);
-        statusValue.textContent = animal.name.toLowerCase() + ' spoken';
+        const didSpeak = await playAnimalName(animal);
+        setFeedback(
+          animal.name,
+          didSpeak ? 'Hello, ' + animal.name + '! Tap again to hear the sound first.' : animal.name + ' is ready, but spoken audio is unavailable on this device right now.',
+          animal.icon
+        );
+        statusValue.textContent = didSpeak ? animal.name.toLowerCase() + ' spoken' : 'name blocked';
         celebrate(card, ['🫧', '🌟', '💖', animal.emoji]);
       }
 
@@ -839,7 +884,7 @@
           score += 1;
           updateScore();
           card.classList.add('correct');
-          speak('Yay! ' + animal.name);
+          await playAnimalName(animal, 'Yay! ' + animal.name);
           setFeedback('You found the ' + animal.name + '!', 'Great job. ' + scoreValue.textContent + '. Let\'s find another friend.', '🎉');
           statusValue.textContent = 'big cheer!';
           celebrate(card, ['🎉', '⭐', '🥳', '🌈']);
@@ -884,7 +929,12 @@
     });
 
     resetButton.addEventListener('click', resetProgress);
-    window.addEventListener('pointerdown', ensureAudio, { once: true });
+    window.addEventListener('pointerdown', () => {
+      ensureAudio();
+      warmAudioAssets();
+    }, { once: true });
+    window.addEventListener('beforeunload', stopAllAudio);
+    warmAudioAssets();
     window.speechSynthesis?.getVoices();
     updateScore();
     updateModeUi();

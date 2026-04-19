@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Evelyn's World</title>
+  <meta name="description" content="A playful animal soundboard for little hands." />
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #050816;
+      --bg-soft: #0c1328;
+      --panel: rgba(13, 18, 37, 0.86);
+      --panel-strong: rgba(18, 26, 49, 0.96);
+      --line: rgba(255,255,255,0.09);
+      --line-bright: rgba(255,255,255,0.18);
+      --text: #f5f7fb;
+      --muted: rgba(245,247,251,0.66);
+      --pink: #ff7bc0;
+      --violet: #9a7cff;
+      --cyan: #78d7ff;
+      --mint: #7effbf;
+      --gold: #ffd56a;
+      --shadow: 0 18px 48px rgba(0, 0, 0, 0.38);
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); }
+    body {
+      background:
+        radial-gradient(circle at top, rgba(154,124,255,0.16), transparent 28%),
+        radial-gradient(circle at 80% 10%, rgba(120,215,255,0.12), transparent 24%),
+        radial-gradient(circle at 50% 100%, rgba(255,123,192,0.08), transparent 30%),
+        linear-gradient(180deg, #090d1c 0%, #050816 100%);
+    }
+
+    .page {
+      width: min(100%, 920px);
+      margin: 0 auto;
+      padding: max(18px, env(safe-area-inset-top)) 16px max(22px, env(safe-area-inset-bottom));
+    }
+
+    .hero, .stage, .cards-wrap {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015));
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .hero {
+      padding: 18px;
+      position: sticky;
+      top: 10px;
+      z-index: 5;
+      margin-bottom: 14px;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 14px 0 8px;
+      font-size: clamp(2rem, 8vw, 3.4rem);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.5;
+      max-width: 34rem;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 12px;
+      margin-top: 16px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .mini {
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .mini .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+    .mini .value { margin-top: 5px; font-weight: 700; font-size: 16px; }
+
+    .stage {
+      padding: 18px;
+      margin-bottom: 14px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .glow {
+      position: absolute;
+      inset: auto -15% -60px;
+      height: 140px;
+      background: radial-gradient(circle, rgba(126,255,191,0.15), transparent 65%);
+      pointer-events: none;
+      filter: blur(10px);
+    }
+
+    .prompt {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .prompt-copy h2, .feedback h3 {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: -0.03em;
+    }
+    .prompt-copy p, .feedback p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    button {
+      appearance: none;
+      border: 0;
+      cursor: pointer;
+      color: #06111d;
+      background: linear-gradient(180deg, var(--gold), #ffbd55);
+      border-radius: 999px;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 800;
+      box-shadow: 0 10px 28px rgba(255,213,106,0.24);
+    }
+    button.secondary {
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      border: 1px solid var(--line-bright);
+      box-shadow: none;
+    }
+
+    .feedback {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(154,124,255,0.16), rgba(120,215,255,0.12));
+      border: 1px solid rgba(154,124,255,0.24);
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .burst {
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      font-size: 28px;
+      background: rgba(255,255,255,0.08);
+      transform-origin: center;
+    }
+
+    .cards-wrap { padding: 14px; }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      position: relative;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      min-height: 144px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      padding: 14px;
+      text-align: left;
+      color: var(--text);
+      overflow: hidden;
+      transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+    }
+    .card:active { transform: scale(0.98); }
+    .card.active {
+      border-color: rgba(126,255,191,0.45);
+      background: linear-gradient(180deg, rgba(126,255,191,0.13), rgba(120,215,255,0.06));
+      animation: bounce 0.45s ease;
+    }
+    .card.correct {
+      border-color: rgba(126,255,191,0.72);
+      box-shadow: 0 0 0 1px rgba(126,255,191,0.12), 0 18px 36px rgba(126,255,191,0.12);
+    }
+    .card.wrong {
+      border-color: rgba(255,123,192,0.54);
+      animation: shake 0.3s ease;
+    }
+
+    .shine {
+      position: absolute;
+      inset: -30% auto auto -10%;
+      width: 110px;
+      height: 110px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(255,255,255,0.18), transparent 66%);
+      pointer-events: none;
+    }
+
+    .emoji {
+      font-size: 48px;
+      line-height: 1;
+      display: inline-block;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 8px 20px rgba(0,0,0,0.22));
+    }
+    .name { font-size: 18px; font-weight: 800; letter-spacing: -0.03em; }
+    .hint { margin-top: 6px; font-size: 13px; color: var(--muted); }
+    .tap-badge {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      font-size: 11px;
+      padding: 7px 9px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.07);
+      color: var(--muted);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .celebration {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      font-size: 24px;
+      opacity: 0;
+    }
+    .celebration.show { animation: floatUp 0.9s ease forwards; }
+
+    @keyframes bounce {
+      0% { transform: translateY(0) scale(1); }
+      35% { transform: translateY(-8px) scale(1.02); }
+      70% { transform: translateY(0) scale(0.995); }
+      100% { transform: translateY(0) scale(1); }
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      75% { transform: translateX(4px); }
+    }
+    @keyframes pulseBurst {
+      0% { transform: scale(0.92); }
+      45% { transform: scale(1.12) rotate(8deg); }
+      100% { transform: scale(1); }
+    }
+    @keyframes floatUp {
+      0% { opacity: 0; transform: translate(-50%, -20%) scale(0.75); }
+      30% { opacity: 1; }
+      100% { opacity: 0; transform: translate(-50%, -95%) scale(1.2); }
+    }
+
+    .footer-note {
+      color: rgba(245,247,251,0.46);
+      text-align: center;
+      font-size: 12px;
+      margin: 14px 0 8px;
+    }
+
+    @media (max-width: 720px) {
+      .hero { position: static; }
+      .hero-grid, .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 480px) {
+      .page { padding-left: 12px; padding-right: 12px; }
+      .hero, .stage, .cards-wrap { border-radius: 20px; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+      .card { min-height: 132px; padding: 12px; }
+      .emoji { font-size: 42px; }
+      .feedback { grid-template-columns: 1fr; text-align: center; }
+      .burst { margin: 0 auto; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="kicker">✨ Evelyn's World</div>
+      <h1>Tap. Hear. Cheer.</h1>
+      <p>A tiny animal world for curious little hands. First tap plays the sound. Second tap says the animal name. Then try the mini game below.</p>
+      <div class="hero-grid">
+        <div class="mini"><div class="label">Animals</div><div class="value">9 big cards</div></div>
+        <div class="mini"><div class="label">Tap flow</div><div class="value">sound → name</div></div>
+        <div class="mini"><div class="label">Mode</div><div class="value" id="mode-label">free play</div></div>
+      </div>
+    </section>
+
+    <section class="stage">
+      <div class="prompt">
+        <div class="prompt-copy">
+          <h2 id="prompt-title">Free play</h2>
+          <p id="prompt-text">Tap any animal. On the second tap, Evelyn hears the name spoken aloud.</p>
+        </div>
+        <div class="actions">
+          <button id="game-toggle" type="button">Start “Where is it?”</button>
+          <button id="reset-progress" class="secondary" type="button">Reset taps</button>
+        </div>
+      </div>
+
+      <div class="feedback" aria-live="polite">
+        <div class="burst" id="feedback-burst">🐾</div>
+        <div>
+          <h3 id="feedback-title">Ready to play</h3>
+          <p id="feedback-text">Tap an animal card to begin. If sound is muted, tap again after unmuting your device.</p>
+        </div>
+      </div>
+      <div class="glow"></div>
+    </section>
+
+    <section class="cards-wrap">
+      <div class="cards" id="cards"></div>
+    </section>
+
+    <p class="footer-note">Built as a lightweight lab app. No ads. No clutter. Just delight.</p>
+  </main>
+
+  <script>
+    const animals = [
+      { name: 'Dog', emoji: '🐶', soundText: 'woof', icon: '🦴', freq: [196, 246.94], wave: 'square' },
+      { name: 'Cat', emoji: '🐱', soundText: 'meow', icon: '🧶', freq: [329.63, 392], wave: 'triangle' },
+      { name: 'Cow', emoji: '🐮', soundText: 'moo', icon: '🌾', freq: [130.81, 98], wave: 'sine' },
+      { name: 'Duck', emoji: '🦆', soundText: 'quack', icon: '💦', freq: [523.25, 392], wave: 'square' },
+      { name: 'Sheep', emoji: '🐑', soundText: 'baa', icon: '☁️', freq: [261.63, 220], wave: 'sawtooth' },
+      { name: 'Lion', emoji: '🦁', soundText: 'roar', icon: '👑', freq: [110, 82.41], wave: 'sawtooth' },
+      { name: 'Elephant', emoji: '🐘', soundText: 'pawoo', icon: '🌿', freq: [164.81, 123.47], wave: 'triangle' },
+      { name: 'Monkey', emoji: '🐵', soundText: 'ooh-ooh', icon: '🍌', freq: [392, 493.88], wave: 'square' },
+      { name: 'Frog', emoji: '🐸', soundText: 'ribbit', icon: '🌱', freq: [220, 174.61], wave: 'triangle' }
+    ];
+
+    const cardsEl = document.getElementById('cards');
+    const feedbackTitle = document.getElementById('feedback-title');
+    const feedbackText = document.getElementById('feedback-text');
+    const feedbackBurst = document.getElementById('feedback-burst');
+    const promptTitle = document.getElementById('prompt-title');
+    const promptText = document.getElementById('prompt-text');
+    const modeLabel = document.getElementById('mode-label');
+    const toggleButton = document.getElementById('game-toggle');
+    const resetButton = document.getElementById('reset-progress');
+
+    let audioCtx;
+    let taps = Object.fromEntries(animals.map(({ name }) => [name, 0]));
+    let gameMode = false;
+    let currentTarget = null;
+    let score = 0;
+
+    function ensureAudio() {
+      if (!audioCtx) {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (Ctx) audioCtx = new Ctx();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    function speak(text) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.86;
+      utterance.pitch = 1.08;
+      utterance.volume = 1;
+      const voices = window.speechSynthesis.getVoices();
+      const preferred = voices.find(v => /samantha|karen|moira|ava|zira/i.test(v.name)) || voices.find(v => /en/i.test(v.lang));
+      if (preferred) utterance.voice = preferred;
+      utterance.lang = 'en-US';
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function playAnimalTone(animal) {
+      ensureAudio();
+      if (!audioCtx) return;
+      const now = audioCtx.currentTime;
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(0.18, now + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.44);
+      gain.connect(audioCtx.destination);
+
+      animal.freq.forEach((freq, index) => {
+        const osc = audioCtx.createOscillator();
+        osc.type = animal.wave;
+        osc.frequency.setValueAtTime(freq, now + index * 0.03);
+        osc.frequency.exponentialRampToValueAtTime(Math.max(80, freq * 0.84), now + 0.24 + index * 0.03);
+        osc.connect(gain);
+        osc.start(now + index * 0.03);
+        osc.stop(now + 0.32 + index * 0.07);
+      });
+    }
+
+    function celebrate(card, marks) {
+      const bubble = card.querySelector('.celebration');
+      bubble.textContent = marks[Math.floor(Math.random() * marks.length)];
+      bubble.classList.remove('show');
+      void bubble.offsetWidth;
+      bubble.classList.add('show');
+      feedbackBurst.style.animation = 'none';
+      void feedbackBurst.offsetWidth;
+      feedbackBurst.style.animation = 'pulseBurst 0.4s ease';
+    }
+
+    function setFeedback(title, text, burst) {
+      feedbackTitle.textContent = title;
+      feedbackText.textContent = text;
+      feedbackBurst.textContent = burst;
+      feedbackBurst.style.animation = 'none';
+      void feedbackBurst.offsetWidth;
+      feedbackBurst.style.animation = 'pulseBurst 0.42s ease';
+    }
+
+    function chooseTarget(excludeName) {
+      const pool = animals.filter(a => a.name !== excludeName);
+      currentTarget = pool[Math.floor(Math.random() * pool.length)];
+      promptTitle.textContent = 'Where is the ' + currentTarget.name.toLowerCase() + '?';
+      promptText.textContent = 'Tap the matching animal card. A correct answer gets a happy cheer.';
+    }
+
+    function resetCardStates() {
+      document.querySelectorAll('.card').forEach(card => card.classList.remove('correct', 'wrong', 'active'));
+    }
+
+    function updateModeUi() {
+      if (gameMode) {
+        modeLabel.textContent = 'find it game';
+        toggleButton.textContent = 'Back to free play';
+        if (!currentTarget) chooseTarget();
+      } else {
+        modeLabel.textContent = 'free play';
+        toggleButton.textContent = 'Start “Where is it?”';
+        promptTitle.textContent = 'Free play';
+        promptText.textContent = 'Tap any animal. On the second tap, Evelyn hears the name spoken aloud.';
+        currentTarget = null;
+      }
+    }
+
+    function resetProgress() {
+      taps = Object.fromEntries(animals.map(({ name }) => [name, 0]));
+      resetCardStates();
+      setFeedback('Ready to play', 'All cards are reset. First tap plays the sound. Second tap says the name.', '🐾');
+    }
+
+    function handleTap(animal, card) {
+      ensureAudio();
+      resetCardStates();
+      card.classList.add('active');
+      window.setTimeout(() => card.classList.remove('active'), 420);
+
+      taps[animal.name] += 1;
+      const count = taps[animal.name];
+      card.querySelector('.tap-badge').textContent = count % 2 === 1 ? 'sound tap' : 'name tap';
+
+      if (count % 2 === 1) {
+        playAnimalTone(animal);
+        setFeedback(animal.soundText + '!', animal.name + ' says ' + animal.soundText + '.', animal.emoji);
+        celebrate(card, ['✨', '💫', '🎵', animal.icon]);
+      } else {
+        speak(animal.name);
+        setFeedback(animal.name, 'Hello, ' + animal.name + '! Tap again to hear the sound first.', animal.icon);
+        celebrate(card, ['🫧', '🌟', '💖', animal.emoji]);
+      }
+
+      if (gameMode && currentTarget) {
+        if (animal.name === currentTarget.name) {
+          score += 1;
+          card.classList.add('correct');
+          speak('Yay! ' + animal.name);
+          setFeedback('You found the ' + animal.name + '!', 'Great job. Score: ' + score + '. Let\'s find another one.', '🎉');
+          celebrate(card, ['🎉', '⭐', '🥳']);
+          chooseTarget(animal.name);
+        } else {
+          card.classList.add('wrong');
+          setFeedback('Try again', 'That was the ' + animal.name.toLowerCase() + '. Find the ' + currentTarget.name.toLowerCase() + '.', '💞');
+        }
+      }
+    }
+
+    animals.forEach(animal => {
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'card';
+      card.setAttribute('aria-label', animal.name);
+      card.innerHTML = `
+        <span class="shine"></span>
+        <div class="emoji">${animal.emoji}</div>
+        <div class="name">${animal.name}</div>
+        <div class="hint">tap for ${animal.soundText}</div>
+        <div class="tap-badge">sound tap</div>
+        <div class="celebration">✨</div>
+      `;
+      card.addEventListener('click', () => handleTap(animal, card));
+      cardsEl.appendChild(card);
+    });
+
+    toggleButton.addEventListener('click', () => {
+      gameMode = !gameMode;
+      resetCardStates();
+      updateModeUi();
+      if (gameMode) {
+        setFeedback('Game on', 'Find the animal in the prompt. Correct taps earn a cheerful celebration.', '🧩');
+      } else {
+        setFeedback('Free play', 'Back to open tapping. First tap makes the sound. Second tap speaks the name.', '🐾');
+      }
+    });
+
+    resetButton.addEventListener('click', resetProgress);
+    window.addEventListener('pointerdown', ensureAudio, { once: true });
+    window.speechSynthesis?.getVoices();
+    updateModeUi();
+  </script>
+</body>
+</html>

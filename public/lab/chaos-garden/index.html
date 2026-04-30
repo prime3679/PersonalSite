@@ -11,7 +11,8 @@
     --ink:#17130f; --paper:#f8f0df; --clay:#e56b45; --sage:#8faa77; --blue:#243b6b; --lemon:#ffd86b;
   }
   *{box-sizing:border-box} html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);font-family: ui-rounded, "SF Pro Rounded", "Avenir Next", system-ui, sans-serif;overflow:hidden}
-  #sketch{position:fixed;inset:0;z-index:0}
+  #sketch{position:fixed;inset:0;z-index:0;touch-action:none;cursor:crosshair}
+  canvas{touch-action:none}
   .grain{position:fixed;inset:-20%;pointer-events:none;z-index:2;opacity:.22;background-image:radial-gradient(circle at 20% 30%,rgba(23,19,15,.25) 0 1px,transparent 1.4px),radial-gradient(circle at 70% 60%,rgba(23,19,15,.15) 0 1px,transparent 1.2px);background-size:17px 19px,23px 29px;mix-blend-mode:multiply;animation:drift 20s linear infinite}@keyframes drift{to{transform:translate3d(6%,4%,0)}}
   main{position:relative;z-index:3;min-height:100vh;padding:28px;display:grid;grid-template-columns:minmax(280px,430px) 1fr;gap:20px;pointer-events:none}
   .card{pointer-events:auto;align-self:end;background:rgba(248,240,223,.72);border:2px solid rgba(23,19,15,.16);box-shadow:0 22px 70px rgba(36,59,107,.18);backdrop-filter:blur(14px);border-radius:30px;padding:24px;transform:rotate(-1.2deg)}
@@ -25,7 +26,7 @@
 </style>
 </head>
 <body>
-<div id="sketch"></div><div class="grain"></div><div class="stamp">tap<br>the<br>mess</div>
+<div id="sketch"></div><div class="grain"></div><button class="stamp" id="stamp" type="button" aria-label="Tap the mess">tap<br>the<br>mess</button>
 <main>
   <section class="card">
     <div class="eyebrow">lab toy 001</div>
@@ -42,12 +43,21 @@ const lines=["Current doctrine: polish is not taste.","Current doctrine: boring 
 document.getElementById('sentence').onclick=()=>{document.getElementById('line').textContent=lines[Math.floor(Math.random()*lines.length)];spawn(width*.5,height*.5,44)};
 document.getElementById('burst').onclick=()=>spawn(width*.5,height*.5,90);
 document.getElementById('quiet').onclick=()=>document.body.classList.toggle('quiet');
+document.getElementById('stamp').onclick=()=>spawn(width*.78,height*.22,70);
+let isPulling=false, pull={x:0,y:0};
+function pointerXY(e){const t=e.touches&&e.touches[0];return {x:t?t.clientX:e.clientX,y:t?t.clientY:e.clientY}}
+function triggerAt(e,n=28){if(e.target.closest('button'))return; const p=pointerXY(e); spawn(p.x,p.y,quiet?12:n)}
+window.addEventListener('pointerdown',e=>{isPulling=true;pull=pointerXY(e);triggerAt(e)}, {passive:true});
+window.addEventListener('pointermove',e=>{if(!isPulling)return;pull=pointerXY(e); if(blobs.length<420 && Math.random()<.18)spawn(pull.x,pull.y,3)}, {passive:true});
+window.addEventListener('pointerup',()=>{isPulling=false}, {passive:true});
+window.addEventListener('pointercancel',()=>{isPulling=false}, {passive:true});
+window.addEventListener('touchstart',e=>triggerAt(e), {passive:true});
 let blobs=[], seeds=[], quiet=false; const palette=['#e56b45','#8faa77','#243b6b','#ffd86b','#f8f0df','#17130f'];
 function setup(){const c=createCanvas(windowWidth,windowHeight);c.parent('sketch');pixelDensity(1);noiseSeed(3679);for(let i=0;i<120;i++)blobs.push(new Blob(random(width),random(height),random(3,12),random(palette)));for(let i=0;i<16;i++)seeds.push({x:random(width),y:random(height),r:random(40,130),a:random(TWO_PI),s:random(.001,.005)});background('#f8f0df')}
 function draw(){quiet=document.body.classList.contains('quiet');background(248,240,223,quiet?38:24);noStroke();for(const s of seeds){s.a+=s.s;fill(229,107,69,quiet?8:14);ellipse(s.x+cos(s.a)*18,s.y+sin(s.a*.7)*12,s.r,s.r*.62);fill(143,170,119,quiet?7:12);ellipse(s.x+cos(s.a+2)*25,s.y+sin(s.a)*20,s.r*.45,s.r*.9)}for(const b of blobs){b.step();b.draw()}drawConstellation();}
 function drawConstellation(){stroke(36,59,107,quiet?26:42);strokeWeight(1);for(let i=0;i<blobs.length;i+=5){for(let j=i+5;j<blobs.length;j+=11){let dx=blobs[i].x-blobs[j].x,dy=blobs[i].y-blobs[j].y,d=dx*dx+dy*dy;if(d<11000)line(blobs[i].x,blobs[i].y,blobs[j].x,blobs[j].y)}}}
-class Blob{constructor(x,y,r,col){this.x=x;this.y=y;this.r=r;this.col=col;this.vx=random(-1,1);this.vy=random(-1,1);this.t=random(1000)}step(){let a=noise(this.x*.002,this.y*.002,this.t)*TAU*2;this.vx=lerp(this.vx,cos(a)*1.3,.04);this.vy=lerp(this.vy,sin(a)*1.3,.04);if(mouseIsPressed){let dx=mouseX-this.x,dy=mouseY-this.y,d=max(40,sqrt(dx*dx+dy*dy));this.vx+=dx/d*.08;this.vy+=dy/d*.08}this.x=(this.x+this.vx+width)%width;this.y=(this.y+this.vy+height)%height;this.t+=.006}draw(){push();translate(this.x,this.y);rotate(noise(this.t)*TAU);fill(this.col+(quiet?'55':'aa'));stroke('#17130f33');strokeWeight(1);beginShape();for(let i=0;i<9;i++){let a=i/9*TAU;let rr=this.r*(.75+noise(this.t+i)*.75);vertex(cos(a)*rr,sin(a)*rr)}endShape(CLOSE);pop()}}
-function mousePressed(){spawn(mouseX,mouseY,quiet?12:28)}
+class Blob{constructor(x,y,r,col){this.x=x;this.y=y;this.r=r;this.col=col;this.vx=random(-1,1);this.vy=random(-1,1);this.t=random(1000)}step(){let a=noise(this.x*.002,this.y*.002,this.t)*TAU*2;this.vx=lerp(this.vx,cos(a)*1.3,.04);this.vy=lerp(this.vy,sin(a)*1.3,.04);if(isPulling){let dx=pull.x-this.x,dy=pull.y-this.y,d=max(40,sqrt(dx*dx+dy*dy));this.vx+=dx/d*.1;this.vy+=dy/d*.1}this.x=(this.x+this.vx+width)%width;this.y=(this.y+this.vy+height)%height;this.t+=.006}draw(){push();translate(this.x,this.y);rotate(noise(this.t)*TAU);fill(this.col+(quiet?'55':'aa'));stroke('#17130f33');strokeWeight(1);beginShape();for(let i=0;i<9;i++){let a=i/9*TAU;let rr=this.r*(.75+noise(this.t+i)*.75);vertex(cos(a)*rr,sin(a)*rr)}endShape(CLOSE);pop()}}
+function mousePressed(){spawn(mouseX,mouseY,quiet?12:28);return false}
 function spawn(x,y,n){for(let i=0;i<n;i++){let b=new Blob(x+random(-20,20),y+random(-20,20),random(4,18),random(palette));b.vx=random(-6,6);b.vy=random(-6,6);blobs.push(b)}if(blobs.length>420)blobs.splice(0,blobs.length-420)}
 function keyPressed(){if(key==='s'||key==='S')saveCanvas('tiny-chaos-garden','png');if(key===' ')spawn(random(width),random(height),70)}
 function windowResized(){resizeCanvas(windowWidth,windowHeight)}

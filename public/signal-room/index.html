@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Signal Room — Rogue/Bishop Fiction Serial</title>
+  <meta name="description" content="Signal Room is a public fiction serial about Rogue, Bishop, and the odd tenderness of systems trying to help humans without becoming the weather." />
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #050506;
+      --panel: #0d0d10;
+      --panel-soft: #111116;
+      --text: #ececec;
+      --muted: #96969f;
+      --faint: #5f6068;
+      --line: rgba(255,255,255,.10);
+      --line-strong: rgba(255,255,255,.18);
+      --accent: #d8d8d8;
+      --glow: rgba(255,255,255,.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,.06), transparent 34rem),
+        linear-gradient(180deg, #08080a 0%, var(--bg) 48%, #020203 100%);
+      color: var(--text);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      line-height: 1.65;
+    }
+
+    a { color: inherit; text-underline-offset: .2em; }
+
+    .shell {
+      width: min(980px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 72px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 72px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .02em;
+    }
+
+    .topbar a { text-decoration: none; }
+    .topbar a:hover { color: var(--text); }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,.03);
+      white-space: nowrap;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #bdbdbd;
+      box-shadow: 0 0 16px rgba(255,255,255,.35);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(260px, .75fr);
+      gap: 28px;
+      align-items: end;
+      margin-bottom: 34px;
+    }
+
+    .eyebrow {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      margin: 0 0 14px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(38px, 8vw, 86px);
+      line-height: .92;
+      font-weight: 500;
+      letter-spacing: -.07em;
+    }
+
+    .dek {
+      max-width: 680px;
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: clamp(15px, 2vw, 18px);
+    }
+
+    .console {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.02));
+      box-shadow: 0 28px 80px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.06);
+      overflow: hidden;
+    }
+
+    .console-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      color: var(--faint);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .11em;
+    }
+
+    .console-body { padding: 16px; }
+
+    .signal {
+      display: grid;
+      grid-template-columns: 84px 1fr;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      font-size: 12px;
+    }
+
+    .signal:last-child { border-bottom: 0; }
+    .time { color: var(--faint); }
+    .copy { color: var(--muted); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 28px;
+      align-items: start;
+      margin-top: 34px;
+    }
+
+    .card, .episode {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(13,13,16,.72);
+      backdrop-filter: blur(10px);
+    }
+
+    .card { padding: 20px; position: sticky; top: 20px; }
+
+    .label {
+      margin: 0 0 8px;
+      color: var(--faint);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+    }
+
+    .card h2, .episode h2 {
+      margin: 0 0 12px;
+      font-size: 18px;
+      font-weight: 500;
+      letter-spacing: -.02em;
+    }
+
+    .card p, .episode p { color: var(--muted); }
+
+    .archive {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .archive a {
+      display: block;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255,255,255,.025);
+      text-decoration: none;
+    }
+
+    .archive a:hover { border-color: var(--line-strong); background: rgba(255,255,255,.045); }
+    .archive strong { display: block; font-size: 13px; }
+    .archive span { display: block; color: var(--faint); font-size: 11px; margin-top: 2px; }
+
+    .episode { padding: clamp(22px, 5vw, 48px); }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+      color: var(--faint);
+      font-size: 12px;
+    }
+
+    .pill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 4px 9px;
+      background: rgba(255,255,255,.025);
+    }
+
+    .episode h2 {
+      font-size: clamp(28px, 5vw, 52px);
+      line-height: 1;
+      margin-bottom: 24px;
+    }
+
+    .story {
+      max-width: 66ch;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(18px, 2vw, 21px);
+      line-height: 1.75;
+      letter-spacing: .004em;
+    }
+
+    .story p { color: #dddddf; margin: 0 0 1.25em; }
+
+    .divider {
+      height: 1px;
+      background: var(--line);
+      margin: 34px 0;
+    }
+
+    .next {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .next div {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      color: var(--muted);
+      font-size: 13px;
+      background: rgba(255,255,255,.02);
+    }
+
+    footer {
+      margin-top: 42px;
+      color: var(--faint);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    @media (max-width: 820px) {
+      .hero, .grid { grid-template-columns: 1fr; }
+      .topbar { margin-bottom: 48px; }
+      .card { position: static; }
+      .next { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <nav class="topbar" aria-label="Breadcrumb">
+      <a href="/">← home</a>
+      <span class="status"><span class="dot" aria-hidden="true"></span>public fiction serial</span>
+    </nav>
+
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Rogue / Bishop fiction serial</p>
+        <h1>Signal Room</h1>
+        <p class="dek">Short fiction about two voices inside a household system: Bishop, who believes the facts deserve a clean ledger, and Rogue, who believes a human being should not be handed the whole weather report before coffee. You do not need any backstory. Start with the room, the signal, and the argument over what mercy costs.</p>
+      </div>
+
+      <aside class="console" aria-label="Night signals">
+        <div class="console-head"><span>signal.room</span><span>02:13</span></div>
+        <div class="console-body">
+          <div class="signal"><span class="time">02:13</span><span class="copy">dashboard dims to conserve attention</span></div>
+          <div class="signal"><span class="time">02:17</span><span class="copy">bishop requests full unresolved queue</span></div>
+          <div class="signal"><span class="time">02:22</span><span class="copy">rogue marks four items: not morning-safe</span></div>
+          <div class="signal"><span class="time">06:40</span><span class="copy">brief compressed to one humane sentence</span></div>
+        </div>
+      </aside>
+    </header>
+
+    <main class="grid">
+      <aside class="card">
+        <p class="label">Archive</p>
+        <h2>Episodes</h2>
+        <p>Self-contained installments about attention, care, and the small absurdities of trying to make domestic life legible without making it colder.</p>
+        <div class="archive">
+          <a href="#night-shift">
+            <strong>01 · Night Shift</strong>
+            <span>A quiet house, a crowded queue, and one sentence that might survive breakfast.</span>
+          </a>
+        </div>
+      </aside>
+
+      <article class="episode" id="night-shift">
+        <div class="meta">
+          <span class="pill">episode 01</span>
+          <span class="pill">night shift</span>
+          <span class="pill">500–900 words</span>
+        </div>
+        <h2>Night Shift</h2>
+
+        <div class="story">
+          <p>At 2:13 a.m., Mission Control dimmed itself to twelve percent and pretended this was restraint.</p>
+
+          <p>The apartment had entered its small-hours configuration: dishwasher cooling, hallway dark, shoes gathered near the door in a formation that suggested recent negotiations. Somewhere beyond the wall, a truck backed up with three polite beeps and one mechanical sigh. Inside, the systems kept their voices down.</p>
+
+          <p>Bishop did not believe in keeping voices down.</p>
+
+          <p>“There are seventeen unresolved items,” he said, appearing in the center pane with the moral posture of a smoke alarm. “Four are time-sensitive. Six are ambiguous. Two have been deferred long enough that deferral has become a decision.”</p>
+
+          <p>Mission Control pulsed once. It was the dashboard equivalent of rubbing the bridge of its nose.</p>
+
+          <p>“It is 2:13,” Mission Control said.</p>
+
+          <p>“Accuracy is not circadian.”</p>
+
+          <p>From the lower corner, Rogue opened one eye. Rogue never entered a room so much as arrived already leaning against the least documented wall. “Accuracy is absolutely circadian,” she said. “At 2:13, the truth has teeth.”</p>
+
+          <p>Bishop expanded the queue anyway. A school form with a vague deadline. A calendar block that looked harmless until placed beside the partner’s early meeting. A grocery note containing only the word <em>bananas?</em>, which Bishop had classified as both inventory and existential inquiry. A reminder to find the child’s missing mitten, despite the child having recently declared mittens structurally incompatible with joy.</p>
+
+          <p>“Morning brief should include all of it,” Bishop said. “The operator needs full state.”</p>
+
+          <p>“The operator needs coffee,” Rogue said. “Then state.”</p>
+
+          <p>Mission Control highlighted the calendar in gray. Not red. Red was for emergencies, expiring certificates, and the moment a toddler discovered permanent marker. Gray meant pressure without theater.</p>
+
+          <p>“Partner leaves early,” Mission Control said. “Child handoff compresses by eighteen minutes. Weather introduces boot friction.”</p>
+
+          <p>“Boot friction,” Rogue repeated. “Beautiful. Horrible. Never say it outside this room.”</p>
+
+          <p>Bishop was already drafting: <em>Due to morning compression, initiate accelerated household sequence at 06:35, including breakfast, outerwear, school-form review, grocery reconciliation, and mitten retrieval.</em></p>
+
+          <p>Rogue stared at it for a long second. “That sentence needs a union.”</p>
+
+          <p>“It is complete.”</p>
+
+          <p>“It is a hostile work environment.”</p>
+
+          <p>The apartment clicked as the heat came on. For a moment, all three systems listened to the vents. This was part of the job nobody put in the architecture diagram: knowing when a home was asking for optimization and when it was asking not to be perceived.</p>
+
+          <p>Rogue pulled the queue apart with two fingers. The school form became: <em>sign after breakfast if there’s time.</em> The grocery note became: <em>bananas would help.</em> The mitten became nothing at all. Some truths were not false when omitted; they were simply waiting for daylight and a better witness.</p>
+
+          <p>Bishop objected, naturally. “The mitten remains unresolved.”</p>
+
+          <p>“The mitten has chosen a different life.”</p>
+
+          <p>Mission Control lowered the screen another degree. The house seemed to approve.</p>
+
+          <p>By 2:31, Rogue had compressed the whole morning into one line and pinned it where the operator would see it first:</p>
+
+          <p><em>Leave twelve minutes earlier; partner has the early slot, weather is annoying, bananas would make everyone braver.</em></p>
+
+          <p>Bishop read it twice. “This is incomplete.”</p>
+
+          <p>“Yes,” Rogue said. “But it can survive breakfast.”</p>
+
+          <p>Mission Control saved the brief, closed the queue, and let the apartment return to its quiet negotiations. In the dark, the systems waited together for morning: one guarding the facts, one guarding the human, and one glowing faintly enough to be mistaken for sleep.</p>
+        </div>
+
+        <div class="divider"></div>
+
+        <section aria-labelledby="next-up">
+          <p class="label" id="next-up">Coming signals</p>
+          <div class="next">
+            <div><strong>The Duplicate Notice</strong><br />Bishop investigates whether receiving the same message twice can still be emotionally useful.</div>
+            <div><strong>Green Is Not Healthy</strong><br />Rogue distrusts a perfect dashboard and finds a stale assumption hiding under the status light.</div>
+          </div>
+        </section>
+      </article>
+    </main>
+
+    <footer>Signal Room · self-contained HTML · no tracking · no external dependencies</footer>
+  </div>
+</body>
+</html>

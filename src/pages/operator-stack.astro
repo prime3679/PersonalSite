@@ -1,0 +1,171 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+
+const products = [
+  {
+    name: 'Morning Brief Generator',
+    price: 'free',
+    fit: 'best if mornings start scattered.',
+    copy: 'turn scattered notes into a short daily brief you can actually use.',
+    href: 'https://www.shopclawmart.com/listings/morning-brief-generator-d6441723',
+    cta: 'get morning brief',
+  },
+  {
+    name: 'Weekly Review Operator',
+    price: 'free',
+    fit: 'best if the week ends messier than it should.',
+    copy: 'close the week cleanly and set up the next one without carrying extra noise.',
+    href: 'https://www.shopclawmart.com/listings/weekly-review-operator-6f7c1b22',
+    cta: 'get weekly review',
+  },
+  {
+    name: 'Morning Operator',
+    price: 'free',
+    fit: 'best if the whole system feels loose.',
+    copy: 'get the fuller layer: brief, open loops, waiting-fors, and clearer next actions.',
+    href: 'https://www.shopclawmart.com/listings/morning-operator-517ef2dd',
+    cta: 'get morning operator',
+  },
+  {
+    name: 'Meeting Prep Operator',
+    price: 'free',
+    fit: 'best if the meeting matters and the prep is still messy.',
+    copy: 'turn an invite, rough notes, and a half-formed objective into a sharp brief with goal, talk track, questions, risks, and desired outcome.',
+    href: 'https://www.shopclawmart.com/listings/meeting-prep-operator-87a3a87c',
+    cta: 'get meeting prep',
+  },
+];
+
+const proof = [
+  {
+    name: 'Morning Brief Generator',
+    input: 'notes, loose tasks, context',
+    output: 'a short brief for the day',
+  },
+  {
+    name: 'Weekly Review Operator',
+    input: 'the week you just had',
+    output: 'a cleaner reset and next-week plan',
+  },
+  {
+    name: 'Morning Operator',
+    input: 'your working mess',
+    output: 'a clearer operating picture',
+  },
+  {
+    name: 'Meeting Prep Operator',
+    input: 'invite, notes, stakeholder context',
+    output: 'a sharp meeting brief',
+  },
+];
+---
+
+<Base
+  title="Operator Stack"
+  description="A few simple OpenClaw tools I built for people carrying too many threads at once."
+>
+  <Header />
+
+  <main class="mx-auto max-w-2xl px-6 py-12 font-mono space-y-16">
+    <section class="fade-in">
+      <h1 class="text-2xl font-normal mb-5 leading-relaxed">operator stack.</h1>
+      <div class="space-y-4 text-base leading-relaxed text-foreground/80">
+        <p>
+          i built these because i kept running into the same problem: too many notes,
+          too many loose ends, and no clean picture of what actually mattered.
+        </p>
+        <p>
+          these are small OpenClaw tools for founders, executives, chiefs of staff,
+          and product or ops people carrying too much at once.
+        </p>
+        <p>
+          they are free for now. start with the narrow problem. keep the ones that actually help.
+        </p>
+        <p>
+          if you are new here, <a href="/start/" class="underline decoration-foreground/40 underline-offset-4 hover:decoration-foreground/70">start here</a> before you pick one up.
+        </p>
+      </div>
+    </section>
+
+    <section class="fade-in">
+      <h2 class="text-xs font-normal mb-5 uppercase tracking-[0.24em] text-foreground/60">start here:</h2>
+      <ul class="space-y-3 text-base leading-relaxed text-foreground/80">
+        <li class="relative pl-4">
+          <span class="absolute left-0 text-foreground/60">—</span>
+          start with the <a href="https://www.shopclawmart.com/listings/morning-brief-generator-d6441723" class="underline decoration-foreground/40 underline-offset-4 hover:decoration-foreground/70" target="_blank" rel="noopener noreferrer">free morning brief</a> if mornings start scattered.
+        </li>
+        <li class="relative pl-4">
+          <span class="absolute left-0 text-foreground/60">—</span>
+          start with the <a href="https://www.shopclawmart.com/listings/weekly-review-operator-6f7c1b22" class="underline decoration-foreground/40 underline-offset-4 hover:decoration-foreground/70" target="_blank" rel="noopener noreferrer">free weekly review</a> if your weeks end messy.
+        </li>
+        <li class="relative pl-4">
+          <span class="absolute left-0 text-foreground/60">—</span>
+          use the <a href="https://www.shopclawmart.com/listings/morning-operator-517ef2dd" class="underline decoration-foreground/40 underline-offset-4 hover:decoration-foreground/70" target="_blank" rel="noopener noreferrer">free morning operator</a> if the whole operating picture feels loose.
+        </li>
+        <li class="relative pl-4">
+          <span class="absolute left-0 text-foreground/60">—</span>
+          use the <a href="https://www.shopclawmart.com/listings/meeting-prep-operator-87a3a87c" class="underline decoration-foreground/40 underline-offset-4 hover:decoration-foreground/70" target="_blank" rel="noopener noreferrer">free meeting prep</a> if the meeting matters and you do not want to wing it.
+        </li>
+      </ul>
+    </section>
+
+    <section class="fade-in">
+      <h2 class="text-xs font-normal mb-5 uppercase tracking-[0.24em] text-foreground/60">live now:</h2>
+      <div class="divide-y divide-border/60 text-base leading-relaxed">
+        {products.map((product) => (
+          <article class="py-5 sm:py-6">
+            <div class="flex items-baseline justify-between gap-4">
+              <h3 class="text-base font-normal text-foreground">{product.name}</h3>
+              <span class="text-xs uppercase tracking-[0.2em] text-foreground/60">{product.price}</span>
+            </div>
+            <div class="mt-3 space-y-2 text-foreground/80">
+              <p>{product.copy}</p>
+              <p class="text-foreground/70">{product.fit}</p>
+            </div>
+            <p class="mt-4 text-foreground/90">
+              → <a href={product.href} class="underline decoration-foreground/40 underline-offset-4 hover:decoration-foreground/70" target="_blank" rel="noopener noreferrer">{product.cta}</a>
+            </p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="fade-in">
+      <h2 class="text-xs font-normal mb-5 uppercase tracking-[0.24em] text-foreground/60">what comes out:</h2>
+      <ul class="space-y-4 text-base leading-relaxed text-foreground/80">
+        {proof.map((item) => (
+          <li class="relative pl-4">
+            <span class="absolute left-0 text-foreground/60">—</span>
+            <span class="text-foreground">{item.name}</span>: {item.input} → {item.output}
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="fade-in">
+      <h2 class="text-xs font-normal mb-5 uppercase tracking-[0.24em] text-foreground/60">before you pick one up:</h2>
+      <ul class="space-y-3 text-base leading-relaxed text-foreground/80">
+        <li class="relative pl-4">
+          <span class="absolute left-0 text-foreground/60">—</span>
+          these go through Claw Mart.
+        </li>
+        <li class="relative pl-4">
+          <span class="absolute left-0 text-foreground/60">—</span>
+          you will create a quick account, download the file, and drop it into OpenClaw.
+        </li>
+        <li class="relative pl-4">
+          <span class="absolute left-0 text-foreground/60">—</span>
+          if you are not already using OpenClaw, hold off for now.
+        </li>
+      </ul>
+    </section>
+
+    <section class="fade-in">
+      <h2 class="text-xs font-normal mb-5 uppercase tracking-[0.24em] text-foreground/60">next:</h2>
+      <div class="space-y-3 text-base leading-relaxed text-foreground/80">
+        <p>i am not bundling these yet. if people actually want the stack, i will bundle it later.</p>
+      </div>
+    </section>
+  </main>
+</Base>

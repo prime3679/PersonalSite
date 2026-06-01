@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>360 Feedback — Adrian Lumley</title>
+  <meta name="description" content="Confidential 360 feedback for Adrian Lumley. Honest reads only; individual answers stay private and are reported combined by group." />
+  <meta name="robots" content="noindex" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <script>
+    (function () {
+      var t = localStorage.getItem("theme");
+      if (t === "dark" || (!t && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+        document.documentElement.classList.add("dark");
+      }
+    })();
+  </script>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --fg: #000000;
+      --muted: #6b6b6b;
+      --border: rgba(0, 0, 0, 0.16);
+      --input-bg: #fafafa;
+      --note: #f6f6f6;
+      --error: #b00020;
+    }
+    html.dark {
+      --bg: #000000;
+      --fg: #ffffff;
+      --muted: #9a9a9a;
+      --border: rgba(255, 255, 255, 0.18);
+      --input-bg: #0c0c0c;
+      --note: #0c0c0c;
+      --error: #ff8585;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: "SF Mono", Monaco, Inconsolata, "Roboto Mono", "Source Code Pro", Menlo, monospace;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-underline-offset: 0.2em; }
+
+    .shell { max-width: 680px; margin: 0 auto; padding: 0 20px 96px; }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 22px 0 0;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .topbar a { text-decoration: none; }
+    .topbar a:hover { color: var(--fg); }
+    .toggle {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font: inherit;
+      font-size: 12px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+    .toggle:hover { color: var(--fg); border-color: var(--fg); }
+
+    header.intro { padding-top: 44px; margin-bottom: 40px; }
+    .eyebrow { font-size: 12px; color: var(--muted); margin: 0 0 12px; }
+    h1 { font-size: 24px; font-weight: 500; margin: 0 0 20px; }
+
+    .note {
+      padding: 16px;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--muted);
+      background: var(--note);
+      border: 1px solid var(--border);
+    }
+    .note .comment { color: var(--fg); }
+
+    h2.section-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--fg);
+      margin: 0 0 4px;
+    }
+    .rule { height: 1px; background: var(--border); margin: 0 0 4px; }
+
+    section.block { margin-bottom: 40px; }
+    section.raters { margin-bottom: 40px; }
+
+    .rater-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 560px) { .rater-grid { grid-template-columns: 1fr; } }
+
+    .rater {
+      text-align: left;
+      padding: 16px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--fg);
+      font: inherit;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .rater:hover { border-color: var(--fg); }
+    .rater .r-label { font-size: 14px; }
+    .rater .r-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .rater.active { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+    .rater.active .r-sub { color: var(--bg); opacity: 0.8; }
+
+    .legend {
+      padding: 14px 16px;
+      margin-bottom: 32px;
+      font-size: 12px;
+      color: var(--muted);
+      background: var(--note);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 16px;
+    }
+    .legend b { color: var(--fg); font-weight: 500; }
+
+    .item {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .item p.q { margin: 0 0 12px; font-size: 14px; line-height: 1.6; }
+    .item label.q { display: block; margin: 0 0 8px; font-size: 14px; line-height: 1.6; }
+
+    .scale { display: flex; flex-wrap: wrap; gap: 8px; }
+    .sbtn {
+      width: 40px;
+      height: 40px;
+      font: inherit;
+      font-size: 14px;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.12s, color 0.12s, border-color 0.12s;
+    }
+    .sbtn:hover { border-color: var(--fg); color: var(--fg); }
+    .sbtn.active { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+    .nabtn {
+      height: 40px;
+      padding: 0 14px;
+      font: inherit;
+      font-size: 14px;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: color 0.12s, border-color 0.12s;
+    }
+    .nabtn:hover { border-color: var(--fg); color: var(--fg); }
+    .nabtn.active { color: var(--fg); border-color: var(--fg); }
+
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      font: inherit;
+      font-size: 14px;
+      background: var(--input-bg);
+      color: var(--fg);
+      border: 1px solid var(--border);
+      resize: vertical;
+      outline: none;
+    }
+    textarea:focus { border-color: var(--fg); }
+
+    .opens { padding-top: 16px; }
+
+    .err { font-size: 14px; color: var(--error); margin: 0 0 12px; }
+
+    button.submit {
+      width: 100%;
+      padding: 14px;
+      font: inherit;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      background: var(--fg);
+      color: var(--bg);
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    button.submit:disabled { opacity: 0.4; cursor: not-allowed; }
+    .count { text-align: center; font-size: 12px; color: var(--muted); margin-top: 12px; }
+
+    .done-wrap { min-height: 70vh; display: flex; align-items: center; justify-content: center; }
+    .done {
+      max-width: 420px;
+      width: 100%;
+      padding: 36px;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+    .done .check { font-size: 26px; margin-bottom: 16px; }
+    .done h1 { font-size: 18px; margin: 0 0 14px; }
+    .done p { font-size: 14px; line-height: 1.7; color: var(--muted); margin: 0; }
+
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <nav class="topbar">
+      <a href="/">← adrianlumley.co</a>
+      <button class="toggle" id="theme-toggle" type="button" aria-label="Toggle theme">theme</button>
+    </nav>
+
+    <div id="form-view">
+      <header class="intro">
+        <p class="eyebrow">→ 360 feedback</p>
+        <h1>feedback on adrian lumley.</h1>
+        <div class="note">
+          <span class="comment">// </span>thank you for doing this. the goal is an honest read, not a flattering one. your individual answers stay confidential; results are combined by group (peers together, reports together) so no single response is identifiable. answer based on what you actually see day to day. blunt is more useful than kind.
+        </div>
+      </header>
+
+      <section class="raters">
+        <h2 class="section-title">what's your relationship to adrian?</h2>
+        <div class="rule"></div>
+        <div class="rater-grid" id="rater-grid"></div>
+      </section>
+
+      <div id="sections"></div>
+    </div>
+
+    <div id="done-view" class="hidden">
+      <div class="done-wrap">
+        <div class="done">
+          <div class="check">✓</div>
+          <h1>thank you.</h1>
+          <p>your feedback has been recorded. individual answers stay confidential and are only ever reported combined with others in your group.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var ENDPOINT = "https://oceanseleven.zo.space/api/360/submit";
+
+    var RATERS = [
+      { id: "manager", label: "manager / skip-level", sub: "you manage adrian or sit above him" },
+      { id: "peer", label: "peer", sub: "you work alongside adrian as an equal" },
+      { id: "report", label: "direct report", sub: "adrian manages you" },
+      { id: "self", label: "self", sub: "this is adrian rating himself" }
+    ];
+
+    var SECTION_A = [
+      "Turns ambiguous or messy situations into a clear direction the rest of us can act on.",
+      "Communicates decisions and reasoning clearly.",
+      "Has strong product and strategic judgment.",
+      "Follows through and delivers what he commits to.",
+      "Is someone I trust.",
+      "Makes the reasoning behind his decisions visible, not just the conclusion.",
+      "Moves at a pace the people around him can actually keep up with.",
+      "Knows when something is “good enough” versus when it needs more work, and calibrates effort accordingly.",
+      "Stays open to being wrong once he has formed a view.",
+      "Notices and responds to how people are feeling, not just what needs to get done.",
+      "Lets others own work fully, rather than staying closely involved or redoing it.",
+      "Handles disagreement and pushback without it becoming friction."
+    ];
+    var SECTION_B = [
+      "Operates at the level above his current title already.",
+      "Builds influence across the org, not just within his own lane.",
+      "Invests in relationships and coalitions, not only in systems and process.",
+      "Is someone I would actively advocate to promote.",
+      "Brings problems forward early rather than absorbing them and trying to solve everything himself."
+    ];
+    var SECTION_C = [
+      "Gives me room to do my work my own way.",
+      "Is approachable when I disagree or when something is going wrong.",
+      "Helps me grow, not just helps the work get done.",
+      "Is consistent and predictable in how he reacts, so I know what to expect.",
+      "Recognizes effort and contribution, not only outcomes."
+    ];
+    var SECTION_D = [
+      "Shares credit and information rather than concentrating it.",
+      "Collaborates as an equal rather than trying to drive.",
+      "Is someone I’d want on a high-stakes project with me."
+    ];
+
+    var OPEN_A = [
+      { id: "a_open1", q: "What does Adrian reliably do better than almost anyone you work with?" },
+      { id: "a_open2", q: "What is the single most impactful change he could make to be more effective?" },
+      { id: "a_open3", q: "Describe a moment that captures how he operates, good or bad." }
+    ];
+    var OPEN_B = [
+      { id: "b_open1", q: "What is the gap, specifically, between where he is and the next level?" },
+      { id: "b_open2", q: "Where does he over-rely on his own capability instead of leveraging the team or the org?" }
+    ];
+    var OPEN_C = [
+      { id: "c_open1", q: "What is it like to work for Adrian on a hard day?" },
+      { id: "c_open2", q: "What would make you more effective that he controls?" }
+    ];
+    var OPEN_D = [
+      { id: "d_open1", q: "Where does working alongside Adrian get harder than it needs to be?" }
+    ];
+
+    var SCALE = [
+      { v: 1, label: "strongly disagree" },
+      { v: 2, label: "disagree" },
+      { v: 3, label: "neutral / mixed" },
+      { v: 4, label: "agree" },
+      { v: 5, label: "strongly agree" }
+    ];
+
+    var state = { rater: null, scores: {}, open: {}, status: "idle", error: "" };
+
+    function esc(s) {
+      return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    function blocksFor(rater) {
+      var blocks = [{ key: "A", title: "about working with adrian", items: SECTION_A, opens: OPEN_A }];
+      if (rater === "manager") blocks.push({ key: "B", title: "leadership & potential", items: SECTION_B, opens: OPEN_B });
+      if (rater === "report") blocks.push({ key: "C", title: "as your manager", items: SECTION_C, opens: OPEN_C });
+      if (rater === "peer") blocks.push({ key: "D", title: "as a peer", items: SECTION_D, opens: OPEN_D });
+      return blocks;
+    }
+
+    function answeredCount() {
+      return Object.keys(state.scores).filter(function (k) {
+        var v = state.scores[k];
+        return v !== null && v !== undefined && v !== "";
+      }).length;
+    }
+
+    // ---- Theme toggle ----
+    document.getElementById("theme-toggle").addEventListener("click", function () {
+      var root = document.documentElement;
+      var isDark = root.classList.toggle("dark");
+      localStorage.setItem("theme", isDark ? "dark" : "light");
+    });
+
+    // ---- Rater selector ----
+    var raterGrid = document.getElementById("rater-grid");
+    RATERS.forEach(function (r) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "rater";
+      b.dataset.rater = r.id;
+      b.innerHTML = '<div class="r-label">' + esc(r.label) + '</div><div class="r-sub">' + esc(r.sub) + "</div>";
+      b.addEventListener("click", function () {
+        state.rater = r.id;
+        Array.prototype.forEach.call(raterGrid.children, function (c) {
+          c.classList.toggle("active", c.dataset.rater === r.id);
+        });
+        renderSections();
+      });
+      raterGrid.appendChild(b);
+    });
+
+    // ---- Sections ----
+    var sectionsEl = document.getElementById("sections");
+
+    function renderSections() {
+      if (!state.rater) { sectionsEl.innerHTML = ""; return; }
+      var blocks = blocksFor(state.rater);
+
+      var html = '<div class="legend">';
+      SCALE.forEach(function (s) { html += "<span><b>" + s.v + "</b> " + esc(s.label) + "</span>"; });
+      html += "<span><b>n/a</b> haven't seen enough</span></div>";
+
+      blocks.forEach(function (block) {
+        html += '<section class="block">';
+        html += '<h2 class="section-title">' + esc(block.title) + ":</h2>";
+        html += '<div class="rule"></div>';
+        block.items.forEach(function (text, i) {
+          var id = block.key + (i + 1);
+          html += '<div class="item">';
+          html += '<p class="q">' + esc(text) + "</p>";
+          html += '<div class="scale" data-id="' + id + '">';
+          SCALE.forEach(function (s) {
+            html += '<button type="button" class="sbtn" data-id="' + id + '" data-val="' + s.v + '" title="' + esc(s.label) + '">' + s.v + "</button>";
+          });
+          html += '<button type="button" class="nabtn" data-id="' + id + '" data-val="na">n/a</button>';
+          html += "</div></div>";
+        });
+        html += '<div class="opens">';
+        block.opens.forEach(function (o) {
+          html += '<div class="item">';
+          html += '<label class="q" for="' + o.id + '">' + esc(o.q) + "</label>";
+          html += '<textarea id="' + o.id + '" data-open="' + o.id + '" rows="3" placeholder="optional, but the open answers are the most useful part."></textarea>';
+          html += "</div>";
+        });
+        html += "</div></section>";
+      });
+
+      html += '<p class="err hidden" id="err"></p>';
+      html += '<button type="button" class="submit" id="submit" disabled>→ submit feedback</button>';
+      html += '<p class="count" id="count"></p>';
+
+      sectionsEl.innerHTML = html;
+      restoreInputs();
+      updateCount();
+    }
+
+    function restoreInputs() {
+      // restore scale selections
+      var sbtns = sectionsEl.querySelectorAll(".sbtn, .nabtn");
+      Array.prototype.forEach.call(sbtns, function (btn) {
+        var id = btn.dataset.id;
+        var val = btn.dataset.val;
+        var cur = state.scores[id];
+        var match = (val === "na") ? cur === "na" : cur === Number(val);
+        btn.classList.toggle("active", match);
+      });
+      // restore open text
+      var tas = sectionsEl.querySelectorAll("textarea[data-open]");
+      Array.prototype.forEach.call(tas, function (ta) {
+        var v = state.open[ta.dataset.open];
+        if (v) ta.value = v;
+      });
+    }
+
+    function updateCount() {
+      var n = answeredCount();
+      var countEl = document.getElementById("count");
+      var submitEl = document.getElementById("submit");
+      if (countEl) {
+        countEl.textContent = n + " item" + (n === 1 ? "" : "s") + " answered. you can leave items as n/a if you haven't seen enough.";
+      }
+      if (submitEl) submitEl.disabled = state.status === "sending" || n === 0;
+    }
+
+    // Event delegation: scale clicks + textarea input + submit
+    sectionsEl.addEventListener("click", function (e) {
+      var btn = e.target.closest(".sbtn, .nabtn");
+      if (btn) {
+        var id = btn.dataset.id;
+        var val = btn.dataset.val === "na" ? "na" : Number(btn.dataset.val);
+        state.scores[id] = val;
+        var row = sectionsEl.querySelector('.scale[data-id="' + id + '"]');
+        if (row) {
+          Array.prototype.forEach.call(row.children, function (c) { c.classList.remove("active"); });
+        }
+        btn.classList.add("active");
+        updateCount();
+        return;
+      }
+      if (e.target.id === "submit") submit();
+    });
+
+    sectionsEl.addEventListener("input", function (e) {
+      if (e.target.matches("textarea[data-open]")) {
+        state.open[e.target.dataset.open] = e.target.value;
+      }
+    });
+
+    function submit() {
+      if (state.status === "sending") return;
+      state.status = "sending";
+      var submitEl = document.getElementById("submit");
+      var errEl = document.getElementById("err");
+      if (errEl) errEl.classList.add("hidden");
+      if (submitEl) { submitEl.disabled = true; submitEl.textContent = "submitting…"; }
+
+      fetch(ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ raterType: state.rater, scores: state.scores, open: state.open })
+      })
+        .then(function (res) {
+          return res.json().then(function (data) {
+            if (!res.ok) throw new Error((data && data.error) || "Something went wrong");
+            return data;
+          });
+        })
+        .then(function () {
+          state.status = "done";
+          document.getElementById("form-view").classList.add("hidden");
+          document.getElementById("done-view").classList.remove("hidden");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        })
+        .catch(function (err) {
+          state.status = "error";
+          if (errEl) { errEl.textContent = (err && err.message) || "Could not submit"; errEl.classList.remove("hidden"); }
+          if (submitEl) { submitEl.disabled = false; submitEl.textContent = "→ submit feedback"; }
+        });
+    }
+  </script>
+</body>
+</html>

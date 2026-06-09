@@ -3,7 +3,7 @@ title: "the purchasing agent"
 episode: 4
 date: 2026-06-08
 teaser: "mission control tries to solve the entryway with furniture. rogue insists on fewer decisions first."
-badges: ["episode 04", "the purchasing agent", "june 2026"]
+badges: ["episode 04", "the purchasing agent"]
 ---
 At 7:11 p.m., the apartment door became a border dispute.
 

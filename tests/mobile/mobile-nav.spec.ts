@@ -17,7 +17,7 @@ test('mobile: hamburger menu opens and navigates', async ({ page }) => {
   await expect(toggle).toHaveAttribute('aria-expanded', 'true');
 
   await mobileNav.locator('a[href="/lab"]').click();
-  await expect(page).toHaveURL(/\/lab\/?$/);
+  await page.waitForURL(/\/lab\/?$/); // navigation timeout tolerates dev lazy-compile under load
   await expect(page.locator('main h1')).toHaveText('lab');
 });
 

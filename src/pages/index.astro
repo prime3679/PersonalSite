@@ -32,7 +32,7 @@ import { now } from '../data/now';
           </p>
         ))}
         <div class="pt-2 space-y-2 text-sm text-foreground/60">
-          <p><span class="font-semibold text-foreground/80">stack:</span> astro, typescript, node.js, sqlite, claude</p>
+          <p><span class="font-semibold text-foreground/80">stack:</span> astro, typescript, node.js, claude</p>
           <p><span class="font-semibold text-foreground/80">reading:</span> {now.reading.map((b) => b.author).join(', ')} — <a href={now.goodreads} class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">goodreads</a></p>
           <p><span class="font-semibold text-foreground/80">training:</span> {now.training.disciplines.join(' + ')}. {now.training.note}</p>
         </div>

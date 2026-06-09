@@ -5,7 +5,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        mono: ['"SF Mono"', 'Monaco', 'Inconsolata', '"Roboto Mono"', '"Source Code Pro"', 'Menlo', 'monospace'],
+        mono: ['"JetBrains Mono"', '"SF Mono"', 'Monaco', 'Inconsolata', '"Roboto Mono"', '"Source Code Pro"', 'Menlo', 'monospace'],
       },
       colors: {
         border: 'hsl(var(--border))',

@@ -42,7 +42,9 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'npm run dev',
+    // Test the built output, not the dev server: it's what actually deploys,
+    // and it avoids dev-mode lazy route compilation flaking parallel runs.
+    command: 'npm run build && npm run preview',
     url: 'http://localhost:4321',
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,

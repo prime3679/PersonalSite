@@ -33,7 +33,7 @@ export const GET: APIRoute = async (context) => {
   const episodes = (await getCollection('signal-room'))
     .map((ep): FeedItem => ({
       title: `signal room ${pad(ep.data.episode)} · ${ep.data.title}`,
-      url: `${site}/signal-room/${ep.slug}`,
+      url: `${site}/signal-room/${ep.slug}/`,
       date: ep.data.date,
       description: ep.data.teaser,
     }));

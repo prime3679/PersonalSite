@@ -8,10 +8,15 @@ import bishopStats from '../../public/bishop-stats.json';
 
 // Stats render at build time from the repo JSONs (the cron commits them, which
 // triggers a deploy anyway) — honest snapshot labels instead of client fetches.
-const snapshot = (iso: string) =>
-  new Date(iso)
-    .toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' })
-    .toLowerCase();
+const snapshot = (iso: string | undefined | null) => {
+  if (!iso) return '—';
+  const date = new Date(iso);
+  return isNaN(date.getTime())
+    ? '—'
+    : date
+        .toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' })
+        .toLowerCase();
+};
 
 const episodes = (await getCollection('signal-room')).sort(
   (a, b) => b.data.episode - a.data.episode,
@@ -23,7 +28,7 @@ const overrides: Record<string, Partial<LabProject>> = {
   'signal-room': {
     stats: [
       { value: pad(episodes.length), label: 'episodes' },
-      { value: latest.data.title, label: 'latest signal' },
+      { value: latest?.data.title ?? '—', label: 'latest signal' },
       { value: 'weekly', label: 'cadence' },
     ],
   },

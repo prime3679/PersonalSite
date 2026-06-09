@@ -19,6 +19,7 @@ describe('collections config', () => {
   it('should export the signal-room collection', () => {
     expect(collections['signal-room']).toBeDefined();
     expect(collections['signal-room'].type).toBe('content');
+    expect(collections['signal-room'].schema).toBe(signalRoomSchema);
   });
 });
 

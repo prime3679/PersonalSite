@@ -1,6 +1,7 @@
 ---
 title: "I built a sensory app for my toddler in one sprint. It runs on nothing."
 date: 2026-03-09
+tags: ["building"]
 description: "No backend, no accounts, no dependencies. Just a screen that makes sounds and particles when a toddler taps it."
 published: true
 ---

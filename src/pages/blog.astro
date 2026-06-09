@@ -10,6 +10,17 @@ const allPosts = await getCollection('blog');
 const publishedPosts = allPosts
   .filter(post => post.data.published !== false)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+// Derive the tag list from published posts, most-used first.
+const tagCounts = new Map<string, number>();
+for (const post of publishedPosts) {
+  for (const tag of post.data.tags ?? []) {
+    tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+  }
+}
+const allTags = [...tagCounts.entries()]
+  .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+  .map(([tag]) => tag);
 ---
 
 <Base title={title} description={description}>
@@ -25,12 +36,24 @@ const publishedPosts = allPosts
       </p>
     </section>
 
+    <!-- Tag filter -->
+    {allTags.length > 0 && (
+      <section class="mb-10 fade-in">
+        <div class="flex flex-wrap gap-2" id="tag-filters" role="group" aria-label="Filter posts by tag">
+          <button type="button" class="chip" data-tag="all" aria-pressed="true">all</button>
+          {allTags.map((tag) => (
+            <button type="button" class="chip" data-tag={tag} aria-pressed="false">{tag}</button>
+          ))}
+        </div>
+      </section>
+    )}
+
     <!-- Posts -->
     <section class="mb-16 fade-in">
       {publishedPosts.length > 0 ? (
-        <div class="space-y-12">
+        <div class="space-y-12" id="post-list">
           {publishedPosts.map((post) => (
-            <article class="border-b border-border pb-8">
+            <article class="blog-post border-b border-border pb-8" data-tags={(post.data.tags ?? []).join(' ')}>
               <div class="mb-4">
                 <h2 class="text-lg font-normal mb-2 leading-relaxed">
                   <a href={`/blog/${post.slug}`} class="underline hover:no-underline">
@@ -39,14 +62,21 @@ const publishedPosts = allPosts
                 </h2>
                 <time class="text-sm text-muted-foreground uppercase tracking-wider">
                   {new Date(post.data.date).toLocaleDateString('en-US', {
-                    year: 'numeric', 
-                    month: 'long' 
+                    year: 'numeric',
+                    month: 'long'
                   })}
                 </time>
               </div>
               <p class="text-base leading-relaxed text-muted-foreground">
                 {post.data.description}
               </p>
+              {(post.data.tags ?? []).length > 0 && (
+                <div class="flex flex-wrap gap-2 mt-3">
+                  {post.data.tags.map((tag) => (
+                    <span class="text-[10px] uppercase tracking-wider text-muted-foreground border border-border rounded-full px-2 py-0.5">{tag}</span>
+                  ))}
+                </div>
+              )}
             </article>
           ))}
         </div>
@@ -56,53 +86,12 @@ const publishedPosts = allPosts
             first post coming soon.
           </p>
           <p class="text-sm text-muted-foreground">
-            building the content from voice musings and real insights. 
+            building the content from voice musings and real insights.
             quality over frequency.
           </p>
         </div>
       )}
-    </section>
-
-    <!-- Themes -->
-    <section class="mb-16 fade-in">
-      <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">recurring themes:</h2>
-      
-      <div class="space-y-4">
-        <div>
-          <h3 class="font-semibold mb-1">product leadership</h3>
-          <p class="text-sm text-muted-foreground">
-            frameworks, trade-offs, decision-making at director+ scale
-          </p>
-        </div>
-        
-        <div>
-          <h3 class="font-semibold mb-1">systems thinking</h3>
-          <p class="text-sm text-muted-foreground">
-            second-order effects, feedback loops, leverage points
-          </p>
-        </div>
-        
-        <div>
-          <h3 class="font-semibold mb-1">scaling platforms</h3>
-          <p class="text-sm text-muted-foreground">
-            lessons from salesforce, siriusxm, disney+, ea
-          </p>
-        </div>
-        
-        <div>
-          <h3 class="font-semibold mb-1">career navigation</h3>
-          <p class="text-sm text-muted-foreground">
-            breaking into senior product roles, influence without authority
-          </p>
-        </div>
-        
-        <div>
-          <h3 class="font-semibold mb-1">optimization</h3>
-          <p class="text-sm text-muted-foreground">
-            ai costs, operational efficiency, finding leverage
-          </p>
-        </div>
-      </div>
+      <p id="no-matches" class="hidden text-sm text-muted-foreground text-center py-8">no posts with that tag yet.</p>
     </section>
 
     <!-- Footer -->
@@ -121,3 +110,31 @@ const publishedPosts = allPosts
 
   </main>
 </Base>
+
+<script>
+  const filterBar = document.getElementById('tag-filters');
+  if (filterBar) {
+    const chips = Array.from(filterBar.querySelectorAll('[data-tag]'));
+    const posts = Array.from(document.querySelectorAll('.blog-post'));
+    const noMatches = document.getElementById('no-matches');
+
+    filterBar.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      const btn = target.closest('[data-tag]') as HTMLElement | null;
+      if (!btn) return;
+      const tag = btn.dataset.tag;
+
+      chips.forEach((c) => c.setAttribute('aria-pressed', String(c === btn)));
+
+      let visible = 0;
+      posts.forEach((post) => {
+        const tags = (post.getAttribute('data-tags') || '').split(' ').filter(Boolean);
+        const show = tag === 'all' || tags.includes(tag as string);
+        post.classList.toggle('hidden', !show);
+        if (show) visible++;
+      });
+
+      if (noMatches) noMatches.classList.toggle('hidden', visible > 0);
+    });
+  }
+</script>

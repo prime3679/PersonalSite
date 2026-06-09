@@ -19,11 +19,22 @@ import Header from '../components/Header.astro';
       </p>
     </section>
 
+    <!-- Filter -->
+    <section class="mb-8 fade-in">
+      <div class="flex flex-wrap gap-2" id="lab-filters" role="group" aria-label="Filter projects by kind">
+        <button type="button" class="chip" data-filter="all" aria-pressed="true">all</button>
+        <button type="button" class="chip" data-filter="agents" aria-pressed="false">agents</button>
+        <button type="button" class="chip" data-filter="tools" aria-pressed="false">tools</button>
+        <button type="button" class="chip" data-filter="toys" aria-pressed="false">toys</button>
+        <button type="button" class="chip" data-filter="writing" aria-pressed="false">writing</button>
+      </div>
+    </section>
+
     <!-- Projects -->
     <section class="space-y-4 fade-in">
 
       <!-- Signal Room -->
-      <article class="border border-foreground/10 rounded-xl overflow-hidden" id="signal-room">
+      <article class="border border-foreground/10 rounded-xl overflow-hidden" id="signal-room" data-category="writing">
         <div class="p-6">
           <div class="flex items-start justify-between mb-3">
             <div>
@@ -63,7 +74,7 @@ import Header from '../components/Header.astro';
       </article>
 
       <!-- Operator Stack -->
-      <article class="border border-foreground/10 rounded-xl overflow-hidden" id="operator-stack">
+      <article class="border border-foreground/10 rounded-xl overflow-hidden" id="operator-stack" data-category="tools">
         <div class="p-6">
           <div class="flex items-start justify-between mb-3">
             <div>
@@ -103,7 +114,7 @@ import Header from '../components/Header.astro';
       </article>
 
       <!-- 90-Day OS -->
-      <article class="border border-foreground/10 rounded-xl overflow-hidden" id="90-day-os">
+      <article class="border border-foreground/10 rounded-xl overflow-hidden" id="90-day-os" data-category="tools">
         <div class="p-6">
           <div class="flex items-start justify-between mb-3">
             <div>
@@ -144,7 +155,7 @@ import Header from '../components/Header.astro';
       </article>
 
       <!-- FamilyOS -->
-      <article class="border border-foreground/10 rounded-xl overflow-hidden" id="familyos">
+      <article class="border border-foreground/10 rounded-xl overflow-hidden" id="familyos" data-category="agents">
         <div class="p-6">
           <div class="flex items-start justify-between mb-3">
             <div>
@@ -190,7 +201,7 @@ import Header from '../components/Header.astro';
       </article>
 
       <!-- Bishop -->
-      <article class="border border-foreground/10 rounded-xl overflow-hidden" id="bishop">
+      <article class="border border-foreground/10 rounded-xl overflow-hidden" id="bishop" data-category="agents">
         <div class="p-6">
           <div class="flex items-start justify-between mb-3">
             <div>
@@ -232,7 +243,7 @@ import Header from '../components/Header.astro';
       </article>
 
       <!-- Mission Control -->
-      <article class="border border-foreground/10 rounded-xl overflow-hidden" id="mission-control">
+      <article class="border border-foreground/10 rounded-xl overflow-hidden" id="mission-control" data-category="agents">
         <div class="p-6">
           <div class="flex items-start justify-between mb-3">
             <div>
@@ -272,7 +283,7 @@ import Header from '../components/Header.astro';
       </article>
 
       <!-- Bishop Bench -->
-      <article class="border border-foreground/10 rounded-xl overflow-hidden" id="bishop-bench">
+      <article class="border border-foreground/10 rounded-xl overflow-hidden" id="bishop-bench" data-category="agents">
         <div class="p-6">
           <div class="flex items-start justify-between mb-3">
             <div>
@@ -313,7 +324,7 @@ import Header from '../components/Header.astro';
       </article>
 
       <!-- FamilyOS Template -->
-      <article class="border border-foreground/10 rounded-xl overflow-hidden" id="familyos-template">
+      <article class="border border-foreground/10 rounded-xl overflow-hidden" id="familyos-template" data-category="agents">
         <div class="p-6">
           <div class="flex items-start justify-between mb-3">
             <div>
@@ -355,7 +366,7 @@ import Header from '../components/Header.astro';
       </article>
 
       <!-- Evelyn's World -->
-      <article class="border border-foreground/10 rounded-xl overflow-hidden" id="evelyns-world">
+      <article class="border border-foreground/10 rounded-xl overflow-hidden" id="evelyns-world" data-category="toys">
         <div class="p-6">
           <div class="flex items-start justify-between mb-3">
             <div>
@@ -395,7 +406,7 @@ import Header from '../components/Header.astro';
       </article>
 
       <!-- Tiny Chaos Garden -->
-      <article class="border border-foreground/10 rounded-xl overflow-hidden" id="chaos-garden">
+      <article class="border border-foreground/10 rounded-xl overflow-hidden" id="chaos-garden" data-category="toys">
         <div class="p-6">
           <div class="flex items-start justify-between mb-3">
             <div>
@@ -435,7 +446,7 @@ import Header from '../components/Header.astro';
       </article>
 
       <!-- Iron Log -->
-      <article class="border border-foreground/10 rounded-xl overflow-hidden" id="iron-log">
+      <article class="border border-foreground/10 rounded-xl overflow-hidden" id="iron-log" data-category="tools">
         <div class="p-6">
           <div class="flex items-start justify-between mb-3">
             <div>
@@ -476,7 +487,7 @@ import Header from '../components/Header.astro';
       </article>
 
       <!-- Meeting Price Tag -->
-      <article class="border border-foreground/10 rounded-xl overflow-hidden" id="meeting-price-tag">
+      <article class="border border-foreground/10 rounded-xl overflow-hidden" id="meeting-price-tag" data-category="tools">
         <div class="p-6">
           <div class="flex items-start justify-between mb-3">
             <div>
@@ -517,7 +528,7 @@ import Header from '../components/Header.astro';
       </article>
 
       <!-- JoyTap -->
-      <article class="border border-foreground/10 rounded-xl overflow-hidden" id="joytap">
+      <article class="border border-foreground/10 rounded-xl overflow-hidden" id="joytap" data-category="tools">
         <div class="p-6">
           <div class="flex items-start justify-between mb-3">
             <div>
@@ -696,4 +707,26 @@ import Header from '../components/Header.astro';
   }
 
   loadBishopStats();
+</script>
+
+<script>
+  // Filter project cards by kind. Degrades gracefully: with no JS, all cards show.
+  const labFilters = document.getElementById('lab-filters');
+  if (labFilters) {
+    const chips = Array.from(labFilters.querySelectorAll('[data-filter]'));
+    const cards = Array.from(document.querySelectorAll('[data-category]'));
+
+    labFilters.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      const btn = target.closest('[data-filter]') as HTMLElement | null;
+      if (!btn) return;
+      const filter = btn.dataset.filter;
+
+      chips.forEach((c) => c.setAttribute('aria-pressed', String(c === btn)));
+      cards.forEach((card) => {
+        const show = filter === 'all' || card.getAttribute('data-category') === filter;
+        card.classList.toggle('hidden', !show);
+      });
+    });
+  }
 </script>

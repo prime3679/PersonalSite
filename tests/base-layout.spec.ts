@@ -32,10 +32,10 @@ test.describe('Base Layout Meta Tags', () => {
     const ogDescription = await page.locator('meta[property="og:description"]').getAttribute('content');
     expect(ogDescription).toBe('Director of Product at Salesforce, building at the intersection of AI and enterprise. Previously SiriusXM, Disney+, EA. Based in NYC.');
 
-    // OG Image
+    // OG Image (home uses a custom generated card at /og/home.png)
     const ogImage = await page.locator('meta[property="og:image"]').getAttribute('content');
     expect(ogImage).toContain('https://adrianlumley.co/');
-    expect(ogImage).toContain('og-image');
+    expect(ogImage).toContain('/og/home.png');
   });
 
   test('Work page should have correct custom meta tags', async ({ page }) => {

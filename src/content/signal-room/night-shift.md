@@ -3,7 +3,7 @@ title: "night shift"
 episode: 1
 date: 2026-05-18
 teaser: "a quiet house, a crowded queue, and one sentence that might survive breakfast."
-badges: ["episode 01", "night shift", "500–900 words"]
+badges: ["episode 01", "night shift"]
 ---
 At 2:13 a.m., Mission Control dimmed itself to twelve percent and pretended this was restraint.
 

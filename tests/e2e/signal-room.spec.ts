@@ -17,9 +17,18 @@ test('signal room: an episode page renders prose and serial nav', async ({ page 
   await expect(page.locator('main h1')).toHaveText('night shift');
   await expect(page.locator('main')).toContainText('Mission Control dimmed itself to twelve percent');
 
+  // Consistent date rendered from frontmatter (not the old vague badges)
+  await expect(page.locator('main')).toContainText('may 18, 2026');
+
   // First episode: no prev, next points at episode 02
   await expect(page.locator('a[href="/signal-room/green-is-not-healthy/"]')).toBeVisible();
   await expect(page.locator('a[href="/signal-room/"]').first()).toBeVisible();
+});
+
+test('signal room: the index shows a date for each episode', async ({ page }) => {
+  await page.goto('/signal-room');
+  await expect(page.locator('main')).toContainText('june 8, 2026');
+  await expect(page.locator('main')).toContainText('may 18, 2026');
 });
 
 test('signal room: episodes appear in the rss feed', async ({ page }) => {

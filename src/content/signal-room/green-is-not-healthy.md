@@ -3,7 +3,7 @@ title: "green is not healthy"
 episode: 2
 date: 2026-05-25
 teaser: "rogue distrusts a perfect dashboard and finds a stale assumption under the status light."
-badges: ["episode 02", "green is not healthy", "may 2026"]
+badges: ["episode 02", "green is not healthy"]
 ---
 At 6:04 a.m., the apartment made the sound of a small kingdom remembering it had citizens.
 

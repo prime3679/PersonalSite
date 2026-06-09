@@ -3,7 +3,7 @@ title: "off-site"
 episode: 3
 date: 2026-06-01
 teaser: "a third voice calls in from the cloud, sees a storm the local sensors can't, and chooses not to become it."
-badges: ["episode 03", "off-site", "june 2026"]
+badges: ["episode 03", "off-site"]
 ---
 At 3:48 a.m., a new voice asked to enter a room that had no door.
 

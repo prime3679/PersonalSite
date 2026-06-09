@@ -1,13 +1,7 @@
 ---
+import { navItems } from '../data/nav';
+
 const pathname = Astro.url.pathname;
-const navItems = [
-  { href: '/', label: 'home' },
-  { href: '/about', label: 'about' },
-  { href: '/blog', label: 'blog' },
-  { href: '/signal-room', label: 'signal room' },
-  { href: '/lab', label: 'lab' },
-  { href: '/contact', label: 'contact' },
-];
 ---
 
 <header class="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-colors">

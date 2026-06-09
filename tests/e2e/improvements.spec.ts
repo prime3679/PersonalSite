@@ -78,10 +78,14 @@ test('rss: /rss.xml is served as XML with items', async ({ page }) => {
 test('header: theme toggle flips dark mode', async ({ page }) => {
   await page.goto('/');
   const html = page.locator('html');
-  const before = await html.evaluate((el) => el.classList.contains('dark'));
+  const wasDark = await html.evaluate((el) => el.classList.contains('dark'));
   await page.locator('#theme-toggle').click();
-  const after = await html.evaluate((el) => el.classList.contains('dark'));
-  expect(after).toBe(!before);
+  // Web-first assertions auto-wait/retry, so the class flip isn't raced.
+  if (wasDark) {
+    await expect(html).not.toHaveClass(/dark/);
+  } else {
+    await expect(html).toHaveClass(/dark/);
+  }
 });
 
 test('nav: unified header includes the /now link', async ({ page }) => {

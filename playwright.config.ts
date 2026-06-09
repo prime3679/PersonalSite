@@ -12,9 +12,33 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   projects: [
+    // Desktop engines run the full suite except the mobile-only specs.
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+      testIgnore: '**/mobile/**',
+    },
+    {
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'] },
+      testIgnore: '**/mobile/**',
+    },
+    {
+      name: 'webkit',
+      use: { ...devices['Desktop Safari'] },
+      testIgnore: '**/mobile/**',
+    },
+    // Touch viewports run only the mobile specs (the desktop specs assume the
+    // full nav is visible, which it isn't behind the hamburger).
+    {
+      name: 'mobile-chrome',
+      use: { ...devices['Pixel 5'] },
+      testMatch: '**/mobile/**',
+    },
+    {
+      name: 'mobile-safari',
+      use: { ...devices['iPhone 13'] },
+      testMatch: '**/mobile/**',
     },
   ],
   webServer: {

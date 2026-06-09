@@ -6,10 +6,10 @@ test('Homepage features current work and reading', async ({ page }) => {
   // Verify the "currently" section heading
   await expect(page.getByRole('heading', { name: 'currently:' })).toBeVisible();
 
-  // Verify the "FamilyOS" project link
-  const familyOSLink = page.getByRole('link', { name: 'familyos' });
-  await expect(familyOSLink).toBeVisible();
-  await expect(familyOSLink).toHaveAttribute('href', '/lab');
+  // Verify the "signal room" serial link (scoped to main; the footer also links it)
+  const signalRoomLink = page.locator('main').getByRole('link', { name: 'signal room' });
+  await expect(signalRoomLink).toBeVisible();
+  await expect(signalRoomLink).toHaveAttribute('href', '/signal-room');
 
   // Verify the "stack" information
   await expect(page.getByText('stack:')).toBeVisible();

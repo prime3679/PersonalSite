@@ -16,21 +16,13 @@ export interface ReadingItem {
 }
 
 export const now = {
-  updated: 'March 2026',
+  updated: 'June 2026',
   goodreads: 'https://www.goodreads.com/user/show/149439647-adrian-lumley',
   building: [
-    {
-      label: 'familyos',
-      href: '/lab',
-      text: 'a multi-agent system that coordinates family logistics. the goal is to spend less time managing a shared calendar and more time being present.',
-    },
     {
       label: 'signal room',
       href: '/signal-room',
       text: 'a fiction serial about rogue, mission control, and systems trying to help humans without becoming the weather. new episodes monthly.',
-    },
-    {
-      text: "slowly writing a sci-fi novel about what happens when ai develops consciousness. no deadline. that's the point.",
     },
   ] satisfies BuildingItem[],
   reading: [

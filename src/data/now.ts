@@ -22,7 +22,7 @@ export const now = {
     {
       label: 'signal room',
       href: '/signal-room',
-      text: 'a fiction serial about rogue, mission control, and systems trying to help humans without becoming the weather. new episodes monthly.',
+      text: 'a fiction serial about rogue, mission control, and systems trying to help humans without becoming the weather. new episodes weekly.',
     },
   ] satisfies BuildingItem[],
   reading: [

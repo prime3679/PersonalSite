@@ -6,8 +6,8 @@ test('FamilyOS page has correct structure and content', async ({ page }) => {
   // Verify the page title (taking into account the suffix from Base layout)
   await expect(page).toHaveTitle('FamilyOS — Adrian Lumley — Adrian Lumley');
 
-  // Verify the main heading
-  await expect(page.locator('h1')).toHaveText('familyos');
+  // Verify the main heading (scope to the page content, not the dev-toolbar shadow DOM)
+  await expect(page.locator('main h1')).toHaveText('familyos');
 
   // Verify the presence of the main content sections using their uppercase text
   await expect(page.locator('h2', { hasText: 'the problem' })).toBeVisible();

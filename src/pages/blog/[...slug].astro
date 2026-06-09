@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Header from '../../components/Header.astro';
+import { readingTime } from '../../lib/readingTime';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -44,6 +45,7 @@ const ogImagePath = `/og/${post.slug}.png`;
       <time class="text-xs text-muted-foreground uppercase tracking-wider">
         {dateFormatted}
       </time>
+      <span class="text-xs text-muted-foreground uppercase tracking-wider"> · {readingTime(post.body)} min read</span>
     </section>
 
     <!-- Content -->

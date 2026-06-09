@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
 import { getCollection } from 'astro:content';
+import { readingTime } from '../lib/readingTime';
 
 const title = "Blog";
 const description = "Monthly musings on product leadership, systems thinking, and building scalable platforms.";
@@ -66,6 +67,7 @@ const allTags = [...tagCounts.entries()]
                     month: 'long'
                   })}
                 </time>
+                <span class="text-sm text-muted-foreground uppercase tracking-wider"> · {readingTime(post.body)} min read</span>
               </div>
               <p class="text-base leading-relaxed text-muted-foreground">
                 {post.data.description}

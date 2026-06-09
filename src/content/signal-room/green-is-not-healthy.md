@@ -1,7 +1,7 @@
 ---
 title: "green is not healthy"
 episode: 2
-date: 2026-05-08
+date: 2026-05-25
 teaser: "rogue distrusts a perfect dashboard and finds a stale assumption under the status light."
 badges: ["episode 02", "green is not healthy", "may 2026"]
 ---

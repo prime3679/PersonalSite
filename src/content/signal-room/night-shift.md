@@ -1,7 +1,7 @@
 ---
 title: "night shift"
 episode: 1
-date: 2026-05-01
+date: 2026-05-18
 teaser: "a quiet house, a crowded queue, and one sentence that might survive breakfast."
 badges: ["episode 01", "night shift", "500–900 words"]
 ---

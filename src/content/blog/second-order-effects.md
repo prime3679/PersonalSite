@@ -1,6 +1,7 @@
 ---
 title: "Second-order effects in product organizations"
 date: 2026-03-09
+tags: ["systems", "product"]
 description: "Why the best product decisions consider what happens after what happens. Lessons from 14 years of product work at Salesforce, SiriusXM, Disney+, and beyond."
 published: true
 ---

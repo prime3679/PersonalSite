@@ -1,17 +1,11 @@
 ---
+import { navItems } from '../data/nav';
+
 const pathname = Astro.url.pathname;
-const navItems = [
-  { href: '/', label: 'home' },
-  { href: '/about', label: 'about' },
-  { href: '/blog', label: 'blog' },
-  { href: '/signal-room', label: 'signal room' },
-  { href: '/lab', label: 'lab' },
-  { href: '/contact', label: 'contact' },
-];
 ---
 
 <header class="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-colors">
-  <div class="mx-auto flex max-w-3xl items-center justify-between px-4 py-3 text-sm">
+  <div class="mx-auto flex max-w-2xl items-center justify-between px-6 py-3 text-sm">
     <!-- Desktop nav -->
     <nav class="hidden sm:flex gap-5 font-medium font-mono">
       {navItems.map((item) => (
@@ -70,7 +64,7 @@ const navItems = [
   </div>
 
   <!-- Mobile nav dropdown -->
-  <nav id="mobile-nav" class="hidden sm:hidden border-t border-border px-4 pb-4 pt-2 space-y-3 font-mono">
+  <nav id="mobile-nav" class="hidden sm:hidden border-t border-border px-6 pb-4 pt-2 space-y-3 font-mono">
     {navItems.map((item) => (
       <a
         href={item.href}

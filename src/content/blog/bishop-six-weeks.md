@@ -1,6 +1,7 @@
 ---
 title: "Six weeks with an AI chief of staff. Here's what it actually does."
 date: 2026-03-09
+tags: ["ai", "building", "systems"]
 description: "Not a productivity hack. A persistent system that handles the operational layer of my life so I can ignore it. What I built, what it costs, and what surprised me."
 published: true
 ---

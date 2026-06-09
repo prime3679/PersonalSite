@@ -3,6 +3,7 @@ import '../styles/global.css';
 import { getImage } from 'astro:assets';
 import ogImage from '../assets/og-image.png';
 import { siteMetadata } from '../data/siteMetadata';
+import { navItems } from '../data/nav';
 
 interface ArticleData {
   headline: string;
@@ -87,6 +88,7 @@ const structuredData: Record<string, unknown> = {
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={ogImageUrl} />
   <link rel="canonical" href={Astro.url.href} />
+  <link rel="alternate" type="application/rss+xml" title={`${siteMetadata.title} — Blog`} href="/rss.xml" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/site.webmanifest" />
@@ -112,13 +114,11 @@ const structuredData: Record<string, unknown> = {
   <footer class="border-t border-border mt-16 py-8 font-mono">
     <div class="mx-auto max-w-2xl px-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-muted-foreground">
       <span>adrian lumley · nyc</span>
-      <nav class="flex gap-5">
-        <a href="/about" class="hover:text-foreground transition-colors">about</a>
-        <a href="/now" class="hover:text-foreground transition-colors">now</a>
-        <a href="/work" class="hover:text-foreground transition-colors">work</a>
-        <a href="/lab" class="hover:text-foreground transition-colors">lab</a>
-        <a href="/blog" class="hover:text-foreground transition-colors">blog</a>
-        <a href="/contact" class="hover:text-foreground transition-colors">contact</a>
+      <nav class="flex flex-wrap gap-x-5 gap-y-2">
+        {navItems.map((item) => (
+          <a href={item.href} class="hover:text-foreground transition-colors">{item.label}</a>
+        ))}
+        <a href="/rss.xml" class="hover:text-foreground transition-colors">rss</a>
       </nav>
     </div>
   </footer>

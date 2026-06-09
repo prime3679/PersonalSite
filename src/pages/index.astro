@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
+import { now } from '../data/now';
 ---
 
 <Base description="Director of Product at Salesforce, building at the intersection of AI and enterprise. Previously SiriusXM, Disney+, EA. Based in NYC." ogImage="/og/home.png">
@@ -22,12 +23,18 @@ import Header from '../components/Header.astro';
     <section class="mb-16 fade-in">
       <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">currently:</h2>
       <div class="space-y-3 text-base leading-relaxed">
-        <p>building <a href="/lab" class="underline hover:no-underline">familyos</a> — a multi-agent system that coordinates family logistics so i can focus on being present, not managing a spreadsheet.</p>
-        <p>slowly writing a scifi novel about what happens when ai develops consciousness. no deadline. that's the point.</p>
+        {now.building.map((item) => (
+          <p>
+            {item.href && item.label && (
+              <><a href={item.href} class="underline hover:no-underline">{item.label}</a> — </>
+            )}
+            {item.text}
+          </p>
+        ))}
         <div class="pt-2 space-y-2 text-sm text-foreground/60">
           <p><span class="font-semibold text-foreground/80">stack:</span> astro, typescript, node.js, sqlite, claude</p>
-          <p><span class="font-semibold text-foreground/80">reading:</span> brandon sanderson, viet thanh nguyen, patty wipfler — <a href="https://www.goodreads.com/user/show/149439647-adrian-lumley" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">goodreads</a></p>
-          <p><span class="font-semibold text-foreground/80">training:</span> muay thai + jiu jitsu. still getting hit. still showing up.</p>
+          <p><span class="font-semibold text-foreground/80">reading:</span> {now.reading.map((b) => b.author).join(', ')} — <a href={now.goodreads} class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">goodreads</a></p>
+          <p><span class="font-semibold text-foreground/80">training:</span> {now.training.disciplines.join(' + ')}. {now.training.note}</p>
         </div>
       </div>
     </section>

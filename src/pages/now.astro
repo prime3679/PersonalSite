@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
+import { now } from '../data/now';
 ---
 
 <Base title="Now" description="What Adrian Lumley is focused on right now — work, projects, reading, training.">
@@ -10,7 +11,7 @@ import Header from '../components/Header.astro';
     <section class="mb-16 fade-in">
       <h1 class="text-2xl font-normal mb-6 leading-relaxed">now.</h1>
       <p class="text-base leading-relaxed mb-4">
-        what i'm focused on right now. updated march 2026. based in new york city.
+        what i'm focused on right now. updated {now.updated.toLowerCase()}. based in new york city.
       </p>
     </section>
 
@@ -25,27 +26,32 @@ import Header from '../components/Header.astro';
     <section class="mb-16 fade-in">
       <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">building:</h2>
       <div class="space-y-3 text-base leading-relaxed text-foreground/80">
-        <p><a href="/lab" class="underline hover:no-underline">familyos</a> — a multi-agent system that coordinates family logistics. the goal is to spend less time managing a shared calendar and more time being present.</p>
-        <p>slowly writing a sci-fi novel about what happens when ai develops consciousness. no deadline. that's the point.</p>
+        {now.building.map((item) => (
+          <p>
+            {item.href && item.label && (
+              <><a href={item.href} class="underline hover:no-underline">{item.label}</a> — </>
+            )}
+            {item.text}
+          </p>
+        ))}
       </div>
     </section>
 
     <section class="mb-16 fade-in">
       <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">reading:</h2>
       <div class="space-y-2 text-base leading-relaxed text-foreground/80">
-        <p>— brandon sanderson (the cosmere, in order)</p>
-        <p>— viet thanh nguyen</p>
-        <p>— patty wipfler — <em>listen</em></p>
-        <p class="text-sm text-foreground/60 pt-1"><a href="https://www.goodreads.com/user/show/149439647-adrian-lumley" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">full list on goodreads</a></p>
+        {now.reading.map((book) => (
+          <p>— {book.author}{book.note && <> (<em>{book.note}</em>)</>}</p>
+        ))}
+        <p class="text-sm text-foreground/60 pt-1"><a href={now.goodreads} class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">full list on goodreads</a></p>
       </div>
     </section>
 
     <section class="mb-16 fade-in">
       <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">training:</h2>
       <div class="space-y-2 text-base leading-relaxed text-foreground/80">
-        <p>— muay thai</p>
-        <p>— jiu jitsu</p>
-        <p class="text-sm text-foreground/60 pt-1">still getting hit. still showing up.</p>
+        {now.training.disciplines.map((d) => <p>— {d}</p>)}
+        <p class="text-sm text-foreground/60 pt-1">{now.training.note}</p>
       </div>
     </section>
 

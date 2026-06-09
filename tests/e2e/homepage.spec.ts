@@ -19,7 +19,7 @@ test('Homepage has correct title and content', async ({ page }) => {
   const familyOsLink = page.locator('a', { hasText: 'familyos' });
   await expect(familyOsLink).toBeVisible();
   await expect(familyOsLink).toHaveAttribute('href', '/lab');
-  await expect(page.locator('body')).toContainText('scifi novel');
+  await expect(page.locator('body')).toContainText('sci-fi novel');
 
   // Check for "Connect" section
   await expect(page.getByText("let's talk:", { exact: true })).toBeVisible();

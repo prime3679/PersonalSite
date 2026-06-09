@@ -8,21 +8,26 @@ Adrian Lumley's personal site. Live at https://adrianlumley.co. GitHub Pages, de
 - **Style:** Dark, monochrome aesthetic. Minimal. No clutter.
 
 ## Key Files
-- `src/pages/` — all pages (index.astro, blog/, lab/)
-- `src/layouts/` — BaseLayout.astro wraps everything
+- `src/pages/` — all pages (index.astro, blog/, lab.astro, 404.astro, rss.xml.ts)
+- `src/layouts/Base.astro` — wraps every page (head, footer, structured data)
+- `src/components/Header.astro` — sticky top nav + theme toggle + NYC clock
+- `src/data/nav.ts` — single source of truth for nav (used by header AND footer)
+- `src/data/siteMetadata.ts` — title, description, social links
 - `src/content/blog/` — blog posts as Markdown (Astro Content Collections)
-- `public/lab/` — standalone lab demos (plain HTML, self-contained)
-- `public/lab/lacarte/` — La Carte demo
-- `public/lab/iron-log/` — Iron Log workout tracker
+- `public/lab/<slug>/` — self-contained HTML demos (iron-log, meeting-cost, evelyns-world, chaos-garden)
 
 ## Live Pages
-- `/` — 2-sentence intro + link to /work
-- `/blog` — blog index
-- `/lab` — lab projects (Iron Log, La Carte)
+- `/` — intro, "currently", and contact links
+- `/about`, `/now` — bio and current focus
+- `/blog` — blog index (+ `/rss.xml` feed)
+- `/lab` — lab projects (one card per build)
+- `/signal-room` — fiction serial
 - `/contact` — contact
+- Also live, just not in nav: `/work`, `/services`, `/operator-stack`, `/90-day-os`, `/familyos`, `/bishop-development`
 
 ## Nav
-Home · Blog · Lab · Contact ONLY. Work, Services, Log removed from nav (still accessible by URL — don't delete them).
+Defined once in `src/data/nav.ts` — header and footer both render that list. Don't hardcode nav links in either; edit the array.
+Current: Home · About · Now · Blog · Signal Room · Lab · Contact. Other pages stay out of nav but remain reachable by URL — don't delete them.
 
 ## Rules
 - No Salesforce work on /work — NDAs. No explanation needed.

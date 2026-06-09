@@ -37,6 +37,17 @@ a {
   transition: all 0.2s ease-in-out;
 }
 
+/* Filter chips (blog tags + lab categories) */
+.chip {
+  @apply text-xs lowercase tracking-wider px-3 py-1 rounded-full border border-border text-muted-foreground transition-colors cursor-pointer;
+}
+.chip:hover {
+  @apply text-foreground;
+}
+.chip[aria-pressed="true"] {
+  @apply border-foreground text-foreground bg-foreground/5;
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }

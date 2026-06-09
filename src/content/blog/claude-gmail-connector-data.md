@@ -1,6 +1,7 @@
 ---
 title: "Does Claude train on your email? The honest, sourced answer."
 date: 2026-06-09
+tags: ["ai"]
 description: "The first question every team asks when they turn on Claude's Gmail connector — answered with primary sources, including the consumer-plan catch and the enterprise gotcha nobody mentions."
 published: true
 ---

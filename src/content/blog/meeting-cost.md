@@ -1,6 +1,7 @@
 ---
 title: "Your Meetings Are a Budget Line. Start Treating Them Like One."
 date: 2026-03-17
+tags: ["product", "cost"]
 description: "Most companies treat meeting time as free. It isn't. A real-time cost calculator changes how the room behaves."
 published: true
 ---

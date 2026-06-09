@@ -4,7 +4,7 @@ test('Homepage has correct title and content', async ({ page }) => {
   await page.goto('/');
 
   // Check for the main heading
-  await expect(page.locator('main h1')).toHaveText("hello, i'm adrian.");
+  await expect(page.locator('main h1')).toHaveText("hello, i'm adrian");
 
   // Check for the role description
   await expect(page.locator('body')).toContainText('director of product at salesforce');

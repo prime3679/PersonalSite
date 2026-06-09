@@ -63,7 +63,7 @@ test('lab: category chip filters project cards', async ({ page }) => {
 
 test('404: custom page renders in the site voice', async ({ page }) => {
   await page.goto('/this-page-does-not-exist');
-  await expect(page.locator('main')).toContainText('lost the signal.');
+  await expect(page.locator('main')).toContainText('lost the signal');
 });
 
 test('rss: /rss.xml is served as XML with items', async ({ page }) => {

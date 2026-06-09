@@ -157,7 +157,4 @@ published: true
 <p class="text-sm text-muted-foreground">
   OpenClaw is the orchestration layer I'm running this on — it handles the agent runtime,
   tool access, and Telegram integration. I'm not affiliated with it. It's just what I use.
-  The full configuration lives in
-  <a href="https://github.com/prime3679/bishop-config" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">bishop-config on GitHub</a>
-  if you want to see the actual setup.
 </p>

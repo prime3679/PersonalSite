@@ -1,0 +1,76 @@
+---
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const episodes = (await getCollection('signal-room'))
+    .sort((a, b) => a.data.episode - b.data.episode);
+
+  return episodes.map((episode, i) => ({
+    params: { slug: episode.slug },
+    props: {
+      episode,
+      prev: i > 0 ? episodes[i - 1] : null,
+      next: i < episodes.length - 1 ? episodes[i + 1] : null,
+    },
+  }));
+}
+
+interface Props {
+  episode: CollectionEntry<'signal-room'>;
+  prev: CollectionEntry<'signal-room'> | null;
+  next: CollectionEntry<'signal-room'> | null;
+}
+
+const { episode, prev, next } = Astro.props;
+const { Content } = await episode.render();
+
+const pad = (n: number) => String(n).padStart(2, '0');
+const pageTitle = `${episode.data.title} — signal room`;
+---
+
+<Base
+  title={pageTitle}
+  description={episode.data.teaser}
+  article={{
+    headline: `signal room ${pad(episode.data.episode)} · ${episode.data.title}`,
+    description: episode.data.teaser,
+    datePublished: episode.data.date.toISOString(),
+    url: Astro.url.href,
+  }}
+>
+  <Header />
+  <main class="mx-auto max-w-2xl px-6 py-12 font-mono">
+
+    <article class="fade-in">
+      <a href="/signal-room/" class="text-xs uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors">← signal room</a>
+
+      <div class="flex flex-wrap gap-2 mt-6 mb-6">
+        {episode.data.badges.map((badge) => (
+          <span class="text-xs uppercase tracking-wider text-muted-foreground border border-border rounded-full px-3 py-1">{badge}</span>
+        ))}
+      </div>
+
+      <h1 class="text-2xl font-normal mb-8 leading-relaxed">{episode.data.title}</h1>
+
+      <div class="space-y-4 text-base leading-relaxed text-foreground/80">
+        <Content />
+      </div>
+    </article>
+
+    <!-- Episode nav -->
+    <nav class="mt-12 pt-8 border-t border-border flex justify-between gap-4 text-sm">
+      {prev ? (
+        <a href={`/signal-room/${prev.slug}/`} class="underline hover:no-underline text-muted-foreground hover:text-foreground transition-colors">← {pad(prev.data.episode)} · {prev.data.title}</a>
+      ) : <span />}
+      {next ? (
+        <a href={`/signal-room/${next.slug}/`} class="underline hover:no-underline text-muted-foreground hover:text-foreground transition-colors text-right">{pad(next.data.episode)} · {next.data.title} →</a>
+      ) : <span />}
+    </nav>
+
+    <p class="text-xs text-muted-foreground border-t border-border pt-8 mt-12">signal room · a fiction serial · published on adrianlumley.co</p>
+
+  </main>
+</Base>

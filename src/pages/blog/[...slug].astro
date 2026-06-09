@@ -6,22 +6,34 @@ import { readingTime } from '../../lib/readingTime';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
-  return posts
-    .filter(post => post.data.published !== false)
-    .map(post => ({
+  const published = posts.filter(post => post.data.published !== false);
+
+  return published.map(post => {
+    const primaryTag = (post.data.tags ?? [])[0] ?? null;
+    const related = primaryTag
+      ? published
+          .filter(p => p.slug !== post.slug && (p.data.tags ?? []).includes(primaryTag))
+          .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+          .slice(0, 3)
+      : [];
+    return {
       params: { slug: post.slug },
-      props: { post },
-    }));
+      props: { post, related, primaryTag },
+    };
+  });
 }
 
-const { post } = Astro.props;
+const { post, related, primaryTag } = Astro.props;
 const { Content } = await post.render();
 
-const dateFormatted = new Date(post.data.date).toLocaleDateString('en-US', {
+const formatDate = (value: Date) => new Date(value).toLocaleDateString('en-US', {
   year: 'numeric',
   month: 'long',
   day: 'numeric'
 });
+
+const dateFormatted = formatDate(post.data.date);
+const updatedFormatted = post.data.updatedDate ? formatDate(post.data.updatedDate) : null;
 
 // Pass raw title — Base.astro handles the suffix
 
@@ -46,6 +58,16 @@ const ogImagePath = `/og/${post.slug}.png`;
         {dateFormatted}
       </time>
       <span class="text-xs text-muted-foreground uppercase tracking-wider"> · {readingTime(post.body)} min read</span>
+      {updatedFormatted && (
+        <p class="text-xs text-muted-foreground uppercase tracking-wider mt-1">updated {updatedFormatted}</p>
+      )}
+      {(post.data.tags ?? []).length > 0 && (
+        <div class="flex flex-wrap gap-2 mt-4">
+          {post.data.tags.map((tag) => (
+            <a href={`/blog?tag=${encodeURIComponent(tag)}`} class="text-[10px] uppercase tracking-wider text-muted-foreground border border-border rounded-full px-2 py-0.5 hover:text-foreground hover:border-foreground transition-colors">{tag}</a>
+          ))}
+        </div>
+      )}
     </section>
 
     <!-- Content -->
@@ -53,8 +75,21 @@ const ogImagePath = `/og/${post.slug}.png`;
       <Content />
     </article>
 
+    {related.length > 0 && (
+      <section class="mt-16 pt-8 border-t border-foreground/10 fade-in">
+        <h2 class="text-xs text-muted-foreground uppercase tracking-wider mb-4">more on {primaryTag}</h2>
+        <ul class="space-y-3">
+          {related.map((r) => (
+            <li>
+              <a href={`/blog/${r.slug}`} class="text-sm underline hover:no-underline">{r.data.title}</a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
     <!-- Footer -->
-    <footer class="mt-16 pt-8 border-t border-foreground/10 fade-in">
+    <footer class="mt-12 fade-in">
       <a href="/blog" class="text-xs text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">← all posts</a>
     </footer>
   </main>

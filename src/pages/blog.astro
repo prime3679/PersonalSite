@@ -75,7 +75,7 @@ const allTags = [...tagCounts.entries()]
               {(post.data.tags ?? []).length > 0 && (
                 <div class="flex flex-wrap gap-2 mt-3">
                   {post.data.tags.map((tag) => (
-                    <span class="text-[10px] uppercase tracking-wider text-muted-foreground border border-border rounded-full px-2 py-0.5">{tag}</span>
+                    <a href={`/blog?tag=${encodeURIComponent(tag)}`} class="text-[10px] uppercase tracking-wider text-muted-foreground border border-border rounded-full px-2 py-0.5 hover:text-foreground hover:border-foreground transition-colors">{tag}</a>
                   ))}
                 </div>
               )}
@@ -120,23 +120,32 @@ const allTags = [...tagCounts.entries()]
     const posts = Array.from(document.querySelectorAll('.blog-post'));
     const noMatches = document.getElementById('no-matches');
 
+    function applyFilter(tag: string) {
+      let visible = 0;
+      chips.forEach((c) => c.setAttribute('aria-pressed', String(c.getAttribute('data-tag') === tag)));
+      posts.forEach((post) => {
+        const tags = (post.getAttribute('data-tags') || '').split(' ').filter(Boolean);
+        const show = tag === 'all' || tags.includes(tag);
+        post.classList.toggle('hidden', !show);
+        if (show) visible++;
+      });
+      if (noMatches) noMatches.classList.toggle('hidden', visible > 0);
+    }
+
     filterBar.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
       const btn = target.closest('[data-tag]') as HTMLElement | null;
       if (!btn) return;
-      const tag = btn.dataset.tag;
-
-      chips.forEach((c) => c.setAttribute('aria-pressed', String(c === btn)));
-
-      let visible = 0;
-      posts.forEach((post) => {
-        const tags = (post.getAttribute('data-tags') || '').split(' ').filter(Boolean);
-        const show = tag === 'all' || tags.includes(tag as string);
-        post.classList.toggle('hidden', !show);
-        if (show) visible++;
-      });
-
-      if (noMatches) noMatches.classList.toggle('hidden', visible > 0);
+      const tag = btn.getAttribute('data-tag') || 'all';
+      applyFilter(tag);
+      const url = tag === 'all' ? location.pathname : `${location.pathname}?tag=${encodeURIComponent(tag)}`;
+      history.replaceState(null, '', url);
     });
+
+    // Apply a filter passed via ?tag= (used by the clickable tag pills).
+    const initial = new URLSearchParams(location.search).get('tag');
+    if (initial && chips.some((c) => c.getAttribute('data-tag') === initial)) {
+      applyFilter(initial);
+    }
   }
 </script>

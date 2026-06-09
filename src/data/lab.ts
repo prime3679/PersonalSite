@@ -168,10 +168,10 @@ export const labProjects: LabProject[] = [
     ],
   },
   {
-    id: 'evelyns-world',
+    id: 'my-kids-world',
     category: 'toys',
-    title: "evelyn's world",
-    href: '/lab/evelyns-world/',
+    title: "my kid's world",
+    href: '/lab/my-kids-world/',
     dateline: 'built april 2026',
     badge: { label: 'new', tone: 'green' },
     description:
@@ -181,7 +181,7 @@ export const labProjects: LabProject[] = [
       { value: 'tap x2', label: 'sound then speech' },
       { value: '0 deps', label: 'pure html/js' },
     ],
-    links: [{ label: 'open app ↗', href: '/lab/evelyns-world/' }],
+    links: [{ label: 'open app ↗', href: '/lab/my-kids-world/' }],
   },
   {
     id: 'chaos-garden',
@@ -239,7 +239,7 @@ export const labProjects: LabProject[] = [
     dateline: 'started march 2026',
     badge: { label: 'active', tone: 'green' },
     description:
-      'sensory play app for toddlers. tap the screen — particles, sounds, and haptic feedback. 7 themed worlds, no accounts, no ads. built in a single sprint for evelyn.',
+      'sensory play app for toddlers. tap the screen — particles, sounds, and haptic feedback. 7 themed worlds, no accounts, no ads. built in a single sprint for my kid.',
     stats: [
       { value: '1 sprint', label: 'build time' },
       { value: 'ios', label: 'platform' },

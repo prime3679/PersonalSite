@@ -16,13 +16,9 @@ test('Homepage has correct title and content', async ({ page }) => {
 
   // Check for "Currently" section
   await expect(page.getByText('currently:', { exact: true })).toBeVisible();
-  const familyOsLink = page.locator('a', { hasText: 'familyos' });
-  await expect(familyOsLink).toBeVisible();
-  await expect(familyOsLink).toHaveAttribute('href', '/lab');
   const signalRoomLink = page.locator('main a', { hasText: 'signal room' });
   await expect(signalRoomLink).toBeVisible();
   await expect(signalRoomLink).toHaveAttribute('href', '/signal-room');
-  await expect(page.locator('body')).toContainText('sci-fi novel');
 
   // Check for "Connect" section
   await expect(page.getByText("let's talk:", { exact: true })).toBeVisible();

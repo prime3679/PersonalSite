@@ -88,7 +88,15 @@ test('header: theme toggle flips dark mode', async ({ page }) => {
   }
 });
 
-test('nav: unified header includes the /now link', async ({ page }) => {
+test('nav: header shows the home wordmark + tightened primary tabs', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('header a[href="/now"]').first()).toBeVisible();
+  // The name acts as the home link
+  await expect(page.locator('header a[href="/"]').first()).toBeVisible();
+  // Primary tabs are the visible desktop nav
+  for (const href of ['/about', '/blog', '/lab', '/contact']) {
+    await expect(page.locator(`header a[href="${href}"]`).first()).toBeVisible();
+  }
+  // Secondary items live in the footer, not the top bar
+  await expect(page.locator('footer a[href="/now"]')).toHaveCount(1);
+  await expect(page.locator('footer a[href="/signal-room"]')).toHaveCount(1);
 });

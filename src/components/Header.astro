@@ -1,49 +1,34 @@
 ---
-import { navItems } from '../data/nav';
+import { navItems, primaryNavItems } from '../data/nav';
 
 const pathname = Astro.url.pathname;
+const isActive = (href: string) =>
+  pathname === href || (href !== '/' && pathname.startsWith(href + '/'));
 ---
 
 <header class="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-colors">
   <div class="mx-auto flex max-w-2xl items-center justify-between px-6 py-3 text-sm">
-    <!-- Desktop nav -->
-    <nav class="hidden sm:flex gap-5 font-medium font-mono">
-      {navItems.map((item) => (
-        <a
-          href={item.href}
-          class:list={[
-            'transition-colors duration-200 uppercase tracking-wider text-xs',
-            pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
-              ? 'text-foreground'
-              : 'text-muted-foreground hover:text-foreground',
-          ]}
-        >
-          {item.label}
-        </a>
-      ))}
-    </nav>
+    <!-- Wordmark (home) -->
+    <a href="/" class="font-mono text-sm font-semibold lowercase tracking-tight hover:text-muted-foreground transition-colors">
+      adrian lumley
+    </a>
 
-    <!-- Mobile hamburger -->
-    <button
-      id="menu-toggle"
-      class="sm:hidden inline-flex items-center justify-center w-9 h-9 rounded text-foreground"
-      aria-label="Toggle menu"
-      aria-expanded="false"
-    >
-      <svg id="menu-open-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/>
-      </svg>
-      <svg id="menu-close-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
-      </svg>
-    </button>
+    <div class="flex items-center gap-4">
+      <!-- Desktop nav (tightened to primary tabs) -->
+      <nav class="hidden sm:flex gap-5 font-medium font-mono">
+        {primaryNavItems.map((item) => (
+          <a
+            href={item.href}
+            class:list={[
+              'transition-colors duration-200 uppercase tracking-wider text-xs',
+              isActive(item.href) ? 'text-foreground' : 'text-muted-foreground hover:text-foreground',
+            ]}
+          >
+            {item.label}
+          </a>
+        ))}
+      </nav>
 
-    <div class="flex items-center gap-3">
-      <div class="flex items-center gap-2 text-[10px] sm:text-xs text-muted-foreground font-mono tracking-wide uppercase">
-        <span>nyc</span>
-        <span aria-hidden="true" class="text-border">·</span>
-        <span id="nyc-clock" data-timezone="America/New_York">--:-- -- ET</span>
-      </div>
       <!-- Dark mode toggle -->
       <button
         id="theme-toggle"
@@ -60,19 +45,32 @@ const pathname = Astro.url.pathname;
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
         </svg>
       </button>
+
+      <!-- Mobile hamburger -->
+      <button
+        id="menu-toggle"
+        class="sm:hidden inline-flex items-center justify-center w-9 h-9 rounded text-foreground"
+        aria-label="Toggle menu"
+        aria-expanded="false"
+      >
+        <svg id="menu-open-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+        <svg id="menu-close-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
     </div>
   </div>
 
-  <!-- Mobile nav dropdown -->
+  <!-- Mobile nav dropdown (full list) -->
   <nav id="mobile-nav" class="hidden sm:hidden border-t border-border px-6 pb-4 pt-2 space-y-3 font-mono">
     {navItems.map((item) => (
       <a
         href={item.href}
         class:list={[
           'block text-sm uppercase tracking-wider py-1',
-          pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
-            ? 'text-foreground'
-            : 'text-muted-foreground',
+          isActive(item.href) ? 'text-foreground' : 'text-muted-foreground',
         ]}
       >
         {item.label}
@@ -114,24 +112,4 @@ const pathname = Astro.url.pathname;
     localStorage.setItem('theme', isDark ? 'light' : 'dark');
     updateIcons();
   });
-
-  const nycClock = document.getElementById('nyc-clock');
-
-  function updateClock() {
-    if (!nycClock) return;
-
-    const timezone = nycClock.getAttribute('data-timezone') || 'America/New_York';
-    const formatted = new Intl.DateTimeFormat('en-US', {
-      timeZone: timezone,
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-      timeZoneName: 'short',
-    }).format(new Date());
-
-    nycClock.textContent = formatted.replace(/\sGMT-?\d+/, ' ET');
-  }
-
-  updateClock();
-  window.setInterval(updateClock, 1000 * 30);
 </script>

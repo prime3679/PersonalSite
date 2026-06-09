@@ -1,17 +1,26 @@
 export interface NavItem {
   href: string;
   label: string;
+  /**
+   * Shown as a top-level tab in the header. Non-primary items are reachable
+   * from the footer (and the mobile menu) but kept out of the desktop tab bar
+   * to keep it tight. Home is the wordmark, so it is not a primary tab.
+   */
+  primary?: boolean;
 }
 
-// Single source of truth for primary navigation.
-// Used by both the header (Header.astro) and the footer (Base.astro)
-// so the two can never drift out of sync.
+// Single source of truth for navigation.
+// The footer and mobile menu render the full list; the header renders only
+// `primaryNavItems` as tabs (with the name acting as the home link).
 export const navItems: NavItem[] = [
   { href: '/', label: 'home' },
-  { href: '/about', label: 'about' },
+  { href: '/about', label: 'about', primary: true },
   { href: '/now', label: 'now' },
-  { href: '/blog', label: 'blog' },
+  { href: '/blog', label: 'blog', primary: true },
   { href: '/signal-room', label: 'signal room' },
-  { href: '/lab', label: 'lab' },
-  { href: '/contact', label: 'contact' },
+  { href: '/lab', label: 'lab', primary: true },
+  { href: '/contact', label: 'contact', primary: true },
 ];
+
+// Tightened set of top-level header tabs (home lives in the wordmark).
+export const primaryNavItems = navItems.filter((item) => item.primary);

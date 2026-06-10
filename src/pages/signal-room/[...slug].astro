@@ -37,6 +37,7 @@ const pageTitle = `${episode.data.title} — signal room`;
 <Base
   title={pageTitle}
   description={episode.data.teaser}
+  ogImage={`/og/signal-room/${episode.slug}.png`}
   article={{
     headline: `signal room ${pad(episode.data.episode)} · ${episode.data.title}`,
     description: episode.data.teaser,

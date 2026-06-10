@@ -10,6 +10,10 @@ let fontData: Buffer | null = null;
 
 function getFont(): Buffer {
   if (!fontData) {
+    // Read from source at build time. This is a static build (CWD = project
+    // root, src/ present, OG PNGs generated ahead of time), so cwd-relative is
+    // reliable here. `new URL(..., import.meta.url)` does NOT work: it resolves
+    // to the bundled dist/ location where the font isn't copied.
     fontData = fs.readFileSync(
       path.join(process.cwd(), 'src/lib/fonts/JetBrainsMono-Regular.ttf'),
     );

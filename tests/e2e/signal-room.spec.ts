@@ -34,8 +34,10 @@ test('signal room: the index shows a date for each episode', async ({ page }) =>
 
 test('signal room: an episode has a per-episode OG card that is served', async ({ page }) => {
   await page.goto('/signal-room/the-purchasing-agent');
-  const og = await page.locator('meta[property="og:image"]').getAttribute('content');
-  expect(og).toContain('/og/signal-room/the-purchasing-agent.png');
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+    'content',
+    /\/og\/signal-room\/the-purchasing-agent\.png$/,
+  );
 
   // The generated PNG is actually built and served (relative path → preview server)
   const img = await page.request.get('/og/signal-room/the-purchasing-agent.png');

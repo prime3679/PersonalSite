@@ -32,6 +32,17 @@ test('signal room: the index shows a date for each episode', async ({ page }) =>
   await expect(page.locator('main')).toContainText('May 18, 2026');
 });
 
+test('signal room: an episode has a per-episode OG card that is served', async ({ page }) => {
+  await page.goto('/signal-room/the-purchasing-agent');
+  const og = await page.locator('meta[property="og:image"]').getAttribute('content');
+  expect(og).toContain('/og/signal-room/the-purchasing-agent.png');
+
+  // The generated PNG is actually built and served (relative path → preview server)
+  const img = await page.request.get('/og/signal-room/the-purchasing-agent.png');
+  expect(img.status()).toBe(200);
+  expect(img.headers()['content-type']).toContain('image/png');
+});
+
 test('signal room: episodes appear in the rss feed', async ({ page }) => {
   const resp = await page.request.get('/rss.xml');
   expect(resp.status()).toBe(200);

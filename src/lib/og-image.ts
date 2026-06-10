@@ -1,36 +1,28 @@
 import satori from 'satori';
 import sharp from 'sharp';
 import fs from 'node:fs';
+import path from 'node:path';
 
-let fontData: ArrayBuffer | null = null;
+// Self-hosted JetBrains Mono (the site's font), read at build time. Using a
+// local TTF keeps the OG cards on-brand and removes the build-time Google Fonts
+// fetch. Satori needs TTF/OTF/WOFF — not the WOFF2 the browser uses.
+let fontData: Buffer | null = null;
 
-async function getFont(): Promise<ArrayBuffer> {
-  if (fontData) return fontData;
-
-  // Try local system font first (Courier on macOS)
-  const systemFont = '/System/Library/Fonts/Courier.dfont';
-  const monoFont = '/System/Library/Fonts/Supplemental/Courier New.ttf';
-
-  if (fs.existsSync(monoFont)) {
-    fontData = fs.readFileSync(monoFont).buffer as ArrayBuffer;
-    return fontData;
+function getFont(): Buffer {
+  if (!fontData) {
+    // Read from source at build time. This is a static build (CWD = project
+    // root, src/ present, OG PNGs generated ahead of time), so cwd-relative is
+    // reliable here. `new URL(..., import.meta.url)` does NOT work: it resolves
+    // to the bundled dist/ location where the font isn't copied.
+    fontData = fs.readFileSync(
+      path.join(process.cwd(), 'src/lib/fonts/JetBrainsMono-Regular.ttf'),
+    );
   }
-
-  // Fallback: fetch Inter from Google Fonts
-  const res = await fetch(
-    'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap',
-    { headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)' } },
-  );
-  const css = await res.text();
-  const fontUrl = css.match(/src: url\(([^)]+)\)/)?.[1];
-  if (!fontUrl) throw new Error('Could not find font URL');
-  const fontRes = await fetch(fontUrl);
-  fontData = await fontRes.arrayBuffer();
   return fontData;
 }
 
 export async function generateOgImage(title: string, subtitle: string): Promise<Buffer> {
-  const font = await getFont();
+  const font = getFont();
 
   const svg = await satori(
     {
@@ -44,6 +36,7 @@ export async function generateOgImage(title: string, subtitle: string): Promise<
           height: '100%',
           backgroundColor: '#0a0a0a',
           padding: '80px',
+          fontFamily: 'JetBrains Mono',
         },
         children: [
           {
@@ -104,7 +97,7 @@ export async function generateOgImage(title: string, subtitle: string): Promise<
       height: 630,
       fonts: [
         {
-          name: 'Mono',
+          name: 'JetBrains Mono',
           data: font,
           weight: 400,
           style: 'normal' as const,

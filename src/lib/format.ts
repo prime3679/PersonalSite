@@ -20,6 +20,10 @@ export const formatMonthYear = (d: Date): string =>
 /** Episode numbers render as two digits everywhere: 3 → "03". */
 export const padEpisode = (n: number): string => String(n).padStart(2, '0');
 
+/** Composite episode title — the RSS feed and JSON-LD must agree on it. */
+export const episodeTitle = (episode: number, title: string): string =>
+  `signal room ${padEpisode(episode)} · ${title}`;
+
 /** "jun 2026" snapshot label for lab stats; '—' for missing/invalid input. */
 export const snapshotLabel = (iso: string | undefined | null): string => {
   if (!iso) return '—';

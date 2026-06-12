@@ -1,8 +1,8 @@
 ---
 import Base from '../../layouts/Base.astro';
 import type { CollectionEntry } from 'astro:content';
-import { getEpisodes, episodePath } from '../../lib/content';
-import { formatLongDate, padEpisode } from '../../lib/format';
+import { getEpisodes, episodePath, episodeOgPath } from '../../lib/content';
+import { episodeTitle, formatLongDate, padEpisode } from '../../lib/format';
 
 export async function getStaticPaths() {
   const episodes = await getEpisodes('asc');
@@ -32,9 +32,9 @@ const pageTitle = `${episode.data.title} — signal room`;
 <Base
   title={pageTitle}
   description={episode.data.teaser}
-  ogImage={`/og/signal-room/${episode.slug}.png`}
+  ogImage={episodeOgPath(episode.slug)}
   article={{
-    headline: `signal room ${padEpisode(episode.data.episode)} · ${episode.data.title}`,
+    headline: episodeTitle(episode.data.episode, episode.data.title),
     description: episode.data.teaser,
     datePublished: episode.data.date.toISOString(),
     url: Astro.url.href,

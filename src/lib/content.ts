@@ -8,8 +8,9 @@ import { getCollection } from 'astro:content';
 
 /** Blog posts with `published: false` filtered out, newest first. */
 export async function getPublishedPosts() {
+  // blogSchema defaults `published` to true, so this is a plain boolean read.
   return (await getCollection('blog'))
-    .filter((post) => post.data.published !== false)
+    .filter((post) => post.data.published)
     .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 }
 
@@ -29,3 +30,7 @@ export async function getEpisodes(order: 'asc' | 'desc' = 'desc') {
  */
 export const postPath = (slug: string) => `/blog/${slug}`;
 export const episodePath = (slug: string) => `/signal-room/${slug}/`;
+
+/** Generated OG-card routes (must mirror the endpoints under src/pages/og/). */
+export const postOgPath = (slug: string) => `/og/${slug}.png`;
+export const episodeOgPath = (slug: string) => `/og/signal-room/${slug}.png`;

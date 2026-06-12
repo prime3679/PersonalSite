@@ -109,12 +109,19 @@ test('a11y: skip link jumps focus to main content', async ({ page }) => {
   await expect(skipLink).toBeVisible(); // un-hides itself on focus
   await skipLink.press('Enter');
   await expect(page).toHaveURL(/#main$/);
+  // main carries tabindex="-1" so activation moves real focus, not just scroll.
+  await expect(page.locator('main#main')).toBeFocused();
 });
 
 test('a11y: active header tab carries aria-current="page"', async ({ page }) => {
   await page.goto('/blog');
   await expect(page.locator('header nav a[href="/blog"]').first()).toHaveAttribute('aria-current', 'page');
   await expect(page.locator('header nav a[href="/about"]').first()).not.toHaveAttribute('aria-current', 'page');
+
+  // aria-current means "this exact page" — a child route must not claim it,
+  // even though the tab stays visually highlighted for the section.
+  await page.goto('/blog/meeting-cost');
+  await expect(page.locator('header nav a[href="/blog"]').first()).not.toHaveAttribute('aria-current', 'page');
 });
 
 test('post: prev/next navigation walks the archive in date order', async ({ page }) => {

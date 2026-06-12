@@ -18,8 +18,10 @@ interface Props {
   description?: string;
   ogImage?: string;
   article?: ArticleData;
-  /** Overrides the standard centered-column <main> classes (e.g. /work, /90-day-os). */
+  /** Replaces the standard centered-column <main> classes (e.g. /work, /90-day-os). */
   mainClass?: string;
+  /** Adds classes on top of the standard column without restating it (e.g. space-y-16). */
+  extraMainClass?: string;
 }
 
 const {
@@ -28,6 +30,7 @@ const {
   ogImage: ogImageOverride,
   article,
   mainClass = 'mx-auto max-w-2xl px-6 py-12 font-mono',
+  extraMainClass,
 } = Astro.props;
 const fullTitle = title === siteMetadata.title ? title : `${title} — ${siteMetadata.title}`;
 
@@ -125,7 +128,9 @@ const structuredData: Record<string, unknown> = {
     class="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 focus:rounded-lg focus:border focus:border-foreground focus:bg-background focus:px-4 focus:py-2 font-mono text-sm"
   >skip to content</a>
   <Header />
-  <main id="main" class={mainClass}>
+  <!-- tabindex=-1 so the skip link moves real keyboard focus (Safari doesn't
+       focus fragment targets otherwise); scroll-mt clears the sticky header. -->
+  <main id="main" tabindex="-1" class:list={[mainClass, extraMainClass, 'scroll-mt-20 focus:outline-none']}>
     <slot />
   </main>
   <footer class="border-t border-border mt-16 py-8 font-mono">

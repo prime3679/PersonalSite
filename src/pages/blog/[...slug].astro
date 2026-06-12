@@ -1,7 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { readingTime } from '../../lib/readingTime';
-import { getPublishedPosts, postPath } from '../../lib/content';
+import { getPublishedPosts, postPath, postOgPath } from '../../lib/content';
 import { formatLongDate } from '../../lib/format';
 
 export async function getStaticPaths() {
@@ -9,10 +9,10 @@ export async function getStaticPaths() {
 
   return published.map((post, i) => {
     const primaryTag = (post.data.tags ?? [])[0] ?? null;
+    // published is already newest-first; filter preserves that order.
     const related = primaryTag
       ? published
           .filter(p => p.slug !== post.slug && (p.data.tags ?? []).includes(primaryTag))
-          .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
           .slice(0, 3)
       : [];
     return {
@@ -44,11 +44,11 @@ const articleData = {
   url: new URL(postPath(post.slug), Astro.site).href,
 };
 
-const ogImagePath = `/og/${post.slug}.png`;
+const ogImagePath = postOgPath(post.slug);
 ---
 
 <Base title={post.data.title} description={post.data.description} article={articleData} ogImage={ogImagePath}>
-  <!-- Header -->
+  <!-- Intro -->
   <section class="mb-10 fade-in">
     <a href="/blog" class="text-xs text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">← blog</a>
     <h1 class="text-2xl font-normal mt-4 mb-3 leading-relaxed">{post.data.title}</h1>

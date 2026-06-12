@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
 import { siteMetadata } from '../data/siteMetadata';
 import { getEpisodes, getPublishedPosts, episodePath, postPath } from '../lib/content';
-import { padEpisode } from '../lib/format';
+import { episodeTitle } from '../lib/format';
 
 const escapeXml = (value: string): string =>
   value
@@ -29,7 +29,7 @@ export const GET: APIRoute = async (context) => {
   }));
 
   const episodes = (await getEpisodes()).map((ep): FeedItem => ({
-    title: `signal room ${padEpisode(ep.data.episode)} · ${ep.data.title}`,
+    title: episodeTitle(ep.data.episode, ep.data.title),
     url: `${site}${episodePath(ep.slug)}`,
     date: ep.data.date,
     description: ep.data.teaser,

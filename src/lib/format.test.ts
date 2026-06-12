@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatLongDate, formatMonthYear, padEpisode, snapshotLabel } from './format';
+import { episodeTitle, formatLongDate, formatMonthYear, padEpisode, snapshotLabel } from './format';
 
 describe('formatLongDate', () => {
   it('formats a date-only value without shifting the day', () => {
@@ -25,6 +25,12 @@ describe('padEpisode', () => {
 
   it('leaves two-digit numbers alone', () => {
     expect(padEpisode(12)).toBe('12');
+  });
+});
+
+describe('episodeTitle', () => {
+  it('builds the composite title shared by RSS and JSON-LD', () => {
+    expect(episodeTitle(5, 'night shift')).toBe('signal room 05 · night shift');
   });
 });
 

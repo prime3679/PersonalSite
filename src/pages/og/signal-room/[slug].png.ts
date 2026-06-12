@@ -1,5 +1,5 @@
 import type { APIRoute, GetStaticPaths } from 'astro';
-import { generateOgImage } from '../../../lib/og-image';
+import { generateOgImage, pngResponse } from '../../../lib/og-image';
 import { getEpisodes } from '../../../lib/content';
 import { formatLongDate, padEpisode } from '../../../lib/format';
 
@@ -17,7 +17,5 @@ export const GET: APIRoute<{ title: string; subtitle: string }> = async ({ props
   const { title, subtitle } = props;
   const png = await generateOgImage(title, subtitle);
 
-  return new Response(png, {
-    headers: { 'Content-Type': 'image/png' },
-  });
+  return pngResponse(png);
 };

@@ -108,3 +108,10 @@ export async function generateOgImage(title: string, subtitle: string): Promise<
 
   return await sharp(Buffer.from(svg)).png().toBuffer();
 }
+
+/** The response shape shared by every OG endpoint under src/pages/og/. */
+export function pngResponse(png: Buffer): Response {
+  return new Response(png, {
+    headers: { 'Content-Type': 'image/png' },
+  });
+}

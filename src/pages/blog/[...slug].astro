@@ -7,7 +7,7 @@ import { formatLongDate } from '../../lib/format';
 export async function getStaticPaths() {
   const published = await getPublishedPosts();
 
-  return published.map(post => {
+  return published.map((post, i) => {
     const primaryTag = (post.data.tags ?? [])[0] ?? null;
     const related = primaryTag
       ? published
@@ -17,12 +17,19 @@ export async function getStaticPaths() {
       : [];
     return {
       params: { slug: post.slug },
-      props: { post, related, primaryTag },
+      props: {
+        post,
+        related,
+        primaryTag,
+        // published is newest-first, so i+1 is back in time.
+        older: published[i + 1] ?? null,
+        newer: published[i - 1] ?? null,
+      },
     };
   });
 }
 
-const { post, related, primaryTag } = Astro.props;
+const { post, related, primaryTag, older, newer } = Astro.props;
 const { Content } = await post.render();
 
 const dateFormatted = formatLongDate(post.data.date);
@@ -80,7 +87,17 @@ const ogImagePath = `/og/${post.slug}.png`;
   )}
 
   <!-- Footer -->
-  <footer class="mt-12 fade-in">
-    <a href="/blog" class="text-xs text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">← all posts</a>
+  <footer class="mt-12 pt-8 border-t border-foreground/10 fade-in space-y-6">
+    {(older || newer) && (
+      <nav class="flex justify-between gap-6 text-sm" aria-label="Post navigation">
+        {older ? (
+          <a href={postPath(older.slug)} class="underline hover:no-underline text-muted-foreground hover:text-foreground transition-colors">← {older.data.title}</a>
+        ) : <span />}
+        {newer ? (
+          <a href={postPath(newer.slug)} class="underline hover:no-underline text-muted-foreground hover:text-foreground transition-colors text-right">{newer.data.title} →</a>
+        ) : <span />}
+      </nav>
+    )}
+    <a href="/blog" class="block text-xs text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">← all posts</a>
   </footer>
 </Base>

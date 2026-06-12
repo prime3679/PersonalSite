@@ -42,3 +42,17 @@ test('mobile: lab category filter works on a touch viewport', async ({ page }) =
   await expect(page.locator('#chaos-garden')).toBeVisible(); // toy
   await expect(page.locator('#bishop')).toBeHidden();         // agent
 });
+
+test('mobile: Escape closes the open menu and restores focus to the toggle', async ({ page }) => {
+  await page.goto('/');
+  const toggle = page.locator('#menu-toggle');
+  const mobileNav = page.locator('#mobile-nav');
+
+  await toggle.click();
+  await expect(mobileNav).toBeVisible();
+
+  await page.keyboard.press('Escape');
+  await expect(mobileNav).toBeHidden();
+  await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  await expect(toggle).toBeFocused();
+});

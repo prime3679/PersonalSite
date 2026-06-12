@@ -100,3 +100,34 @@ test('nav: header shows the home wordmark + tightened primary tabs', async ({ pa
   await expect(page.locator('footer a[href="/now"]')).toHaveCount(1);
   await expect(page.locator('footer a[href="/signal-room"]')).toHaveCount(1);
 });
+
+test('a11y: skip link jumps focus to main content', async ({ page }) => {
+  await page.goto('/');
+  await page.keyboard.press('Tab'); // first tabbable element is the skip link
+  const skipLink = page.locator('a[href="#main"]');
+  await expect(skipLink).toBeFocused();
+  await expect(skipLink).toBeVisible(); // un-hides itself on focus
+  await skipLink.press('Enter');
+  await expect(page).toHaveURL(/#main$/);
+});
+
+test('a11y: active header tab carries aria-current="page"', async ({ page }) => {
+  await page.goto('/blog');
+  await expect(page.locator('header nav a[href="/blog"]').first()).toHaveAttribute('aria-current', 'page');
+  await expect(page.locator('header nav a[href="/about"]').first()).not.toHaveAttribute('aria-current', 'page');
+});
+
+test('post: prev/next navigation walks the archive in date order', async ({ page }) => {
+  await page.goto('/blog');
+  // Newest post has no "newer" link; it links back in time only.
+  const newestHref = await page.locator('#post-list article a').first().getAttribute('href');
+  await page.goto(newestHref!);
+  const postNav = page.locator('main footer nav[aria-label="Post navigation"]');
+  await expect(postNav).toBeVisible();
+  const olderLink = postNav.locator('a').first();
+  const olderHref = await olderLink.getAttribute('href');
+  await olderLink.click();
+  await expect(page).toHaveURL(new RegExp(`${olderHref}/?$`));
+  // From the older post, the right-hand link leads back to the newest.
+  await expect(postNav.locator(`a[href="${newestHref}"]`)).toBeVisible();
+});

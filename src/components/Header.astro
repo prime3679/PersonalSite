@@ -19,6 +19,7 @@ const isActive = (href: string) =>
         {primaryNavItems.map((item) => (
           <a
             href={item.href}
+            aria-current={isActive(item.href) ? 'page' : undefined}
             class:list={[
               'transition-colors duration-200 uppercase tracking-wider text-xs',
               isActive(item.href) ? 'text-foreground' : 'text-muted-foreground hover:text-foreground',
@@ -68,6 +69,7 @@ const isActive = (href: string) =>
     {navItems.map((item) => (
       <a
         href={item.href}
+        aria-current={isActive(item.href) ? 'page' : undefined}
         class:list={[
           'block text-sm uppercase tracking-wider py-1',
           isActive(item.href) ? 'text-foreground' : 'text-muted-foreground',
@@ -86,12 +88,23 @@ const isActive = (href: string) =>
   const openIcon = document.getElementById('menu-open-icon');
   const closeIcon = document.getElementById('menu-close-icon');
 
+  function setMenuOpen(open: boolean) {
+    menuToggle?.setAttribute('aria-expanded', String(open));
+    mobileNav?.classList.toggle('hidden', !open);
+    openIcon?.classList.toggle('hidden', open);
+    closeIcon?.classList.toggle('hidden', !open);
+  }
+
   menuToggle?.addEventListener('click', () => {
-    const expanded = menuToggle.getAttribute('aria-expanded') === 'true';
-    menuToggle.setAttribute('aria-expanded', String(!expanded));
-    mobileNav?.classList.toggle('hidden');
-    openIcon?.classList.toggle('hidden');
-    closeIcon?.classList.toggle('hidden');
+    setMenuOpen(menuToggle.getAttribute('aria-expanded') !== 'true');
+  });
+
+  // Escape closes the menu and hands focus back to the toggle.
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && menuToggle?.getAttribute('aria-expanded') === 'true') {
+      setMenuOpen(false);
+      menuToggle.focus();
+    }
   });
 
   // Theme toggle

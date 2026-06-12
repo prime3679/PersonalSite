@@ -84,7 +84,7 @@ const structuredData: Record<string, unknown> = {
   <meta charset="UTF-8" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cloud.umami.is; connect-src 'self' https://cloud.umami.is; style-src 'self' 'unsafe-inline'; form-action 'self' https://formspree.io; object-src 'none'; base-uri 'self'; upgrade-insecure-requests;">
   <meta name="referrer" content="strict-origin-when-cross-origin" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{fullTitle}</title>
   <meta name="description" content={description} />
   <meta property="og:title" content={fullTitle} />
@@ -120,14 +120,18 @@ const structuredData: Record<string, unknown> = {
   <script defer src="https://cloud.umami.is/script.js" data-website-id="aa267d21-11bc-40c3-a359-974f47e24791"></script>
 </head>
 <body class="min-h-screen">
+  <a
+    href="#main"
+    class="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 focus:rounded-lg focus:border focus:border-foreground focus:bg-background focus:px-4 focus:py-2 font-mono text-sm"
+  >skip to content</a>
   <Header />
-  <main class={mainClass}>
+  <main id="main" class={mainClass}>
     <slot />
   </main>
   <footer class="border-t border-border mt-16 py-8 font-mono">
     <div class="mx-auto max-w-2xl px-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-muted-foreground">
       <span>adrian lumley · nyc</span>
-      <nav class="flex flex-wrap gap-x-5 gap-y-2">
+      <nav class="flex flex-wrap gap-x-5 gap-y-2" aria-label="Footer">
         {navItems.map((item) => (
           <a href={item.href} class="hover:text-foreground transition-colors">{item.label}</a>
         ))}

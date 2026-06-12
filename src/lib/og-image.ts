@@ -111,7 +111,8 @@ export async function generateOgImage(title: string, subtitle: string): Promise<
 
 /** The response shape shared by every OG endpoint under src/pages/og/. */
 export function pngResponse(png: Buffer): Response {
-  return new Response(png, {
+  // Re-wrap as a plain Uint8Array: Node's Buffer isn't a DOM BodyInit type.
+  return new Response(new Uint8Array(png), {
     headers: { 'Content-Type': 'image/png' },
   });
 }

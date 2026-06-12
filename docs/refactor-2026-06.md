@@ -25,8 +25,20 @@ Branch: `claude/refactor-architecture-ux-ox3l1u`
 - [x] **Step 2 — Shared content + format lib**: `src/lib/format.ts` (long date, episode padding) and `src/lib/content.ts` (published posts, sorted episodes, canonical URLs); dedupe blog/signal-room/RSS/OG/lab call sites; fix the hardcoded domain. Unit tests for both libs.
 - [x] **Step 3 — UX / accessibility pass**: allow pinch-zoom (drop `maximum-scale`), skip-to-content link, `aria-current="page"` on active nav links, Escape closes the mobile menu, prev/next links on blog posts.
 - [x] **Step 4 — Final review**: full test matrix, code review of the cumulative diff, close out this log.
+- [x] **Step 5 — Type gate + last UX nicety**: `astro check` wired into scripts and CI (caught two latent type errors); tap-outside closes the mobile menu.
 
 ## Step log
+
+- **Step 5** — Type-checking is now part of the gate: `@astrojs/check` + `typescript` in devDependencies, `npm run check` script, and a CI step before the unit tests. The first run surfaced two latent errors nothing else caught — `vitest.config.ts` used the pre-Vitest-4 `vitest` types reference (now `vitest/config`), and `pngResponse` passed a Node `Buffer` where the DOM `BodyInit` type is expected (runtime-fine, now wrapped in `Uint8Array`) — plus two `is:inline` hints in `Base.astro`, all fixed; `astro check` reports 0/0/0. UX: tapping outside the header now closes the open mobile menu (Escape already did), with a mobile e2e test. Verified: check, build, 25 unit tests, 81 Playwright tests green.
+
+## Verdict
+
+The goal — refactor until happy with the architecture and the user experience — is met:
+- **Architecture:** one owner per concern (Base = page shell, `lib/content` = queries + routes, `lib/format` = display, `data/nav` = navigation); zero duplicated date/URL/collection logic in pages; dead code gone; types, units, and e2e all gated in CI.
+- **UX:** pinch-zoom restored, skip link with real focus management, exact `aria-current`, Escape/outside-tap menu handling, prev/next on both content types, dates consistent (UTC) everywhere, RSS GUIDs untouched.
+- Deliberately left alone: the blog/lab filter scripts (similar shape, genuinely different behavior — a shared abstraction would be bigger than both), lab filter URL sync (no inbound category links exist), and the root-level legacy artifacts (`audit-report.md`, `verification_lab.png`, `archive/`) which predate this branch.
+
+Ready to merge.
 
 - **Step 0** — Baseline green: 17 unit tests, 38 Playwright tests (chromium + mobile-chrome). Note: 7 webkit tests fail *in this sandbox on the unmodified baseline too* (headless-webkit visibility quirks in the container); they pass in CI, so chromium/firefox/mobile-chrome are the local gate and CI remains the webkit gate.
 - **Step 4** — Adversarial review of the cumulative branch diff (7 independent review angles), then fixes for everything that survived verification:

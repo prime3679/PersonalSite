@@ -56,3 +56,16 @@ test('mobile: Escape closes the open menu and restores focus to the toggle', asy
   await expect(toggle).toHaveAttribute('aria-expanded', 'false');
   await expect(toggle).toBeFocused();
 });
+
+test('mobile: tapping outside the open menu closes it', async ({ page }) => {
+  await page.goto('/');
+  const toggle = page.locator('#menu-toggle');
+  const mobileNav = page.locator('#mobile-nav');
+
+  await toggle.click();
+  await expect(mobileNav).toBeVisible();
+
+  await page.locator('main h1').click(); // anywhere outside the header
+  await expect(mobileNav).toBeHidden();
+  await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+});

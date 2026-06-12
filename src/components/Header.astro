@@ -111,6 +111,18 @@ const isCurrentPage = (href: string) => pathname === href || pathname === href +
     }
   });
 
+  // Tapping outside the header closes the open menu.
+  const header = menuToggle?.closest('header');
+  document.addEventListener('click', (e) => {
+    if (
+      menuToggle?.getAttribute('aria-expanded') === 'true' &&
+      e.target instanceof Node &&
+      !header?.contains(e.target)
+    ) {
+      setMenuOpen(false);
+    }
+  });
+
   // Theme toggle
   const themeToggle = document.getElementById('theme-toggle');
   const sunIcon = document.getElementById('sun-icon');

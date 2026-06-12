@@ -97,7 +97,6 @@ test('nav: header shows the home wordmark + tightened primary tabs', async ({ pa
     await expect(page.locator(`header a[href="${href}"]`).first()).toBeVisible();
   }
   // Secondary items live in the footer, not the top bar
-  await expect(page.locator('footer a[href="/now"]')).toHaveCount(1);
   await expect(page.locator('footer a[href="/signal-room"]')).toHaveCount(1);
 });
 

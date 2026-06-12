@@ -15,7 +15,7 @@ Adrian Lumley's personal site. Live at https://adrianlumley.co. GitHub Pages, de
 - `src/lib/content.ts` — canonical collection queries (`getPublishedPosts`, `getEpisodes`) and route paths (`postPath`, `episodePath`, OG variants). The trailing-slash shapes are RSS GUIDs — don't "normalize" them.
 - `src/lib/format.ts` — shared display formatting (dates pinned to UTC, episode padding/titles). Don't hand-roll `toLocaleDateString` in pages.
 - `src/data/nav.ts` — single source of truth for nav (header tabs + footer + mobile menu)
-- `src/data/now.ts` — "currently"/"now" content (home and /now both read it)
+- `src/data/now.ts` — homepage "currently" content
 - `src/data/lab.ts` — every /lab project card (one entry per build)
 - `src/data/siteMetadata.ts` — title, description, social links
 - `src/content/blog/` — blog posts (Markdown content collection)
@@ -25,7 +25,7 @@ Adrian Lumley's personal site. Live at https://adrianlumley.co. GitHub Pages, de
 
 ## Live Pages
 - `/` — intro, "currently", and contact links
-- `/about`, `/now` — bio and current focus
+- `/about` — bio
 - `/blog` — blog index (+ `/rss.xml` combined writing feed) → `/blog/<slug>` per post
 - `/signal-room` — fiction serial index → `/signal-room/<slug>` per episode
 - `/lab` — lab projects (one card per build, from `src/data/lab.ts`)
@@ -35,7 +35,7 @@ Adrian Lumley's personal site. Live at https://adrianlumley.co. GitHub Pages, de
 ## Nav
 Defined once in `src/data/nav.ts` — items flagged `primary` are the header tabs; the footer and mobile menu render the full list. Don't hardcode nav links.
 - **Header tabs:** `adrian lumley` wordmark (home) · About · Blog · Lab · Contact
-- **Footer / mobile menu also include:** Now · Signal Room
+- **Footer / mobile menu also include:** Signal Room
 Other pages stay out of nav but remain reachable by URL — don't delete them.
 
 ## Rules

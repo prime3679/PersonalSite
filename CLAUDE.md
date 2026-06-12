@@ -10,10 +10,12 @@ Adrian Lumley's personal site. Live at https://adrianlumley.co. GitHub Pages, de
 
 ## Key Files
 - `src/pages/` — all pages (index.astro, blog/, signal-room/, lab.astro, 404.astro, rss.xml.ts)
-- `src/layouts/Base.astro` — wraps every page (head, footer, structured data, OG tags)
+- `src/layouts/Base.astro` — owns the whole page shell: head/OG/structured data, skip link, `<Header />`, the `<main>` wrapper (standard centered column; `mainClass` replaces it, `extraMainClass` adds to it), and the footer. **Pages render content only — never add `<Header />` or `<main>` inside a page.**
 - `src/components/Header.astro` — sticky top bar: "adrian lumley" wordmark (home) + theme toggle
+- `src/lib/content.ts` — canonical collection queries (`getPublishedPosts`, `getEpisodes`) and route paths (`postPath`, `episodePath`, OG variants). The trailing-slash shapes are RSS GUIDs — don't "normalize" them.
+- `src/lib/format.ts` — shared display formatting (dates pinned to UTC, episode padding/titles). Don't hand-roll `toLocaleDateString` in pages.
 - `src/data/nav.ts` — single source of truth for nav (header tabs + footer + mobile menu)
-- `src/data/now.ts` — "currently"/"now" content (home and /now both read it)
+- `src/data/now.ts` — homepage "currently" content
 - `src/data/lab.ts` — every /lab project card (one entry per build)
 - `src/data/siteMetadata.ts` — title, description, social links
 - `src/content/blog/` — blog posts (Markdown content collection)
@@ -23,7 +25,7 @@ Adrian Lumley's personal site. Live at https://adrianlumley.co. GitHub Pages, de
 
 ## Live Pages
 - `/` — intro, "currently", and contact links
-- `/about`, `/now` — bio and current focus
+- `/about` — bio
 - `/blog` — blog index (+ `/rss.xml` combined writing feed) → `/blog/<slug>` per post
 - `/signal-room` — fiction serial index → `/signal-room/<slug>` per episode
 - `/lab` — lab projects (one card per build, from `src/data/lab.ts`)
@@ -33,7 +35,7 @@ Adrian Lumley's personal site. Live at https://adrianlumley.co. GitHub Pages, de
 ## Nav
 Defined once in `src/data/nav.ts` — items flagged `primary` are the header tabs; the footer and mobile menu render the full list. Don't hardcode nav links.
 - **Header tabs:** `adrian lumley` wordmark (home) · About · Blog · Lab · Contact
-- **Footer / mobile menu also include:** Now · Signal Room
+- **Footer / mobile menu also include:** Signal Room
 Other pages stay out of nav but remain reachable by URL — don't delete them.
 
 ## Rules
@@ -69,8 +71,8 @@ Content here...
 ```markdown
 ---
 title: "episode title"
-episode: 5
-date: YYYY-MM-DD          # weekly (Monday) cadence; drives order, RSS, and the shown date
+episode: 5                # drives site order (index, prev/next, "latest signal")
+date: YYYY-MM-DD          # weekly (Monday) cadence; drives RSS order and the shown date
 teaser: "one-line hook shown on the index"
 badges: ["episode 05", "episode title"]
 ---

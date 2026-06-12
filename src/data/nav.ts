@@ -15,7 +15,6 @@ export interface NavItem {
 export const navItems: NavItem[] = [
   { href: '/', label: 'home' },
   { href: '/about', label: 'about', primary: true },
-  { href: '/now', label: 'now' },
   { href: '/blog', label: 'blog', primary: true },
   { href: '/signal-room', label: 'signal room' },
   { href: '/lab', label: 'lab', primary: true },

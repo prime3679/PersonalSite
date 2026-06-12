@@ -2,8 +2,11 @@
 import { navItems, primaryNavItems } from '../data/nav';
 
 const pathname = Astro.url.pathname;
+// Highlight covers the whole section (/blog/* lights up the blog tab)…
 const isActive = (href: string) =>
   pathname === href || (href !== '/' && pathname.startsWith(href + '/'));
+// …but aria-current="page" is reserved for the exact page (ARIA semantics).
+const isCurrentPage = (href: string) => pathname === href || pathname === href + '/';
 ---
 
 <header class="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-colors">
@@ -19,6 +22,7 @@ const isActive = (href: string) =>
         {primaryNavItems.map((item) => (
           <a
             href={item.href}
+            aria-current={isCurrentPage(item.href) ? 'page' : undefined}
             class:list={[
               'transition-colors duration-200 uppercase tracking-wider text-xs',
               isActive(item.href) ? 'text-foreground' : 'text-muted-foreground hover:text-foreground',
@@ -68,6 +72,7 @@ const isActive = (href: string) =>
     {navItems.map((item) => (
       <a
         href={item.href}
+        aria-current={isCurrentPage(item.href) ? 'page' : undefined}
         class:list={[
           'block text-sm uppercase tracking-wider py-1',
           isActive(item.href) ? 'text-foreground' : 'text-muted-foreground',
@@ -86,12 +91,36 @@ const isActive = (href: string) =>
   const openIcon = document.getElementById('menu-open-icon');
   const closeIcon = document.getElementById('menu-close-icon');
 
+  function setMenuOpen(open: boolean) {
+    menuToggle?.setAttribute('aria-expanded', String(open));
+    mobileNav?.classList.toggle('hidden', !open);
+    openIcon?.classList.toggle('hidden', open);
+    closeIcon?.classList.toggle('hidden', !open);
+  }
+
   menuToggle?.addEventListener('click', () => {
-    const expanded = menuToggle.getAttribute('aria-expanded') === 'true';
-    menuToggle.setAttribute('aria-expanded', String(!expanded));
-    mobileNav?.classList.toggle('hidden');
-    openIcon?.classList.toggle('hidden');
-    closeIcon?.classList.toggle('hidden');
+    setMenuOpen(menuToggle.getAttribute('aria-expanded') !== 'true');
+  });
+
+  // Escape closes the menu and hands focus back to the toggle.
+  document.addEventListener('keydown', (e) => {
+    if (e.defaultPrevented) return; // let overlays that claimed Escape keep it
+    if (e.key === 'Escape' && menuToggle?.getAttribute('aria-expanded') === 'true') {
+      setMenuOpen(false);
+      menuToggle.focus();
+    }
+  });
+
+  // Tapping outside the header closes the open menu.
+  const header = menuToggle?.closest('header');
+  document.addEventListener('click', (e) => {
+    if (
+      menuToggle?.getAttribute('aria-expanded') === 'true' &&
+      e.target instanceof Node &&
+      !header?.contains(e.target)
+    ) {
+      setMenuOpen(false);
+    }
   });
 
   // Theme toggle

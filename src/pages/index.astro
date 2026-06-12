@@ -1,58 +1,54 @@
 ---
 import Base from '../layouts/Base.astro';
-import Header from '../components/Header.astro';
 import { now } from '../data/now';
 ---
 
 <Base description="Director of Product at Salesforce, building at the intersection of AI and enterprise. Previously SiriusXM, Disney+, EA. Based in NYC." ogImage="/og/home.png">
-  <Header />
-  <main class="mx-auto max-w-2xl px-6 py-12 font-mono">
 
-    <!-- Intro -->
-    <section class="mb-16 fade-in">
-      <h1 class="text-2xl font-normal mb-6 leading-relaxed">hello, i'm adrian</h1>
-      <p class="text-base leading-relaxed mb-4">
-        director of product at <a href="https://www.salesforce.com" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">salesforce</a>, working at the intersection of ai and enterprise — figuring out how large organizations actually adopt new technology, and what it takes to make that stick.
-      </p>
-      <p class="text-base leading-relaxed">
-        14 years in tech. previously siriusxm, disney+, ea. based in nyc. → <a href="/work" class="underline hover:no-underline">see the work</a>
-      </p>
-    </section>
+  <!-- Intro -->
+  <section class="mb-16 fade-in">
+    <h1 class="text-2xl font-normal mb-6 leading-relaxed">hello, i'm adrian</h1>
+    <p class="text-base leading-relaxed mb-4">
+      director of product at <a href="https://www.salesforce.com" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">salesforce</a>, working at the intersection of ai and enterprise — figuring out how large organizations actually adopt new technology, and what it takes to make that stick.
+    </p>
+    <p class="text-base leading-relaxed">
+      14 years in tech. previously siriusxm, disney+, ea. based in nyc. → <a href="/work" class="underline hover:no-underline">see the work</a>
+    </p>
+  </section>
 
-    <!-- Currently -->
-    <section class="mb-16 fade-in">
-      <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">currently:</h2>
-      <div class="space-y-3 text-base leading-relaxed">
-        {now.building.map((item) => (
-          <p>
-            {item.href && item.label && (
-              <><a href={item.href} class="underline hover:no-underline">{item.label}</a> — </>
-            )}
-            {item.text}
-          </p>
-        ))}
-        <div class="pt-2 space-y-2 text-sm text-foreground/60">
-          <p><span class="font-semibold text-foreground/80">stack:</span> astro, typescript, node.js, claude</p>
-          <p><span class="font-semibold text-foreground/80">reading:</span> {now.reading.map((b) => b.author).join(', ')} — <a href={now.goodreads} class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">goodreads</a></p>
-          <p><span class="font-semibold text-foreground/80">training:</span> {now.training.disciplines.join(' + ')}. {now.training.note}</p>
-        </div>
+  <!-- Currently -->
+  <section class="mb-16 fade-in">
+    <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">currently:</h2>
+    <div class="space-y-3 text-base leading-relaxed">
+      {now.building.map((item) => (
+        <p>
+          {item.href && item.label && (
+            <><a href={item.href} class="underline hover:no-underline">{item.label}</a> — </>
+          )}
+          {item.text}
+        </p>
+      ))}
+      <div class="pt-2 space-y-2 text-sm text-foreground/60">
+        <p><span class="font-semibold text-foreground/80">stack:</span> astro, typescript, node.js, claude</p>
+        <p><span class="font-semibold text-foreground/80">reading:</span> {now.reading.map((b) => b.author).join(', ')} — <a href={now.goodreads} class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">goodreads</a></p>
+        <p><span class="font-semibold text-foreground/80">training:</span> {now.training.disciplines.join(' + ')}. {now.training.note}</p>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Connect -->
-    <section class="mb-16 fade-in" id="connect">
-      <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">let's talk:</h2>
-      <div class="space-y-4 text-base leading-relaxed">
-        <p>always interested in product challenges, creative projects, or just good conversation.</p>
-        <p>open to advisory roles, the right side-hustle, and useful operator tools.</p>
-        <div class="space-y-2 mt-6">
-          <p>— <a href="/operator-stack" class="underline hover:no-underline">operator stack</a></p>
-          <p>— <a href="/contact" class="underline hover:no-underline">email me</a></p>
-          <p>— <a href="https://www.linkedin.com/in/adrianlumley/" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">linkedin</a></p>
-          <p>— <a href="https://github.com/prime3679" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">github</a></p>
-        </div>
+  <!-- Connect -->
+  <section class="mb-16 fade-in" id="connect">
+    <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">let's talk:</h2>
+    <div class="space-y-4 text-base leading-relaxed">
+      <p>always interested in product challenges, creative projects, or just good conversation.</p>
+      <p>open to advisory roles, the right side-hustle, and useful operator tools.</p>
+      <div class="space-y-2 mt-6">
+        <p>— <a href="/operator-stack" class="underline hover:no-underline">operator stack</a></p>
+        <p>— <a href="/contact" class="underline hover:no-underline">email me</a></p>
+        <p>— <a href="https://www.linkedin.com/in/adrianlumley/" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">linkedin</a></p>
+        <p>— <a href="https://github.com/prime3679" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">github</a></p>
       </div>
-    </section>
+    </div>
+  </section>
 
-  </main>
 </Base>

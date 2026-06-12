@@ -16,9 +16,9 @@ test.describe('Base Layout Meta Tags', () => {
     const referrer = await page.locator('meta[name="referrer"]').getAttribute('content');
     expect(referrer).toBe('strict-origin-when-cross-origin');
 
-    // Viewport
+    // Viewport — no maximum-scale: pinch-zoom must stay available (WCAG 1.4.4)
     const viewport = await page.locator('meta[name="viewport"]').getAttribute('content');
-    expect(viewport).toBe('width=device-width, initial-scale=1.0, maximum-scale=1');
+    expect(viewport).toBe('width=device-width, initial-scale=1.0');
 
     // Description
     const description = await page.locator('meta[name="description"]').getAttribute('content');

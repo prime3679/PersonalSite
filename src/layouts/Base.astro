@@ -4,6 +4,7 @@ import { getImage } from 'astro:assets';
 import ogImage from '../assets/og-image.png';
 import { siteMetadata } from '../data/siteMetadata';
 import { navItems } from '../data/nav';
+import Header from '../components/Header.astro';
 
 interface ArticleData {
   headline: string;
@@ -17,9 +18,20 @@ interface Props {
   description?: string;
   ogImage?: string;
   article?: ArticleData;
+  /** Replaces the standard centered-column <main> classes (e.g. /work, /90-day-os). */
+  mainClass?: string;
+  /** Adds classes on top of the standard column without restating it (e.g. space-y-16). */
+  extraMainClass?: string;
 }
 
-const { title = siteMetadata.title, description = siteMetadata.description, ogImage: ogImageOverride, article } = Astro.props;
+const {
+  title = siteMetadata.title,
+  description = siteMetadata.description,
+  ogImage: ogImageOverride,
+  article,
+  mainClass = 'mx-auto max-w-2xl px-6 py-12 font-mono',
+  extraMainClass,
+} = Astro.props;
 const fullTitle = title === siteMetadata.title ? title : `${title} — ${siteMetadata.title}`;
 
 let ogImageUrl: string;
@@ -75,7 +87,7 @@ const structuredData: Record<string, unknown> = {
   <meta charset="UTF-8" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cloud.umami.is; connect-src 'self' https://cloud.umami.is; style-src 'self' 'unsafe-inline'; form-action 'self' https://formspree.io; object-src 'none'; base-uri 'self'; upgrade-insecure-requests;">
   <meta name="referrer" content="strict-origin-when-cross-origin" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{fullTitle}</title>
   <meta name="description" content={description} />
   <meta property="og:title" content={fullTitle} />
@@ -97,7 +109,7 @@ const structuredData: Record<string, unknown> = {
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="author" content={siteMetadata.author} />
-  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
   <script is:inline>
     // Prevent flash of wrong theme
     (function() {
@@ -108,14 +120,23 @@ const structuredData: Record<string, unknown> = {
     })();
   </script>
   <!-- Umami Analytics (privacy-first, no cookies) -->
-  <script defer src="https://cloud.umami.is/script.js" data-website-id="aa267d21-11bc-40c3-a359-974f47e24791"></script>
+  <script is:inline defer src="https://cloud.umami.is/script.js" data-website-id="aa267d21-11bc-40c3-a359-974f47e24791"></script>
 </head>
 <body class="min-h-screen">
-  <slot />
+  <a
+    href="#main"
+    class="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 focus:rounded-lg focus:border focus:border-foreground focus:bg-background focus:px-4 focus:py-2 font-mono text-sm"
+  >skip to content</a>
+  <Header />
+  <!-- tabindex=-1 so the skip link moves real keyboard focus (Safari doesn't
+       focus fragment targets otherwise); scroll-mt clears the sticky header. -->
+  <main id="main" tabindex="-1" class:list={[mainClass, extraMainClass, 'scroll-mt-20 focus:outline-none']}>
+    <slot />
+  </main>
   <footer class="border-t border-border mt-16 py-8 font-mono">
     <div class="mx-auto max-w-2xl px-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-muted-foreground">
       <span>adrian lumley · nyc</span>
-      <nav class="flex flex-wrap gap-x-5 gap-y-2">
+      <nav class="flex flex-wrap gap-x-5 gap-y-2" aria-label="Footer">
         {navItems.map((item) => (
           <a href={item.href} class="hover:text-foreground transition-colors">{item.label}</a>
         ))}

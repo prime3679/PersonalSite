@@ -1,6 +1,4 @@
-// Single source of truth for "current focus" content.
-// Rendered in full on /now and condensed in the homepage "currently:" section,
-// so the two never drift apart. Update here, both pages follow.
+// Single source of truth for the homepage "currently:" section.
 
 export interface BuildingItem {
   /** Optional link label (renders as an inline link when href is set). */
@@ -16,7 +14,6 @@ export interface ReadingItem {
 }
 
 export const now = {
-  updated: 'June 2026',
   goodreads: 'https://www.goodreads.com/user/show/149439647-adrian-lumley',
   building: [
     {

@@ -1,32 +1,20 @@
 ---
 import Base from '../layouts/Base.astro';
-import { getCollection } from 'astro:content';
 import { labProjects, badgeToneClasses, type LabProject } from '../data/lab';
+import { getEpisodes } from '../lib/content';
+import { padEpisode, snapshotLabel } from '../lib/format';
 import familyosStats from '../../public/familyos-stats.json';
 import bishopStats from '../../public/bishop-stats.json';
 
 // Stats render at build time from the repo JSONs (the cron commits them, which
 // triggers a deploy anyway) — honest snapshot labels instead of client fetches.
-const snapshot = (iso: string | undefined | null) => {
-  if (!iso) return '—';
-  const date = new Date(iso);
-  return isNaN(date.getTime())
-    ? '—'
-    : date
-        .toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' })
-        .toLowerCase();
-};
-
-const episodes = (await getCollection('signal-room')).sort(
-  (a, b) => b.data.episode - a.data.episode,
-);
+const episodes = await getEpisodes();
 const latest = episodes[0];
-const pad = (n: number) => String(n).padStart(2, '0');
 
 const overrides: Record<string, Partial<LabProject>> = {
   'signal-room': {
     stats: [
-      { value: pad(episodes.length), label: 'episodes' },
+      { value: padEpisode(episodes.length), label: 'episodes' },
       { value: latest?.data.title ?? '—', label: 'latest signal' },
       { value: 'weekly', label: 'cadence' },
     ],
@@ -43,7 +31,7 @@ const overrides: Record<string, Partial<LabProject>> = {
         label: 'approval rate',
       },
     ],
-    statsNote: `snapshot · ${snapshot(familyosStats.updatedAt)}`,
+    statsNote: `snapshot · ${snapshotLabel(familyosStats.updatedAt)}`,
   },
   bishop: {
     stats: [
@@ -51,7 +39,7 @@ const overrides: Record<string, Partial<LabProject>> = {
       { value: String(bishopStats.cronCount ?? '—'), label: 'cron jobs' },
       { value: bishopStats.uptime ?? '24/7', label: 'uptime' },
     ],
-    statsNote: `snapshot · ${snapshot(bishopStats.updatedAt)}`,
+    statsNote: `snapshot · ${snapshotLabel(bishopStats.updatedAt)}`,
   },
 };
 

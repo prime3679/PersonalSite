@@ -1,15 +1,13 @@
 ---
 import Base from '../layouts/Base.astro';
-import { getCollection } from 'astro:content';
 import { readingTime } from '../lib/readingTime';
+import { getPublishedPosts, postPath } from '../lib/content';
+import { formatMonthYear } from '../lib/format';
 
 const title = "Blog";
 const description = "Monthly musings on product leadership, systems thinking, and building scalable platforms.";
 
-const allPosts = await getCollection('blog');
-const publishedPosts = allPosts
-  .filter(post => post.data.published !== false)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const publishedPosts = await getPublishedPosts();
 
 // Derive the tag list from published posts, most-used first.
 const tagCounts = new Map<string, number>();
@@ -54,15 +52,12 @@ const allTags = [...tagCounts.entries()]
           <article class="blog-post border-b border-border pb-8" data-tags={(post.data.tags ?? []).join(' ')}>
             <div class="mb-4">
               <h2 class="text-lg font-normal mb-2 leading-relaxed">
-                <a href={`/blog/${post.slug}`} class="underline hover:no-underline">
+                <a href={postPath(post.slug)} class="underline hover:no-underline">
                   {post.data.title}
                 </a>
               </h2>
               <time class="text-sm text-muted-foreground uppercase tracking-wider">
-                {new Date(post.data.date).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long'
-                })}
+                {formatMonthYear(post.data.date)}
               </time>
               <span class="text-sm text-muted-foreground uppercase tracking-wider"> · {readingTime(post.body)} min read</span>
             </div>

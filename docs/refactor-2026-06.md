@@ -22,11 +22,12 @@ Branch: `claude/refactor-architecture-ux-ox3l1u`
 
 - [x] **Step 0 — Baseline**: install deps, run the existing suites, commit this log.
 - [x] **Step 1 — Page shell consolidation**: move `<Header />` + `<main>` (+ default classes, overridable via prop) into `Base.astro`; strip the boilerplate from all 16 pages; delete dead `BlogPost.astro`.
-- [ ] **Step 2 — Shared content + format lib**: `src/lib/format.ts` (long date, episode padding) and `src/lib/content.ts` (published posts, sorted episodes, canonical URLs); dedupe blog/signal-room/RSS/OG/lab call sites; fix the hardcoded domain. Unit tests for both libs.
+- [x] **Step 2 — Shared content + format lib**: `src/lib/format.ts` (long date, episode padding) and `src/lib/content.ts` (published posts, sorted episodes, canonical URLs); dedupe blog/signal-room/RSS/OG/lab call sites; fix the hardcoded domain. Unit tests for both libs.
 - [ ] **Step 3 — UX / accessibility pass**: allow pinch-zoom (drop `maximum-scale`), skip-to-content link, `aria-current="page"` on active nav links, Escape closes the mobile menu, prev/next links on blog posts.
 - [ ] **Step 4 — Final review**: full test matrix, code review of the cumulative diff, close out this log.
 
 ## Step log
 
 - **Step 0** — Baseline green: 17 unit tests, 38 Playwright tests (chromium + mobile-chrome). Note: 7 webkit tests fail *in this sandbox on the unmodified baseline too* (headless-webkit visibility quirks in the container); they pass in CI, so chromium/firefox/mobile-chrome are the local gate and CI remains the webkit gate.
+- **Step 2** — Added `src/lib/format.ts` (formatLongDate / formatMonthYear / padEpisode / snapshotLabel, all pinned to UTC) and `src/lib/content.ts` (getPublishedPosts, getEpisodes, postPath/episodePath). Seven call sites (blog index + post, signal-room index + episode, lab, RSS, both per-slug OG endpoints) now share them. Fixes along the way: blog post structured-data URL no longer hardcodes the domain (derived from `Astro.site`), and blog dates now format in UTC like everything else (local-zone formatting could shift the shown day). RSS GUIDs verified byte-identical so feed readers see no churn. 7 new unit tests for the formatters. Verified: build, 24 unit tests, 73 Playwright tests green.
 - **Step 1** — `Base.astro` now owns the page shell: it renders `<Header />`, wraps the slot in `<main>` (standard centered column by default, `mainClass` prop for `/work` and `/90-day-os`), and keeps the footer. All 18 page files lost their copy-pasted shell; `src/layouts/BlogPost.astro` (dead since posts render via `blog/[...slug].astro`) is deleted. Net −60 lines, and a new page can no longer forget its header. Verified: build, 17 unit tests, 73 Playwright tests (chromium + firefox + mobile-chrome) green.

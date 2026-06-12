@@ -1,11 +1,11 @@
 ---
-import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import { readingTime } from '../../lib/readingTime';
+import { getPublishedPosts, postPath } from '../../lib/content';
+import { formatLongDate } from '../../lib/format';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog');
-  const published = posts.filter(post => post.data.published !== false);
+  const published = await getPublishedPosts();
 
   return published.map(post => {
     const primaryTag = (post.data.tags ?? [])[0] ?? null;
@@ -25,22 +25,16 @@ export async function getStaticPaths() {
 const { post, related, primaryTag } = Astro.props;
 const { Content } = await post.render();
 
-const formatDate = (value: Date) => new Date(value).toLocaleDateString('en-US', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric'
-});
-
-const dateFormatted = formatDate(post.data.date);
-const updatedFormatted = post.data.updatedDate ? formatDate(post.data.updatedDate) : null;
+const dateFormatted = formatLongDate(post.data.date);
+const updatedFormatted = post.data.updatedDate ? formatLongDate(post.data.updatedDate) : null;
 
 // Pass raw title — Base.astro handles the suffix
 
 const articleData = {
   headline: post.data.title,
   description: post.data.description,
-  datePublished: new Date(post.data.date).toISOString(),
-  url: `https://adrianlumley.co/blog/${post.slug}`,
+  datePublished: post.data.date.toISOString(),
+  url: new URL(postPath(post.slug), Astro.site).href,
 };
 
 const ogImagePath = `/og/${post.slug}.png`;
@@ -78,7 +72,7 @@ const ogImagePath = `/og/${post.slug}.png`;
       <ul class="space-y-3">
         {related.map((r) => (
           <li>
-            <a href={`/blog/${r.slug}`} class="text-sm underline hover:no-underline">{r.data.title}</a>
+            <a href={postPath(r.slug)} class="text-sm underline hover:no-underline">{r.data.title}</a>
           </li>
         ))}
       </ul>

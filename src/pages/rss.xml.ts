@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
-import { getCollection } from 'astro:content';
 import { siteMetadata } from '../data/siteMetadata';
+import { getEpisodes, getPublishedPosts, episodePath, postPath } from '../lib/content';
+import { padEpisode } from '../lib/format';
 
 const escapeXml = (value: string): string =>
   value
@@ -20,23 +21,19 @@ interface FeedItem {
 export const GET: APIRoute = async (context) => {
   const site = (context.site?.href ?? `${siteMetadata.url}/`).replace(/\/$/, '');
 
-  const posts = (await getCollection('blog'))
-    .filter((post) => post.data.published !== false)
-    .map((post): FeedItem => ({
-      title: post.data.title,
-      url: `${site}/blog/${post.slug}`,
-      date: post.data.date,
-      description: post.data.description,
-    }));
+  const posts = (await getPublishedPosts()).map((post): FeedItem => ({
+    title: post.data.title,
+    url: `${site}${postPath(post.slug)}`,
+    date: post.data.date,
+    description: post.data.description,
+  }));
 
-  const pad = (n: number) => String(n).padStart(2, '0');
-  const episodes = (await getCollection('signal-room'))
-    .map((ep): FeedItem => ({
-      title: `signal room ${pad(ep.data.episode)} · ${ep.data.title}`,
-      url: `${site}/signal-room/${ep.slug}/`,
-      date: ep.data.date,
-      description: ep.data.teaser,
-    }));
+  const episodes = (await getEpisodes()).map((ep): FeedItem => ({
+    title: `signal room ${padEpisode(ep.data.episode)} · ${ep.data.title}`,
+    url: `${site}${episodePath(ep.slug)}`,
+    date: ep.data.date,
+    description: ep.data.teaser,
+  }));
 
   const items = [...posts, ...episodes]
     .sort((a, b) => b.date.valueOf() - a.date.valueOf())

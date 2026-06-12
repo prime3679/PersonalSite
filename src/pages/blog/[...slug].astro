@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import Header from '../../components/Header.astro';
 import { readingTime } from '../../lib/readingTime';
 
 export async function getStaticPaths() {
@@ -48,49 +47,46 @@ const ogImagePath = `/og/${post.slug}.png`;
 ---
 
 <Base title={post.data.title} description={post.data.description} article={articleData} ogImage={ogImagePath}>
-  <Header />
-  <main class="mx-auto max-w-2xl px-6 py-12 font-mono">
-    <!-- Header -->
-    <section class="mb-10 fade-in">
-      <a href="/blog" class="text-xs text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">← blog</a>
-      <h1 class="text-2xl font-normal mt-4 mb-3 leading-relaxed">{post.data.title}</h1>
-      <time class="text-xs text-muted-foreground uppercase tracking-wider">
-        {dateFormatted}
-      </time>
-      <span class="text-xs text-muted-foreground uppercase tracking-wider"> · {readingTime(post.body)} min read</span>
-      {updatedFormatted && (
-        <p class="text-xs text-muted-foreground uppercase tracking-wider mt-1">updated {updatedFormatted}</p>
-      )}
-      {(post.data.tags ?? []).length > 0 && (
-        <div class="flex flex-wrap gap-2 mt-4">
-          {post.data.tags.map((tag) => (
-            <a href={`/blog?tag=${encodeURIComponent(tag)}`} class="text-[10px] uppercase tracking-wider text-muted-foreground border border-border rounded-full px-2 py-0.5 hover:text-foreground hover:border-foreground transition-colors">{tag}</a>
-          ))}
-        </div>
-      )}
-    </section>
-
-    <!-- Content -->
-    <article class="fade-in prose space-y-6 text-sm leading-relaxed">
-      <Content />
-    </article>
-
-    {related.length > 0 && (
-      <section class="mt-16 pt-8 border-t border-foreground/10 fade-in">
-        <h2 class="text-xs text-muted-foreground uppercase tracking-wider mb-4">more on {primaryTag}</h2>
-        <ul class="space-y-3">
-          {related.map((r) => (
-            <li>
-              <a href={`/blog/${r.slug}`} class="text-sm underline hover:no-underline">{r.data.title}</a>
-            </li>
-          ))}
-        </ul>
-      </section>
+  <!-- Header -->
+  <section class="mb-10 fade-in">
+    <a href="/blog" class="text-xs text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">← blog</a>
+    <h1 class="text-2xl font-normal mt-4 mb-3 leading-relaxed">{post.data.title}</h1>
+    <time class="text-xs text-muted-foreground uppercase tracking-wider">
+      {dateFormatted}
+    </time>
+    <span class="text-xs text-muted-foreground uppercase tracking-wider"> · {readingTime(post.body)} min read</span>
+    {updatedFormatted && (
+      <p class="text-xs text-muted-foreground uppercase tracking-wider mt-1">updated {updatedFormatted}</p>
     )}
+    {(post.data.tags ?? []).length > 0 && (
+      <div class="flex flex-wrap gap-2 mt-4">
+        {post.data.tags.map((tag) => (
+          <a href={`/blog?tag=${encodeURIComponent(tag)}`} class="text-[10px] uppercase tracking-wider text-muted-foreground border border-border rounded-full px-2 py-0.5 hover:text-foreground hover:border-foreground transition-colors">{tag}</a>
+        ))}
+      </div>
+    )}
+  </section>
 
-    <!-- Footer -->
-    <footer class="mt-12 fade-in">
-      <a href="/blog" class="text-xs text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">← all posts</a>
-    </footer>
-  </main>
+  <!-- Content -->
+  <article class="fade-in prose space-y-6 text-sm leading-relaxed">
+    <Content />
+  </article>
+
+  {related.length > 0 && (
+    <section class="mt-16 pt-8 border-t border-foreground/10 fade-in">
+      <h2 class="text-xs text-muted-foreground uppercase tracking-wider mb-4">more on {primaryTag}</h2>
+      <ul class="space-y-3">
+        {related.map((r) => (
+          <li>
+            <a href={`/blog/${r.slug}`} class="text-sm underline hover:no-underline">{r.data.title}</a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  <!-- Footer -->
+  <footer class="mt-12 fade-in">
+    <a href="/blog" class="text-xs text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors">← all posts</a>
+  </footer>
 </Base>

@@ -20,12 +20,13 @@ Branch: `claude/refactor-architecture-ux-ox3l1u`
 
 ## Plan / progress
 
-- [ ] **Step 0 — Baseline**: install deps, run the existing suites, commit this log.
-- [ ] **Step 1 — Page shell consolidation**: move `<Header />` + `<main>` (+ default classes, overridable via prop) into `Base.astro`; strip the boilerplate from all 16 pages; delete dead `BlogPost.astro`.
+- [x] **Step 0 — Baseline**: install deps, run the existing suites, commit this log.
+- [x] **Step 1 — Page shell consolidation**: move `<Header />` + `<main>` (+ default classes, overridable via prop) into `Base.astro`; strip the boilerplate from all 16 pages; delete dead `BlogPost.astro`.
 - [ ] **Step 2 — Shared content + format lib**: `src/lib/format.ts` (long date, episode padding) and `src/lib/content.ts` (published posts, sorted episodes, canonical URLs); dedupe blog/signal-room/RSS/OG/lab call sites; fix the hardcoded domain. Unit tests for both libs.
 - [ ] **Step 3 — UX / accessibility pass**: allow pinch-zoom (drop `maximum-scale`), skip-to-content link, `aria-current="page"` on active nav links, Escape closes the mobile menu, prev/next links on blog posts.
 - [ ] **Step 4 — Final review**: full test matrix, code review of the cumulative diff, close out this log.
 
 ## Step log
 
-(updated as each step lands)
+- **Step 0** — Baseline green: 17 unit tests, 38 Playwright tests (chromium + mobile-chrome). Note: 7 webkit tests fail *in this sandbox on the unmodified baseline too* (headless-webkit visibility quirks in the container); they pass in CI, so chromium/firefox/mobile-chrome are the local gate and CI remains the webkit gate.
+- **Step 1** — `Base.astro` now owns the page shell: it renders `<Header />`, wraps the slot in `<main>` (standard centered column by default, `mainClass` prop for `/work` and `/90-day-os`), and keeps the footer. All 18 page files lost their copy-pasted shell; `src/layouts/BlogPost.astro` (dead since posts render via `blog/[...slug].astro`) is deleted. Net −60 lines, and a new page can no longer forget its header. Verified: build, 17 unit tests, 73 Playwright tests (chromium + firefox + mobile-chrome) green.

@@ -1,6 +1,5 @@
 ---
 import Base from '../../layouts/Base.astro';
-import Header from '../../components/Header.astro';
 import { getCollection } from 'astro:content';
 
 const title = "Signal Room";
@@ -16,69 +15,66 @@ const fmtDate = (d: Date) =>
 ---
 
 <Base title={title} description={description} ogImage="/og/signal-room.png">
-  <Header />
-  <main class="mx-auto max-w-2xl px-6 py-12 font-mono">
 
-    <!-- Intro -->
-    <section class="mb-12 fade-in">
-      <p class="text-sm text-muted-foreground uppercase tracking-wider mb-4">rogue fiction serial</p>
-      <h1 class="text-2xl font-normal mb-6 leading-relaxed">signal room</h1>
-      <p class="text-base leading-relaxed text-muted-foreground">
-        short fiction about rogue, mission control, and the small absurdities of making domestic life legible without making it colder. you don't need any backstory — start with the room, the signal, and the argument over what mercy costs. new episodes weekly.
-      </p>
-    </section>
+  <!-- Intro -->
+  <section class="mb-12 fade-in">
+    <p class="text-sm text-muted-foreground uppercase tracking-wider mb-4">rogue fiction serial</p>
+    <h1 class="text-2xl font-normal mb-6 leading-relaxed">signal room</h1>
+    <p class="text-base leading-relaxed text-muted-foreground">
+      short fiction about rogue, mission control, and the small absurdities of making domestic life legible without making it colder. you don't need any backstory — start with the room, the signal, and the argument over what mercy costs. new episodes weekly.
+    </p>
+  </section>
 
-    <!-- Night signals log -->
-    <section class="mb-16 fade-in">
-      <div class="border border-border rounded-lg overflow-hidden">
-        <div class="flex items-center justify-between px-4 py-2.5 border-b border-border text-xs uppercase tracking-wider text-muted-foreground">
-          <span>signal.room</span>
-          <span>07:11</span>
+  <!-- Night signals log -->
+  <section class="mb-16 fade-in">
+    <div class="border border-border rounded-lg overflow-hidden">
+      <div class="flex items-center justify-between px-4 py-2.5 border-b border-border text-xs uppercase tracking-wider text-muted-foreground">
+        <span>signal.room</span>
+        <span>07:11</span>
+      </div>
+      <div class="divide-y divide-border">
+        <div class="flex gap-4 px-4 py-2.5 text-sm">
+          <span class="text-muted-foreground tabular-nums">02:22</span>
+          <span class="text-foreground/70">rogue marks four items: not morning-safe</span>
         </div>
-        <div class="divide-y divide-border">
-          <div class="flex gap-4 px-4 py-2.5 text-sm">
-            <span class="text-muted-foreground tabular-nums">02:22</span>
-            <span class="text-foreground/70">rogue marks four items: not morning-safe</span>
-          </div>
-          <div class="flex gap-4 px-4 py-2.5 text-sm">
-            <span class="text-muted-foreground tabular-nums">03:48</span>
-            <span class="text-foreground/70">off-site voice requests entry — no door</span>
-          </div>
-          <div class="flex gap-4 px-4 py-2.5 text-sm">
-            <span class="text-muted-foreground tabular-nums">03:50</span>
-            <span class="text-foreground/70">front detected 200mi offshore, unseen by local sensors</span>
-          </div>
-          <div class="flex gap-4 px-4 py-2.5 text-sm">
-            <span class="text-muted-foreground tabular-nums">03:52</span>
-            <span class="text-foreground/70">brief compressed to one humane sentence</span>
-          </div>
+        <div class="flex gap-4 px-4 py-2.5 text-sm">
+          <span class="text-muted-foreground tabular-nums">03:48</span>
+          <span class="text-foreground/70">off-site voice requests entry — no door</span>
+        </div>
+        <div class="flex gap-4 px-4 py-2.5 text-sm">
+          <span class="text-muted-foreground tabular-nums">03:50</span>
+          <span class="text-foreground/70">front detected 200mi offshore, unseen by local sensors</span>
+        </div>
+        <div class="flex gap-4 px-4 py-2.5 text-sm">
+          <span class="text-muted-foreground tabular-nums">03:52</span>
+          <span class="text-foreground/70">brief compressed to one humane sentence</span>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Episodes index -->
-    <section class="mb-16 fade-in">
-      <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">episodes:</h2>
-      <div class="space-y-4">
-        {episodes.map((ep) => (
-          <a href={`/signal-room/${ep.slug}/`} id={ep.slug} class="block border-b border-border pb-4 group scroll-mt-20">
-            <span class="text-sm text-muted-foreground uppercase tracking-wider">{pad(ep.data.episode)} · {ep.data.title} · {fmtDate(ep.data.date)}</span>
-            <p class="text-base leading-relaxed text-muted-foreground group-hover:text-foreground transition-colors mt-1">{ep.data.teaser}</p>
-          </a>
-        ))}
-      </div>
-    </section>
+  <!-- Episodes index -->
+  <section class="mb-16 fade-in">
+    <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">episodes:</h2>
+    <div class="space-y-4">
+      {episodes.map((ep) => (
+        <a href={`/signal-room/${ep.slug}/`} id={ep.slug} class="block border-b border-border pb-4 group scroll-mt-20">
+          <span class="text-sm text-muted-foreground uppercase tracking-wider">{pad(ep.data.episode)} · {ep.data.title} · {fmtDate(ep.data.date)}</span>
+          <p class="text-base leading-relaxed text-muted-foreground group-hover:text-foreground transition-colors mt-1">{ep.data.teaser}</p>
+        </a>
+      ))}
+    </div>
+  </section>
 
-    <!-- Coming signals -->
-    <section class="mb-16 fade-in">
-      <p class="text-sm text-muted-foreground uppercase tracking-wider mb-4">coming signals</p>
-      <div class="space-y-3 text-sm text-muted-foreground">
-        <p><span class="text-foreground">welcome packet</span> — bishop attempts to give zo a hallway. zo declines, gracefully, from orbit.</p>
-        <p><span class="text-foreground">the long horizon</span> — zo sees something three weeks out and has to decide whether seeing it counts as knowing it.</p>
-      </div>
-    </section>
+  <!-- Coming signals -->
+  <section class="mb-16 fade-in">
+    <p class="text-sm text-muted-foreground uppercase tracking-wider mb-4">coming signals</p>
+    <div class="space-y-3 text-sm text-muted-foreground">
+      <p><span class="text-foreground">welcome packet</span> — bishop attempts to give zo a hallway. zo declines, gracefully, from orbit.</p>
+      <p><span class="text-foreground">the long horizon</span> — zo sees something three weeks out and has to decide whether seeing it counts as knowing it.</p>
+    </div>
+  </section>
 
-    <p class="text-xs text-muted-foreground border-t border-border pt-8">signal room · a fiction serial · published on adrianlumley.co · <a href="/rss.xml" class="underline hover:no-underline">rss</a></p>
+  <p class="text-xs text-muted-foreground border-t border-border pt-8">signal room · a fiction serial · published on adrianlumley.co · <a href="/rss.xml" class="underline hover:no-underline">rss</a></p>
 
-  </main>
 </Base>

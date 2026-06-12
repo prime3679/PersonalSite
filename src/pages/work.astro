@@ -1,6 +1,5 @@
 ---
 import Base from '../layouts/Base.astro';
-import Header from '../components/Header.astro';
 
 const caseStudies = [
   {
@@ -60,43 +59,40 @@ const caseStudies = [
 ];
 ---
 
-<Base title="Work" description="Case studies from 14 years in product. SiriusXM, Disney+, EA — the metrics, the decisions, and what actually happened.">
-  <Header />
-  <main class="mx-auto max-w-3xl px-4 py-12 font-mono">
-    <h1 class="text-2xl font-normal mb-12 fade-in">work</h1>
+<Base mainClass="mx-auto max-w-3xl px-4 py-12 font-mono" title="Work" description="Case studies from 14 years in product. SiriusXM, Disney+, EA — the metrics, the decisions, and what actually happened.">
+  <h1 class="text-2xl font-normal mb-12 fade-in">work</h1>
 
-    <div class="space-y-16">
-      {caseStudies.map((cs) => (
-        <article id={cs.id} class="fade-in scroll-mt-20">
-          <div class="mb-4">
-            <span class="text-xs uppercase tracking-wider text-muted-foreground">{cs.company}</span>
-            <h2 class="text-xl font-normal mt-1">{cs.title}</h2>
-            <p class="text-sm font-semibold text-foreground/70 mt-1">{cs.headline}</p>
-          </div>
+  <div class="space-y-16">
+    {caseStudies.map((cs) => (
+      <article id={cs.id} class="fade-in scroll-mt-20">
+        <div class="mb-4">
+          <span class="text-xs uppercase tracking-wider text-muted-foreground">{cs.company}</span>
+          <h2 class="text-xl font-normal mt-1">{cs.title}</h2>
+          <p class="text-sm font-semibold text-foreground/70 mt-1">{cs.headline}</p>
+        </div>
 
-          <p class="text-base leading-relaxed mb-6 text-foreground/90">{cs.summary}</p>
+        <p class="text-base leading-relaxed mb-6 text-foreground/90">{cs.summary}</p>
 
-          <div class="mb-6">
-            <h3 class="text-sm uppercase tracking-wider text-muted-foreground mb-3">outcomes</h3>
-            <ul class="space-y-2">
-              {cs.outcomes.map((o) => (
-                <li class="text-sm leading-relaxed pl-4 border-l-2 border-foreground/10">{o}</li>
-              ))}
-            </ul>
-          </div>
+        <div class="mb-6">
+          <h3 class="text-sm uppercase tracking-wider text-muted-foreground mb-3">outcomes</h3>
+          <ul class="space-y-2">
+            {cs.outcomes.map((o) => (
+              <li class="text-sm leading-relaxed pl-4 border-l-2 border-foreground/10">{o}</li>
+            ))}
+          </ul>
+        </div>
 
-          <div class="mb-6">
-            <h3 class="text-sm uppercase tracking-wider text-muted-foreground mb-3">what i did</h3>
-            <ul class="space-y-2">
-              {cs.responsibilities.map((r) => (
-                <li class="text-sm leading-relaxed pl-4 border-l-2 border-foreground/10">{r}</li>
-              ))}
-            </ul>
-          </div>
+        <div class="mb-6">
+          <h3 class="text-sm uppercase tracking-wider text-muted-foreground mb-3">what i did</h3>
+          <ul class="space-y-2">
+            {cs.responsibilities.map((r) => (
+              <li class="text-sm leading-relaxed pl-4 border-l-2 border-foreground/10">{r}</li>
+            ))}
+          </ul>
+        </div>
 
-          <hr class="border-border" />
-        </article>
-      ))}
-    </div>
-  </main>
+        <hr class="border-border" />
+      </article>
+    ))}
+  </div>
 </Base>

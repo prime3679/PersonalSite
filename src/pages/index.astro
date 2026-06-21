@@ -17,45 +17,44 @@ const updatedLabel = 'June 2026';
 >
 
     <section class="fade-in">
-      <p class="mb-5 text-[0.72rem] uppercase tracking-[0.2em] text-muted-foreground">
-        adrian@nyc:~$ whoami --public
-      </p>
       <div class="grid gap-8 lg:grid-cols-[minmax(0,1.15fr),minmax(18rem,0.85fr)] lg:items-start">
         <div>
-          <h1 class="max-w-[12ch] text-[clamp(2.6rem,7vw,5.2rem)] font-semibold lowercase leading-[0.96] tracking-[-0.06em] text-foreground">
-            a personal operating system, run in public.
+          <p class="eyebrow mb-5">Personal site · product leadership · AI systems</p>
+          <h1 class="max-w-[11ch] text-[clamp(3rem,7vw,5.6rem)] leading-[0.94] tracking-[-0.06em] text-foreground" style="font-family: var(--font-display); font-weight: 600;">
+            Building the quiet machinery behind better product work.
           </h1>
-          <div class="mt-6 max-w-3xl space-y-4 text-[1rem] leading-8 text-foreground/78 sm:text-[1.05rem]">
+          <div class="mt-6 max-w-3xl space-y-4 lede sm:text-[1.08rem]">
             <p>
-              director of product at <a href="https://www.salesforce.com" class="console-link" target="_blank" rel="noopener noreferrer">salesforce</a>,
-              working at the intersection of ai and enterprise: how large organizations actually adopt new technology, and what it takes to make it stick.
+              I’m director of product at <a href="https://www.salesforce.com" class="text-link" target="_blank" rel="noopener noreferrer">Salesforce</a>,
+              working at the intersection of AI and enterprise: how large organizations actually adopt new technology, and what it takes to make it stick.
             </p>
             <p class="text-muted-foreground">
-              14 years in tech. previously siriusxm, disney+, ea. the rest of this site is the off-hours system: public notes, small products, and agent experiments that are safe to show in the open.
+              Fourteen years in tech, previously SiriusXM, Disney+, and EA. The rest of this site is the off-hours body of work: public notes, useful products, and agent experiments that are safe to show in the open.
             </p>
           </div>
         </div>
 
-        <aside class="console-panel overflow-hidden rounded-lg">
-          <div class="border-b border-border px-5 py-4">
-            <p class="console-label">runtime</p>
+        <aside class="surface-panel overflow-hidden rounded-[1.5rem] p-6">
+          <div class="flex items-center justify-between gap-4">
+            <p class="eyebrow">At a glance</p>
+            <span class="capsule" data-state="green">Operational</span>
           </div>
-          <div class="bg-[hsl(var(--panel-strong))]">
-            <div class="console-kv">
-              <span class="console-k">updated</span>
-              <span class="console-v">{updatedLabel}</span>
+          <div class="detail-list mt-5">
+            <div class="detail-pair">
+              <span class="detail-term">Updated</span>
+              <span class="detail-value">{updatedLabel}</span>
             </div>
-            <div class="console-kv">
-              <span class="console-k">stack</span>
-              <span class="console-v">astro, typescript, node.js, claude</span>
+            <div class="detail-pair">
+              <span class="detail-term">Stack</span>
+              <span class="detail-value">Astro, TypeScript, Node.js, Claude</span>
             </div>
-            <div class="console-kv">
-              <span class="console-k">base</span>
-              <span class="console-v">nyc / eastern time / one mac mini and a lot of opinions</span>
+            <div class="detail-pair">
+              <span class="detail-term">Base</span>
+              <span class="detail-value">New York City, Eastern time, one Mac mini, and a lot of opinions</span>
             </div>
-            <div class="console-kv">
-              <span class="console-k">status</span>
-              <span class="console-v"><span class="mr-2 inline-block align-middle text-[hsl(var(--success))]">●</span>operational</span>
+            <div class="detail-pair">
+              <span class="detail-term">Focus</span>
+              <span class="detail-value">Practical AI, clearer product strategy, and tools that earn their keep</span>
             </div>
           </div>
         </aside>
@@ -63,22 +62,22 @@ const updatedLabel = 'June 2026';
     </section>
 
     <section class="mt-10 fade-in">
-      <div class="console-grid lg:grid-cols-[minmax(0,1fr),minmax(0,1fr)]">
-        <div class="console-panel">
-          <div class="border-b border-border px-5 py-4">
+      <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr),minmax(0,1fr)]">
+        <div class="surface-panel rounded-[1.5rem] p-6">
+          <div class="border-b border-border pb-4">
             <div class="flex items-center justify-between gap-4">
-              <p class="console-label">currently</p>
-              <span class="text-[0.72rem] uppercase tracking-[0.18em] text-muted-foreground">{updatedLabel}</span>
+              <p class="eyebrow">Currently</p>
+              <span class="eyebrow text-muted-foreground">{updatedLabel}</span>
             </div>
           </div>
-          <div class="bg-[hsl(var(--panel-strong))]">
+          <div class="detail-list mt-4">
             {now.building.map((item) => (
-              <div class="console-kv">
-                <span class="console-k">building</span>
-                <p class="console-v">
+              <div class="detail-pair">
+                <span class="detail-term">Building</span>
+                <p class="detail-value">
                   {item.href && item.label && (
                     <>
-                      <a href={item.href} class="console-link">{item.label}</a>
+                      <a href={item.href} class="text-link">{item.label}</a>
                       {' — '}
                     </>
                   )}
@@ -86,44 +85,44 @@ const updatedLabel = 'June 2026';
                 </p>
               </div>
             ))}
-            <div class="console-kv">
-              <span class="console-k">reading</span>
-              <p class="console-v">
+            <div class="detail-pair">
+              <span class="detail-term">Reading</span>
+              <p class="detail-value">
                 {now.reading.map((book) => book.author).join(' · ')}
                 {' · '}
-                <a href={now.goodreads} class="console-link" target="_blank" rel="noopener noreferrer">goodreads</a>
+                <a href={now.goodreads} class="text-link" target="_blank" rel="noopener noreferrer">Goodreads</a>
               </p>
             </div>
-            <div class="console-kv">
-              <span class="console-k">training</span>
-              <p class="console-v">{now.training.disciplines.join(' + ')}. {now.training.note}</p>
+            <div class="detail-pair">
+              <span class="detail-term">Training</span>
+              <p class="detail-value">{now.training.disciplines.join(' + ')}. {now.training.note}</p>
             </div>
           </div>
         </div>
 
-        <div class="console-panel">
-          <div class="border-b border-border px-5 py-4">
+        <div class="surface-panel rounded-[1.5rem] p-6" data-tone="muted">
+          <div class="border-b border-border pb-4">
             <div class="flex items-center justify-between gap-4">
-              <p class="console-label">channels</p>
-              <span class="text-[0.72rem] uppercase tracking-[0.18em] text-muted-foreground">next hops</span>
+              <p class="eyebrow">Where to go next</p>
+              <span class="eyebrow text-muted-foreground">Guided tour</span>
             </div>
           </div>
-          <div class="grid gap-px bg-border">
-            <a href="/lab" class="flex items-center justify-between bg-[hsl(var(--panel-strong))] px-5 py-4 hover:bg-[hsl(var(--panel))]">
-              <span>inspect live processes</span>
-              <span class="text-[hsl(var(--accent))]">~/lab</span>
+          <div class="mt-4 grid gap-3">
+            <a href="/lab" class="flex items-center justify-between rounded-[1.1rem] border border-border bg-background/70 px-5 py-4 hover:border-[hsl(var(--accent)/0.25)] hover:bg-background">
+              <span class="text-lg tracking-[-0.02em]" style="font-family: var(--font-display);">The lab</span>
+              <span class="eyebrow text-[hsl(var(--accent))]">Projects</span>
             </a>
-            <a href="/work" class="flex items-center justify-between bg-[hsl(var(--panel-strong))] px-5 py-4 hover:bg-[hsl(var(--panel))]">
-              <span>see the work</span>
-              <span class="text-[hsl(var(--accent))]">~/work</span>
+            <a href="/work" class="flex items-center justify-between rounded-[1.1rem] border border-border bg-background/70 px-5 py-4 hover:border-[hsl(var(--accent)/0.25)] hover:bg-background">
+              <span class="text-lg tracking-[-0.02em]" style="font-family: var(--font-display);">Selected work</span>
+              <span class="eyebrow text-[hsl(var(--accent))]">Case studies</span>
             </a>
-            <a href="/operator-stack" class="flex items-center justify-between bg-[hsl(var(--panel-strong))] px-5 py-4 hover:bg-[hsl(var(--panel))]">
-              <span>browse operator tools</span>
-              <span class="text-[hsl(var(--accent))]">~/operator-stack</span>
+            <a href="/operator-stack" class="flex items-center justify-between rounded-[1.1rem] border border-border bg-background/70 px-5 py-4 hover:border-[hsl(var(--accent)/0.25)] hover:bg-background">
+              <span class="text-lg tracking-[-0.02em]" style="font-family: var(--font-display);">Operator Stack</span>
+              <span class="eyebrow text-[hsl(var(--accent))]">Tools</span>
             </a>
-            <a href="/contact" class="flex items-center justify-between bg-[hsl(var(--panel-strong))] px-5 py-4 hover:bg-[hsl(var(--panel))]">
-              <span>open a channel</span>
-              <span class="text-[hsl(var(--accent))]">~/contact</span>
+            <a href="/contact" class="flex items-center justify-between rounded-[1.1rem] border border-border bg-background/70 px-5 py-4 hover:border-[hsl(var(--accent)/0.25)] hover:bg-background">
+              <span class="text-lg tracking-[-0.02em]" style="font-family: var(--font-display);">Start a conversation</span>
+              <span class="eyebrow text-[hsl(var(--accent))]">Contact</span>
             </a>
           </div>
         </div>
@@ -131,36 +130,36 @@ const updatedLabel = 'June 2026';
     </section>
 
     <section class="mt-16 fade-in" id="lab-preview">
-      <div class="mb-6 flex items-end justify-between gap-4 border-b border-border pb-4">
+      <div class="section-heading mb-6">
         <div>
-          <p class="console-label mb-2">featured processes</p>
-          <h2 class="text-2xl lowercase tracking-[-0.03em]">what is running in public</h2>
+          <p class="eyebrow mb-2">Featured from the lab</p>
+          <h2>What is running in public</h2>
         </div>
-        <a href="/lab" class="console-link text-sm lowercase">full process list</a>
+        <a href="/lab" class="text-link text-sm" style="font-family: var(--font-ui);">View the full index</a>
       </div>
 
       <div class="space-y-4">
         {featuredProjects.map((project) => (
-          <article class="process-card">
-            <div class="process-dot" data-tone={project.badge.tone}></div>
+          <article class="project-card">
+            <div class="project-dot" data-tone={project.badge.tone}></div>
             <div>
               <div class="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   {project.external ? (
-                    <a href={project.href} target="_blank" rel="noopener noreferrer" class="text-xl lowercase tracking-[-0.02em] hover:text-[hsl(var(--accent))]">{project.title}</a>
+                    <a href={project.href} target="_blank" rel="noopener noreferrer" class="text-[1.55rem] tracking-[-0.03em] hover:text-[hsl(var(--accent))]" style="font-family: var(--font-display);">{project.title}</a>
                   ) : (
-                    <a href={project.href} class="text-xl lowercase tracking-[-0.02em] hover:text-[hsl(var(--accent))]">{project.title}</a>
+                    <a href={project.href} class="text-[1.55rem] tracking-[-0.03em] hover:text-[hsl(var(--accent))]" style="font-family: var(--font-display);">{project.title}</a>
                   )}
-                  <p class="mt-1 text-[0.72rem] uppercase tracking-[0.18em] text-muted-foreground">{project.dateline}</p>
+                  <p class="eyebrow mt-2 text-muted-foreground">{project.dateline}</p>
                 </div>
-                <span class="console-chip" data-state={project.badge.tone}>{project.badge.label}</span>
+                <span class="capsule capitalize" data-state={project.badge.tone}>{project.badge.label}</span>
               </div>
 
-              <p class="mt-3 max-w-3xl text-sm leading-7 text-foreground/78">{project.description}</p>
+              <p class="mt-3 max-w-3xl text-[1rem] leading-7 text-foreground/78">{project.description}</p>
 
               <div class="mt-4 flex flex-wrap gap-2">
                 {project.stats.map((stat) => (
-                  <span class="telemetry-pill">
+                  <span class="metric-pill">
                     <strong>{stat.value}</strong>
                     <span>{stat.label}</span>
                   </span>

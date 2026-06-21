@@ -4,7 +4,7 @@ test('Homepage features current work and reading', async ({ page }) => {
   await page.goto('/');
 
   // Verify the currently panel is present
-  await expect(page.getByText('currently', { exact: true })).toBeVisible();
+  await expect(page.getByText('Currently', { exact: true })).toBeVisible();
 
   // Verify the "signal room" serial link (scoped to main; the footer also links it)
   const signalRoomLink = page.locator('main').getByRole('link', { name: 'signal room' });
@@ -12,14 +12,14 @@ test('Homepage features current work and reading', async ({ page }) => {
   await expect(signalRoomLink).toHaveAttribute('href', '/signal-room');
 
   // Verify the runtime stack information
-  await expect(page.getByText('stack', { exact: true })).toBeVisible();
-  await expect(page.getByText('astro, typescript, node.js')).toBeVisible();
+  await expect(page.getByText('Stack', { exact: true })).toBeVisible();
+  await expect(page.getByText('Astro, TypeScript, Node.js, Claude')).toBeVisible();
 
   // Verify the "reading" section
-  await expect(page.getByText('reading', { exact: true })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'goodreads' })).toBeVisible();
+  await expect(page.getByText('Reading', { exact: true })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Goodreads' })).toBeVisible();
 
   // Verify the "training" section
-  await expect(page.getByText('training', { exact: true })).toBeVisible();
+  await expect(page.getByText('Training', { exact: true })).toBeVisible();
   await expect(page.getByText('muay thai + jiu jitsu')).toBeVisible();
 });

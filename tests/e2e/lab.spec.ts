@@ -7,7 +7,7 @@ test('Lab page has correct title, heading, and projects', async ({ page }) => {
   await expect(page).toHaveTitle('Lab — Adrian Lumley — Adrian Lumley');
 
   // Check for the main heading
-  await expect(page.locator('main h1')).toHaveText('lab');
+  await expect(page.locator('main h1')).toHaveText('Lab');
 
   // Check that key project elements are visible
   await expect(page.locator('#familyos')).toBeVisible();

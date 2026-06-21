@@ -16,8 +16,8 @@ test.describe('Blog', () => {
   test('ai-cost-70-percent page has only one global footer', async ({ page }) => {
     await page.goto('/blog/ai-cost-70-percent');
 
-    // The global footer contains "adrian lumley · nyc"
-    const footerText = page.getByText('adrian lumley · nyc');
+    // The global footer contains the site colophon once.
+    const footerText = page.getByText('Adrian Lumley · New York City');
 
     // Should be visible
     await expect(footerText).toBeVisible();

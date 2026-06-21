@@ -21,33 +21,36 @@
 }
 
 :root {
-  --background: 35 26% 9%;
-  --foreground: 42 35% 89%;
-  --muted: 35 22% 13%;
-  --muted-foreground: 40 18% 66%;
-  --border: 35 20% 21%;
-  --panel: 34 22% 12%;
-  --panel-strong: 35 23% 15%;
-  --accent: 38 71% 56%;
-  --accent-soft: 38 47% 62%;
-  --success: 99 27% 60%;
-  --info: 205 29% 63%;
-  --danger: 24 49% 56%;
+  --background: 38 29% 96%;
+  --foreground: 24 18% 15%;
+  --muted: 36 23% 91%;
+  --muted-foreground: 25 10% 40%;
+  --border: 30 18% 82%;
+  --panel: 42 38% 98%;
+  --panel-strong: 36 30% 93%;
+  --accent: 10 35% 31%;
+  --accent-soft: 30 22% 42%;
+  --success: 146 19% 34%;
+  --info: 212 26% 38%;
+  --danger: 18 42% 44%;
+  --font-body: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --font-display: "Baskerville", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-ui: "Avenir Next", "Segoe UI", Helvetica, Arial, sans-serif;
 }
 
 .dark {
-  --background: 35 26% 9%;
-  --foreground: 42 35% 89%;
-  --muted: 35 22% 13%;
-  --muted-foreground: 40 18% 66%;
-  --border: 35 20% 21%;
-  --panel: 34 22% 12%;
-  --panel-strong: 35 23% 15%;
-  --accent: 38 71% 56%;
-  --accent-soft: 38 47% 62%;
-  --success: 99 27% 60%;
-  --info: 205 29% 63%;
-  --danger: 24 49% 56%;
+  --background: 24 19% 10%;
+  --foreground: 38 27% 89%;
+  --muted: 25 16% 14%;
+  --muted-foreground: 33 14% 67%;
+  --border: 25 13% 23%;
+  --panel: 24 17% 13%;
+  --panel-strong: 24 16% 16%;
+  --accent: 28 42% 68%;
+  --accent-soft: 29 30% 60%;
+  --success: 144 22% 62%;
+  --info: 207 28% 70%;
+  --danger: 18 46% 61%;
 }
 
 @layer base {
@@ -60,14 +63,16 @@
   }
 
   body {
-    @apply font-mono antialiased;
+    @apply antialiased;
+    font-family: var(--font-body);
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
     background-image:
-      radial-gradient(circle at top right, hsl(var(--accent) / 0.08), transparent 34%),
-      linear-gradient(to bottom, transparent, hsl(var(--background))),
-      repeating-linear-gradient(0deg, transparent 0 39px, hsl(var(--foreground) / 0.035) 39px 40px);
+      radial-gradient(circle at top left, hsl(var(--accent) / 0.08), transparent 28%),
+      radial-gradient(circle at top right, hsl(var(--info) / 0.06), transparent 24%),
+      linear-gradient(180deg, hsl(var(--panel)) 0%, hsl(var(--background)) 18%, hsl(var(--background)) 100%);
     min-height: 100vh;
+    text-rendering: optimizeLegibility;
   }
 
   ::selection {
@@ -76,6 +81,7 @@
   }
 
   a {
+    color: inherit;
     transition:
       color 0.2s ease,
       border-color 0.2s ease,
@@ -90,54 +96,91 @@
     @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
   }
 
-  .console-panel {
+  .eyebrow {
+    color: hsl(var(--accent-soft));
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .lede {
+    color: hsl(var(--foreground) / 0.8);
+    font-size: 1.04rem;
+    line-height: 1.9;
+  }
+
+  .text-link {
+    color: hsl(var(--accent));
+    text-decoration: underline;
+    text-decoration-color: hsl(var(--accent) / 0.35);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  .text-link:hover {
+    color: hsl(var(--foreground));
+    text-decoration-color: hsl(var(--accent));
+  }
+
+  .surface-panel {
     background: hsl(var(--panel));
     border: 1px solid hsl(var(--border));
-    box-shadow: inset 0 1px 0 hsl(var(--foreground) / 0.02);
+    box-shadow:
+      inset 0 1px 0 hsl(var(--foreground) / 0.03),
+      0 18px 40px -28px hsl(var(--foreground) / 0.2);
   }
 
-  .console-panel-strong {
+  .surface-panel[data-tone="muted"] {
     background: hsl(var(--panel-strong));
-    border: 1px solid hsl(var(--border));
   }
 
-  .console-label {
-    color: hsl(var(--accent-soft));
-    letter-spacing: 0.24em;
+  .detail-list {
+    border-top: 1px solid hsl(var(--border));
+  }
+
+  .detail-pair {
+    @apply grid gap-2 py-3 sm:grid-cols-[7rem,1fr];
+    border-bottom: 1px solid hsl(var(--border) / 0.8);
+  }
+
+  .detail-pair:last-child {
+    border-bottom: 0;
+  }
+
+  .detail-term {
+    color: hsl(var(--muted-foreground));
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    font-size: 0.68rem;
   }
 
-  .console-copy {
-    color: hsl(var(--muted-foreground));
-    line-height: 1.75;
+  .detail-value {
+    color: hsl(var(--foreground) / 0.88);
+    line-height: 1.7;
   }
 
-  .console-link {
-    color: hsl(var(--accent));
-    border-bottom: 1px solid hsl(var(--accent) / 0.4);
-  }
-
-  .console-link:hover {
-    border-color: hsl(var(--accent));
-  }
-
-  .console-chip {
-    @apply inline-flex items-center gap-2 rounded-sm px-2.5 py-1 text-[0.68rem] uppercase tracking-[0.18em];
+  .capsule {
+    @apply inline-flex items-center gap-2 rounded-full px-3 py-1;
     border: 1px solid hsl(var(--border));
-    background: hsl(var(--background) / 0.8);
+    background: hsl(var(--background) / 0.72);
     color: hsl(var(--muted-foreground));
+    font-family: var(--font-ui);
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
   }
 
-  .console-chip[data-state="green"] {
+  .capsule[data-state="green"] {
     color: hsl(var(--success));
   }
 
-  .console-chip[data-state="amber"] {
+  .capsule[data-state="amber"] {
     color: hsl(var(--danger));
   }
 
-  .console-chip[data-state="sky"] {
+  .capsule[data-state="sky"] {
     color: hsl(var(--info));
   }
 
@@ -148,96 +191,90 @@
     animation: pulse 2.8s infinite;
   }
 
-  .console-grid {
-    @apply grid gap-px overflow-hidden rounded-lg;
-    background: hsl(var(--border));
-  }
-
-  .console-kv {
-    @apply grid gap-3 border-b border-dashed px-4 py-3 sm:grid-cols-[8rem,1fr] sm:px-5;
+  .section-heading {
+    @apply flex flex-wrap items-end justify-between gap-4 border-b pb-4;
     border-color: hsl(var(--border));
   }
 
-  .console-kv:last-child {
-    border-bottom: 0;
-  }
-
-  .console-k {
-    color: hsl(var(--muted-foreground));
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    font-size: 0.72rem;
-  }
-
-  .console-v {
-    color: hsl(var(--foreground) / 0.88);
-    line-height: 1.75;
+  .section-heading h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 3vw, 2.6rem);
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 1;
   }
 
   .chip {
-    @apply rounded-sm px-3 py-1.5 text-[0.68rem] uppercase tracking-[0.16em];
+    @apply rounded-full px-4 py-2 text-[0.72rem];
     border: 1px solid hsl(var(--border));
     color: hsl(var(--muted-foreground));
     background: hsl(var(--panel) / 0.75);
     cursor: pointer;
+    font-family: var(--font-ui);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
   }
 
   .chip:hover {
     color: hsl(var(--foreground));
-    border-color: hsl(var(--accent) / 0.45);
+    border-color: hsl(var(--accent) / 0.35);
+    background: hsl(var(--panel-strong));
   }
 
   .chip[aria-pressed="true"] {
     color: hsl(var(--accent));
-    border-color: hsl(var(--accent) / 0.5);
-    background: hsl(var(--panel-strong));
+    border-color: hsl(var(--accent) / 0.4);
+    background: hsl(var(--background));
   }
 
-  .process-card {
-    @apply grid gap-4 rounded-lg px-4 py-4 sm:grid-cols-[auto,1fr] sm:px-5;
+  .project-card {
+    @apply grid gap-4 rounded-[1.5rem] px-5 py-5 sm:grid-cols-[auto,1fr] sm:px-6;
     border: 1px solid hsl(var(--border));
     background: linear-gradient(180deg, hsl(var(--panel)), hsl(var(--panel-strong)));
+    box-shadow: 0 22px 44px -34px hsl(var(--foreground) / 0.25);
   }
 
-  .process-card:hover {
-    border-color: hsl(var(--accent) / 0.42);
+  .project-card:hover {
+    border-color: hsl(var(--accent) / 0.32);
     transform: translateY(-1px);
   }
 
-  .process-dot {
-    @apply mt-1.5 h-2.5 w-2.5 rounded-full;
+  .project-dot {
+    @apply mt-2 h-2.5 w-2.5 rounded-full;
   }
 
-  .process-dot[data-tone="green"] {
+  .project-dot[data-tone="green"] {
     background: hsl(var(--success));
-    box-shadow: 0 0 10px hsl(var(--success) / 0.45);
+    box-shadow: 0 0 0 4px hsl(var(--success) / 0.12);
   }
 
-  .process-dot[data-tone="amber"] {
+  .project-dot[data-tone="amber"] {
     background: hsl(var(--danger));
-    box-shadow: 0 0 10px hsl(var(--danger) / 0.4);
+    box-shadow: 0 0 0 4px hsl(var(--danger) / 0.1);
   }
 
-  .process-dot[data-tone="sky"] {
+  .project-dot[data-tone="sky"] {
     background: hsl(var(--info));
-    box-shadow: 0 0 10px hsl(var(--info) / 0.4);
+    box-shadow: 0 0 0 4px hsl(var(--info) / 0.1);
   }
 
-  .telemetry-pill {
-    @apply inline-flex items-baseline gap-2 rounded-sm px-2.5 py-1;
+  .metric-pill {
+    @apply inline-flex items-baseline gap-2 rounded-full px-3 py-1.5;
     border: 1px solid hsl(var(--border));
-    background: hsl(var(--background) / 0.8);
+    background: hsl(var(--background) / 0.76);
   }
 
-  .telemetry-pill strong {
+  .metric-pill strong {
     color: hsl(var(--accent-soft));
     font-weight: 600;
+    font-family: var(--font-display);
   }
 
-  .telemetry-pill span {
+  .metric-pill span {
     color: hsl(var(--muted-foreground));
     font-size: 0.7rem;
-    letter-spacing: 0.08em;
+    font-family: var(--font-ui);
+    letter-spacing: 0.12em;
     text-transform: uppercase;
   }
 }

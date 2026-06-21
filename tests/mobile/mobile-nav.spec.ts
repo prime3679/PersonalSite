@@ -18,7 +18,7 @@ test('mobile: hamburger menu opens and navigates', async ({ page }) => {
 
   await mobileNav.locator('a[href="/lab"]').click();
   await page.waitForURL(/\/lab\/?$/); // navigation timeout tolerates dev lazy-compile under load
-  await expect(page.locator('main h1')).toHaveText('Lab');
+  await expect(page.locator('main h1')).toHaveText('lab');
 });
 
 test('mobile: theme toggle flips dark mode', async ({ page }) => {

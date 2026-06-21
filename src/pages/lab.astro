@@ -49,10 +49,10 @@ const projects = labProjects.map((project) =>
 
 const categoryOrder = ['agents', 'tools', 'toys', 'writing'] as const;
 const categoryLabels = {
-  agents: 'Agent systems',
-  tools: 'Tools',
-  toys: 'Toys',
-  writing: 'Writing',
+  agents: 'agent lane',
+  tools: 'tool lane',
+  toys: 'toy lane',
+  writing: 'writing lane',
 } as const;
 ---
 
@@ -63,34 +63,36 @@ const categoryLabels = {
 >
 
     <section class="fade-in">
+      <p class="mb-5 text-[0.72rem] uppercase tracking-[0.2em] text-muted-foreground">
+        adrian@nyc:~/lab$ ps --public --grouped
+      </p>
       <div class="grid gap-6 lg:grid-cols-[minmax(0,1.15fr),minmax(18rem,0.85fr)] lg:items-start">
         <div>
-          <p class="eyebrow mb-5">Public index · experiments · products · writing</p>
-          <h1 class="text-[clamp(2.8rem,6vw,4.8rem)] tracking-[-0.05em] text-foreground" style="font-family: var(--font-display); font-weight: 600;">
-            Lab
+          <h1 class="text-[clamp(2.4rem,6vw,4.4rem)] font-semibold lowercase tracking-[-0.05em] text-foreground">
+            lab
           </h1>
-          <p class="mt-4 max-w-3xl lede sm:text-[1.08rem]">
-            A public index of what I’m building. Not a portfolio and not a launch queue: just the work itself, what is live, what is paused, what is safe to click, and what taught me something even if it never became a company.
+          <p class="mt-4 max-w-3xl text-[1rem] leading-8 text-foreground/78 sm:text-[1.05rem]">
+            things i am building. not a portfolio, not a launch queue. this is the public process table:
+            what is running, what is paused, what is safe to click, and what learned something even if it never became a company.
           </p>
         </div>
 
-        <aside class="surface-panel overflow-hidden rounded-[1.5rem] p-6">
-          <div class="flex items-center justify-between gap-4">
-            <p class="eyebrow">How to read this</p>
-            <span class="capsule" data-state="sky">Curated</span>
+        <aside class="console-panel overflow-hidden rounded-lg">
+          <div class="border-b border-border px-5 py-4">
+            <p class="console-label">operator notes</p>
           </div>
-          <div class="detail-list mt-5 text-sm">
-            <div class="detail-pair">
-              <span class="detail-term">Scope</span>
-              <span class="detail-value">{projects.length} public projects</span>
+          <div class="space-y-0 bg-[hsl(var(--panel-strong))] text-sm">
+            <div class="console-kv">
+              <span class="console-k">scope</span>
+              <span class="console-v">{projects.length} public projects</span>
             </div>
-            <div class="detail-pair">
-              <span class="detail-term">Snapshots</span>
-              <span class="detail-value">Public metrics are baked at build time when a safe snapshot exists</span>
+            <div class="console-kv">
+              <span class="console-k">feed</span>
+              <span class="console-v">stats are baked at build time when public snapshots exist</span>
             </div>
-            <div class="detail-pair">
-              <span class="detail-term">Boundary</span>
-              <span class="detail-value">No private dashboards, credentials, or internal-only specifics</span>
+            <div class="console-kv">
+              <span class="console-k">rule</span>
+              <span class="console-v">no private dashboards, credentials, or internal-only specifics</span>
             </div>
           </div>
         </aside>
@@ -110,12 +112,9 @@ const categoryLabels = {
     <section class="mt-10 space-y-10 fade-in">
       {categoryOrder.map((category) => (
         <section data-group={category} class="space-y-4">
-          <div class="section-heading pb-3">
-            <div>
-              <p class="eyebrow mb-2">{categoryLabels[category]}</p>
-              <h2>{categoryLabels[category]}</h2>
-            </div>
-            <span class="eyebrow text-muted-foreground">
+          <div class="flex items-center gap-4 border-b border-border pb-3">
+            <p class="console-label">{categoryLabels[category]}</p>
+            <span class="text-xs uppercase tracking-[0.16em] text-muted-foreground">
               {projects.filter((project) => project.category === category).length} entries
             </span>
           </div>
@@ -123,32 +122,32 @@ const categoryLabels = {
           <div class="space-y-4">
             {projects.filter((project) => project.category === category).map((project) => (
               <article
-                class="project-card"
+                class="process-card"
                 id={project.id}
                 data-category={project.category}
               >
-                <div class="project-dot" data-tone={project.badge.tone}></div>
+                <div class="process-dot" data-tone={project.badge.tone}></div>
                 <div>
                   <div class="flex flex-wrap items-start justify-between gap-3">
                     <div>
                       {project.external ? (
-                        <a href={project.href} target="_blank" rel="noopener noreferrer" class="text-[1.55rem] tracking-[-0.03em] hover:text-[hsl(var(--accent))]" style="font-family: var(--font-display);">{project.title}</a>
+                        <a href={project.href} target="_blank" rel="noopener noreferrer" class="text-xl lowercase tracking-[-0.02em] hover:text-[hsl(var(--accent))]">{project.title}</a>
                       ) : (
-                        <a href={project.href} class="text-[1.55rem] tracking-[-0.03em] hover:text-[hsl(var(--accent))]" style="font-family: var(--font-display);">{project.title}</a>
+                        <a href={project.href} class="text-xl lowercase tracking-[-0.02em] hover:text-[hsl(var(--accent))]">{project.title}</a>
                       )}
-                      <p class="eyebrow mt-2 text-muted-foreground">{project.dateline}</p>
+                      <p class="mt-1 text-[0.72rem] uppercase tracking-[0.18em] text-muted-foreground">{project.dateline}</p>
                     </div>
 
-                    <span class="capsule capitalize" data-state={project.badge.tone}>
+                    <span class="console-chip" data-state={project.badge.tone}>
                       {project.badge.label}
                     </span>
                   </div>
 
-                  <p class="mt-3 max-w-3xl text-[1rem] leading-7 text-foreground/78">{project.description}</p>
+                  <p class="mt-3 max-w-3xl text-sm leading-7 text-foreground/78">{project.description}</p>
 
                   <div class="mt-4 flex flex-wrap gap-2">
                     {project.stats.map((stat) => (
-                      <span class="metric-pill">
+                      <span class="telemetry-pill">
                         <strong>{stat.value}</strong>
                         <span>{stat.label}</span>
                       </span>
@@ -156,7 +155,7 @@ const categoryLabels = {
                   </div>
 
                   {project.statsNote && (
-                    <p class="mt-3 eyebrow text-muted-foreground">
+                    <p class="mt-3 text-[0.68rem] uppercase tracking-[0.16em] text-muted-foreground">
                       {project.statsNote}
                     </p>
                   )}
@@ -164,9 +163,9 @@ const categoryLabels = {
                   <div class="mt-4 flex flex-wrap gap-4 text-sm">
                     {project.links.map((link) =>
                       link.external ? (
-                        <a href={link.href} target="_blank" rel="noopener noreferrer" class="text-link">{link.label}</a>
+                        <a href={link.href} target="_blank" rel="noopener noreferrer" class="console-link">{link.label}</a>
                       ) : (
-                        <a href={link.href} class="text-link">{link.label}</a>
+                        <a href={link.href} class="console-link">{link.label}</a>
                       ),
                     )}
                   </div>
@@ -177,8 +176,8 @@ const categoryLabels = {
         </section>
       ))}
 
-      <div class="rounded-[1.5rem] border border-dashed border-border px-5 py-5 text-sm text-muted-foreground">
-        More work will appear here when it is safe to show and worth keeping online.
+      <div class="rounded-lg border border-dashed border-border px-5 py-5 text-sm text-muted-foreground">
+        more processes will appear when they are safe to show and worth keeping online.
       </div>
     </section>
 </Base>

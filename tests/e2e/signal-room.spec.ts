@@ -6,8 +6,8 @@ test('signal room: index lists every episode newest-first', async ({ page }) => 
   await expect(page.locator('main h1')).toHaveText('signal room');
 
   const links = page.locator('main a[href^="/signal-room/"]');
-  await expect(links).toHaveCount(4);
-  await expect(links.first()).toContainText('the purchasing agent');
+  await expect(links).toHaveCount(5);
+  await expect(links.first()).toContainText('the quiet receipt');
   await expect(links.last()).toContainText('night shift');
 });
 

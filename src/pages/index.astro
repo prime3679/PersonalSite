@@ -1,173 +1,54 @@
 ---
 import Base from '../layouts/Base.astro';
 import { now } from '../data/now';
-import { labProjects, type LabProject } from '../data/lab';
-
-const featuredProjects = ['agent-arcade', 'bishop', 'mission-control', 'operator-stack']
-  .map((id) => labProjects.find((project) => project.id === id))
-  .filter((project): project is LabProject => Boolean(project));
-
-const updatedLabel = 'June 2026';
 ---
 
-<Base
-  description="Director of Product at Salesforce, building at the intersection of AI and enterprise. Previously SiriusXM, Disney+, EA. Based in NYC."
-  ogImage="/og/home.png"
-  mainClass="site-shell py-10 sm:py-14"
->
+<Base description="Director of Product at Salesforce, building at the intersection of AI and enterprise. Previously SiriusXM, Disney+, EA. Based in NYC." ogImage="/og/home.png">
 
-    <section class="fade-in">
-      <div class="grid gap-8 lg:grid-cols-[minmax(0,1.15fr),minmax(18rem,0.85fr)] lg:items-start">
-        <div>
-          <p class="eyebrow mb-5">Personal site · product leadership · AI systems</p>
-          <h1 class="max-w-[11ch] text-[clamp(3rem,7vw,5.6rem)] leading-[0.94] tracking-[-0.06em] text-foreground" style="font-family: var(--font-display); font-weight: 600;">
-            Building the quiet machinery behind better product work.
-          </h1>
-          <div class="mt-6 max-w-3xl space-y-4 lede sm:text-[1.08rem]">
-            <p>
-              I’m director of product at <a href="https://www.salesforce.com" class="text-link" target="_blank" rel="noopener noreferrer">Salesforce</a>,
-              working at the intersection of AI and enterprise: how large organizations actually adopt new technology, and what it takes to make it stick.
-            </p>
-            <p class="text-muted-foreground">
-              Fourteen years in tech, previously SiriusXM, Disney+, and EA. The rest of this site is the off-hours body of work: public notes, useful products, and agent experiments that are safe to show in the open.
-            </p>
-          </div>
-        </div>
+  <!-- Intro -->
+  <section class="mb-16 fade-in">
+    <h1 class="text-2xl font-normal mb-6 leading-relaxed">hello, i'm adrian</h1>
+    <p class="text-base leading-relaxed mb-4">
+      director of product at <a href="https://www.salesforce.com" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">salesforce</a>, working at the intersection of ai and enterprise — figuring out how large organizations actually adopt new technology, and what it takes to make that stick.
+    </p>
+    <p class="text-base leading-relaxed">
+      14 years in tech. previously siriusxm, disney+, ea. based in nyc. → <a href="/work" class="underline hover:no-underline">see the work</a>
+    </p>
+  </section>
 
-        <aside class="surface-panel overflow-hidden rounded-[1.5rem] p-6">
-          <div class="flex items-center justify-between gap-4">
-            <p class="eyebrow">At a glance</p>
-            <span class="capsule" data-state="green">Operational</span>
-          </div>
-          <div class="detail-list mt-5">
-            <div class="detail-pair">
-              <span class="detail-term">Updated</span>
-              <span class="detail-value">{updatedLabel}</span>
-            </div>
-            <div class="detail-pair">
-              <span class="detail-term">Stack</span>
-              <span class="detail-value">Astro, TypeScript, Node.js, Claude</span>
-            </div>
-            <div class="detail-pair">
-              <span class="detail-term">Base</span>
-              <span class="detail-value">New York City, Eastern time, one Mac mini, and a lot of opinions</span>
-            </div>
-            <div class="detail-pair">
-              <span class="detail-term">Focus</span>
-              <span class="detail-value">Practical AI, clearer product strategy, and tools that earn their keep</span>
-            </div>
-          </div>
-        </aside>
+  <!-- Currently -->
+  <section class="mb-16 fade-in">
+    <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">currently:</h2>
+    <div class="space-y-3 text-base leading-relaxed">
+      {now.building.map((item) => (
+        <p>
+          {item.href && item.label && (
+            <><a href={item.href} class="underline hover:no-underline">{item.label}</a> — </>
+          )}
+          {item.text}
+        </p>
+      ))}
+      <div class="pt-2 space-y-2 text-sm text-foreground/60">
+        <p><span class="font-semibold text-foreground/80">stack:</span> astro, typescript, node.js, claude</p>
+        <p><span class="font-semibold text-foreground/80">reading:</span> {now.reading.map((b) => b.author).join(', ')} — <a href={now.goodreads} class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">goodreads</a></p>
+        <p><span class="font-semibold text-foreground/80">training:</span> {now.training.disciplines.join(' + ')}. {now.training.note}</p>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="mt-10 fade-in">
-      <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr),minmax(0,1fr)]">
-        <div class="surface-panel rounded-[1.5rem] p-6">
-          <div class="border-b border-border pb-4">
-            <div class="flex items-center justify-between gap-4">
-              <p class="eyebrow">Currently</p>
-              <span class="eyebrow text-muted-foreground">{updatedLabel}</span>
-            </div>
-          </div>
-          <div class="detail-list mt-4">
-            {now.building.map((item) => (
-              <div class="detail-pair">
-                <span class="detail-term">Building</span>
-                <p class="detail-value">
-                  {item.href && item.label && (
-                    <>
-                      <a href={item.href} class="text-link">{item.label}</a>
-                      {' — '}
-                    </>
-                  )}
-                  {item.text}
-                </p>
-              </div>
-            ))}
-            <div class="detail-pair">
-              <span class="detail-term">Reading</span>
-              <p class="detail-value">
-                {now.reading.map((book) => book.author).join(' · ')}
-                {' · '}
-                <a href={now.goodreads} class="text-link" target="_blank" rel="noopener noreferrer">Goodreads</a>
-              </p>
-            </div>
-            <div class="detail-pair">
-              <span class="detail-term">Training</span>
-              <p class="detail-value">{now.training.disciplines.join(' + ')}. {now.training.note}</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="surface-panel rounded-[1.5rem] p-6" data-tone="muted">
-          <div class="border-b border-border pb-4">
-            <div class="flex items-center justify-between gap-4">
-              <p class="eyebrow">Where to go next</p>
-              <span class="eyebrow text-muted-foreground">Guided tour</span>
-            </div>
-          </div>
-          <div class="mt-4 grid gap-3">
-            <a href="/lab" class="flex items-center justify-between rounded-[1.1rem] border border-border bg-background/70 px-5 py-4 hover:border-[hsl(var(--accent)/0.25)] hover:bg-background">
-              <span class="text-lg tracking-[-0.02em]" style="font-family: var(--font-display);">The lab</span>
-              <span class="eyebrow text-[hsl(var(--accent))]">Projects</span>
-            </a>
-            <a href="/work" class="flex items-center justify-between rounded-[1.1rem] border border-border bg-background/70 px-5 py-4 hover:border-[hsl(var(--accent)/0.25)] hover:bg-background">
-              <span class="text-lg tracking-[-0.02em]" style="font-family: var(--font-display);">Selected work</span>
-              <span class="eyebrow text-[hsl(var(--accent))]">Case studies</span>
-            </a>
-            <a href="/operator-stack" class="flex items-center justify-between rounded-[1.1rem] border border-border bg-background/70 px-5 py-4 hover:border-[hsl(var(--accent)/0.25)] hover:bg-background">
-              <span class="text-lg tracking-[-0.02em]" style="font-family: var(--font-display);">Operator Stack</span>
-              <span class="eyebrow text-[hsl(var(--accent))]">Tools</span>
-            </a>
-            <a href="/contact" class="flex items-center justify-between rounded-[1.1rem] border border-border bg-background/70 px-5 py-4 hover:border-[hsl(var(--accent)/0.25)] hover:bg-background">
-              <span class="text-lg tracking-[-0.02em]" style="font-family: var(--font-display);">Start a conversation</span>
-              <span class="eyebrow text-[hsl(var(--accent))]">Contact</span>
-            </a>
-          </div>
-        </div>
+  <!-- Connect -->
+  <section class="mb-16 fade-in" id="connect">
+    <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">let's talk:</h2>
+    <div class="space-y-4 text-base leading-relaxed">
+      <p>always interested in product challenges, creative projects, or just good conversation.</p>
+      <p>open to advisory roles, the right side-hustle, and useful operator tools.</p>
+      <div class="space-y-2 mt-6">
+        <p>— <a href="/operator-stack" class="underline hover:no-underline">operator stack</a></p>
+        <p>— <a href="/contact" class="underline hover:no-underline">email me</a></p>
+        <p>— <a href="https://www.linkedin.com/in/adrianlumley/" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">linkedin</a></p>
+        <p>— <a href="https://github.com/prime3679" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">github</a></p>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="mt-16 fade-in" id="lab-preview">
-      <div class="section-heading mb-6">
-        <div>
-          <p class="eyebrow mb-2">Featured from the lab</p>
-          <h2>What is running in public</h2>
-        </div>
-        <a href="/lab" class="text-link text-sm" style="font-family: var(--font-ui);">View the full index</a>
-      </div>
-
-      <div class="space-y-4">
-        {featuredProjects.map((project) => (
-          <article class="project-card">
-            <div class="project-dot" data-tone={project.badge.tone}></div>
-            <div>
-              <div class="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  {project.external ? (
-                    <a href={project.href} target="_blank" rel="noopener noreferrer" class="text-[1.55rem] tracking-[-0.03em] hover:text-[hsl(var(--accent))]" style="font-family: var(--font-display);">{project.title}</a>
-                  ) : (
-                    <a href={project.href} class="text-[1.55rem] tracking-[-0.03em] hover:text-[hsl(var(--accent))]" style="font-family: var(--font-display);">{project.title}</a>
-                  )}
-                  <p class="eyebrow mt-2 text-muted-foreground">{project.dateline}</p>
-                </div>
-                <span class="capsule capitalize" data-state={project.badge.tone}>{project.badge.label}</span>
-              </div>
-
-              <p class="mt-3 max-w-3xl text-[1rem] leading-7 text-foreground/78">{project.description}</p>
-
-              <div class="mt-4 flex flex-wrap gap-2">
-                {project.stats.map((stat) => (
-                  <span class="metric-pill">
-                    <strong>{stat.value}</strong>
-                    <span>{stat.label}</span>
-                  </span>
-                ))}
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
 </Base>

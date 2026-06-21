@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { labProjects, type LabProject } from '../data/lab';
+import { labProjects, badgeToneClasses, type LabProject } from '../data/lab';
 import { getEpisodes } from '../lib/content';
 import { padEpisode, snapshotLabel } from '../lib/format';
 import familyosStats from '../../public/familyos-stats.json';
@@ -43,173 +43,118 @@ const overrides: Record<string, Partial<LabProject>> = {
   },
 };
 
-const projects = labProjects.map((project) =>
-  overrides[project.id] ? { ...project, ...overrides[project.id] } : project,
+const projects = labProjects.map((p) =>
+  overrides[p.id] ? { ...p, ...overrides[p.id] } : p,
 );
-
-const categoryOrder = ['agents', 'tools', 'toys', 'writing'] as const;
-const categoryLabels = {
-  agents: 'Agent systems',
-  tools: 'Tools',
-  toys: 'Toys',
-  writing: 'Writing',
-} as const;
 ---
 
 <Base
   title="Lab — Adrian Lumley"
   description="Things I'm building. Some finished, some running, some still figuring out."
-  mainClass="site-shell py-10 sm:py-14"
 >
 
-    <section class="fade-in">
-      <div class="grid gap-6 lg:grid-cols-[minmax(0,1.15fr),minmax(18rem,0.85fr)] lg:items-start">
-        <div>
-          <p class="eyebrow mb-5">Public index · experiments · products · writing</p>
-          <h1 class="text-[clamp(2.8rem,6vw,4.8rem)] tracking-[-0.05em] text-foreground" style="font-family: var(--font-display); font-weight: 600;">
-            Lab
-          </h1>
-          <p class="mt-4 max-w-3xl lede sm:text-[1.08rem]">
-            A public index of what I’m building. Not a portfolio and not a launch queue: just the work itself, what is live, what is paused, what is safe to click, and what taught me something even if it never became a company.
-          </p>
-        </div>
+  <!-- Intro -->
+  <section class="mb-12 fade-in">
+    <h1 class="text-2xl font-normal mb-3">lab</h1>
+    <p class="text-sm leading-relaxed text-foreground/60">
+      things i'm building. not a portfolio — an honest record of what's running,
+      what's in progress, and what didn't survive contact with reality.
+    </p>
+  </section>
 
-        <aside class="surface-panel overflow-hidden rounded-[1.5rem] p-6">
-          <div class="flex items-center justify-between gap-4">
-            <p class="eyebrow">How to read this</p>
-            <span class="capsule" data-state="sky">Curated</span>
-          </div>
-          <div class="detail-list mt-5 text-sm">
-            <div class="detail-pair">
-              <span class="detail-term">Scope</span>
-              <span class="detail-value">{projects.length} public projects</span>
-            </div>
-            <div class="detail-pair">
-              <span class="detail-term">Snapshots</span>
-              <span class="detail-value">Public metrics are baked at build time when a safe snapshot exists</span>
-            </div>
-            <div class="detail-pair">
-              <span class="detail-term">Boundary</span>
-              <span class="detail-value">No private dashboards, credentials, or internal-only specifics</span>
-            </div>
-          </div>
-        </aside>
-      </div>
-    </section>
+  <!-- Filter -->
+  <section class="mb-8 fade-in">
+    <div class="flex flex-wrap gap-2" id="lab-filters" role="group" aria-label="Filter projects by kind">
+      <button type="button" class="chip" data-filter="all" aria-pressed="true">all</button>
+      <button type="button" class="chip" data-filter="agents" aria-pressed="false">agents</button>
+      <button type="button" class="chip" data-filter="tools" aria-pressed="false">tools</button>
+      <button type="button" class="chip" data-filter="toys" aria-pressed="false">toys</button>
+      <button type="button" class="chip" data-filter="writing" aria-pressed="false">writing</button>
+    </div>
+  </section>
 
-    <section class="mt-10 fade-in">
-      <div class="flex flex-wrap gap-2" id="lab-filters" role="group" aria-label="Filter projects by kind">
-        <button type="button" class="chip" data-filter="all" aria-pressed="true">all</button>
-        <button type="button" class="chip" data-filter="agents" aria-pressed="false">agents</button>
-        <button type="button" class="chip" data-filter="tools" aria-pressed="false">tools</button>
-        <button type="button" class="chip" data-filter="toys" aria-pressed="false">toys</button>
-        <button type="button" class="chip" data-filter="writing" aria-pressed="false">writing</button>
-      </div>
-    </section>
+  <!-- Projects -->
+  <section class="space-y-4 fade-in">
 
-    <section class="mt-10 space-y-10 fade-in">
-      {categoryOrder.map((category) => (
-        <section data-group={category} class="space-y-4">
-          <div class="section-heading pb-3">
+    {projects.map((project) => (
+      <article class="border border-foreground/10 rounded-xl overflow-hidden" id={project.id} data-category={project.category}>
+        <div class="p-6">
+          <div class="flex items-start justify-between mb-3">
             <div>
-              <p class="eyebrow mb-2">{categoryLabels[category]}</p>
-              <h2>{categoryLabels[category]}</h2>
+              {project.external ? (
+                <a href={project.href} target="_blank" rel="noopener noreferrer" class="text-base font-medium hover:underline">{project.title}</a>
+              ) : (
+                <a href={project.href} class="text-base font-medium hover:underline">{project.title}</a>
+              )}
+              <p class="text-xs text-muted-foreground mt-0.5">{project.dateline}</p>
             </div>
-            <span class="eyebrow text-muted-foreground">
-              {projects.filter((project) => project.category === category).length} entries
+            <span class={`text-xs px-2 py-0.5 rounded border shrink-0 ml-4 ${badgeToneClasses[project.badge.tone]}`}>
+              {project.badge.label}
             </span>
           </div>
+          <p class="text-sm leading-relaxed text-foreground/70 mb-4">{project.description}</p>
 
-          <div class="space-y-4">
-            {projects.filter((project) => project.category === category).map((project) => (
-              <article
-                class="project-card"
-                id={project.id}
-                data-category={project.category}
-              >
-                <div class="project-dot" data-tone={project.badge.tone}></div>
+          <div class="border-t border-foreground/5 pt-4 mt-4">
+            <div class="grid grid-cols-3 gap-4 text-center">
+              {project.stats.map((stat) => (
                 <div>
-                  <div class="flex flex-wrap items-start justify-between gap-3">
-                    <div>
-                      {project.external ? (
-                        <a href={project.href} target="_blank" rel="noopener noreferrer" class="text-[1.55rem] tracking-[-0.03em] hover:text-[hsl(var(--accent))]" style="font-family: var(--font-display);">{project.title}</a>
-                      ) : (
-                        <a href={project.href} class="text-[1.55rem] tracking-[-0.03em] hover:text-[hsl(var(--accent))]" style="font-family: var(--font-display);">{project.title}</a>
-                      )}
-                      <p class="eyebrow mt-2 text-muted-foreground">{project.dateline}</p>
-                    </div>
-
-                    <span class="capsule capitalize" data-state={project.badge.tone}>
-                      {project.badge.label}
-                    </span>
-                  </div>
-
-                  <p class="mt-3 max-w-3xl text-[1rem] leading-7 text-foreground/78">{project.description}</p>
-
-                  <div class="mt-4 flex flex-wrap gap-2">
-                    {project.stats.map((stat) => (
-                      <span class="metric-pill">
-                        <strong>{stat.value}</strong>
-                        <span>{stat.label}</span>
-                      </span>
-                    ))}
-                  </div>
-
-                  {project.statsNote && (
-                    <p class="mt-3 eyebrow text-muted-foreground">
-                      {project.statsNote}
-                    </p>
-                  )}
-
-                  <div class="mt-4 flex flex-wrap gap-4 text-sm">
-                    {project.links.map((link) =>
-                      link.external ? (
-                        <a href={link.href} target="_blank" rel="noopener noreferrer" class="text-link">{link.label}</a>
-                      ) : (
-                        <a href={link.href} class="text-link">{link.label}</a>
-                      ),
-                    )}
-                  </div>
+                  <div class="text-lg font-medium">{stat.value}</div>
+                  <div class="text-xs text-muted-foreground mt-0.5">{stat.label}</div>
                 </div>
-              </article>
-            ))}
+              ))}
+            </div>
+            {project.statsNote && (
+              <p class="text-[10px] uppercase tracking-wider text-muted-foreground mt-3 text-center">{project.statsNote}</p>
+            )}
           </div>
-        </section>
-      ))}
 
-      <div class="rounded-[1.5rem] border border-dashed border-border px-5 py-5 text-sm text-muted-foreground">
-        More work will appear here when it is safe to show and worth keeping online.
-      </div>
-    </section>
+          <div class="flex items-center gap-4 mt-4 pt-4 border-t border-foreground/5">
+            {project.links.map((link) =>
+              link.external ? (
+                <a href={link.href} target="_blank" rel="noopener noreferrer" class="text-xs underline hover:no-underline text-muted-foreground">{link.label}</a>
+              ) : (
+                <a href={link.href} class="text-xs underline hover:no-underline text-muted-foreground">{link.label}</a>
+              ),
+            )}
+          </div>
+        </div>
+      </article>
+    ))}
+
+    <!-- Placeholder: more to come -->
+    <div class="border border-dashed border-foreground/10 rounded-xl p-6 text-center">
+      <p class="text-xs text-muted-foreground">more things brewing. check back.</p>
+    </div>
+
+  </section>
+
+  <!-- Philosophy -->
+  <section class="mt-16 fade-in">
+    <p class="text-xs leading-relaxed text-foreground/40">
+      i build things i actually use. if they're useful to others, i open source them.
+      no launch announcements, no waitlists. just working software that solves real problems.
+    </p>
+  </section>
+
 </Base>
 
 <script>
+  // Filter project cards by kind. Degrades gracefully: with no JS, all cards show.
   const labFilters = document.getElementById('lab-filters');
-
   if (labFilters) {
     const chips = Array.from(labFilters.querySelectorAll('[data-filter]'));
     const cards = Array.from(document.querySelectorAll('[data-category]'));
-    const groups = Array.from(document.querySelectorAll('[data-group]'));
 
-    labFilters.addEventListener('click', (event) => {
-      const target = event.target as HTMLElement;
-      const button = target.closest('[data-filter]') as HTMLElement | null;
-      if (!button) return;
+    labFilters.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      const btn = target.closest('[data-filter]') as HTMLElement | null;
+      if (!btn) return;
+      const filter = btn.dataset.filter;
 
-      const filter = button.dataset.filter;
-      chips.forEach((chip) => chip.setAttribute('aria-pressed', String(chip === button)));
-
+      chips.forEach((c) => c.setAttribute('aria-pressed', String(c === btn)));
       cards.forEach((card) => {
         const show = filter === 'all' || card.getAttribute('data-category') === filter;
         card.classList.toggle('hidden', !show);
-      });
-
-      groups.forEach((group) => {
-        const category = group.getAttribute('data-group');
-        const visibleCards = cards.filter(
-          (card) => card.getAttribute('data-category') === category && !card.classList.contains('hidden'),
-        );
-        group.classList.toggle('hidden', visibleCards.length === 0);
       });
     });
   }

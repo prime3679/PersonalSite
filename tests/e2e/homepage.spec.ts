@@ -4,7 +4,7 @@ test('Homepage has correct title and content', async ({ page }) => {
   await page.goto('/');
 
   // Check for the main heading
-  await expect(page.locator('main h1')).toHaveText("hello, i'm adrian");
+  await expect(page.locator('main h1')).toHaveText('a personal operating system, run in public.');
 
   // Check for the role description
   await expect(page.locator('body')).toContainText('director of product at salesforce');
@@ -14,24 +14,16 @@ test('Homepage has correct title and content', async ({ page }) => {
   await expect(salesforceLink).toBeVisible();
   await expect(salesforceLink).toHaveAttribute('href', 'https://www.salesforce.com');
 
-  // Check for "Currently" section
-  await expect(page.getByText('currently:', { exact: true })).toBeVisible();
+  // Check for "Currently" section content
+  await expect(page.getByText('currently', { exact: true })).toBeVisible();
   const signalRoomLink = page.locator('main a', { hasText: 'signal room' });
   await expect(signalRoomLink).toBeVisible();
   await expect(signalRoomLink).toHaveAttribute('href', '/signal-room');
 
-  // Check for "Connect" section
-  await expect(page.getByText("let's talk:", { exact: true })).toBeVisible();
+  // Check for the contact route in the channel list
+  await expect(page.getByText('open a channel', { exact: true })).toBeVisible();
 
-  const emailLink = page.locator('a', { hasText: 'email me' });
-  await expect(emailLink).toBeVisible();
-  await expect(emailLink).toHaveAttribute('href', '/contact');
-
-  const linkedinLink = page.locator('a', { hasText: 'linkedin' });
-  await expect(linkedinLink).toBeVisible();
-  await expect(linkedinLink).toHaveAttribute('href', 'https://www.linkedin.com/in/adrianlumley/');
-
-  const githubLink = page.locator('a', { hasText: 'github' });
-  await expect(githubLink).toBeVisible();
-  await expect(githubLink).toHaveAttribute('href', 'https://github.com/prime3679');
+  const contactLink = page.locator('main a', { hasText: 'open a channel' });
+  await expect(contactLink).toBeVisible();
+  await expect(contactLink).toHaveAttribute('href', '/contact');
 });

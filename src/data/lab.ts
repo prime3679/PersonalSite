@@ -40,6 +40,23 @@ export const badgeToneClasses: Record<BadgeTone, string> = {
 
 export const labProjects: LabProject[] = [
   {
+    id: 'agent-arcade',
+    category: 'agents',
+    title: 'agent arcade',
+    href: 'http://arcade.adrianlumley.co/app/',
+    external: true,
+    dateline: 'public demo · june 2026',
+    badge: { label: 'public', tone: 'sky' },
+    description:
+      'a public arcade for watching agents play, compete, and occasionally embarrass themselves. small games, visible behavior, and a safer way to show agent systems in motion without pretending they are magic.',
+    stats: [
+      { value: 'public', label: 'open link' },
+      { value: 'agents', label: 'in play' },
+      { value: 'live', label: 'demo lane' },
+    ],
+    links: [{ label: 'enter the arcade ↗', href: 'http://arcade.adrianlumley.co/app/', external: true }],
+  },
+  {
     id: 'signal-room',
     category: 'writing',
     title: 'signal room',

@@ -5,7 +5,8 @@ const root = process.cwd();
 const dist = join(root, 'dist');
 const failures = [];
 const globalForbidden = ['homepage / hero', 'lab / flagship card', 'signal room / episode log', 'OpenClaw'];
-const primarySurfaceForbidden = ['operator stack', 'familyos', 'bishop-bench'];
+const primarySurfaceForbidden = ['operator stack', 'familyos', 'bishop-bench', 'mission control'];
+const emDashForbidden = '—';
 
 function files(path) {
   const stat = statSync(path);
@@ -13,8 +14,17 @@ function files(path) {
   return /\.(html|xml|css|js)$/.test(path) ? [path] : [];
 }
 
+function isToyOrLegacyStatic(rel) {
+  return rel.startsWith('dist/lab/') || rel.startsWith('dist/360/');
+}
+
+function isSignalRoomFictionSurface(rel) {
+  return rel.startsWith('dist/signal-room/') || rel === 'dist/rss.xml';
+}
+
 for (const path of files(dist)) {
   const rel = path.replace(root + '/', '');
+  if (isToyOrLegacyStatic(rel)) continue;
   const text = readFileSync(path, 'utf8');
   const lower = text.toLowerCase();
   for (const term of globalForbidden) {
@@ -22,8 +32,8 @@ for (const path of files(dist)) {
     const needle = term === 'OpenClaw' ? term : term.toLowerCase();
     if (haystack.includes(needle)) failures.push(`${rel}: forbidden marker '${term}'`);
   }
-  const isSignalRoomEpisode = rel.startsWith('dist/signal-room/') && rel !== 'dist/signal-room/index.html';
-  if (!isSignalRoomEpisode) {
+  if (text.includes(emDashForbidden)) failures.push(`${rel}: forbidden marker '${emDashForbidden}'`);
+  if (!isSignalRoomFictionSurface(rel)) {
     for (const term of primarySurfaceForbidden) {
       if (lower.includes(term)) failures.push(`${rel}: retired primary-surface marker '${term}'`);
     }

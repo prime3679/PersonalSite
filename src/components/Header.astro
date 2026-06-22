@@ -5,17 +5,48 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(href
 const isCurrentPage = (href: string) => pathname === href || pathname === href + '/';
 ---
 
-<header class="sticky top-0 z-40 border-b border-[var(--line)] bg-[color:rgb(247_243_234_/_0.86)] backdrop-blur supports-[backdrop-filter]:bg-[color:rgb(247_243_234_/_0.74)]">
-  <div class="mx-auto flex max-w-[52rem] items-center justify-between gap-6 px-6 py-3 font-sans text-sm">
-    <a href="/" class="font-medium lowercase tracking-tight text-[var(--ink)] no-underline hover:text-[var(--accent-ink)]">adrian lumley</a>
-    <nav class="flex flex-wrap items-center justify-end gap-x-5 gap-y-2" aria-label="primary">
+<header data-site-header class="site-header sticky top-0 z-40 border-b border-[var(--line)] bg-[color:rgb(247_243_234_/_0.86)] backdrop-blur supports-[backdrop-filter]:bg-[color:rgb(247_243_234_/_0.74)]">
+  <div class="site-header__inner mx-auto flex max-w-[52rem] items-center justify-between gap-4 px-4 py-3 font-sans text-sm sm:px-6">
+    <a href="/" class="site-header__logo font-medium lowercase tracking-tight text-[var(--ink)] no-underline hover:text-[var(--accent-ink)]">adrian lumley</a>
+    <button
+      id="menu-toggle"
+      class="site-header__toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="mobile-nav"
+      aria-label="open menu"
+    >
+      <span class="site-header__toggle-mark" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
+      <span>menu</span>
+    </button>
+    <nav class="site-header__nav site-header__nav--desktop" aria-label="primary">
       {navItems.map((item) => (
         <a
           href={item.href}
           aria-current={isCurrentPage(item.href) ? 'page' : undefined}
           class:list={[
-            'no-underline text-sm lowercase text-[var(--ink-soft)] hover:text-[var(--ink)]',
-            isActive(item.href) ? 'border-b border-[var(--accent)] text-[var(--ink)]' : '',
+            'site-header__link no-underline text-sm lowercase text-[var(--ink-soft)] hover:text-[var(--ink)]',
+            isActive(item.href) ? 'site-header__link--active text-[var(--ink)]' : '',
+          ]}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+  </div>
+  <div id="mobile-nav" class="site-header__panel" hidden>
+    <nav class="site-header__nav site-header__nav--mobile" aria-label="mobile primary">
+      {navItems.map((item) => (
+        <a
+          href={item.href}
+          aria-current={isCurrentPage(item.href) ? 'page' : undefined}
+          class:list={[
+            'site-header__link site-header__mobile-link no-underline text-base lowercase text-[var(--ink-soft)] hover:text-[var(--ink)]',
+            isActive(item.href) ? 'site-header__link--active text-[var(--ink)]' : '',
           ]}
         >
           {item.label}
@@ -24,3 +55,58 @@ const isCurrentPage = (href: string) => pathname === href || pathname === href +
     </nav>
   </div>
 </header>
+
+<script is:inline>
+  const header = document.querySelector('[data-site-header]');
+  const toggle = document.getElementById('menu-toggle');
+  const mobileNav = document.getElementById('mobile-nav');
+  const desktopNav = window.matchMedia('(min-width: 48rem)');
+
+  if (header && toggle && mobileNav) {
+    const closeMenu = ({ restoreFocus = false } = {}) => {
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'open menu');
+      header.dataset.menuOpen = 'false';
+      mobileNav.hidden = true;
+      if (restoreFocus) toggle.focus();
+    };
+
+    const openMenu = () => {
+      toggle.setAttribute('aria-expanded', 'true');
+      toggle.setAttribute('aria-label', 'close menu');
+      header.dataset.menuOpen = 'true';
+      mobileNav.hidden = false;
+    };
+
+    toggle.addEventListener('click', () => {
+      const expanded = toggle.getAttribute('aria-expanded') === 'true';
+      if (expanded) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+
+    mobileNav.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => closeMenu());
+    });
+
+    document.addEventListener('click', (event) => {
+      if (mobileNav.hidden) return;
+      const target = event.target;
+      if (target instanceof Node && !header.contains(target)) {
+        closeMenu();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !mobileNav.hidden) {
+        closeMenu({ restoreFocus: true });
+      }
+    });
+
+    desktopNav.addEventListener('change', (event) => {
+      if (event.matches) closeMenu();
+    });
+  }
+</script>

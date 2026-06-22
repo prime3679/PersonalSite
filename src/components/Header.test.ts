@@ -15,4 +15,9 @@ test('Header renders the canonical navigation links', async () => {
   expect(result).not.toContain('href="/about"');
   expect(result).not.toContain('href="/blog"');
   expect(result).not.toContain('theme-toggle');
+  expect(result).toContain('id="menu-toggle"');
+  expect(result).toContain('id="mobile-nav"');
+  expect(result).toContain('aria-controls="mobile-nav"');
+  expect(result).toContain('aria-label="primary"');
+  expect(result).toContain('aria-label="mobile primary"');
 });

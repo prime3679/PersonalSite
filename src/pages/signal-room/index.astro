@@ -30,14 +30,14 @@ const latest = episodes[0];
 
   {latest && (
     <section class="mt-16 reveal">
-      <p class="eyebrow">latest signal</p>
+      <h2 class="section-title">latest</h2>
       <h2 class="card-title"><a href={episodePath(latest.slug)}>{latest.data.title}</a></h2>
       <p class="ui-copy mt-3">{latest.data.teaser}</p>
     </section>
   )}
 
   <section class="mt-16 reveal">
-    <p class="eyebrow">episode log</p>
+    <h2 class="section-title">episodes</h2>
     <div class="content-stack">
       {episodes.map((episode) => (
         <article class="card">

@@ -1,55 +1,38 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Header Component', () => {
-  test('Theme toggle switches theme and persists in localStorage', async ({ page }) => {
+  test('desktop nav keeps the canonical inline links', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto('/');
 
-    const toggle = page.locator('#theme-toggle');
-    const html = page.locator('html');
-    const sunIcon = page.locator('#sun-icon');
-    const moonIcon = page.locator('#moon-icon');
+    const toggle = page.locator('#menu-toggle');
+    const desktopNav = page.locator('.site-header__nav--desktop');
+    const mobileNav = page.locator('#mobile-nav');
 
-    // Get initial state
-    const initialClass = await html.getAttribute('class') || '';
-    const isDarkInitially = initialClass.includes('dark');
+    await expect(toggle).toBeHidden();
+    await expect(desktopNav).toBeVisible();
+    await expect(mobileNav).toBeHidden();
 
-    // 1. Click to toggle
-    await toggle.click();
+    const links = desktopNav.locator('a');
+    await expect(links).toHaveCount(5);
+    await expect(links).toHaveText(['work', 'lab', 'writing', 'signal room', 'contact']);
 
-    // Determine expected state
-    const expectedDark = !isDarkInitially;
-    const expectedTheme = expectedDark ? 'dark' : 'light';
+    const hrefs = await links.evaluateAll((nodes) => nodes.map((node) => node.getAttribute('href')));
+    expect(hrefs).toEqual(['/work', '/lab', '/writing', '/signal-room', '/contact']);
+  });
 
-    // Verify HTML class
-    if (expectedDark) {
-      await expect(html).toHaveClass(/dark/);
-    } else {
-      await expect(html).not.toHaveClass(/dark/);
-    }
+  test('legacy routes stay alive while staying out of the primary nav', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/');
 
-    // Verify LocalStorage
-    const storedTheme = await page.evaluate(() => localStorage.getItem('theme'));
-    expect(storedTheme).toBe(expectedTheme);
+    const primaryNav = page.locator('.site-header__nav--desktop');
+    await expect(primaryNav.locator('a[href="/about"]')).toHaveCount(0);
+    await expect(primaryNav.locator('a[href="/blog"]')).toHaveCount(0);
 
-    // Verify Icons
-    if (expectedDark) {
-      await expect(sunIcon).toBeVisible();
-      await expect(moonIcon).not.toBeVisible();
-    } else {
-      await expect(sunIcon).not.toBeVisible();
-      await expect(moonIcon).toBeVisible();
-    }
+    await page.goto('/about');
+    await expect(page.locator('main h1')).toContainText('about');
 
-    // 2. Click to toggle back
-    await toggle.click();
-
-    // Verify return to initial state
-    if (isDarkInitially) {
-      await expect(html).toHaveClass(/dark/);
-      await expect(sunIcon).toBeVisible();
-    } else {
-      await expect(html).not.toHaveClass(/dark/);
-      await expect(moonIcon).toBeVisible();
-    }
+    await page.goto('/blog');
+    await expect(page.locator('main')).toContainText('writing');
   });
 });

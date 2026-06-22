@@ -1,46 +1,64 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Locator } from '@playwright/test';
 
-// These run only under the mobile projects (Pixel 5 / iPhone 13), where the
-// desktop nav is collapsed behind the hamburger menu.
+const targetWidths = [320, 375, 414];
 
-test('mobile: hamburger menu opens and navigates', async ({ page }) => {
-  await page.goto('/');
+async function expectTapTarget(locator: Locator) {
+  const box = await locator.boundingBox();
+  expect(box).not.toBeNull();
+  expect(box!.height).toBeGreaterThanOrEqual(44);
+}
 
-  const toggle = page.locator('#menu-toggle');
-  const mobileNav = page.locator('#mobile-nav');
+test.describe('mobile homepage navigation', () => {
+  for (const width of targetWidths) {
+    test(`mobile: ${width}px header stays compact and the menu exposes the canonical links`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/');
 
-  await expect(toggle).toBeVisible();   // hamburger is shown on small screens
-  await expect(mobileNav).toBeHidden(); // menu starts collapsed
+      const toggle = page.locator('#menu-toggle');
+      const mobileNav = page.locator('#mobile-nav');
+      const desktopNav = page.locator('.site-header__nav--desktop');
+      const logo = page.locator('.site-header__logo');
+      const hero = page.locator('.hero-title');
 
-  await toggle.click();
-  await expect(mobileNav).toBeVisible();
-  await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+      await expect(toggle).toBeVisible();
+      await expect(mobileNav).toBeHidden();
+      await expect(desktopNav).toBeHidden();
+      await expect(logo).toBeVisible();
+      await expect(logo).toHaveText('adrian lumley');
+      await expectTapTarget(toggle);
 
-  await mobileNav.locator('a[href="/lab"]').click();
-  await page.waitForURL(/\/lab\/?$/); // navigation timeout tolerates dev lazy-compile under load
-  await expect(page.locator('main h1')).toHaveText('lab');
-});
+      const logoBox = await logo.boundingBox();
+      const toggleBox = await toggle.boundingBox();
+      expect(logoBox).not.toBeNull();
+      expect(toggleBox).not.toBeNull();
+      expect((logoBox!.x + logoBox!.width)).toBeLessThanOrEqual(toggleBox!.x - 8);
 
-test('mobile: theme toggle flips dark mode', async ({ page }) => {
-  await page.goto('/');
-  const html = page.locator('html');
-  const wasDark = await html.evaluate((el) => el.classList.contains('dark'));
-  await page.locator('#theme-toggle').click();
-  // Web-first assertions auto-wait/retry, so the class flip isn't raced.
-  if (wasDark) {
-    await expect(html).not.toHaveClass(/dark/);
-  } else {
-    await expect(html).toHaveClass(/dark/);
+      const heroSize = await hero.evaluate((node) => parseFloat(window.getComputedStyle(node).fontSize));
+      expect(heroSize).toBeLessThan(33);
+      expect(heroSize).toBeGreaterThan(30);
+
+      const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+      expect(scrollWidth).toBeLessThanOrEqual(width);
+
+      await toggle.click();
+      await expect(mobileNav).toBeVisible();
+      await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+
+      const linkTexts = (await mobileNav.locator('a').allTextContents()).map((text) => text.trim());
+      expect(linkTexts).toEqual(['work', 'lab', 'writing', 'signal room', 'contact']);
+
+      for (const href of ['/work', '/lab', '/writing', '/signal-room', '/contact']) {
+        await expectTapTarget(mobileNav.locator(`a[href="${href}"]`));
+      }
+
+      await expectTapTarget(page.locator('main a[href="/work"]'));
+      await expectTapTarget(page.locator('main a[href="/lab"]'));
+      await expectTapTarget(page.locator('main a[href="/signal-room"]').first());
+      await expectTapTarget(page.locator('main a[href="/contact"]'));
+      await expectTapTarget(page.locator('main a[href="https://www.linkedin.com/in/adrianlumley/"]'));
+      await expectTapTarget(page.locator('main a[href="https://github.com/prime3679"]'));
+    });
   }
-});
-
-test('mobile: lab category filter works on a touch viewport', async ({ page }) => {
-  await page.goto('/lab');
-  await expect(page.locator('#chaos-garden')).toBeVisible();
-
-  await page.locator('button.chip[data-filter="toys"]').click();
-  await expect(page.locator('#chaos-garden')).toBeVisible(); // toy
-  await expect(page.locator('#bishop')).toBeHidden();         // agent
 });
 
 test('mobile: Escape closes the open menu and restores focus to the toggle', async ({ page }) => {

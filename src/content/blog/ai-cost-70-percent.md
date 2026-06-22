@@ -3,11 +3,11 @@ title: "I cut my AI costs 70% in a weekend. Here's the only thing that mattered.
 date: 2026-02-18
 tags: ["ai", "cost"]
 description: "Not prompt compression. Not batching. Routing. How I went from $45/day to under $15 by asking one question: does this task actually need my best model?"
-published: true
+published: false
 ---
 
 <p>
-  I built an AI agent to run my life — morning briefings, calendar coordination,
+  I built an AI agent to run my life , morning briefings, calendar coordination,
   cron jobs, family logistics, the works. After three days it was costing me $45/day.
 </p>
 
@@ -18,8 +18,8 @@ published: true
 <p>
   The obvious fixes didn't work. I compressed prompts. I reduced context. I cached
   aggressively. It barely moved. Then I looked at where the money was actually going
-  and the problem became obvious: I was routing every single request — a 7am weather
-  check, a heartbeat ping, a status update — through Claude Opus. My most expensive
+  and the problem became obvious: I was routing every single request , a 7am weather
+  check, a heartbeat ping, a status update , through Claude Opus. My most expensive
   model, doing my least important work.
 </p>
 
@@ -32,7 +32,7 @@ published: true
 </p>
 
 <p>
-  I ran the same task — summarize and prioritize today's calendar — through four models
+  I ran the same task , summarize and prioritize today's calendar , through four models
   and measured the real cost:
 </p>
 
@@ -82,17 +82,17 @@ published: true
 
 <div class="border border-foreground/10 rounded-xl p-5 my-6 space-y-4">
   <div>
-    <p class="text-sm font-medium mb-1">tier 1 — haiku 3.5</p>
+    <p class="text-sm font-medium mb-1">tier 1 , haiku 3.5</p>
     <p class="text-xs text-muted-foreground">heartbeat checks, security audits, health monitoring, status pings</p>
     <p class="text-xs text-muted-foreground mt-1">rule: if the task fails, nothing bad happens</p>
   </div>
   <div class="border-t border-foreground/10 pt-4">
-    <p class="text-sm font-medium mb-1">tier 2 — sonnet 4.6</p>
+    <p class="text-sm font-medium mb-1">tier 2 , sonnet 4.6</p>
     <p class="text-xs text-muted-foreground">morning briefings, weekly planning, calendar analysis, emails, most writing</p>
     <p class="text-xs text-muted-foreground mt-1">rule: tasks with real output that someone will read</p>
   </div>
   <div class="border-t border-foreground/10 pt-4">
-    <p class="text-sm font-medium mb-1">tier 3 — opus 4.6</p>
+    <p class="text-sm font-medium mb-1">tier 3 , opus 4.6</p>
     <p class="text-xs text-muted-foreground">strategy docs, executive deliverables, complex multi-step reasoning, anything that needs to be excellent</p>
     <p class="text-xs text-muted-foreground mt-1">rule: when the output quality materially changes the outcome</p>
   </div>
@@ -105,18 +105,18 @@ published: true
   switching, no guessing.
 </p>
 
-<h2 class="text-lg font-normal mt-10 mb-4 uppercase tracking-wider">the result — and the honest asterisk</h2>
+<h2 class="text-lg font-normal mt-10 mb-4 uppercase tracking-wider">the result , and the honest asterisk</h2>
 
 <p>
-  Background operational costs dropped dramatically. Cron jobs — briefings, heartbeat
-  checks, weekly scans, security audits — now run on Haiku or Sonnet instead of Opus.
+  Background operational costs dropped dramatically. Cron jobs , briefings, heartbeat
+  checks, weekly scans, security audits , now run on Haiku or Sonnet instead of Opus.
   That slice of the bill is down over 70%.
 </p>
 
 <p>
   The honest version: total daily spend still varies a lot based on how much interactive
   work the agent does. A quiet day with only crons running costs $15-20. A heavy build
-  session — shipping features, running audits, iterating on code — can hit $80-100+.
+  session , shipping features, running audits, iterating on code , can hit $80-100+.
   That's not a routing problem, that's the cost of actually using the tool for real work.
 </p>
 
@@ -129,7 +129,7 @@ published: true
 <h2 class="text-lg font-normal mt-10 mb-4 uppercase tracking-wider">what this means if you're building with AI</h2>
 
 <p>
-  The mistake I made — and I see it constantly — is treating all tasks as equivalent
+  The mistake I made , and I see it constantly , is treating all tasks as equivalent
   because they're all "AI tasks." They're not. A frontier model reasoning about strategy
   is different from a frontier model telling you it's 42 degrees and cloudy. One earns
   its cost. One is waste.
@@ -138,7 +138,7 @@ published: true
 <p>
   Before you optimize anything else, audit what your most expensive model is actually
   doing all day. The answer is usually humbling. Most of it could be done by a model
-  that costs 40x less, and your users — or your agent — wouldn't notice the difference.
+  that costs 40x less, and your users , or your agent , wouldn't notice the difference.
 </p>
 
 <p>
@@ -153,7 +153,7 @@ published: true
 <hr class="border-foreground/10 my-10" />
 
 <p class="text-sm text-muted-foreground">
-  I validated the cost numbers using <a href="https://github.com/prime3679/bishop-bench" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">bishop-bench</a> —
+  I validated the cost numbers using <a href="https://github.com/prime3679/bishop-bench" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">bishop-bench</a> ,
   a simple eval runner that tests the same task across models simultaneously and
   compares outputs and costs side-by-side. Open source if you want to run your own numbers.
 </p>

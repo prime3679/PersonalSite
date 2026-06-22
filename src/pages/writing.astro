@@ -1,0 +1,81 @@
+---
+import Base from '../layouts/Base.astro';
+import { readingTime } from '../lib/readingTime';
+import { getPublishedPosts, postPath } from '../lib/content';
+import { formatMonthYear } from '../lib/format';
+
+const publishedPosts = await getPublishedPosts();
+const tagCounts = new Map<string, number>();
+for (const post of publishedPosts) for (const tag of post.data.tags ?? []) tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+const allTags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([tag]) => tag);
+---
+
+<Base title="writing" description="notes on ai, enterprise product, and building systems, drawn from real work and the occasional voice memo.">
+  <header class="page-header reveal">
+    <h1 class="page-title">writing</h1>
+    <p class="page-standfirst">notes on ai, enterprise product, and building systems, drawn from real work and the occasional voice memo. published when there's something worth saying, not on a schedule.</p>
+  </header>
+
+  {allTags.length > 0 && (
+    <section class="mb-10 reveal">
+      <div class="flex flex-wrap gap-2" id="tag-filters" role="group" aria-label="filter posts by tag">
+        <button type="button" class="chip" data-tag="all" aria-pressed="true">all</button>
+        {allTags.map((tag) => <button type="button" class="chip" data-tag={tag} aria-pressed="false">{tag}</button>)}
+      </div>
+    </section>
+  )}
+
+  <section class="reveal">
+    {publishedPosts.length > 0 ? (
+      <div class="section-stack" id="post-list">
+        {publishedPosts.map((post) => (
+          <article class="blog-post" data-tags={(post.data.tags ?? []).join(' ')}>
+            <h2 class="card-title"><a href={postPath(post.slug)}>{post.data.title}</a></h2>
+            <p class="font-sans text-sm uppercase tracking-[.08em] text-[var(--ink-soft)] mt-2">{formatMonthYear(post.data.date)} · {readingTime(post.body)} min read</p>
+            <p class="ui-copy mt-4">{post.data.description}</p>
+            {(post.data.tags ?? []).length > 0 && (
+              <p class="plain-links mt-3">
+                {post.data.tags.map((tag, index) => <><a href={`/writing?tag=${encodeURIComponent(tag)}`}>{tag}</a>{index < (post.data.tags ?? []).length - 1 && <span>·</span>}</>)}
+              </p>
+            )}
+          </article>
+        ))}
+      </div>
+    ) : <p class="ui-copy">first post coming soon.</p>}
+    <p id="no-matches" class="hidden ui-copy text-center py-8">no posts with that tag yet.</p>
+  </section>
+
+  <div class="mt-16 border-t border-[var(--line)] pt-8 font-sans text-sm text-[var(--ink-soft)]">
+    <p>subscribe: <a href="/rss.xml">rss</a> · <a href="/contact">email me</a> for updates.</p>
+  </div>
+</Base>
+
+<script>
+  const filterBar = document.getElementById('tag-filters');
+  if (filterBar) {
+    const chips = Array.from(filterBar.querySelectorAll('[data-tag]'));
+    const posts = Array.from(document.querySelectorAll('.blog-post'));
+    const noMatches = document.getElementById('no-matches');
+    function applyFilter(tag: string) {
+      let visible = 0;
+      chips.forEach((c) => c.setAttribute('aria-pressed', String(c.getAttribute('data-tag') === tag)));
+      posts.forEach((post) => {
+        const tags = (post.getAttribute('data-tags') || '').split(' ').filter(Boolean);
+        const show = tag === 'all' || tags.includes(tag);
+        post.classList.toggle('hidden', !show);
+        if (show) visible++;
+      });
+      if (noMatches) noMatches.classList.toggle('hidden', visible > 0);
+    }
+    filterBar.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      const btn = target.closest('[data-tag]') as HTMLElement | null;
+      if (!btn) return;
+      const tag = btn.getAttribute('data-tag') || 'all';
+      applyFilter(tag);
+      history.replaceState(null, '', tag === 'all' ? location.pathname : `${location.pathname}?tag=${encodeURIComponent(tag)}`);
+    });
+    const initial = new URLSearchParams(location.search).get('tag');
+    if (initial && chips.some((c) => c.getAttribute('data-tag') === initial)) applyFilter(initial);
+  }
+</script>

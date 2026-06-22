@@ -23,12 +23,12 @@ export async function getEpisodes(order: 'asc' | 'desc' = 'desc') {
 }
 
 /**
- * Site-relative URLs — single place that knows the routing scheme.
+ * Site-relative URLs , single place that knows the routing scheme.
  * The trailing-slash difference is historical but load-bearing: these exact
  * forms are the RSS GUIDs, and changing them would resurface every item as
  * unread in subscribers' feed readers.
  */
-export const postPath = (slug: string) => `/blog/${slug}`;
+export const postPath = (slug: string) => `/writing/${slug}`;
 export const episodePath = (slug: string) => `/signal-room/${slug}/`;
 
 /** Generated OG-card routes (must mirror the endpoints under src/pages/og/). */

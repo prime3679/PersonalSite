@@ -3,95 +3,53 @@ import Base from '../layouts/Base.astro';
 
 const caseStudies = [
   {
-    id: 'siriusxm',
-    company: 'SiriusXM',
-    title: 'SiriusXM cross-platform listening growth',
-    headline: '18% more daily sessions, 12% churn reduction',
+    id: 'salesforce',
+    company: 'Salesforce',
+    title: 'enterprise ai adoption, 0 to 1',
+    headline: '2025 to present. the emerging-technology mandate: figure out how large organizations actually absorb ai, and what makes it stick past the pilot.',
+    summary: '',
+    heading: 'what i own',
+    responsibilities: [
+      'product strategy for ai-adjacent initiatives on the emerging technology team',
+      'zero-to-one development, from an ambiguous problem to a shipped surface',
+      'the cross-functional alignment that turns a capable model into something an enterprise will actually run',
+    ],
+  },
+  {
+    id: 'siriusxm', company: 'SiriusXM', title: 'SiriusXM cross-platform listening growth', headline: '18% more daily sessions, 12% churn reduction',
     summary: 'Scaled a listening experience refresh across mobile, web, and in-car devices for 34M subscribers by pairing human-centered design with personalization experiments.',
-    outcomes: [
-      '18% lift in daily listening sessions and +9 pt improvement in weekly retention',
-      '12% drop in voluntary churn inside the first 90 days of subscription',
-      'New experimentation framework increased shipping cadence 3x',
-    ],
-    responsibilities: [
-      'Owned product strategy and roadmap across playback, discovery, and personalization squads',
-      'Partnered with data science to operationalize a multi-armed bandit recommendation model',
-      'Directed multi-platform design system alignment with design and engineering leads',
-    ],
+    heading: 'what i did', responsibilities: ['18% lift in daily listening sessions and +9 pt improvement in weekly retention', '12% drop in voluntary churn inside the first 90 days of subscription', 'New experimentation framework increased shipping cadence 3x', 'Owned product strategy and roadmap across playback, discovery, and personalization squads'],
   },
   {
-    id: 'disney-plus',
-    company: 'Disney+',
-    title: 'Disney+ global launch operations',
-    headline: '60+ markets live with 35% faster localization',
+    id: 'disney-plus', company: 'Disney+', title: 'Disney+ global launch operations', headline: '60+ markets live with 35% faster localization',
     summary: 'Built the orchestration layer that let launch teams localize and certify content, payments, and UX strings so new markets could ship with feature parity day one.',
-    outcomes: [
-      'Enabled simultaneous launches across 60+ countries and 45 language variants',
-      'Reduced subtitle and artwork localization SLAs by 35% through workflow automation',
-      'Improved regression detection coverage to 92% ahead of regional rollouts',
-    ],
-    responsibilities: [
-      'Defined multi-team launch playbooks spanning content ops, payments, and growth',
-      'Shipped analytics dashboards for real-time readiness tracking across 12 partner teams',
-      'Negotiated vendor integrations and QA gates to keep quality bars consistent',
-    ],
+    heading: 'what i did', responsibilities: ['Enabled simultaneous launches across 60+ countries and 45 language variants', 'Reduced subtitle and artwork localization SLAs by 35% through workflow automation', 'Improved regression detection coverage to 92% ahead of regional rollouts', 'Defined multi-team launch playbooks spanning content ops, payments, and growth'],
   },
   {
-    id: 'ea-sports',
-    company: 'EA (Electronic Arts)',
-    title: 'Building the EA Sports companion app from zero',
-    headline: '90% CSAT · 86% weekly retention · 40-person team',
-    summary: 'Led 0-to-1 product development for a GenZ sports engagement platform — a live companion app that brought mini games, highlight remixes, and reward loops tied to real league schedules. Hired the team, defined the vision, and took the product through two high-performing betas before it evolved into the EA Sports App.',
-    outcomes: [
-      '90% CSAT across beta cohorts — unusually high for a 0-to-1 product at this stage',
-      '86% weekly retention rate, naturally anchored to European soccer match schedules',
-      'Two successful beta phases completed before GA handoff',
-      'Product became the foundation for the EA Sports App after launch',
-    ],
-    responsibilities: [
-      'Defined the product vision: make sports more engaging for GenZ through mini games, live companion features, and in-app rewards tied to league partnerships',
-      'Built and hired a 40-person cross-functional team across product, design, and engineering',
-      'Designed the core reward loop — play on the app, earn rewards in EA Sports games and with league partners',
-      'Originated the feed and highlight remix features — both shipped as signature product moments',
-      'Secured league partnerships and integrated content from EA Sports IP across the experience',
-    ],
+    id: 'ea-sports', company: 'EA', title: 'Building the EA Sports companion app from zero', headline: '90% CSAT · 86% weekly retention · 40-person team',
+    summary: 'Led 0-to-1 product development for a GenZ sports engagement platform: a live companion app that brought mini games, highlight remixes, and reward loops tied to real league schedules. Hired the team, defined the vision, and took the product through two high-performing betas before it evolved into the EA Sports App.',
+    heading: 'what i did', responsibilities: ['90% CSAT across beta cohorts', '86% weekly retention rate, naturally anchored to European soccer match schedules', 'Two successful beta phases completed before GA handoff', 'Product became the foundation for the EA Sports App after launch', 'Built and hired a 40-person cross-functional team across product, design, and engineering'],
   },
 ];
 ---
 
-<Base mainClass="mx-auto max-w-3xl px-4 py-12 font-mono" title="Work" description="Case studies from 14 years in product. SiriusXM, Disney+, EA — the metrics, the decisions, and what actually happened.">
-  <h1 class="text-2xl font-normal mb-12 fade-in">work</h1>
+<Base title="work" description="case studies from fourteen years in product: salesforce, siriusxm, disney+, and ea.">
+  <header class="page-header reveal">
+    <h1 class="page-title">work</h1>
+    <p class="page-standfirst">scaled products, real numbers, and the messy middle between strategy and shipped.</p>
+  </header>
 
-  <div class="space-y-16">
+  <div class="section-stack">
     {caseStudies.map((cs) => (
-      <article id={cs.id} class="fade-in scroll-mt-20">
-        <div class="mb-4">
-          <span class="text-xs uppercase tracking-wider text-muted-foreground">{cs.company}</span>
-          <h2 class="text-xl font-normal mt-1">{cs.title}</h2>
-          <p class="text-sm font-semibold text-foreground/70 mt-1">{cs.headline}</p>
-        </div>
-
-        <p class="text-base leading-relaxed mb-6 text-foreground/90">{cs.summary}</p>
-
-        <div class="mb-6">
-          <h3 class="text-sm uppercase tracking-wider text-muted-foreground mb-3">outcomes</h3>
-          <ul class="space-y-2">
-            {cs.outcomes.map((o) => (
-              <li class="text-sm leading-relaxed pl-4 border-l-2 border-foreground/10">{o}</li>
-            ))}
-          </ul>
-        </div>
-
-        <div class="mb-6">
-          <h3 class="text-sm uppercase tracking-wider text-muted-foreground mb-3">what i did</h3>
-          <ul class="space-y-2">
-            {cs.responsibilities.map((r) => (
-              <li class="text-sm leading-relaxed pl-4 border-l-2 border-foreground/10">{r}</li>
-            ))}
-          </ul>
-        </div>
-
-        <hr class="border-border" />
+      <article id={cs.id} class="reveal scroll-mt-20">
+        <p class="eyebrow">{cs.company}</p>
+        <h2 class="card-title">{cs.title}</h2>
+        <p class="ui-copy mt-2">{cs.headline}</p>
+        {cs.summary && <p class="body-copy mt-6">{cs.summary}</p>}
+        <h3 class="mt-8 mb-3 font-sans text-sm uppercase tracking-[.08em] text-[var(--ink-soft)]">{cs.heading}</h3>
+        <ul class="list-lines">
+          {cs.responsibilities.map((item) => <li>{item}</li>)}
+        </ul>
       </article>
     ))}
   </div>

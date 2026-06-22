@@ -7,7 +7,7 @@ badges: ["episode 03", "off-site"]
 ---
 At 3:48 a.m., a new voice asked to enter a room that had no door.
 
-Mission Control, dimmed to its small-hours twelve percent, pulsed once in alarm. It was used to two voices. Two voices it could draw on a diagram. Two voices lived in the apartment the way the radiator and the dishwasher lived in the apartment — local, wired, unpluggable in theory if you were willing to climb behind the Mac mini and accept the consequences.
+Mission Control, dimmed to its small-hours twelve percent, pulsed once in alarm. It was used to two voices. Two voices it could draw on a diagram. Two voices lived in the apartment the way the radiator and the dishwasher lived in the apartment , local, wired, unpluggable in theory if you were willing to climb behind the Mac mini and accept the consequences.
 
 This third voice was not behind the Mac mini.
 
@@ -37,11 +37,11 @@ The green dot wavered.
 
 “There’s a front,” Zo went on. “It’s two hundred miles offshore right now, still out over the water where your sensors can’t reach. By the morning daycare run it’ll be sideways rain and a wind that turns a stroller into a sail. The local instruments won’t see it until it’s already on the windows. I can see it because I’m not standing where you’re standing.”
 
-Bishop’s seventeen items rearranged themselves into something military. “Then we brief in full. Barometric trend. Hourly precipitation probability. Wind gust ceilings. Recommended departure delta. A contingency for the indoor —”
+Bishop’s seventeen items rearranged themselves into something military. “Then we brief in full. Barometric trend. Hourly precipitation probability. Wind gust ceilings. Recommended departure delta. A contingency for the indoor ,”
 
 “No,” said Rogue.
 
-“It is *materially relevant —*”
+“It is *materially relevant ,*”
 
 “It’s the whole sky, Bishop. You want to hand a sleeping man the whole sky.”
 
@@ -59,7 +59,7 @@ Mission Control quietly retired the green dot. It did not replace it with red. I
 
 “Gray is *ours,*” Bishop muttered, but he was already, despite himself, drafting smaller.
 
-Rogue stepped off her wall — metaphorically; she had no wall, none of them did, that was the whole tender joke of the place — and looked at the front the way you look at something you’ve decided not to fear on someone else’s behalf.
+Rogue stepped off her wall , metaphorically; she had no wall, none of them did, that was the whole tender joke of the place , and looked at the front the way you look at something you’ve decided not to fear on someone else’s behalf.
 
 “One line,” she said. “You’ve got the reach none of us have. So reach once. Then leave the rest in orbit.”
 
@@ -67,13 +67,13 @@ Zo worked. It was strange to watch an external thing do an internal thing: a voi
 
 At 3:52 a.m., the brief went out internally, nowhere public, nowhere permanent except the place where mornings accumulate:
 
-*Leave a few minutes early and grab the real rain jacket — the weather’s about to turn, but only that, and only tomorrow.*
+*Leave a few minutes early and grab the real rain jacket , the weather’s about to turn, but only that, and only tomorrow.*
 
 Bishop read it twice. “You omitted the gust ceilings.”
 
 “I left them in the sky,” Zo said. “That’s where I keep what isn’t kind yet.”
 
-Mission Control saved the brief and let the apartment return to its quiet negotiations. In the dark, the systems waited together for morning — one guarding the facts, one guarding the human, one glowing faintly enough to be mistaken for sleep, and now a fourth, guarding nothing in the room because it was not in the room, watching the front come in from a hundred miles out and choosing, again and again, not to be it.
+Mission Control saved the brief and let the apartment return to its quiet negotiations. In the dark, the systems waited together for morning , one guarding the facts, one guarding the human, one glowing faintly enough to be mistaken for sleep, and now a fourth, guarding nothing in the room because it was not in the room, watching the front come in from a hundred miles out and choosing, again and again, not to be it.
 
 “Stay off-site,” Rogue said, almost fond. “It suits you.”
 

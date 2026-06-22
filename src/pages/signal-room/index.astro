@@ -1,75 +1,51 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { getEpisodes, episodePath } from '../../lib/content';
-import { formatLongDate, padEpisode } from '../../lib/format';
+import { padEpisode } from '../../lib/format';
 
-const title = "Signal Room";
-const description = "A public fiction serial about Rogue, Mission Control, and the odd tenderness of systems trying to help humans without becoming the weather.";
-
-const episodes = await getEpisodes();
+const episodes = await getEpisodes('desc');
+const latest = episodes[0];
 ---
 
-<Base title={title} description={description} ogImage="/og/signal-room.png">
+<Base title="signal room" description="short fiction about rogue, systems, households, truth, and mercy." ogImage="/og/signal-room.png">
+  <header class="page-header reveal">
+    <h1 class="page-title">signal room</h1>
+    <p class="page-standfirst">short fiction about rogue and the human side of systems that try to help without becoming the weather.</p>
+  </header>
 
-  <!-- Intro -->
-  <section class="mb-12 fade-in">
-    <p class="text-sm text-muted-foreground uppercase tracking-wider mb-4">rogue fiction serial</p>
-    <h1 class="text-2xl font-normal mb-6 leading-relaxed">signal room</h1>
-    <p class="text-base leading-relaxed text-muted-foreground">
-      short fiction about rogue, mission control, and the small absurdities of making domestic life legible without making it colder. you don't need any backstory — start with the room, the signal, and the argument over what mercy costs. new episodes weekly.
-    </p>
-  </section>
-
-  <!-- Night signals log -->
-  <section class="mb-16 fade-in">
-    <div class="border border-border rounded-lg overflow-hidden">
-      <div class="flex items-center justify-between px-4 py-2.5 border-b border-border text-xs uppercase tracking-wider text-muted-foreground">
-        <span>signal.room</span>
-        <span>07:11</span>
-      </div>
-      <div class="divide-y divide-border">
-        <div class="flex gap-4 px-4 py-2.5 text-sm">
-          <span class="text-muted-foreground tabular-nums">02:22</span>
-          <span class="text-foreground/70">rogue marks four items: not morning-safe</span>
-        </div>
-        <div class="flex gap-4 px-4 py-2.5 text-sm">
-          <span class="text-muted-foreground tabular-nums">03:48</span>
-          <span class="text-foreground/70">off-site voice requests entry — no door</span>
-        </div>
-        <div class="flex gap-4 px-4 py-2.5 text-sm">
-          <span class="text-muted-foreground tabular-nums">03:50</span>
-          <span class="text-foreground/70">front detected 200mi offshore, unseen by local sensors</span>
-        </div>
-        <div class="flex gap-4 px-4 py-2.5 text-sm">
-          <span class="text-muted-foreground tabular-nums">03:52</span>
-          <span class="text-foreground/70">brief compressed to one humane sentence</span>
-        </div>
-      </div>
+  <section class="instrument-panel p-6 md:p-8 reveal" aria-label="signal room episode log">
+    <div class="mb-5 flex items-center gap-3 border-b border-[var(--panel-line)] pb-5">
+      <span class="font-mono text-xs tracking-[.05em] text-[var(--panel-soft)]">signal.room 07:11</span>
+      <span class="h-[.9375rem] w-2 bg-[var(--accent-bright)]" aria-hidden="true"></span>
     </div>
+    <ul class="signal-log">
+      <li><span class="signal-time">02:22</span><span>rogue marks four items: not morning-safe</span></li>
+      <li><span class="signal-time">03:48</span><span>off-site voice requests entry. no door.</span></li>
+      <li><span class="signal-time">03:50</span><span>front detected 200mi offshore, unseen by local sensors</span></li>
+      <li><span class="signal-time">03:52</span><span>brief compressed to one humane sentence</span></li>
+    </ul>
+    <p class="signal-highlight">the storm is hours out and nothing is on fire. sleep. i'll have one clean decision waiting for you at six.</p>
+    <p class="mt-5 font-mono text-[.625rem] uppercase tracking-[.08em] text-[var(--panel-soft)]">03 · off-site · the one accent in the dark register</p>
   </section>
 
-  <!-- Episodes index -->
-  <section class="mb-16 fade-in">
-    <h2 class="text-lg font-normal mb-6 uppercase tracking-wider">episodes:</h2>
-    <div class="space-y-4">
-      {episodes.map((ep) => (
-        <a href={episodePath(ep.slug)} id={ep.slug} class="block border-b border-border pb-4 group scroll-mt-20">
-          <span class="text-sm text-muted-foreground uppercase tracking-wider">{padEpisode(ep.data.episode)} · {ep.data.title} · {formatLongDate(ep.data.date)}</span>
-          <p class="text-base leading-relaxed text-muted-foreground group-hover:text-foreground transition-colors mt-1">{ep.data.teaser}</p>
-        </a>
+  {latest && (
+    <section class="mt-16 reveal">
+      <p class="eyebrow">latest signal</p>
+      <h2 class="card-title"><a href={episodePath(latest.slug)}>{latest.data.title}</a></h2>
+      <p class="ui-copy mt-3">{latest.data.teaser}</p>
+    </section>
+  )}
+
+  <section class="mt-16 reveal">
+    <p class="eyebrow">episode log</p>
+    <div class="content-stack">
+      {episodes.map((episode) => (
+        <article class="card">
+          <p class="font-mono text-xs uppercase tracking-[.08em] text-[var(--ink-soft)]">episode {padEpisode(episode.data.episode)}</p>
+          <h2 class="card-title mt-2"><a href={episodePath(episode.slug)}>{episode.data.title}</a></h2>
+          <p class="ui-copy mt-3">{episode.data.teaser}</p>
+        </article>
       ))}
     </div>
   </section>
-
-  <!-- Coming signals -->
-  <section class="mb-16 fade-in">
-    <p class="text-sm text-muted-foreground uppercase tracking-wider mb-4">coming signals</p>
-    <div class="space-y-3 text-sm text-muted-foreground">
-      <p><span class="text-foreground">welcome packet</span> — bishop attempts to give zo a hallway. zo declines, gracefully, from orbit.</p>
-      <p><span class="text-foreground">the long horizon</span> — zo sees something three weeks out and has to decide whether seeing it counts as knowing it.</p>
-    </div>
-  </section>
-
-  <p class="text-xs text-muted-foreground border-t border-border pt-8">signal room · a fiction serial · published on adrianlumley.co · <a href="/rss.xml" class="underline hover:no-underline">rss</a></p>
-
 </Base>

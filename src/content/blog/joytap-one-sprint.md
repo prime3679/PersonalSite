@@ -7,7 +7,7 @@ published: true
 ---
 
 <p>
-  My child is a toddler. They gravitate toward screens the way all kids that age do —
+  My child is a toddler. They gravitate toward screens the way all kids that age do ,
   with full-body enthusiasm and zero concept of why a particular screen might be bad for them.
 </p>
 
@@ -32,7 +32,7 @@ published: true
 </p>
 
 <p>
-  The sounds are pentatonic — a five-note scale that doesn't have any dissonant combinations,
+  The sounds are pentatonic , a five-note scale that doesn't have any dissonant combinations,
   so no matter what you tap or how fast, it always sounds musical. The particles are color-coded
   by world: fire world is warm and orange, ocean world is cool and deep, space world trails stars.
   There are seven worlds total, each with its own visual language and haptic pattern.
@@ -73,7 +73,7 @@ published: true
 <p>
   My child cannot tell me what they think. They can't say "the haptic on world 3 feels wrong"
   or "I'd prefer softer colors." Their feedback is binary: they keep playing, or they put the
-  phone down. The first version had too many particles — they'd tap once, the screen would fill
+  phone down. The first version had too many particles , they'd tap once, the screen would fill
   with 200 emitters, and they'd stare blankly instead of tapping again. The second version
   throttled it. They kept tapping.
 </p>
@@ -86,7 +86,7 @@ published: true
 
 <p>
   <strong>That constraint made the app better.</strong> Every time I was tempted to add
-  a menu, a settings screen, a second tap gesture — I asked whether a toddler could
+  a menu, a settings screen, a second tap gesture , I asked whether a toddler could
   figure it out without instruction. The answer was almost always no. So I didn't add it.
 </p>
 
@@ -129,7 +129,7 @@ published: true
 
 <p class="text-sm text-muted-foreground">
   If you want to build something similar for your kid, the core particle/audio loop is about
-  200 lines of Swift. CHHapticEngine setup is the trickiest part — Apple's documentation is
+  200 lines of Swift. CHHapticEngine setup is the trickiest part , Apple's documentation is
   technically complete and practically opaque. Happy to share the relevant sections if you're
   building something and get stuck.
 </p>

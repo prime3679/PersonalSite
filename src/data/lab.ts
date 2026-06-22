@@ -122,7 +122,7 @@ export const labProjects: LabProject[] = [
     dateline: 'started feb 2026',
     badge: { label: 'active', tone: 'green' },
     description:
-      'personal ops dashboard. spend tracking, provider health, cron status, git activity, and security alerts — all in one tab. runs on the mac mini behind a cloudflare tunnel.',
+      'personal ops dashboard. spend tracking, provider health, cron status, git activity, and security alerts , all in one tab. runs on the mac mini behind a cloudflare tunnel.',
     stats: [
       { value: 'port 7777', label: 'local' },
       { value: 'cloudflare', label: 'tunnel' },
@@ -139,7 +139,7 @@ export const labProjects: LabProject[] = [
     dateline: 'started feb 2026',
     badge: { label: 'experimental', tone: 'amber' },
     description:
-      "multi-model eval runner. tests the same task across claude, gpt, and gemini simultaneously and scores outputs side-by-side. built to validate the cost routing architecture — if haiku can do the job, there's no reason to pay for opus.",
+      "multi-model eval runner. tests the same task across claude, gpt, and gemini simultaneously and scores outputs side-by-side. built to validate the cost routing architecture , if haiku can do the job, there's no reason to pay for opus.",
     stats: [
       { value: '4', label: 'models tested' },
       { value: '40x', label: 'cost delta (haiku→opus)' },
@@ -239,7 +239,7 @@ export const labProjects: LabProject[] = [
     dateline: 'started march 2026',
     badge: { label: 'active', tone: 'green' },
     description:
-      'sensory play app for toddlers. tap the screen — particles, sounds, and haptic feedback. 7 themed worlds, no accounts, no ads. built in a single sprint for my kid.',
+      'sensory play app for toddlers. tap the screen , particles, sounds, and haptic feedback. 7 themed worlds, no accounts, no ads. built in a single sprint for my kid.',
     stats: [
       { value: '1 sprint', label: 'build time' },
       { value: 'ios', label: 'platform' },

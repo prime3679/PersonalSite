@@ -3,7 +3,7 @@ import { episodeTitle, formatLongDate, formatMonthYear, padEpisode, snapshotLabe
 
 describe('formatLongDate', () => {
   it('formats a date-only value without shifting the day', () => {
-    // UTC midnight — a local-zone formatter west of UTC would show June 11.
+    // UTC midnight , a local-zone formatter west of UTC would show June 11.
     expect(formatLongDate(new Date('2026-06-12'))).toBe('June 12, 2026');
   });
 });
@@ -40,8 +40,8 @@ describe('snapshotLabel', () => {
   });
 
   it('returns a dash for missing or invalid input', () => {
-    expect(snapshotLabel(null)).toBe('—');
-    expect(snapshotLabel(undefined)).toBe('—');
-    expect(snapshotLabel('not a date')).toBe('—');
+    expect(snapshotLabel(null)).toBe(',');
+    expect(snapshotLabel(undefined)).toBe(',');
+    expect(snapshotLabel('not a date')).toBe(',');
   });
 });

@@ -2,8 +2,9 @@
 title: "I built a benchmark tool to stop making AI model choices on vibes."
 date: 2026-03-09
 tags: ["ai", "building"]
-description: "Haiku vs Sonnet vs Opus vs GPT — I was just guessing. So I built something to run the same task across all of them and look at the actual numbers."
+description: "Haiku vs Sonnet vs Opus vs GPT , I was just guessing. So I built something to run the same task across all of them and look at the actual numbers."
 draft: false
+published: false
 ---
 
 <p>
@@ -18,7 +19,7 @@ draft: false
 </p>
 
 <p>
-  So I built <a href="https://github.com/prime3679/bishop-bench" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">bishop-bench</a> — a tool that runs identical tasks across multiple models simultaneously and shows you the real numbers: quality score, cost, latency.
+  So I built <a href="https://github.com/prime3679/bishop-bench" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">bishop-bench</a> , a tool that runs identical tasks across multiple models simultaneously and shows you the real numbers: quality score, cost, latency.
 </p>
 
 <hr class="border-foreground/10 my-8" />
@@ -31,14 +32,14 @@ draft: false
 
 <p>
   I know intellectually that Haiku costs about 40x less than Opus. I know it. But when I'm
-  configuring a cron job that runs 19 times a day, I default to Sonnet anyway — because I've
+  configuring a cron job that runs 19 times a day, I default to Sonnet anyway , because I've
   seen Sonnet succeed and I haven't personally verified what Haiku would do with the same task.
   So I pay the Sonnet tax on every run, indefinitely, because uncertainty is expensive.
 </p>
 
 <p>
   The gap between Haiku and Opus on complex reasoning tasks is real and significant.
-  The gap on simple tasks — summarize this, format that, flag anything urgent — is much smaller
+  The gap on simple tasks , summarize this, format that, flag anything urgent , is much smaller
   than I assumed. But "much smaller than I assumed" is still a vibe. I needed evidence.
 </p>
 
@@ -47,7 +48,7 @@ draft: false
 <h2 class="text-base font-medium mt-8 mb-3">how it works</h2>
 
 <p>
-  You define tasks in YAML — the prompt, what capabilities it requires, what good output looks like.
+  You define tasks in YAML , the prompt, what capabilities it requires, what good output looks like.
   The eval runner sends that exact same task to every model you're comparing. Then scoring
   runs against each result: completeness, accuracy, formatting, actionability.
 </p>
@@ -60,7 +61,7 @@ draft: false
 
 <p>
   The task format matters. Vague prompts produce noisy comparisons. The discipline of writing
-  a benchmark task — specific prompt, explicit success criteria, clear expected capabilities —
+  a benchmark task , specific prompt, explicit success criteria, clear expected capabilities ,
   is half the value. It forces you to define what "good" actually means for a given use case
   before you pick a model to do it.
 </p>
@@ -70,21 +71,21 @@ draft: false
 <h2 class="text-base font-medium mt-8 mb-3">what I've found so far</h2>
 
 <p>
-  It's early. The tool is still being built — scoring algorithms are in progress, the dashboard
+  It's early. The tool is still being built , scoring algorithms are in progress, the dashboard
   doesn't exist yet, and I'm still refining the task library. But even the rough results are
   already shifting my defaults.
 </p>
 
 <p>
-  For the operational layer of Bishop — morning briefings, heartbeat checks, weekly summaries —
+  For the operational layer of Bishop , morning briefings, heartbeat checks, weekly summaries ,
   Haiku handles the job. Not almost handles it. Handles it. The quality difference on structured,
   well-scoped tasks is marginal. The cost difference is not. Running 19 cron jobs a day on Haiku
   instead of Sonnet compounds across weeks.
 </p>
 
 <p>
-  For tasks that require actual reasoning — multi-step planning, ambiguous inputs, anything where
-  a wrong call has real consequences — Sonnet earns its place. The gap shows up clearly when you
+  For tasks that require actual reasoning , multi-step planning, ambiguous inputs, anything where
+  a wrong call has real consequences , Sonnet earns its place. The gap shows up clearly when you
   look at it side by side.
 </p>
 
@@ -99,7 +100,7 @@ draft: false
 
 <p>
   Model selection is a first-class engineering decision that most teams treat as an afterthought.
-  Someone picks a model at the start of a project — usually the one they've heard of — and it
+  Someone picks a model at the start of a project , usually the one they've heard of , and it
   stays there. No benchmarking, no routing logic, no revisiting as better or cheaper options emerge.
 </p>
 
@@ -119,6 +120,6 @@ draft: false
 
 <p class="text-sm text-muted-foreground">
   The repo is at <a href="https://github.com/prime3679/bishop-bench" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">github.com/prime3679/bishop-bench</a>.
-  Early stage — the eval runner is functional, scoring and dashboard are in progress.
+  Early stage , the eval runner is functional, scoring and dashboard are in progress.
   If you're building something similar or want to compare notes on model routing, I'm easy to find.
 </p>

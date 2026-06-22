@@ -5,7 +5,7 @@ import path from 'node:path';
 
 // Self-hosted JetBrains Mono (the site's font), read at build time. Using a
 // local TTF keeps the OG cards on-brand and removes the build-time Google Fonts
-// fetch. Satori needs TTF/OTF/WOFF — not the WOFF2 the browser uses.
+// fetch. Satori needs TTF/OTF/WOFF , not the WOFF2 the browser uses.
 let fontData: Buffer | null = null;
 
 function getFont(): Buffer {

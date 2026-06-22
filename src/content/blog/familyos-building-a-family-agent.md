@@ -2,8 +2,8 @@
 title: "I gave an AI agent two weeks to coordinate my family"
 date: 2026-02-18
 tags: ["ai", "building"]
-description: "What I learned building a multi-agent family coordination system from scratch. Not a product pitch — just what happened when I stopped managing logistics manually."
-published: true
+description: "What I learned building a multi-agent family coordination system from scratch. Not a product pitch , just what happened when I stopped managing logistics manually."
+published: false
 ---
 
 <p>
@@ -13,7 +13,7 @@ published: true
 </p>
 <p>
   We were managing it with group texts and a shared Google Calendar. It worked, technically.
-  But it was friction — small, constant, cumulative.
+  But it was friction , small, constant, cumulative.
 </p>
 <p>
   I've been a product manager for 14 years. I know what "good enough" looks like.
@@ -26,7 +26,7 @@ published: true
 <h2 class="text-base font-medium mt-8 mb-3">the idea</h2>
 <p>
   I wanted a system that would handle the coordination layer entirely. Not remind me to coordinate
-  — actually coordinate. Scan the week, look at both our calendars, figure out who should do what,
+  , actually coordinate. Scan the week, look at both our calendars, figure out who should do what,
   and ask for a single confirmation.
 </p>
 <p>
@@ -122,15 +122,15 @@ published: true
 </p>
 <p>
   <strong>The second agent is the interesting problem.</strong> Right now this is
-  single-agent — my agent, my preferences, proposals sent to both of us. The next phase
+  single-agent , my agent, my preferences, proposals sent to both of us. The next phase
   is my partner's agent: their own preferences, their own constraints, agent-to-agent negotiation
-  before a proposal hits us. Not AI managing humans — AI managing AI on behalf of humans.
+  before a proposal hits us. Not AI managing humans , AI managing AI on behalf of humans.
   That's the piece I'm most curious about.
 </p>
 <p>
   <strong>It changes the texture of the conversation.</strong> Before: "Can you get her today?"
   After: a calendar entry appears and neither of us had to discuss it. That's the win.
-  Not the automation — the reclaimed attention.
+  Not the automation , the reclaimed attention.
 </p>
 
 <hr class="border-foreground/10 my-8" />
@@ -168,7 +168,7 @@ published: true
 </p>
 <p>
   I'm writing this because I genuinely think this is a more useful application of AI than
-  another chatbot wrapper. The value isn't in any single conversation — it's in systems
+  another chatbot wrapper. The value isn't in any single conversation , it's in systems
   that run quietly in the background and free up attention for things that actually matter.
 </p>
 <p>

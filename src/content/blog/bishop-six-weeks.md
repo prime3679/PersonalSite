@@ -3,12 +3,12 @@ title: "Six weeks with an AI chief of staff. Here's what it actually does."
 date: 2026-03-09
 tags: ["ai", "building", "systems"]
 description: "Not a productivity hack. A persistent system that handles the operational layer of my life so I can ignore it. What I built, what it costs, and what surprised me."
-published: true
+published: false
 ---
 
 <p>
   Six weeks ago I put an AI agent on a Mac Mini, gave it a Telegram channel, and told it to
-  run the operational layer of my life. Not answer questions when I asked. Run things — proactively,
+  run the operational layer of my life. Not answer questions when I asked. Run things , proactively,
   persistently, without me thinking about it.
 </p>
 
@@ -21,7 +21,7 @@ published: true
 <h2 class="text-base font-medium mt-8 mb-3">the actual job list</h2>
 
 <p>
-  Bishop runs 19 cron jobs. Not 19 scheduled messages — 19 distinct automated tasks that
+  Bishop runs 19 cron jobs. Not 19 scheduled messages , 19 distinct automated tasks that
   fire on schedule regardless of whether I'm awake, at work, or paying attention.
 </p>
 
@@ -52,7 +52,7 @@ published: true
       <span class="text-xs text-muted-foreground">periodic</span>
       <span class="text-sm font-medium">family logistics</span>
     </div>
-    <p class="text-sm text-foreground/60 leading-relaxed">With another child on the way, Bishop tracks relevant logistics — medical appointments, what to start thinking about, when things need to be booked. No advice, just flags.</p>
+    <p class="text-sm text-foreground/60 leading-relaxed">With another child on the way, Bishop tracks relevant logistics , medical appointments, what to start thinking about, when things need to be booked. No advice, just flags.</p>
   </div>
   <div class="border border-foreground/10 rounded-xl p-4">
     <div class="flex items-baseline gap-3 mb-1.5">
@@ -80,7 +80,7 @@ published: true
 </p>
 
 <p>
-  Software: OpenClaw handles orchestration. Telegram is the interface — I interact with Bishop
+  Software: OpenClaw handles orchestration. Telegram is the interface , I interact with Bishop
   the same way I text a person. Claude Sonnet handles the main session and anything that needs
   real reasoning. Haiku and Qwen run the cron jobs. The rule is simple: if a task fails and nothing
   bad happens, use the cheapest model that gets it right.
@@ -88,7 +88,7 @@ published: true
 
 <p>
   Cost ceiling: $300/month. I've hit it once. Normal months run $150-180, with the variance
-  coming entirely from how much interactive work I'm doing — build sessions, research tasks,
+  coming entirely from how much interactive work I'm doing , build sessions, research tasks,
   writing drafts. The background operational layer costs around $40/month on its own.
   Nineteen cron jobs running daily on Haiku is very cheap.
 </p>
@@ -98,7 +98,7 @@ published: true
 <h2 class="text-base font-medium mt-8 mb-3">what actually surprised me</h2>
 
 <p>
-  I expected the value to be in the briefings — the information delivery. That's not where
+  I expected the value to be in the briefings , the information delivery. That's not where
   the value is. The value is in what happens between briefings.
 </p>
 
@@ -117,7 +117,7 @@ published: true
 
 <p>
   The second surprise was how much I <em>don't</em> interact with it. Most days, I get two or
-  three messages from Bishop — the morning briefing, maybe a flag on something, the occasional
+  three messages from Bishop , the morning briefing, maybe a flag on something, the occasional
   completed task summary. That's it. A well-tuned system should be quiet. If you're talking to
   your chief of staff all day, something is wrong with the staffing model.
 </p>
@@ -128,13 +128,13 @@ published: true
 
 <p>
   This setup requires real technical work to build. I spent two weekends getting the initial
-  system running — OpenClaw configuration, tool permissions, cron setup, Telegram integration,
+  system running , OpenClaw configuration, tool permissions, cron setup, Telegram integration,
   cost routing, memory architecture. It's not hard work if you're comfortable in a terminal,
   but it's not a product you can install in five minutes.
 </p>
 
 <p>
-  It also requires ongoing calibration. The first version of Bishop was too noisy — it messaged
+  It also requires ongoing calibration. The first version of Bishop was too noisy , it messaged
   me constantly, flagged things that didn't need flagging, and asked for confirmation on tasks
   it should have just done. Tuning the signal-to-noise ratio took a few weeks of small adjustments.
   It's still not perfect.
@@ -147,14 +147,14 @@ published: true
 </p>
 
 <p>
-  For someone who has a lot of operational surface area — a job, a family, personal projects,
-  recurring logistics — that's genuinely valuable. For someone who doesn't, it's an expensive
+  For someone who has a lot of operational surface area , a job, a family, personal projects,
+  recurring logistics , that's genuinely valuable. For someone who doesn't, it's an expensive
   hobby. Know which one you are before you start.
 </p>
 
 <hr class="border-foreground/10 my-8" />
 
 <p class="text-sm text-muted-foreground">
-  OpenClaw is the orchestration layer I'm running this on — it handles the agent runtime,
+  OpenClaw is the orchestration layer I'm running this on , it handles the agent runtime,
   tool access, and Telegram integration. I'm not affiliated with it. It's just what I use.
 </p>

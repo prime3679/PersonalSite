@@ -1,144 +1,26 @@
 ---
-import { navItems, primaryNavItems } from '../data/nav';
-
+import { navItems } from '../data/nav';
 const pathname = Astro.url.pathname;
-// Highlight covers the whole section (/blog/* lights up the blog tab)…
-const isActive = (href: string) =>
-  pathname === href || (href !== '/' && pathname.startsWith(href + '/'));
-// …but aria-current="page" is reserved for the exact page (ARIA semantics).
+const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
 const isCurrentPage = (href: string) => pathname === href || pathname === href + '/';
 ---
 
-<header class="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-colors">
-  <div class="mx-auto flex max-w-2xl items-center justify-between px-6 py-3 text-sm">
-    <!-- Wordmark (home) -->
-    <a href="/" class="font-mono text-sm font-semibold lowercase tracking-tight hover:text-muted-foreground transition-colors">
-      adrian lumley
-    </a>
-
-    <div class="flex items-center gap-4">
-      <!-- Desktop nav (tightened to primary tabs) -->
-      <nav class="hidden sm:flex gap-5 font-medium font-mono">
-        {primaryNavItems.map((item) => (
-          <a
-            href={item.href}
-            aria-current={isCurrentPage(item.href) ? 'page' : undefined}
-            class:list={[
-              'transition-colors duration-200 uppercase tracking-wider text-xs',
-              isActive(item.href) ? 'text-foreground' : 'text-muted-foreground hover:text-foreground',
-            ]}
-          >
-            {item.label}
-          </a>
-        ))}
-      </nav>
-
-      <!-- Dark mode toggle -->
-      <button
-        id="theme-toggle"
-        class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-        aria-label="Toggle dark mode"
-      >
-        <!-- Sun icon (shown in dark mode) -->
-        <svg id="sun-icon" class="w-[18px] h-[18px] hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="5" stroke-width="1.5"/>
-          <path stroke-linecap="round" stroke-width="1.5" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-        </svg>
-        <!-- Moon icon (shown in light mode) -->
-        <svg id="moon-icon" class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
-        </svg>
-      </button>
-
-      <!-- Mobile hamburger -->
-      <button
-        id="menu-toggle"
-        class="sm:hidden inline-flex items-center justify-center w-9 h-9 rounded text-foreground"
-        aria-label="Toggle menu"
-        aria-expanded="false"
-      >
-        <svg id="menu-open-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/>
-        </svg>
-        <svg id="menu-close-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
-        </svg>
-      </button>
-    </div>
+<header class="sticky top-0 z-40 border-b border-[var(--line)] bg-[color:rgb(247_243_234_/_0.86)] backdrop-blur supports-[backdrop-filter]:bg-[color:rgb(247_243_234_/_0.74)]">
+  <div class="mx-auto flex max-w-[52rem] items-center justify-between gap-6 px-6 py-3 font-sans text-sm">
+    <a href="/" class="font-medium lowercase tracking-tight text-[var(--ink)] no-underline hover:text-[var(--accent-ink)]">adrian lumley</a>
+    <nav class="flex flex-wrap items-center justify-end gap-x-5 gap-y-2" aria-label="primary">
+      {navItems.map((item) => (
+        <a
+          href={item.href}
+          aria-current={isCurrentPage(item.href) ? 'page' : undefined}
+          class:list={[
+            'no-underline text-sm lowercase text-[var(--ink-soft)] hover:text-[var(--ink)]',
+            isActive(item.href) ? 'border-b border-[var(--accent)] text-[var(--ink)]' : '',
+          ]}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
   </div>
-
-  <!-- Mobile nav dropdown (full list) -->
-  <nav id="mobile-nav" class="hidden sm:hidden border-t border-border px-6 pb-4 pt-2 space-y-3 font-mono">
-    {navItems.map((item) => (
-      <a
-        href={item.href}
-        aria-current={isCurrentPage(item.href) ? 'page' : undefined}
-        class:list={[
-          'block text-sm uppercase tracking-wider py-1',
-          isActive(item.href) ? 'text-foreground' : 'text-muted-foreground',
-        ]}
-      >
-        {item.label}
-      </a>
-    ))}
-  </nav>
 </header>
-
-<script>
-  // Mobile menu toggle
-  const menuToggle = document.getElementById('menu-toggle');
-  const mobileNav = document.getElementById('mobile-nav');
-  const openIcon = document.getElementById('menu-open-icon');
-  const closeIcon = document.getElementById('menu-close-icon');
-
-  function setMenuOpen(open: boolean) {
-    menuToggle?.setAttribute('aria-expanded', String(open));
-    mobileNav?.classList.toggle('hidden', !open);
-    openIcon?.classList.toggle('hidden', open);
-    closeIcon?.classList.toggle('hidden', !open);
-  }
-
-  menuToggle?.addEventListener('click', () => {
-    setMenuOpen(menuToggle.getAttribute('aria-expanded') !== 'true');
-  });
-
-  // Escape closes the menu and hands focus back to the toggle.
-  document.addEventListener('keydown', (e) => {
-    if (e.defaultPrevented) return; // let overlays that claimed Escape keep it
-    if (e.key === 'Escape' && menuToggle?.getAttribute('aria-expanded') === 'true') {
-      setMenuOpen(false);
-      menuToggle.focus();
-    }
-  });
-
-  // Tapping outside the header closes the open menu.
-  const header = menuToggle?.closest('header');
-  document.addEventListener('click', (e) => {
-    if (
-      menuToggle?.getAttribute('aria-expanded') === 'true' &&
-      e.target instanceof Node &&
-      !header?.contains(e.target)
-    ) {
-      setMenuOpen(false);
-    }
-  });
-
-  // Theme toggle
-  const themeToggle = document.getElementById('theme-toggle');
-  const sunIcon = document.getElementById('sun-icon');
-  const moonIcon = document.getElementById('moon-icon');
-
-  function updateIcons() {
-    const isDark = document.documentElement.classList.contains('dark');
-    sunIcon?.classList.toggle('hidden', !isDark);
-    moonIcon?.classList.toggle('hidden', isDark);
-  }
-  updateIcons();
-
-  themeToggle?.addEventListener('click', () => {
-    const isDark = document.documentElement.classList.contains('dark');
-    document.documentElement.classList.toggle('dark');
-    localStorage.setItem('theme', isDark ? 'light' : 'dark');
-    updateIcons();
-  });
-</script>

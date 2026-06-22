@@ -51,7 +51,7 @@ export const GET: APIRoute = async (context) => {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>${escapeXml(siteMetadata.title)} — Writing</title>
+    <title>${escapeXml(siteMetadata.title)} , Writing</title>
     <link>${site}</link>
     <description>${escapeXml(siteMetadata.description)}</description>
     <language>en-us</language>

@@ -1,0 +1,51 @@
+---
+import Base from '../../layouts/Base.astro';
+import { readingTime } from '../../lib/readingTime';
+import { getPublishedPosts, postPath, postOgPath } from '../../lib/content';
+import { formatLongDate } from '../../lib/format';
+
+export async function getStaticPaths() {
+  const published = await getPublishedPosts();
+  return published.map((post, i) => {
+    const primaryTag = (post.data.tags ?? [])[0] ?? null;
+    const related = primaryTag ? published.filter(p => p.slug !== post.slug && (p.data.tags ?? []).includes(primaryTag)).slice(0, 3) : [];
+    return { params: { slug: post.slug }, props: { post, related, primaryTag, older: published[i + 1] ?? null, newer: published[i - 1] ?? null } };
+  });
+}
+
+const { post, related, primaryTag, older, newer } = Astro.props;
+const { Content } = await post.render();
+const dateFormatted = formatLongDate(post.data.date);
+const updatedFormatted = post.data.updatedDate ? formatLongDate(post.data.updatedDate) : null;
+const articleData = { headline: post.data.title, description: post.data.description, datePublished: post.data.date.toISOString(), url: new URL(postPath(post.slug), Astro.site).href };
+const ogImagePath = postOgPath(post.slug);
+---
+
+<Base title={post.data.title} description={post.data.description} article={articleData} ogImage={ogImagePath}>
+  <header class="page-header reveal">
+    <a href="/writing" class="font-sans text-xs uppercase tracking-[.08em]">writing</a>
+    <h1 class="page-title mt-4">{post.data.title}</h1>
+    <p class="page-standfirst">{dateFormatted} · {readingTime(post.body)} min read{updatedFormatted ? ` · updated ${updatedFormatted}` : ''}</p>
+  </header>
+
+  <article class="prose reveal">
+    <Content />
+  </article>
+
+  {related.length > 0 && (
+    <section class="mt-16 border-t border-[var(--line)] pt-8 reveal">
+      <h2 class="font-sans text-sm uppercase tracking-[.08em] text-[var(--ink-soft)] mb-4">more on {primaryTag}</h2>
+      <ul class="list-lines">
+        {related.map((r) => <li><a href={postPath(r.slug)}>{r.data.title}</a></li>)}
+      </ul>
+    </section>
+  )}
+
+  <footer class="mt-12 border-t border-[var(--line)] pt-8 reveal">
+    <nav class="flex justify-between gap-6 font-sans text-sm" aria-label="post navigation">
+      {older ? <a href={postPath(older.slug)}>← {older.data.title}</a> : <span />}
+      {newer ? <a href={postPath(newer.slug)} class="text-right">{newer.data.title} →</a> : <span />}
+    </nav>
+    <a href="/writing" class="mt-6 block font-sans text-xs uppercase tracking-[.08em]">all writing</a>
+  </footer>
+</Base>

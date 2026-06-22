@@ -1,7 +1,5 @@
 ---
 import '../styles/global.css';
-import { getImage } from 'astro:assets';
-import ogImage from '../assets/og-image.png';
 import { siteMetadata } from '../data/siteMetadata';
 import { navItems } from '../data/nav';
 import Header from '../components/Header.astro';
@@ -18,66 +16,52 @@ interface Props {
   description?: string;
   ogImage?: string;
   article?: ArticleData;
-  /** Replaces the standard centered-column <main> classes (e.g. /work, /90-day-os). */
   mainClass?: string;
-  /** Adds classes on top of the standard column without restating it (e.g. space-y-16). */
   extraMainClass?: string;
 }
 
 const {
   title = siteMetadata.title,
   description = siteMetadata.description,
-  ogImage: ogImageOverride,
+  ogImage: ogImageOverride = '/og/home.png',
   article,
-  mainClass = 'mx-auto max-w-2xl px-6 py-12 font-mono',
+  mainClass = 'site-main',
   extraMainClass,
 } = Astro.props;
-const fullTitle = title === siteMetadata.title ? title : `${title} — ${siteMetadata.title}`;
-
-let ogImageUrl: string;
-if (ogImageOverride) {
-  ogImageUrl = new URL(ogImageOverride, Astro.site).href;
-} else {
-  const optimizedImage = await getImage({
-    src: ogImage,
-    format: 'png',
-    width: 1200,
-    height: 630,
-  });
-  ogImageUrl = new URL(optimizedImage.src, Astro.site).href;
-}
+const fullTitle = title === siteMetadata.title ? title : `${title} · ${siteMetadata.title}`;
+const ogImageUrl = new URL(ogImageOverride, Astro.site).href;
 
 const structuredData: Record<string, unknown> = {
-  "@context": "https://schema.org",
-  "@graph": [
+  '@context': 'https://schema.org',
+  '@graph': [
     {
-      "@type": "Person",
-      "@id": `${siteMetadata.url}/#person`,
-      "name": siteMetadata.author,
-      "url": siteMetadata.url,
-      "jobTitle": siteMetadata.jobTitle,
-      "worksFor": { "@type": "Organization", "name": siteMetadata.worksFor.name },
-      "sameAs": siteMetadata.social,
-      "description": "Director of Product at Salesforce, working at the intersection of AI and enterprise. Previously SiriusXM, Disney+, EA. Based in NYC.",
-      "knowsAbout": ["Product Management", "Artificial Intelligence", "Enterprise Software", "Emerging Technology"]
+      '@type': 'Person',
+      '@id': `${siteMetadata.url}/#person`,
+      name: siteMetadata.author,
+      url: siteMetadata.url,
+      jobTitle: siteMetadata.jobTitle,
+      worksFor: { '@type': 'Organization', name: siteMetadata.worksFor.name },
+      sameAs: siteMetadata.social,
+      description: 'director of product at salesforce. previously siriusxm, disney+, and ea. based in nyc.',
+      knowsAbout: ['product management', 'artificial intelligence', 'enterprise software', 'emerging technology'],
     },
     {
-      "@type": "WebSite",
-      "@id": `${siteMetadata.url}/#website`,
-      "url": siteMetadata.url,
-      "name": siteMetadata.title,
-      "publisher": { "@id": `${siteMetadata.url}/#person` }
+      '@type': 'WebSite',
+      '@id': `${siteMetadata.url}/#website`,
+      url: siteMetadata.url,
+      name: siteMetadata.title,
+      publisher: { '@id': `${siteMetadata.url}/#person` },
     },
     ...(article ? [{
-      "@type": "Article",
-      "headline": article.headline,
-      "datePublished": article.datePublished,
-      "description": article.description,
-      "author": { "@id": `${siteMetadata.url}/#person` },
-      "publisher": { "@id": `${siteMetadata.url}/#person` },
-      "url": article.url
-    }] : [])
-  ]
+      '@type': 'Article',
+      headline: article.headline,
+      datePublished: article.datePublished,
+      description: article.description,
+      author: { '@id': `${siteMetadata.url}/#person` },
+      publisher: { '@id': `${siteMetadata.url}/#person` },
+      url: article.url,
+    }] : []),
+  ],
 };
 ---
 
@@ -92,7 +76,7 @@ const structuredData: Record<string, unknown> = {
   <meta name="description" content={description} />
   <meta property="og:title" content={fullTitle} />
   <meta property="og:description" content={description} />
-  <meta property="og:type" content="website" />
+  <meta property="og:type" content={article ? 'article' : 'website'} />
   <meta property="og:url" content={Astro.url.href} />
   <meta property="og:image" content={ogImageUrl} />
   <meta name="twitter:card" content="summary_large_image" />
@@ -100,47 +84,31 @@ const structuredData: Record<string, unknown> = {
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={ogImageUrl} />
   <link rel="canonical" href={Astro.url.href} />
-  <link rel="alternate" type="application/rss+xml" title={`${siteMetadata.title} — Writing`} href="/rss.xml" />
-  <link rel="preload" href="/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="alternate" type="application/rss+xml" title={`${siteMetadata.title} · writing`} href="/rss.xml" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/site.webmanifest" />
-  <meta name="theme-color" content="#000000" />
+  <meta name="theme-color" content="#f7f3ea" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="author" content={siteMetadata.author} />
   <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
-  <script is:inline>
-    // Prevent flash of wrong theme
-    (function() {
-      const theme = localStorage.getItem('theme');
-      if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
-      }
-    })();
-  </script>
-  <!-- Umami Analytics (privacy-first, no cookies) -->
   <script is:inline defer src="https://cloud.umami.is/script.js" data-website-id="aa267d21-11bc-40c3-a359-974f47e24791"></script>
 </head>
-<body class="min-h-screen">
-  <a
-    href="#main"
-    class="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 focus:rounded-lg focus:border focus:border-foreground focus:bg-background focus:px-4 focus:py-2 font-mono text-sm"
-  >skip to content</a>
+<body>
+  <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 focus:bg-[var(--paper-raised)] focus:px-4 focus:py-2 focus:font-sans focus:text-sm">skip to content</a>
   <Header />
-  <!-- tabindex=-1 so the skip link moves real keyboard focus (Safari doesn't
-       focus fragment targets otherwise); scroll-mt clears the sticky header. -->
-  <main id="main" tabindex="-1" class:list={[mainClass, extraMainClass, 'scroll-mt-20 focus:outline-none']}>
+  <main id="main" tabindex="-1" class:list={[mainClass, extraMainClass, 'focus:outline-none']}>
     <slot />
   </main>
-  <footer class="border-t border-border mt-16 py-8 font-mono">
-    <div class="mx-auto max-w-2xl px-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-muted-foreground">
+  <footer class="border-t border-[var(--line)] py-8">
+    <div class="mx-auto flex max-w-[52rem] flex-col items-start justify-between gap-4 px-6 font-sans text-xs text-[var(--ink-soft)] sm:flex-row sm:items-center">
       <span>adrian lumley · nyc</span>
-      <nav class="flex flex-wrap gap-x-5 gap-y-2" aria-label="Footer">
+      <nav class="flex flex-wrap gap-x-5 gap-y-2" aria-label="footer">
         {navItems.map((item) => (
-          <a href={item.href} class="hover:text-foreground transition-colors">{item.label}</a>
+          <a href={item.href}>{item.label}</a>
         ))}
-        <a href="/rss.xml" class="hover:text-foreground transition-colors">rss</a>
+        <a href="/rss.xml">rss</a>
       </nav>
     </div>
   </footer>

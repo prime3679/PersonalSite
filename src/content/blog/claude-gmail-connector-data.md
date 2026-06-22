@@ -2,13 +2,13 @@
 title: "Does Claude train on your email? The plan-by-plan teardown."
 date: 2026-06-09
 tags: ["ai"]
-description: "What Claude's Gmail connector trains on, where the data lives, and how long it stays — broken down across all five plans, sourced to Anthropic's own docs, with the gaps marked."
+description: "What Claude's Gmail connector trains on, where the data lives, and how long it stays , broken down across all five plans, sourced to Anthropic's own docs, with the gaps marked."
 published: true
 ---
 
 <p class="text-xs text-muted-foreground">
   Last verified June 9, 2026 against Anthropic's primary documentation.
-  <em>Changelog: Jun 9, 2026 — v2. Rebuilt as a plan-by-plan teardown: added the five-plan table
+  <em>Changelog: Jun 9, 2026 , v2. Rebuilt as a plan-by-plan teardown: added the five-plan table
   (and a <a href="/files/claude-gmail-connector-tier-table.pdf" class="underline hover:no-underline" download>downloadable one-pager</a>),
   a memory &amp; incognito section, and a "where the docs go quiet" list. Every claim was re-checked
   against the source on this date.</em>
@@ -16,7 +16,7 @@ published: true
 
 <hr class="border-foreground/10 my-8" />
 
-<h2 class="text-base font-medium mt-8 mb-3">TL;DR — forward this to your security team</h2>
+<h2 class="text-base font-medium mt-8 mb-3">TL;DR , forward this to your security team</h2>
 
 <ul class="space-y-1.5 my-4">
   <li class="flex items-start gap-2 text-foreground/70">
@@ -25,7 +25,7 @@ published: true
   </li>
   <li class="flex items-start gap-2 text-foreground/70">
     <span class="shrink-0 mt-0.5">→</span>
-    <span><strong>The raw connector pull never trains the models.</strong> Anthropic does not train on your Gmail, Drive, or Calendar connector data — on any plan.</span>
+    <span><strong>The raw connector pull never trains the models.</strong> Anthropic does not train on your Gmail, Drive, or Calendar connector data , on any plan.</span>
   </li>
   <li class="flex items-start gap-2 text-foreground/70">
     <span class="shrink-0 mt-0.5">→</span>
@@ -33,11 +33,11 @@ published: true
   </li>
   <li class="flex items-start gap-2 text-foreground/70">
     <span class="shrink-0 mt-0.5">→</span>
-    <span>Retrieved data is <strong>chat-scoped, not session-scoped</strong> — stored on Anthropic's servers and kept with the chat. Delete the chat, delete the data.</span>
+    <span>Retrieved data is <strong>chat-scoped, not session-scoped</strong> , stored on Anthropic's servers and kept with the chat. Delete the chat, delete the data.</span>
   </li>
   <li class="flex items-start gap-2 text-foreground/70">
     <span class="shrink-0 mt-0.5">→</span>
-    <span>On Enterprise, data is retained <strong>indefinitely</strong> until an Owner sets a custom period — and incognito chats are still visible to your org through data exports and the Compliance API.</span>
+    <span>On Enterprise, data is retained <strong>indefinitely</strong> until an Owner sets a custom period , and incognito chats are still visible to your org through data exports and the Compliance API.</span>
   </li>
 </ul>
 
@@ -58,11 +58,11 @@ published: true
 <h2 id="why" class="text-base font-medium mt-8 mb-3">why this matters</h2>
 
 <p>
-  Every team that turns on Claude's Gmail connector asks the same question first — not "how good
+  Every team that turns on Claude's Gmail connector asks the same question first , not "how good
   is the model" or "what does it cost," but <em>what actually happens to our data?</em> Anthropic
   answers it completely, but the answer is scattered across a connector doc, a privacy center, a
   consumer-terms update, and three enterprise pages. Nobody assembles it. So a question with a
-  defensible answer gets treated like a black box — and the black box is what stalls the rollout.
+  defensible answer gets treated like a black box , and the black box is what stalls the rollout.
 </p>
 
 <p>
@@ -70,7 +70,7 @@ published: true
   Anthropic secures and documents the data path. You decide which plan your people are on,
   what retention is set to, and whether anyone is running company email through a personal
   account. Most rollout anxiety points at the model. The real exposure almost always lives on
-  the configuration side — which is the part you control.
+  the configuration side , which is the part you control.
 </p>
 
 <hr class="border-foreground/10 my-8" />
@@ -96,14 +96,14 @@ published: true
       <span class="text-xs text-muted-foreground">02</span>
       <span class="text-sm font-medium">attachments are metadata only</span>
     </div>
-    <p class="text-sm text-foreground/60 leading-relaxed">Claude reads message bodies and metadata — including attachment metadata — but not the contents of the attachments themselves.</p>
+    <p class="text-sm text-foreground/60 leading-relaxed">Claude reads message bodies and metadata , including attachment metadata , but not the contents of the attachments themselves.</p>
   </div>
   <div class="border border-foreground/10 rounded-xl p-4">
     <div class="flex items-baseline gap-3 mb-1.5">
       <span class="text-xs text-muted-foreground">03</span>
       <span class="text-sm font-medium">it mirrors your permissions</span>
     </div>
-    <p class="text-sm text-foreground/60 leading-relaxed">The connector "mirrors your existing permissions — you cannot access information you don't already have access to." It inherits your account's reach, no more.</p>
+    <p class="text-sm text-foreground/60 leading-relaxed">The connector "mirrors your existing permissions , you cannot access information you don't already have access to." It inherits your account's reach, no more.</p>
   </div>
   <div class="border border-foreground/10 rounded-xl p-4">
     <div class="flex items-baseline gap-3 mb-1.5">
@@ -119,24 +119,24 @@ published: true
   Google sign-in, the OAuth consent screen lists email-<em>sending</em> permission. That looks
   alarming. Anthropic addresses it directly: <em>"During authentication, Google's OAuth screen
   mentions email sending permissions. Claude only reads emails and creates drafts with your
-  explicit approval. The send function is not enabled — all emails must be sent manually."</em>
+  explicit approval. The send function is not enabled , all emails must be sent manually."</em>
 </p>
 
 <p>
   This is the gap between <strong>scope breadth</strong> (what the OAuth grant technically covers)
   and the <strong>app layer</strong> (what the product actually wires up). The grant is broad; the
   send capability is switched off in the application. That distinction is exactly the kind of
-  thing a diligent reviewer should ask a vendor to put in writing — which is precisely what
+  thing a diligent reviewer should ask a vendor to put in writing , which is precisely what
   Anthropic has done.
 </p>
 
 <p>
   One scoping note before moving on: everything in this piece is about the <strong>first-party</strong>
-  Google Workspace connector, which Anthropic builds and runs itself — the data path is Anthropic
+  Google Workspace connector, which Anthropic builds and runs itself , the data path is Anthropic
   end to end, revocable any time from your Google account. Anthropic's
   <a href="https://claude.com/blog/connectors-for-everyday-life" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">broader directory spans 200+ connectors</a>,
   and many of those are operated by the app maker over remote MCP servers. For those, "Anthropic
-  doesn't train on it" is necessary but not sufficient — you're also trusting whoever runs the
+  doesn't train on it" is necessary but not sufficient , you're also trusting whoever runs the
   connector. Different risk class, different checklist. Gmail is the easy case.
 </p>
 
@@ -170,10 +170,10 @@ published: true
 <p>
   One honest flag, because it's the most common point of confusion: "chat-scoped" is the
   <em>storage model</em>, not the <em>retention clock</em>. How long that chat itself survives
-  depends on your plan — 30 days on a consumer account, up to five years if you opted into
+  depends on your plan , 30 days on a consumer account, up to five years if you opted into
   training, and on Enterprise, indefinitely until an Owner sets a custom period. More on that in
   <a href="#table" class="underline hover:no-underline">the table</a>. And memory is a separate
-  lever entirely — covered <a href="#memory" class="underline hover:no-underline">below</a>.
+  lever entirely , covered <a href="#memory" class="underline hover:no-underline">below</a>.
 </p>
 
 <hr class="border-foreground/10 my-8" />
@@ -200,13 +200,13 @@ published: true
   </li>
   <li class="flex items-start gap-2 text-foreground/70">
     <span class="shrink-0 mt-0.5">→</span>
-    <span>Connector-derived content that lands in the chat can be — but only if you're (a) on a consumer plan and (b) opted in. Claude quoting your email back to you becomes ordinary chat content, and chat content on an opted-in consumer account is eligible.</span>
+    <span>Connector-derived content that lands in the chat can be , but only if you're (a) on a consumer plan and (b) opted in. Claude quoting your email back to you becomes ordinary chat content, and chat content on an opted-in consumer account is eligible.</span>
   </li>
 </ul>
 
 <p>
   The clean mental model, and the one sentence worth memorizing for the room:
-  <strong>the pipe is private; the conversation might not be — but only on consumer plans you
+  <strong>the pipe is private; the conversation might not be , but only on consumer plans you
   opted into.</strong>
 </p>
 
@@ -225,7 +225,7 @@ published: true
 <h2 id="memory" class="text-base font-medium mt-8 mb-3">memory and incognito (the part nobody reads)</h2>
 
 <p>
-  Connector retention is one lever. <strong>Memory</strong> is a second, independent one — and
+  Connector retention is one lever. <strong>Memory</strong> is a second, independent one , and
   it's where the under-reported surprises live. From the
   <a href="https://support.claude.com/en/articles/11817273-use-claude-s-chat-search-and-memory-to-build-on-previous-context" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">memory &amp; chat-search doc</a>:
 </p>
@@ -233,7 +233,7 @@ published: true
 <ul class="space-y-1.5 my-4">
   <li class="flex items-start gap-2 text-foreground/70">
     <span class="shrink-0 mt-0.5">→</span>
-    <span>Memory from chat history is on every plan (Free through Enterprise); summaries are synthesized roughly every 24 hours. Chat search — retrieval over your past chats — is paid plans only.</span>
+    <span>Memory from chat history is on every plan (Free through Enterprise); summaries are synthesized roughly every 24 hours. Chat search , retrieval over your past chats , is paid plans only.</span>
   </li>
   <li class="flex items-start gap-2 text-foreground/70">
     <span class="shrink-0 mt-0.5">→</span>
@@ -241,7 +241,7 @@ published: true
   </li>
   <li class="flex items-start gap-2 text-foreground/70">
     <span class="shrink-0 mt-0.5">→</span>
-    <span>On Enterprise, an Owner can disable memory org-wide — but read the warning first: <em>"Disabling Claude's memory at the organization level will automatically and permanently delete all memory data for all users in your organization."</em> Team plans have no org-level memory controls; it's individual-only.</span>
+    <span>On Enterprise, an Owner can disable memory org-wide , but read the warning first: <em>"Disabling Claude's memory at the organization level will automatically and permanently delete all memory data for all users in your organization."</em> Team plans have no org-level memory controls; it's individual-only.</span>
   </li>
 </ul>
 
@@ -261,7 +261,7 @@ published: true
   In other words: on a managed plan, <strong>incognito is incognito from you, not from your
   org</strong>. It keeps a chat out of your history and out of memory, but it does not hide it
   from an Owner's export or an Enterprise Compliance pull, and it's retained at least 30 days for
-  safety. If you're rolling Claude out, tell your people this plainly — because the word
+  safety. If you're rolling Claude out, tell your people this plainly , because the word
   "incognito" promises more than it delivers in a workspace, and someone will assume it's a
   shield it isn't.
 </p>
@@ -272,8 +272,8 @@ published: true
 
 <p>
   This is the table everyone wants and Anthropic never publishes as a table. Free, Pro, and Max
-  share identical data-governance terms — the differences between them are usage and features,
-  not data handling — so they share a column below. The real lines are drawn at Team and
+  share identical data-governance terms , the differences between them are usage and features,
+  not data handling , so they share a column below. The real lines are drawn at Team and
   Enterprise.
 </p>
 
@@ -323,8 +323,8 @@ published: true
   <div class="grid grid-cols-4 gap-3">
     <span class="text-foreground/60">is incognito private from your org?</span>
     <span>yes (personal)</span>
-    <span>no — in org exports</span>
-    <span>no — exports + Compliance API</span>
+    <span>no , in org exports</span>
+    <span>no , exports + Compliance API</span>
   </div>
 </div>
 
@@ -339,14 +339,14 @@ published: true
 
 <p class="my-4">
   <a href="/files/claude-gmail-connector-tier-table.pdf" class="underline hover:no-underline" download>↓ download the one-page tier table (PDF)</a>
-  <span class="text-xs text-muted-foreground"> — the full five-column version, made to forward.</span>
+  <span class="text-xs text-muted-foreground"> , the full five-column version, made to forward.</span>
 </p>
 
 <p>
   Two documented limits worth naming alongside the table, because the person asking has usually
   read the fine print: Anthropic may <a href="https://platform.claude.com/docs/en/manage-claude/api-and-data-retention" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">retain flagged inputs and outputs for up to two years</a>
   for misuse review even under privacy arrangements, and the Compliance API's <strong>activity feed</strong>
-  — the who-did-what-when log, not message content — is
+  , the who-did-what-when log, not message content , is
   <a href="https://platform.claude.com/docs/en/manage-claude/compliance-integration-patterns" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">retained for six years</a>.
   So "delete everything when an employee leaves" is true for content; the activity metadata
   persists.
@@ -358,7 +358,7 @@ published: true
 
 <p>
   A teardown is only honest if it marks its own edges. These are the places Anthropic's public
-  docs don't give a crisp, primary answer as of June 9, 2026. None of them is a red flag —
+  docs don't give a crisp, primary answer as of June 9, 2026. None of them is a red flag ,
   they're the questions to send your account team, in writing, before you sign.
 </p>
 
@@ -377,7 +377,7 @@ published: true
   </div>
   <div class="border-t border-foreground/10 pt-4">
     <p class="text-sm font-medium mb-1">does Team have SSO / SCIM and a Compliance API?</p>
-    <p class="text-xs text-muted-foreground">don't assume it does — identity-tied provisioning (SSO/SCIM) and the Compliance API are Enterprise capabilities. if clean offboarding matters, confirm your plan actually includes the mechanism, not just the promise.</p>
+    <p class="text-xs text-muted-foreground">don't assume it does , identity-tied provisioning (SSO/SCIM) and the Compliance API are Enterprise capabilities. if clean offboarding matters, confirm your plan actually includes the mechanism, not just the promise.</p>
   </div>
 </div>
 
@@ -387,7 +387,7 @@ published: true
 
 <p>
   The data question isn't the hard part. The answer exists, it's defensible, and most of it is a
-  setting you control. <strong>The pipe is private</strong> — Anthropic does not train on your
+  setting you control. <strong>The pipe is private</strong> , Anthropic does not train on your
   Gmail, Drive, or Calendar connector data on any plan. <strong>The conversation might not
   be</strong>, but only on consumer plans you opted into training on. Retrieved data lives with
   the chat; on Enterprise that means indefinitely until an Owner sets a retention period. And
@@ -396,7 +396,7 @@ published: true
 
 <p>
   So if your company is rolling out Claude and half the team is on personal Pro accounts, start
-  there. Not with the connector — with the plan.
+  there. Not with the connector , with the plan.
 </p>
 
 <hr class="border-foreground/10 my-10" />
@@ -407,21 +407,21 @@ published: true
 </p>
 
 <ul class="space-y-1.5 my-4 text-sm text-muted-foreground">
-  <li><a href="https://support.claude.com/en/articles/10166901-use-google-workspace-connectors" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Google Workspace connectors</a> — the authoritative connector doc</li>
-  <li><a href="https://www.anthropic.com/news/updates-to-our-consumer-terms" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Updates to consumer terms &amp; privacy policy</a> — the Oct 8, 2025 training fork</li>
-  <li><a href="https://code.claude.com/docs/en/data-usage" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Data usage &amp; retention</a> — consumer retention and coding sessions</li>
-  <li><a href="https://support.claude.com/en/articles/11817273-use-claude-s-chat-search-and-memory-to-build-on-previous-context" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Chat search &amp; memory</a> — memory synthesis, org controls, exports</li>
-  <li><a href="https://support.claude.com/en/articles/12260368-using-incognito-chats" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Using incognito chats</a> — exports + Compliance API inclusion on Team/Enterprise</li>
-  <li><a href="https://support.claude.com/en/articles/10440198-configure-custom-data-retention-controls-for-enterprise-plans" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Custom data retention controls (Enterprise)</a> — indefinite-by-default</li>
-  <li><a href="https://platform.claude.com/docs/en/manage-claude/api-and-data-retention" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">API &amp; data retention / ZDR</a> — ZDR scope, flagged-content retention</li>
-  <li><a href="https://platform.claude.com/docs/en/manage-claude/compliance-content-data" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Compliance API</a> — content deletion</li>
-  <li><a href="https://platform.claude.com/docs/en/manage-claude/compliance-integration-patterns" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Compliance integration patterns</a> — six-year activity-feed retention</li>
+  <li><a href="https://support.claude.com/en/articles/10166901-use-google-workspace-connectors" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Google Workspace connectors</a> , the authoritative connector doc</li>
+  <li><a href="https://www.anthropic.com/news/updates-to-our-consumer-terms" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Updates to consumer terms &amp; privacy policy</a> , the Oct 8, 2025 training fork</li>
+  <li><a href="https://code.claude.com/docs/en/data-usage" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Data usage &amp; retention</a> , consumer retention and coding sessions</li>
+  <li><a href="https://support.claude.com/en/articles/11817273-use-claude-s-chat-search-and-memory-to-build-on-previous-context" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Chat search &amp; memory</a> , memory synthesis, org controls, exports</li>
+  <li><a href="https://support.claude.com/en/articles/12260368-using-incognito-chats" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Using incognito chats</a> , exports + Compliance API inclusion on Team/Enterprise</li>
+  <li><a href="https://support.claude.com/en/articles/10440198-configure-custom-data-retention-controls-for-enterprise-plans" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Custom data retention controls (Enterprise)</a> , indefinite-by-default</li>
+  <li><a href="https://platform.claude.com/docs/en/manage-claude/api-and-data-retention" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">API &amp; data retention / ZDR</a> , ZDR scope, flagged-content retention</li>
+  <li><a href="https://platform.claude.com/docs/en/manage-claude/compliance-content-data" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Compliance API</a> , content deletion</li>
+  <li><a href="https://platform.claude.com/docs/en/manage-claude/compliance-integration-patterns" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Compliance integration patterns</a> , six-year activity-feed retention</li>
   <li><a href="https://www.anthropic.com/product/enterprise" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Claude Enterprise</a></li>
-  <li><a href="https://claude.com/blog/connectors-for-everyday-life" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Connectors for everyday life</a> — the 200+ connector directory</li>
+  <li><a href="https://claude.com/blog/connectors-for-everyday-life" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Connectors for everyday life</a> , the 200+ connector directory</li>
 </ul>
 
 <p class="text-xs text-muted-foreground">
   Independent analysis, assembled from Anthropic's public documentation. I do not speak for
-  Anthropic, and nothing here is legal advice. Plans and policies change — every claim is dated
+  Anthropic, and nothing here is legal advice. Plans and policies change , every claim is dated
   to its last verification above; check the source before you rely on it.
 </p>

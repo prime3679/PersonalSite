@@ -63,7 +63,7 @@ published: true
     <p class="text-sm text-foreground/60 leading-relaxed">
       Direct effect: you reduce scope, hit the timeline, and ship something smaller than promised.
       Second-order effect: the stakeholder who was already skeptical now has evidence for the narrative
-      they were already building. The scope cut wasn't just a project decision — it was a trust signal.
+      they were already building. The scope cut wasn't just a project decision , it was a trust signal.
       You shipped on time. You also made next quarter's roadmap fight harder.
     </p>
   </div>
@@ -89,16 +89,16 @@ published: true
 </p>
 
 <p>
-  Cutting scope doesn't just change a delivery date — it changes a narrative. Shipping a rough
-  feature doesn't just add tech debt — it sets expectations for what "done" means on your team.
-  Saying yes to a request from a senior stakeholder doesn't just add scope — it creates
+  Cutting scope doesn't just change a delivery date , it changes a narrative. Shipping a rough
+  feature doesn't just add tech debt , it sets expectations for what "done" means on your team.
+  Saying yes to a request from a senior stakeholder doesn't just add scope , it creates
   a precedent for who gets to change the roadmap and when.
 </p>
 
 <p>
   At small companies, these effects are visible and fast. Someone makes a decision, the team
-  reacts, you see the consequence within a sprint. At Salesforce scale — tens of thousands
-  of employees, nested hierarchies, cross-functional dependencies — the lag between decision
+  reacts, you see the consequence within a sprint. At Salesforce scale , tens of thousands
+  of employees, nested hierarchies, cross-functional dependencies , the lag between decision
   and second-order consequence can be six months. By the time the effect shows up,
   most people have forgotten the cause.
 </p>
@@ -113,7 +113,7 @@ published: true
 <h2 class="text-base font-medium mt-8 mb-3">the habit</h2>
 
 <p>
-  Before any major decision — roadmap change, scope cut, new capability, launch timing —
+  Before any major decision , roadmap change, scope cut, new capability, launch timing ,
   I ask "and then what?" twice.
 </p>
 
@@ -140,7 +140,7 @@ published: true
 <p>
   You don't have to reverse every decision because of what you find. Sometimes the second-order
   effect is acceptable, or manageable, or smaller than the first-order gain. The point is to
-  see it clearly before you commit — not discover it six months later wondering what happened.
+  see it clearly before you commit , not discover it six months later wondering what happened.
 </p>
 
 <hr class="border-foreground/10 my-8" />
@@ -149,8 +149,8 @@ published: true
 
 <p>
   I've worked with PMs at every level across media, streaming, and enterprise software.
-  The ones who compound — who consistently produce outsized outcomes over years, not just
-  quarters — share this trait more reliably than any other. They're not smarter about features.
+  The ones who compound , who consistently produce outsized outcomes over years, not just
+  quarters , share this trait more reliably than any other. They're not smarter about features.
   They're smarter about systems.
 </p>
 
@@ -162,7 +162,7 @@ published: true
 
 <p>
   The first-order effect is easy to optimize for. Any PM with spreadsheet skills and a willingness
-  to argue can do it. The second-order effect is where the judgment lives — and it's almost
+  to argue can do it. The second-order effect is where the judgment lives , and it's almost
   entirely invisible to people who haven't trained themselves to look for it.
 </p>
 

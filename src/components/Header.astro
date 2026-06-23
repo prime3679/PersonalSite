@@ -15,9 +15,9 @@ const isCurrentPage = (href: string) => currentPath === normalizePath(href);
 
 <header class="site-header" data-site-header>
   <div class="site-header__bar" data-header-bar>
-    <a href="/" class="site-header__wordmark">adrian lumley</a>
+    <a href="/" class="site-header__wordmark site-header__logo">adrian lumley</a>
 
-    <nav class="site-header__desktop-nav" data-header-desktop-nav aria-label="Primary">
+    <nav class="site-header__desktop-nav site-header__nav--desktop" data-header-desktop-nav aria-label="Primary">
       {navItems.map((item) => (
         <a
           href={item.href}
@@ -36,7 +36,7 @@ const isCurrentPage = (href: string) => currentPath === normalizePath(href);
       type="button"
       aria-label="Open site menu"
       aria-expanded="false"
-      aria-controls="site-mobile-nav"
+      aria-controls="mobile-nav"
     >
       <span aria-hidden="true"></span>
       <span aria-hidden="true"></span>
@@ -45,7 +45,7 @@ const isCurrentPage = (href: string) => currentPath === normalizePath(href);
   </div>
 
   <nav
-    id="site-mobile-nav"
+    id="mobile-nav"
     class="site-header__mobile-panel"
     data-header-mobile-panel
     aria-label="Mobile"

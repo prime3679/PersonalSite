@@ -18,6 +18,6 @@ test('Header renders the canonical editorial navigation once', async () => {
   expect(result).not.toContain('href="/blog"');
   expect(result).not.toContain('id="theme-toggle"');
   expect(result).toContain('id="menu-toggle"');
-  expect(result).toContain('id="site-mobile-nav"');
-  expect(result).toContain('aria-controls="site-mobile-nav"');
+  expect(result).toContain('id="mobile-nav"');
+  expect(result).toContain('aria-controls="mobile-nav"');
 });

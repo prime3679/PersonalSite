@@ -75,29 +75,22 @@ test('rss: /rss.xml is served as XML with items', async ({ page }) => {
   expect(body).toContain('<item>');
 });
 
-test('header: theme toggle flips dark mode', async ({ page }) => {
+test('header: canonical editorial nav replaces the old theme toggle', async ({ page }) => {
   await page.goto('/');
-  const html = page.locator('html');
-  const wasDark = await html.evaluate((el) => el.classList.contains('dark'));
-  await page.locator('#theme-toggle').click();
-  // Web-first assertions auto-wait/retry, so the class flip isn't raced.
-  if (wasDark) {
-    await expect(html).not.toHaveClass(/dark/);
-  } else {
-    await expect(html).toHaveClass(/dark/);
-  }
+  await expect(page.locator('#theme-toggle')).toHaveCount(0);
+  await expect(page.locator('header.site-header')).toHaveCount(1);
+  await expect(page.getByRole('link', { name: 'adrian lumley' })).toHaveCSS('white-space', 'nowrap');
 });
 
-test('nav: header shows the home wordmark + tightened primary tabs', async ({ page }) => {
+test('nav: header shows the home wordmark + canonical primary tabs', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto('/');
   // The name acts as the home link
   await expect(page.locator('header a[href="/"]').first()).toBeVisible();
   // Primary tabs are the visible desktop nav
-  for (const href of ['/about', '/blog', '/lab', '/contact']) {
+  for (const href of ['/work', '/lab', '/writing', '/signal-room', '/contact']) {
     await expect(page.locator(`header a[href="${href}"]`).first()).toBeVisible();
   }
-  // Secondary items live in the footer, not the top bar
-  await expect(page.locator('footer a[href="/signal-room"]')).toHaveCount(1);
 });
 
 test('a11y: skip link jumps focus to main content', async ({ page }) => {
@@ -113,14 +106,9 @@ test('a11y: skip link jumps focus to main content', async ({ page }) => {
 });
 
 test('a11y: active header tab carries aria-current="page"', async ({ page }) => {
-  await page.goto('/blog');
-  await expect(page.locator('header nav a[href="/blog"]').first()).toHaveAttribute('aria-current', 'page');
-  await expect(page.locator('header nav a[href="/about"]').first()).not.toHaveAttribute('aria-current', 'page');
-
-  // aria-current means "this exact page" — a child route must not claim it,
-  // even though the tab stays visually highlighted for the section.
-  await page.goto('/blog/meeting-cost');
-  await expect(page.locator('header nav a[href="/blog"]').first()).not.toHaveAttribute('aria-current', 'page');
+  await page.goto('/writing');
+  await expect(page.locator('header nav a[href="/writing"]').first()).toHaveAttribute('aria-current', 'page');
+  await expect(page.locator('header nav a[href="/work"]').first()).not.toHaveAttribute('aria-current', 'page');
 });
 
 test('post: prev/next navigation walks the archive in date order', async ({ page }) => {

@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>the crazy wall</title>
+<meta name="description" content="a corkboard, some index cards, and entirely too much red string. drag the evidence around until it confesses.">
+<style>
+  /* ------------------------------------------------
+     THE CRAZY WALL
+     a corkboard for theories that deserve red string
+     ------------------------------------------------ */
+
+  :root {
+    --cork:       #a97c50;
+    --cork-deep:  #8c6239;
+    --cork-shade: #6f4c2a;
+    --frame:      #3d2b1c;
+    --card:       #f7f1df;
+    --card-edge:  #e4d9bc;
+    --sticky:     #f5df8e;
+    --scrap:      #efe6d4;
+    --ink:        #2b2620;
+    --ink-soft:   #59503f;
+    --string:     #c0272d;
+    --string-glow:#c0272d55;
+    --pin:        #d8342e;
+    --pin-dark:   #8f1f1c;
+    --brass:      #caa74e;
+    --hand: "Marker Felt", "Bradley Hand", "Segoe Print", "Comic Sans MS", cursive;
+    --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    font-family: var(--hand);
+    color: var(--ink);
+    background: var(--frame);
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    touch-action: manipulation;
+  }
+
+  /* ---------- top strip ---------- */
+
+  header {
+    background: linear-gradient(180deg, #241a10, #2f2216);
+    color: #e9ddc7;
+    padding: 0.55rem 0.9rem 0.6rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.9rem;
+    border-bottom: 3px solid #1a120a;
+    position: relative;
+    z-index: 40;
+  }
+
+  h1 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  h1 .thread { color: #e05a51; }
+
+  .status {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    color: #b5a68a;
+    text-transform: lowercase;
+    min-width: 0;
+  }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+    margin-left: auto;
+  }
+
+  .controls input {
+    font-family: var(--hand);
+    font-size: 0.85rem;
+    color: var(--ink);
+    background: var(--card);
+    border: none;
+    border-radius: 2px;
+    padding: 0.35rem 0.5rem;
+    width: min(15rem, 42vw);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.25);
+  }
+
+  .controls input:focus { outline: 2px solid var(--brass); }
+
+  button {
+    font-family: var(--hand);
+    font-size: 0.85rem;
+    color: #f3ead6;
+    border: 1px solid #00000055;
+    border-radius: 3px;
+    padding: 0.35rem 0.7rem;
+    cursor: pointer;
+    background: linear-gradient(180deg, #5a4630, #46351f);
+    box-shadow: 0 1px 0 #00000066, inset 0 1px 0 #ffffff22;
+  }
+
+  button:hover { filter: brightness(1.12); }
+  button:active { transform: translateY(1px); }
+
+  button.crazy {
+    background: linear-gradient(180deg, #b3322c, #8f1f1c);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+  }
+
+  button.ghost {
+    background: transparent;
+    border: 1px solid #ffffff33;
+    box-shadow: none;
+    color: #cbbc9f;
+  }
+
+  /* ---------- the board ---------- */
+
+  .board-wrap {
+    flex: 1;
+    position: relative;
+    margin: 10px;
+    border: 10px solid var(--frame);
+    border-radius: 6px;
+    box-shadow:
+      inset 0 0 0 2px #241a10,
+      inset 0 14px 34px rgba(0,0,0,0.4),
+      0 4px 18px rgba(0,0,0,0.5);
+    overflow: hidden;
+    background:
+      radial-gradient(1.5px 1.5px at 12% 24%, #00000030 40%, transparent 45%),
+      radial-gradient(1.5px 1.5px at 34% 68%, #00000026 40%, transparent 45%),
+      radial-gradient(2px 2px at 57% 15%, #0000002d 40%, transparent 45%),
+      radial-gradient(1.5px 1.5px at 71% 49%, #00000024 40%, transparent 45%),
+      radial-gradient(2px 2px at 88% 77%, #0000002b 40%, transparent 45%),
+      radial-gradient(1.5px 1.5px at 22% 88%, #00000028 40%, transparent 45%),
+      radial-gradient(2px 2px at 45% 41%, #ffffff1c 40%, transparent 45%),
+      radial-gradient(1.5px 1.5px at 66% 90%, #ffffff18 40%, transparent 45%),
+      radial-gradient(1.5px 1.5px at 91% 28%, #ffffff1a 40%, transparent 45%),
+      radial-gradient(120% 100% at 50% 0%, var(--cork) 0%, var(--cork-deep) 62%, var(--cork-shade) 100%);
+  }
+
+  #board {
+    position: absolute;
+    inset: 0;
+    cursor: default;
+  }
+
+  svg#strings {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    overflow: visible;
+  }
+
+  svg#strings path.yarn {
+    fill: none;
+    stroke: var(--string);
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    filter: drop-shadow(0 2px 1px rgba(0,0,0,0.35));
+    pointer-events: stroke;
+    cursor: pointer;
+  }
+
+  svg#strings path.yarn:hover { stroke-width: 3.4; stroke: #e04840; }
+
+  svg#strings path.pending {
+    fill: none;
+    stroke: var(--string);
+    stroke-width: 2;
+    stroke-dasharray: 6 5;
+    opacity: 0.85;
+    pointer-events: none;
+  }
+
+  /* ---------- cards ---------- */
+
+  .card {
+    position: absolute;
+    z-index: 10;
+    width: 150px;
+    min-height: 76px;
+    padding: 1.05rem 0.7rem 0.65rem;
+    background: linear-gradient(180deg, var(--card), var(--card-edge));
+    border-radius: 2px;
+    box-shadow:
+      0 6px 10px rgba(0,0,0,0.35),
+      0 1px 2px rgba(0,0,0,0.3);
+    transform: rotate(var(--rot, 0deg));
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+  }
+
+  .card.dragging {
+    cursor: grabbing;
+    z-index: 30;
+    box-shadow: 0 14px 22px rgba(0,0,0,0.45);
+    transform: rotate(var(--rot, 0deg)) scale(1.04);
+  }
+
+  .card.tone-index {
+    background:
+      repeating-linear-gradient(180deg, transparent 0 21px, #9db3c633 21px 22px),
+      linear-gradient(180deg, #fbf6e7, #efe7cd);
+  }
+
+  .card.tone-index::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; top: 14px;
+    height: 1.5px;
+    background: #c0272d55;
+  }
+
+  .card.tone-sticky {
+    background: linear-gradient(180deg, var(--sticky), #ecd077);
+    width: 128px;
+  }
+
+  .card.tone-scrap {
+    background: linear-gradient(180deg, var(--scrap), #e2d7c0);
+    clip-path: polygon(2% 4%, 97% 0%, 100% 92%, 88% 100%, 4% 97%, 0% 12%);
+  }
+
+  .card .text {
+    font-size: 0.86rem;
+    line-height: 1.28;
+    overflow-wrap: break-word;
+    outline: none;
+  }
+
+  .card .text:focus {
+    background: #ffffff88;
+    border-radius: 2px;
+  }
+
+  .card .pin {
+    position: absolute;
+    top: -9px;
+    left: 50%;
+    width: 22px;
+    height: 22px;
+    margin-left: -11px;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 34% 30%, #ff9d94, var(--pin) 52%, var(--pin-dark) 95%);
+    box-shadow: 0 3px 4px rgba(0,0,0,0.45), inset 0 -2px 3px rgba(0,0,0,0.3);
+    cursor: pointer;
+    border: none;
+    padding: 0;
+    z-index: 12;
+  }
+
+  .card .pin:hover { filter: brightness(1.15); }
+
+  .card .pin.armed {
+    outline: 3px solid #ffd86b;
+    outline-offset: 2px;
+    animation: pinpulse 0.9s ease-in-out infinite;
+  }
+
+  @keyframes pinpulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.18); }
+  }
+
+  .card .zap {
+    position: absolute;
+    top: -7px;
+    right: -7px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #2b2620;
+    color: #f3ead6;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    line-height: 20px;
+    text-align: center;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    z-index: 13;
+  }
+
+  .card:hover .zap, .card.dragging .zap { opacity: 0.85; }
+
+  @media (hover: none) {
+    .card .zap { opacity: 0.55; }
+  }
+
+  /* ---------- escalation ---------- */
+
+  body[data-crazy="2"] .card { --wob: 1; }
+
+  body.motion-ok[data-crazy="3"] .card,
+  body.motion-ok[data-crazy="4"] .card,
+  body.motion-ok[data-crazy="5"] .card {
+    animation: jitter 5s ease-in-out infinite;
+  }
+
+  @keyframes jitter {
+    0%, 100% { transform: rotate(var(--rot, 0deg)); }
+    50% { transform: rotate(calc(var(--rot, 0deg) + 0.7deg)); }
+  }
+
+  .stamp {
+    position: absolute;
+    z-index: 35;
+    left: 50%;
+    top: 42%;
+    transform: translate(-50%, -50%) rotate(-14deg) scale(1);
+    font-family: var(--mono);
+    font-size: clamp(1.3rem, 5vw, 2.6rem);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--string);
+    border: 4px solid var(--string);
+    border-radius: 6px;
+    padding: 0.4em 0.7em;
+    opacity: 0;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+  }
+
+  .stamp.show {
+    opacity: 0.82;
+    transition: opacity 0.2s ease;
+  }
+
+  body.motion-ok .stamp.show {
+    animation: slam 0.35s cubic-bezier(0.2, 1.6, 0.4, 1) both;
+  }
+
+  @keyframes slam {
+    from { opacity: 0; transform: translate(-50%, -50%) rotate(-14deg) scale(2.4); }
+    to   { opacity: 0.82; transform: translate(-50%, -50%) rotate(-14deg) scale(1); }
+  }
+
+  /* ---------- footer ---------- */
+
+  footer {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    color: #a08e6f;
+    background: #241a10;
+    padding: 0.45rem 0.9rem calc(0.45rem + env(safe-area-inset-bottom));
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  footer a { color: #cbbc9f; }
+
+  @media (max-width: 640px) {
+    header { padding: 0.5rem 0.6rem; }
+    h1 { font-size: 1rem; }
+    .status { display: none; }
+    .controls { margin-left: 0; width: 100%; }
+    .controls input { flex: 1; width: auto; min-width: 0; }
+    .card { width: 128px; }
+    .card .text { font-size: 0.8rem; }
+    .board-wrap { margin: 6px; border-width: 7px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card .pin.armed { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>the crazy wall <span class="thread" aria-hidden="true">&#9679;</span></h1>
+  <div class="status" id="status">board quiet. too quiet.</div>
+  <div class="controls">
+    <input id="noteInput" type="text" maxlength="90" placeholder="write a theory..." aria-label="write a theory">
+    <button id="addBtn">pin it</button>
+    <button id="crazyBtn" class="crazy">go crazy</button>
+    <button id="resetBtn" class="ghost">start over</button>
+  </div>
+</header>
+
+<div class="board-wrap">
+  <div id="board">
+    <svg id="strings" aria-hidden="true"></svg>
+    <div class="stamp" id="stamp">it's all connected</div>
+  </div>
+</div>
+
+<footer>
+  <span>drag the cards. tap a pin, then another pin, to run string. tap a string to cut it.</span>
+  <span>the wall remembers. <a href="/lab/">back to lab</a></span>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  var board = document.getElementById("board");
+  var svg = document.getElementById("strings");
+  var statusEl = document.getElementById("status");
+  var stampEl = document.getElementById("stamp");
+  var noteInput = document.getElementById("noteInput");
+
+  var motionOK = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (motionOK) document.body.classList.add("motion-ok");
+
+  var STORE_KEY = "crazy-wall-v1";
+  var TONES = ["index", "sticky", "scrap"];
+
+  var THEORIES = [
+    "the cron job runs at 3:07am. why 3:07.",
+    "every dashboard was green the day it broke",
+    "the retry loop is covering for someone",
+    "who approved the friday deploy",
+    "the logs go silent for four minutes. four.",
+    "the flaky test only fails when nobody watches",
+    "cache invalidation was an inside job",
+    "it works on my machine. whose machine.",
+    "the todo comment from 2019 is load bearing",
+    "the intern's script still runs. nobody knows where.",
+    "port 8080 was already in use. by what.",
+    "the printer has been online this whole time",
+    "somebody keeps watering the chaos garden",
+    "the agent finished early. suspicious.",
+    "off by one. always off by one. one what.",
+    "the changelog just says minor changes",
+    "the meeting that could have been an email knew something",
+    "nobody has ever seen the load balancer and the janitor in the same room",
+    "the 200 ok felt sarcastic",
+    "the backup restored itself. read that again.",
+    "the rubber duck has heard too much",
+    "dns. it's always dns. but who is dns.",
+    "the standup was 47 minutes. standing.",
+    "the feature flag is neither feature nor flag",
+    "the merge conflict resolved a little too cleanly",
+    "someone renamed master to main and the ship still creaks",
+    "the pager went off once and never again. once.",
+    "the linter passed without complaint. it always complains.",
+    "the fridge is on the network. the fridge.",
+    "staging knows what it did"
+  ];
+
+  var STATUS_LINES = [
+    "board quiet. too quiet.",
+    "level 1: noticing things",
+    "level 2: patterns emerging",
+    "level 3: the string budget is gone",
+    "level 4: cork barely visible",
+    "level 5: it was never about the cork"
+  ];
+
+  /* ---------- state ---------- */
+
+  var state = { cards: [], strings: [], crazy: 0, nextId: 1 };
+  var els = {};          /* card id -> element */
+  var armedPin = null;   /* card id awaiting second pin */
+  var pendingPath = null;
+  var pointerPos = null;
+  var needsRedraw = true;
+
+  function save() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  function load() {
+    try {
+      var raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return false;
+      var parsed = JSON.parse(raw);
+      if (!parsed || !Array.isArray(parsed.cards)) return false;
+      state = parsed;
+      if (!Array.isArray(state.strings)) state.strings = [];
+      if (typeof state.nextId !== "number") state.nextId = 1;
+      if (typeof state.crazy !== "number") state.crazy = 0;
+      return state.cards.length > 0;
+    } catch (e) { return false; }
+  }
+
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+  function seed() {
+    state = { cards: [], strings: [], crazy: 0, nextId: 1 };
+    var starters = [
+      { text: "start here. everything is fine.", x: 18, y: 22, tone: "index" },
+      { text: "is it though", x: 55, y: 18, tone: "sticky" },
+      { text: pick(THEORIES), x: 72, y: 52, tone: "scrap" },
+      { text: pick(THEORIES), x: 30, y: 62, tone: "index" }
+    ];
+    starters.forEach(function (s) {
+      state.cards.push({
+        id: state.nextId++,
+        text: s.text,
+        x: s.x, y: s.y,
+        rot: rand(-3.4, 3.4),
+        tone: s.tone
+      });
+    });
+    state.strings.push({ a: 1, b: 2 });
+    state.strings.push({ a: 2, b: 3 });
+  }
+
+  function rand(min, max) { return min + Math.random() * (max - min); }
+
+  /* ---------- rendering cards ---------- */
+
+  function buildCard(card) {
+    var el = document.createElement("div");
+    el.className = "card tone-" + (card.tone || "index");
+    el.dataset.id = card.id;
+    el.style.setProperty("--rot", card.rot.toFixed(2) + "deg");
+
+    var pin = document.createElement("button");
+    pin.className = "pin";
+    pin.type = "button";
+    pin.setAttribute("aria-label", "pin. tap this pin and then another pin to run string.");
+
+    var zap = document.createElement("button");
+    zap.className = "zap";
+    zap.type = "button";
+    zap.textContent = "x";
+    zap.setAttribute("aria-label", "take this card down");
+
+    var text = document.createElement("div");
+    text.className = "text";
+    text.textContent = card.text;
+
+    el.appendChild(pin);
+    el.appendChild(zap);
+    el.appendChild(text);
+    board.appendChild(el);
+    els[card.id] = el;
+    placeCard(card);
+
+    /* dragging */
+    var drag = null;
+    el.addEventListener("pointerdown", function (e) {
+      if (e.target === pin || e.target === zap) return;
+      if (text.isContentEditable) return;
+      drag = {
+        px: e.clientX, py: e.clientY,
+        startX: card.x, startY: card.y
+      };
+      el.classList.add("dragging");
+      el.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    });
+    el.addEventListener("pointermove", function (e) {
+      if (!drag) return;
+      var r = board.getBoundingClientRect();
+      card.x = clamp(drag.startX + ((e.clientX - drag.px) / r.width) * 100, 0, 100);
+      card.y = clamp(drag.startY + ((e.clientY - drag.py) / r.height) * 100, 0, 100);
+      placeCard(card);
+      needsRedraw = true;
+    });
+    function endDrag() {
+      if (!drag) return;
+      drag = null;
+      el.classList.remove("dragging");
+      save();
+    }
+    el.addEventListener("pointerup", endDrag);
+    el.addEventListener("pointercancel", endDrag);
+
+    /* pin arming */
+    pin.addEventListener("click", function (e) {
+      e.stopPropagation();
+      if (armedPin === null) {
+        armedPin = card.id;
+        pin.classList.add("armed");
+        setStatus("string in hand. tap another pin.");
+      } else if (armedPin === card.id) {
+        disarm();
+        setStatus("string put down.");
+      } else {
+        connect(armedPin, card.id);
+        disarm();
+      }
+    });
+
+    /* delete */
+    zap.addEventListener("click", function (e) {
+      e.stopPropagation();
+      removeCard(card.id);
+    });
+
+    /* edit on double tap */
+    el.addEventListener("dblclick", function () {
+      text.contentEditable = "true";
+      text.focus();
+      var sel = window.getSelection();
+      if (sel) sel.selectAllChildren(text);
+    });
+    text.addEventListener("blur", function () {
+      text.contentEditable = "false";
+      card.text = text.textContent.slice(0, 120);
+      text.textContent = card.text;
+      save();
+    });
+    text.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") { e.preventDefault(); text.blur(); }
+    });
+  }
+
+  function placeCard(card) {
+    var el = els[card.id];
+    if (!el) return;
+    el.style.left = card.x + "%";
+    el.style.top = card.y + "%";
+    /* keep cards from escaping too far off the right/bottom edge */
+    el.style.marginLeft = (-el.offsetWidth * (card.x / 100)) + "px";
+    el.style.marginTop = (-el.offsetHeight * (card.y / 100)) + "px";
+  }
+
+  function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+
+  function removeCard(id) {
+    var el = els[id];
+    if (el) el.remove();
+    delete els[id];
+    state.cards = state.cards.filter(function (c) { return c.id !== id; });
+    state.strings = state.strings.filter(function (s) { return s.a !== id && s.b !== id; });
+    if (armedPin === id) armedPin = null;
+    needsRedraw = true;
+    setStatus("card taken down. the theory survives.");
+    save();
+  }
+
+  function disarm() {
+    armedPin = null;
+    var armed = board.querySelector(".pin.armed");
+    if (armed) armed.classList.remove("armed");
+    if (pendingPath) { pendingPath.remove(); pendingPath = null; }
+  }
+
+  function connect(a, b) {
+    var exists = state.strings.some(function (s) {
+      return (s.a === a && s.b === b) || (s.a === b && s.b === a);
+    });
+    if (exists) { setStatus("those two are already connected. obviously."); return; }
+    state.strings.push({ a: a, b: b });
+    needsRedraw = true;
+    setStatus(pick([
+      "connected. of course they are.",
+      "the string never lies.",
+      "that one was hiding in plain sight.",
+      "wait. wait wait wait.",
+      "another thread in the tapestry."
+    ]));
+    save();
+  }
+
+  /* ---------- strings ---------- */
+
+  function pinPoint(id) {
+    var el = els[id];
+    if (!el) return null;
+    var r = board.getBoundingClientRect();
+    var er = el.getBoundingClientRect();
+    return {
+      x: er.left - r.left + er.width / 2,
+      y: er.top - r.top + 4
+    };
+  }
+
+  var swayT = 0;
+
+  function drawStrings() {
+    var r = board.getBoundingClientRect();
+    svg.setAttribute("viewBox", "0 0 " + r.width + " " + r.height);
+
+    var paths = svg.querySelectorAll("path.yarn");
+    var i;
+    /* rebuild if count mismatched */
+    if (paths.length !== state.strings.length) {
+      for (i = 0; i < paths.length; i++) paths[i].remove();
+      state.strings.forEach(function (s) {
+        var p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        p.classList.add("yarn");
+        p.dataset.a = s.a;
+        p.dataset.b = s.b;
+        p.addEventListener("click", function () { cut(s.a, s.b); });
+        svg.insertBefore(p, pendingPath);
+      });
+      paths = svg.querySelectorAll("path.yarn");
+    }
+
+    for (i = 0; i < state.strings.length; i++) {
+      var s = state.strings[i];
+      var pa = pinPoint(s.a);
+      var pb = pinPoint(s.b);
+      var p = paths[i];
+      if (!pa || !pb) { p.setAttribute("d", ""); continue; }
+      var dx = pb.x - pa.x, dy = pb.y - pa.y;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      var sag = 14 + dist * 0.12;
+      if (motionOK) sag += Math.sin(swayT * 0.9 + i * 1.7) * Math.min(6, dist * 0.02);
+      var mx = (pa.x + pb.x) / 2;
+      var my = (pa.y + pb.y) / 2 + sag;
+      p.setAttribute("d", "M " + pa.x + " " + pa.y + " Q " + mx + " " + my + " " + pb.x + " " + pb.y);
+    }
+
+    /* pending string follows the pointer */
+    if (armedPin !== null && pointerPos) {
+      if (!pendingPath) {
+        pendingPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        pendingPath.classList.add("pending");
+        svg.appendChild(pendingPath);
+      }
+      var origin = pinPoint(armedPin);
+      if (origin) {
+        var px = pointerPos.x - r.left;
+        var py = pointerPos.y - r.top;
+        var pdx = px - origin.x, pdy = py - origin.y;
+        var pdist = Math.sqrt(pdx * pdx + pdy * pdy);
+        var psag = 10 + pdist * 0.1;
+        pendingPath.setAttribute("d",
+          "M " + origin.x + " " + origin.y +
+          " Q " + ((origin.x + px) / 2) + " " + ((origin.y + py) / 2 + psag) +
+          " " + px + " " + py);
+      }
+    } else if (pendingPath) {
+      pendingPath.remove();
+      pendingPath = null;
+    }
+  }
+
+  function cut(a, b) {
+    state.strings = state.strings.filter(function (s) {
+      return !((s.a === a && s.b === b) || (s.a === b && s.b === a));
+    });
+    needsRedraw = true;
+    setStatus("string cut. that's what they want you to do.");
+    save();
+  }
+
+  /* ---------- escalation ---------- */
+
+  function goCrazy() {
+    state.crazy = Math.min(5, state.crazy + 1);
+    document.body.dataset.crazy = state.crazy;
+
+    var newCount = 1 + state.crazy;
+    var newIds = [];
+    var i;
+    for (i = 0; i < newCount; i++) {
+      if (state.cards.length >= 40) break;
+      var card = {
+        id: state.nextId++,
+        text: pick(THEORIES),
+        x: rand(8, 92),
+        y: rand(10, 86),
+        rot: rand(-4 - state.crazy, 4 + state.crazy),
+        tone: pick(TONES)
+      };
+      state.cards.push(card);
+      buildCard(card);
+      newIds.push(card.id);
+    }
+
+    /* every new card gets wired into the web */
+    newIds.forEach(function (id) {
+      var wires = 1 + Math.floor(Math.random() * Math.min(2, state.crazy));
+      for (var w = 0; w < wires; w++) {
+        var other = pick(state.cards).id;
+        if (other === id) continue;
+        var exists = state.strings.some(function (s) {
+          return (s.a === id && s.b === other) || (s.a === other && s.b === id);
+        });
+        if (!exists) state.strings.push({ a: id, b: other });
+      }
+    });
+
+    /* existing cards lean harder into it */
+    state.cards.forEach(function (c) {
+      c.rot = clamp(c.rot + rand(-0.8, 0.8) * state.crazy, -10, 10);
+      var el = els[c.id];
+      if (el) el.style.setProperty("--rot", c.rot.toFixed(2) + "deg");
+    });
+
+    if (state.crazy >= 4) stampEl.classList.add("show");
+    setStatus(STATUS_LINES[state.crazy]);
+    needsRedraw = true;
+    save();
+  }
+
+  function setStatus(line) {
+    statusEl.textContent = line;
+  }
+
+  /* ---------- controls ---------- */
+
+  document.getElementById("addBtn").addEventListener("click", addNote);
+  noteInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") addNote();
+  });
+
+  function addNote() {
+    var text = noteInput.value.trim().toLowerCase();
+    if (!text) text = pick(THEORIES);
+    var card = {
+      id: state.nextId++,
+      text: text.slice(0, 90),
+      x: rand(20, 80),
+      y: rand(18, 75),
+      rot: rand(-3.5, 3.5),
+      tone: pick(TONES)
+    };
+    state.cards.push(card);
+    buildCard(card);
+    noteInput.value = "";
+    setStatus("pinned. it stays pinned until it talks.");
+    needsRedraw = true;
+    save();
+  }
+
+  document.getElementById("crazyBtn").addEventListener("click", goCrazy);
+
+  document.getElementById("resetBtn").addEventListener("click", function () {
+    Object.keys(els).forEach(function (id) { els[id].remove(); });
+    els = {};
+    disarm();
+    stampEl.classList.remove("show");
+    seed();
+    document.body.dataset.crazy = state.crazy = 0;
+    state.cards.forEach(buildCard);
+    setStatus("fresh cork. it knows nothing. yet.");
+    needsRedraw = true;
+    save();
+  });
+
+  board.addEventListener("pointermove", function (e) {
+    pointerPos = { x: e.clientX, y: e.clientY };
+    if (armedPin !== null) needsRedraw = true;
+  });
+
+  /* clicking bare cork with a string in hand drops it */
+  board.addEventListener("click", function (e) {
+    if (e.target === board && armedPin !== null) {
+      disarm();
+      setStatus("string put down.");
+    }
+  });
+
+  window.addEventListener("resize", function () {
+    state.cards.forEach(placeCard);
+    needsRedraw = true;
+  });
+
+  /* ---------- boot + loop ---------- */
+
+  if (!load()) seed();
+  document.body.dataset.crazy = state.crazy;
+  if (state.crazy >= 4) stampEl.classList.add("show");
+  if (state.crazy > 0) setStatus(STATUS_LINES[state.crazy]);
+  state.cards.forEach(buildCard);
+  /* placement depends on element size, so run once more after layout */
+  requestAnimationFrame(function () {
+    state.cards.forEach(placeCard);
+    needsRedraw = true;
+  });
+
+  function tick() {
+    if (motionOK && state.strings.length) {
+      swayT += 0.016;
+      drawStrings();
+    } else if (needsRedraw) {
+      drawStrings();
+      needsRedraw = false;
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

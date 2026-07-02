@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import PageIntro from '../components/PageIntro.astro';
 import { readingTime } from '../lib/readingTime';
 import { getPublishedPosts, postPath } from '../lib/content';
 import { formatMonthYear } from '../lib/format';
@@ -11,10 +12,7 @@ const allTags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].loca
 ---
 
 <Base title="writing" description="notes on ai, enterprise product, and building systems, drawn from real work and the occasional voice memo.">
-  <header class="page-header reveal">
-    <h1 class="page-title">writing</h1>
-    <p class="page-standfirst">notes on ai, enterprise product, and building systems, drawn from real work and the occasional voice memo. published when there's something worth saying, not on a schedule.</p>
-  </header>
+  <PageIntro title="writing" standfirst="notes on ai, enterprise product, and building systems, drawn from real work and the occasional voice memo. published when there's something worth saying, not on a schedule." />
 
   {allTags.length > 0 && (
     <section class="mb-10 reveal">

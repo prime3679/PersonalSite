@@ -1,32 +1,30 @@
 ---
 import Base from '../../layouts/Base.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import Panel from '../../components/Panel.astro';
+import SignalLog from '../../components/SignalLog.astro';
 import { getEpisodes, episodePath } from '../../lib/content';
 import { formatLongDate, padEpisode } from '../../lib/format';
 
 const episodes = await getEpisodes('desc');
 const latest = episodes[0];
+
+const logEntries = [
+  { time: '02:22', text: 'rogue marks four items: not morning-safe' },
+  { time: '03:48', text: 'off-site voice requests entry. no door.' },
+  { time: '03:50', text: 'front detected 200mi offshore, unseen by local sensors' },
+  { time: '03:52', text: 'brief compressed to one humane sentence' },
+];
 ---
 
 <Base title="signal room" description="short fiction about rogue, systems, households, truth, and mercy." ogImage="/og/signal-room.png">
-  <header class="page-header reveal">
-    <h1 class="page-title">signal room</h1>
-    <p class="page-standfirst">short fiction about rogue and the human side of systems that try to help without becoming the weather.</p>
-  </header>
+  <PageIntro title="signal room" standfirst="short fiction about rogue and the human side of systems that try to help without becoming the weather." />
 
-  <section class="instrument-panel p-6 md:p-8 reveal" aria-label="signal room episode log">
-    <div class="mb-5 flex items-center gap-3 border-b border-[var(--panel-line)] pb-5">
-      <span class="font-mono text-xs tracking-[.05em] text-[var(--panel-soft)]">signal.room 07:11</span>
-      <span class="h-[.9375rem] w-2 bg-[var(--accent-bright)]" aria-hidden="true"></span>
-    </div>
-    <ul class="signal-log">
-      <li><span class="signal-time">02:22</span><span>rogue marks four items: not morning-safe</span></li>
-      <li><span class="signal-time">03:48</span><span>off-site voice requests entry. no door.</span></li>
-      <li><span class="signal-time">03:50</span><span>front detected 200mi offshore, unseen by local sensors</span></li>
-      <li><span class="signal-time">03:52</span><span>brief compressed to one humane sentence</span></li>
-    </ul>
+  <Panel ariaLabel="signal room episode log" label="signal.room 07:11">
+    <SignalLog entries={logEntries} />
     <p class="signal-highlight">the storm is hours out and nothing is on fire. sleep. i'll have one clean decision waiting for you at six.</p>
     <p class="mt-5 font-mono text-[.625rem] uppercase tracking-[.08em] text-[var(--panel-soft)]">03 · off-site · the one accent in the dark register</p>
-  </section>
+  </Panel>
 
   {latest && (
     <section class="mt-16 reveal">
@@ -39,12 +37,15 @@ const latest = episodes[0];
 
   <section class="mt-16 reveal">
     <h2 class="section-title">episodes</h2>
-    <div class="content-stack">
+    <div>
       {episodes.map((episode) => (
-        <article class="card">
-          <p class="font-mono text-xs uppercase tracking-[.08em] text-[var(--ink-soft)]">episode {padEpisode(episode.data.episode)} · {formatLongDate(episode.data.date)}</p>
-          <h2 class="card-title mt-2"><a href={episodePath(episode.slug)}>{episode.data.title}</a></h2>
-          <p class="ui-copy mt-3">{episode.data.teaser}</p>
+        <article class="ledger-row">
+          <p class="ledger-index">{padEpisode(episode.data.episode)}</p>
+          <div>
+            <h3 class="card-title"><a href={episodePath(episode.slug)}>{episode.data.title}</a></h3>
+            <p class="ui-copy mt-2">{episode.data.teaser}</p>
+            <p class="font-mono text-xs uppercase tracking-[.08em] text-[var(--ink-soft)] mt-2">{formatLongDate(episode.data.date)}</p>
+          </div>
         </article>
       ))}
     </div>

@@ -1,0 +1,13 @@
+---
+interface Props {
+  entries: { time: string; text: string }[];
+}
+
+const { entries } = Astro.props;
+---
+
+<ul class="signal-log">
+  {entries.map((entry) => (
+    <li><span class="signal-time">{entry.time}</span><span>{entry.text}</span></li>
+  ))}
+</ul>

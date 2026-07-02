@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Eyebrow from '../components/Eyebrow.astro';
 
 const caseStudies = [
   {
@@ -7,7 +8,7 @@ const caseStudies = [
     company: 'Salesforce',
     title: 'enterprise ai adoption, 0 to 1',
     headline: '2025 to present. the emerging-technology mandate: figure out how large organizations actually absorb ai, and what makes it stick past the pilot.',
-    summary: '',
+    numbers: null,
     heading: 'what i own',
     responsibilities: [
       'product strategy for ai-adjacent initiatives on the emerging technology team',
@@ -16,19 +17,47 @@ const caseStudies = [
     ],
   },
   {
-    id: 'siriusxm', company: 'SiriusXM', title: 'SiriusXM cross-platform listening growth', headline: '18% more daily sessions, 12% churn reduction',
-    summary: 'Scaled a listening experience refresh across mobile, web, and in-car devices for 34M subscribers by pairing human-centered design with personalization experiments.',
-    heading: 'what i did', responsibilities: ['18% lift in daily listening sessions and +9 pt improvement in weekly retention', '12% drop in voluntary churn inside the first 90 days of subscription', 'New experimentation framework increased shipping cadence 3x', 'Owned product strategy and roadmap across playback, discovery, and personalization squads'],
+    id: 'siriusxm',
+    company: 'SiriusXM',
+    title: 'cross-platform listening growth',
+    headline: 'scaled a listening experience refresh across mobile, web, and in-car devices for 34M subscribers by pairing human-centered design with personalization experiments.',
+    numbers: '18% more daily sessions · 12% churn reduction',
+    heading: 'what i did',
+    responsibilities: [
+      '18% lift in daily listening sessions and +9 pt improvement in weekly retention',
+      '12% drop in voluntary churn inside the first 90 days of subscription',
+      'new experimentation framework increased shipping cadence 3x',
+      'owned product strategy and roadmap across playback, discovery, and personalization squads',
+    ],
   },
   {
-    id: 'disney-plus', company: 'Disney+', title: 'Disney+ global launch operations', headline: '60+ markets live with 35% faster localization',
-    summary: 'Built the orchestration layer that let launch teams localize and certify content, payments, and UX strings so new markets could ship with feature parity day one.',
-    heading: 'what i did', responsibilities: ['Enabled simultaneous launches across 60+ countries and 45 language variants', 'Reduced subtitle and artwork localization SLAs by 35% through workflow automation', 'Improved regression detection coverage to 92% ahead of regional rollouts', 'Defined multi-team launch playbooks spanning content ops, payments, and growth'],
+    id: 'disney-plus',
+    company: 'Disney+',
+    title: 'global launch operations',
+    headline: 'built the orchestration layer that let launch teams localize and certify content, payments, and ux strings so new markets could ship with feature parity day one.',
+    numbers: '60+ markets live · 35% faster localization',
+    heading: 'what i did',
+    responsibilities: [
+      'enabled simultaneous launches across 60+ countries and 45 language variants',
+      'reduced subtitle and artwork localization slas by 35% through workflow automation',
+      'improved regression detection coverage to 92% ahead of regional rollouts',
+      'defined multi-team launch playbooks spanning content ops, payments, and growth',
+    ],
   },
   {
-    id: 'ea-sports', company: 'EA', title: 'Building the EA Sports companion app from zero', headline: '90% CSAT · 86% weekly retention · 40-person team',
-    summary: 'Led 0-to-1 product development for a GenZ sports engagement platform: a live companion app that brought mini games, highlight remixes, and reward loops tied to real league schedules. Hired the team, defined the vision, and took the product through two high-performing betas before it evolved into the EA Sports App.',
-    heading: 'what i did', responsibilities: ['90% CSAT across beta cohorts', '86% weekly retention rate, naturally anchored to European soccer match schedules', 'Two successful beta phases completed before GA handoff', 'Product became the foundation for the EA Sports App after launch', 'Built and hired a 40-person cross-functional team across product, design, and engineering'],
+    id: 'ea-sports',
+    company: 'EA',
+    title: 'building the EA Sports companion app from zero',
+    headline: 'led 0-to-1 product development for a GenZ sports engagement platform: a live companion app that brought mini games, highlight remixes, and reward loops tied to real league schedules. hired the team, defined the vision, and took the product through two high-performing betas before it evolved into the EA Sports App.',
+    numbers: '90% csat · 86% weekly retention · 40-person team',
+    heading: 'what i did',
+    responsibilities: [
+      '90% csat across beta cohorts',
+      '86% weekly retention rate, naturally anchored to European soccer match schedules',
+      'two successful beta phases completed before ga handoff',
+      'product became the foundation for the EA Sports App after launch',
+      'built and hired a 40-person cross-functional team across product, design, and engineering',
+    ],
   },
 ];
 ---
@@ -39,13 +68,13 @@ const caseStudies = [
     <p class="page-standfirst">scaled products, real numbers, and the messy middle between strategy and shipped.</p>
   </header>
 
-  <div class="section-stack">
-    {caseStudies.map((cs) => (
-      <article id={cs.id} class="reveal scroll-mt-20">
-        <p class="eyebrow">{cs.company}</p>
+  <div>
+    {caseStudies.map((cs, index) => (
+      <article id={cs.id} class:list={['reveal', 'scroll-mt-20', index > 0 && 'mt-16 border-t border-[var(--line)] pt-16']}>
+        <Eyebrow text={cs.company} />
         <h2 class="card-title">{cs.title}</h2>
         <p class="ui-copy mt-2">{cs.headline}</p>
-        {cs.summary && <p class="body-copy mt-6">{cs.summary}</p>}
+        {cs.numbers && <p class="font-mono text-xs tracking-[.02em] text-[var(--ink-soft)] mt-3">{cs.numbers}</p>}
         <h3 class="mt-8 mb-3 font-sans text-sm uppercase tracking-[.08em] text-[var(--ink-soft)]">{cs.heading}</h3>
         <ul class="list-lines">
           {cs.responsibilities.map((item) => <li>{item}</li>)}

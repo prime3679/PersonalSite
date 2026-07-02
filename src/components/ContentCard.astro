@@ -1,0 +1,19 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  href?: string;
+  description?: string;
+}
+
+const { eyebrow, title, href, description } = Astro.props;
+---
+
+<article class="ledger-row">
+  <span aria-hidden="true"></span>
+  <div>
+    {eyebrow && <p class="font-mono text-xs uppercase tracking-[.08em] text-[var(--ink-soft)]">{eyebrow}</p>}
+    <h3 class="card-title mt-2">{href ? <a href={href}>{title}</a> : title}</h3>
+    {description && <p class="ui-copy mt-2">{description}</p>}
+  </div>
+</article>

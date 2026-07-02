@@ -131,10 +131,10 @@ const isCurrentPage = (href: string) => currentPath === normalizePath(href);
   .site-header__bar {
     box-sizing: border-box;
     width: 100%;
-    max-width: 72rem;
+    max-width: 52rem;
     min-height: 4.25rem;
     margin: 0 auto;
-    padding: 16px 24px;
+    padding: 16px clamp(var(--s5), 5vw, var(--s7));
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -229,10 +229,10 @@ const isCurrentPage = (href: string) => currentPath === normalizePath(href);
   .site-header__mobile-panel {
     box-sizing: border-box;
     width: 100%;
-    max-width: 72rem;
+    max-width: 52rem;
     max-height: 0;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 clamp(var(--s5), 5vw, var(--s7));
     opacity: 0;
     overflow: hidden;
     pointer-events: none;
@@ -273,7 +273,8 @@ const isCurrentPage = (href: string) => currentPath === normalizePath(href);
 
   @media (min-width: 720px) {
     .site-header__bar {
-      padding: 17px 28px;
+      padding-top: 17px;
+      padding-bottom: 17px;
     }
 
     .site-header__desktop-nav {
@@ -283,18 +284,6 @@ const isCurrentPage = (href: string) => currentPath === normalizePath(href);
     .site-header__menu-toggle,
     .site-header__mobile-panel {
       display: none;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .site-header__bar {
-      padding-left: 18px;
-      padding-right: 18px;
-    }
-
-    .site-header__mobile-panel {
-      padding-left: 18px;
-      padding-right: 18px;
     }
   }
 

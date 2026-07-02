@@ -1,5 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
+import PageIntro from '../components/PageIntro.astro';
+import StatTile from '../components/StatTile.astro';
 
 const rogueDays = 67;
 const toys = [
@@ -14,10 +16,7 @@ const toys = [
 ---
 
 <Base title="lab" description="things i'm building. not a portfolio, an honest record of what's running and what survived contact with reality.">
-  <header class="page-header reveal">
-    <h1 class="page-title">lab</h1>
-    <p class="page-standfirst">things i'm building. not a portfolio, an honest record of what's running, what's in progress, and what didn't survive contact with reality.</p>
-  </header>
+  <PageIntro title="lab" standfirst="things i'm building. not a portfolio, an honest record of what's running, what's in progress, and what didn't survive contact with reality." />
 
   <section class="reveal">
     <article class="card" id="rogue">
@@ -28,10 +27,7 @@ const toys = [
       <p class="card-copy">the agent i actually use. lives on a mac mini, wired to claude and codex, runs the ops i used to do by hand, and builds things, this site included. signal room is fiction about a system like it.</p>
       <p class="card-copy card-note">i ran a stack of agents and kept the combination that worked.</p>
       <div class="readouts" aria-label="rogue stats">
-        <div class="stat">
-          <div class="stat-number">{rogueDays}</div>
-          <div class="stat-label">days running</div>
-        </div>
+        <StatTile value={rogueDays} label="days running" />
       </div>
       <a href="/signal-room">read signal room</a>
     </article>

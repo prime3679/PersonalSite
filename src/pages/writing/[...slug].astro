@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import PageIntro from '../../components/PageIntro.astro';
 import { readingTime } from '../../lib/readingTime';
 import { getPublishedPosts, postPath, postOgPath } from '../../lib/content';
 import { formatLongDate } from '../../lib/format';
@@ -22,11 +23,11 @@ const ogImagePath = postOgPath(post.slug);
 ---
 
 <Base title={post.data.title} description={post.data.description} article={articleData} ogImage={ogImagePath}>
-  <header class="page-header reveal">
-    <a href="/writing" class="font-sans text-xs uppercase tracking-[.08em]">writing</a>
-    <h1 class="page-title mt-4">{post.data.title}</h1>
-    <p class="page-standfirst">{dateFormatted} · {readingTime(post.body)} min read{updatedFormatted ? ` · updated ${updatedFormatted}` : ''}</p>
-  </header>
+  <PageIntro title={post.data.title} standfirst={`${dateFormatted} · ${readingTime(post.body)} min read${updatedFormatted ? ` · updated ${updatedFormatted}` : ''}`}>
+    <div slot="pretitle" class="mb-4">
+      <a href="/writing" class="font-sans text-xs uppercase tracking-[.08em]">writing</a>
+    </div>
+  </PageIntro>
 
   <article class="prose reveal">
     <Content />

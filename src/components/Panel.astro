@@ -1,0 +1,20 @@
+---
+interface Props {
+  label?: string;
+  ariaLabel?: string;
+  id?: string;
+  class?: string;
+}
+
+const { label, ariaLabel, id, class: className } = Astro.props;
+---
+
+<section id={id} class:list={['instrument-panel', 'p-6', 'md:p-8', 'reveal', className]} aria-label={ariaLabel}>
+  {label && (
+    <div class="mb-5 flex items-center gap-3 border-b border-[var(--panel-line)] pb-5">
+      <span class="font-mono text-xs tracking-[.05em] text-[var(--panel-soft)]">{label}</span>
+      <span class="h-[.9375rem] w-2 bg-[var(--accent-bright)]" aria-hidden="true"></span>
+    </div>
+  )}
+  <slot />
+</section>

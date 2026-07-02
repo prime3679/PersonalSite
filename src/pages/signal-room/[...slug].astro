@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import PageIntro from '../../components/PageIntro.astro';
 import type { CollectionEntry } from 'astro:content';
 import { getEpisodes, episodePath, episodeOgPath } from '../../lib/content';
 import { episodeTitle, formatLongDate, padEpisode } from '../../lib/format';
@@ -41,18 +42,18 @@ const pageTitle = `${episode.data.title} · signal room`;
   }}
 >
 
-  <header class="page-header reveal">
-    <a href="/signal-room/" class="font-sans text-xs uppercase tracking-[.08em] text-[var(--ink-soft)] hover:text-[var(--ink)] transition-colors">← signal room</a>
+  <PageIntro title={episode.data.title}>
+    <div slot="pretitle">
+      <a href="/signal-room/" class="font-sans text-xs uppercase tracking-[.08em] text-[var(--ink-soft)] hover:text-[var(--ink)] transition-colors">← signal room</a>
 
-    <div class="flex flex-wrap gap-2 mt-6 mb-5">
-      {episode.data.badges.map((badge) => (
-        <span class="font-mono text-[.6875rem] uppercase tracking-[.08em] text-[var(--ink-soft)] border border-[var(--line)] rounded-full px-3 py-1">{badge}</span>
-      ))}
-      <span class="font-mono text-[.6875rem] uppercase tracking-[.08em] text-[var(--ink-soft)] border border-[var(--line)] rounded-full px-3 py-1">{formatLongDate(episode.data.date)}</span>
+      <div class="flex flex-wrap gap-2 mt-6 mb-5">
+        {episode.data.badges.map((badge) => (
+          <span class="font-mono text-[.6875rem] uppercase tracking-[.08em] text-[var(--ink-soft)] border border-[var(--line)] rounded-full px-3 py-1">{badge}</span>
+        ))}
+        <span class="font-mono text-[.6875rem] uppercase tracking-[.08em] text-[var(--ink-soft)] border border-[var(--line)] rounded-full px-3 py-1">{formatLongDate(episode.data.date)}</span>
+      </div>
     </div>
-
-    <h1 class="page-title">{episode.data.title}</h1>
-  </header>
+  </PageIntro>
 
   <article class="prose reveal">
     <Content />

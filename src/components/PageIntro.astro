@@ -1,0 +1,17 @@
+---
+interface Props {
+  title: string;
+  standfirst?: string;
+}
+
+const { title, standfirst } = Astro.props;
+const hasStandfirst = Boolean(standfirst) || Astro.slots.has('standfirst');
+---
+
+<header class="page-header reveal">
+  <slot name="pretitle" />
+  <h1 class="page-title">{title}</h1>
+  {hasStandfirst && (
+    <p class="page-standfirst"><slot name="standfirst">{standfirst}</slot></p>
+  )}
+</header>

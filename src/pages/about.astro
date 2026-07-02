@@ -1,12 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
+import PageIntro from '../components/PageIntro.astro';
 ---
 
 <Base title="about" description="about adrian lumley: product leader, fourteen years in, director of product at salesforce on emerging technology.">
-  <header class="page-header reveal">
-    <h1 class="page-title">about</h1>
-    <p class="page-standfirst">product leader, builder, and new yorker working on enterprise ai adoption.</p>
-  </header>
+  <PageIntro title="about" standfirst="product leader, builder, and new yorker working on enterprise ai adoption." />
 
   <div class="content-stack reveal">
     <p>i'm a product leader, fourteen years in, currently director of product management at salesforce on the emerging technology team. my work is enterprise ai adoption: the gap between what a model can do and what a large organization will actually absorb. that gap is where the hard, interesting problems live.</p>

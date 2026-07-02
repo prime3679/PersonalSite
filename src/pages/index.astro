@@ -1,5 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
+import Panel from '../components/Panel.astro';
+import { getEpisodes } from '../lib/content';
+import { padEpisode } from '../lib/format';
+
+const episodes = await getEpisodes('desc');
+const latestEpisodeNumber = episodes[0]?.data.episode ?? 0;
 ---
 
 <Base description="director of product at salesforce. before that, disney+, siriusxm, and ea. building ai systems hands-on on a mac mini in nyc." ogImage="/og/home.png">
@@ -26,6 +32,10 @@ import Base from '../layouts/Base.astro';
         <a class="touch-link" href="/signal-room">read signal room</a>
       </div>
     </div>
+
+    <Panel id="instrument-strip" ariaLabel="rogue status" label="rogue · status" class="mb-8">
+      <p class="font-mono text-xs text-[var(--panel-soft)]">running since april 2026 · signal room ep {padEpisode(latestEpisodeNumber)} live</p>
+    </Panel>
 
     <div class="cta-row">
       <span class="cta-copy">building something in ai? i'd like to hear about it.</span>

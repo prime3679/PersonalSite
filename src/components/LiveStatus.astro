@@ -1,0 +1,73 @@
+---
+import { ROGUE_EPOCH } from '../data/rogue';
+
+// the no-js and pre-fetch state makes no freshness claim: the epoch is a
+// fact that stays true without javascript. the live state only ever renders
+// after a fresh server-stamped timestamp arrives. gray beats false green.
+const sinceLabel = new Date(`${ROGUE_EPOCH}T00:00:00Z`)
+  .toLocaleString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' })
+  .toLowerCase();
+---
+
+<span class="live-status" data-live-status data-state="idle">
+  <span class="live-status__dot" aria-hidden="true"></span>
+  <span class="live-status__text">rogue · running since {sinceLabel}</span>
+</span>
+
+<script>
+  import { ROGUE_STATUS_URL, STALE_MS, daysRunning } from '../data/rogue';
+  import { relativeTime } from '../lib/relativeTime';
+
+  const els = Array.from(document.querySelectorAll<HTMLElement>('[data-live-status]'));
+
+  const setAll = (state: string, text: string) => {
+    for (const el of els) {
+      el.dataset.state = state;
+      const t = el.querySelector('.live-status__text');
+      if (t) t.textContent = text;
+    }
+  };
+
+  // the days-running stat is epoch-derived and always correct client side;
+  // the build-time value only lags between deploys.
+  const stat = document.querySelector('#rogue .stat-number');
+  const days = daysRunning(new Date());
+  if (stat) stat.textContent = String(days);
+
+  const announce = (detail: Record<string, unknown>) => {
+    document.dispatchEvent(new CustomEvent('rogue:status', { detail }));
+  };
+
+  if (els.length > 0) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 5000);
+
+    fetch(ROGUE_STATUS_URL, { signal: controller.signal })
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error(String(res.status)))))
+      .then((data) => {
+        clearTimeout(timer);
+        const lastSignal = typeof data?.last_signal === 'string' ? data.last_signal : null;
+        const age = lastSignal ? Date.now() - Date.parse(lastSignal) : Number.POSITIVE_INFINITY;
+        // freshness is computed here, never trusted from the payload
+        if (lastSignal && Number.isFinite(age) && age <= STALE_MS) {
+          const loops = Number.isInteger(data.loops_today) ? data.loops_today : null;
+          let text = `rogue · live · ${days} days running · last signal ${relativeTime(lastSignal, new Date())}`;
+          if (loops !== null) text += ` · ${loops} loops today`;
+          setAll('live', text);
+          announce({ status: 'live', loops_today: loops });
+        } else if (lastSignal) {
+          setAll('quiet', `rogue is quiet · last signal ${relativeTime(lastSignal, new Date())}`);
+          announce({ status: 'quiet' });
+        } else {
+          setAll('quiet', 'rogue is quiet');
+          announce({ status: 'quiet' });
+        }
+      })
+      .catch(() => {
+        clearTimeout(timer);
+        // a failed fetch is not knowledge about rogue: keep the idle epoch
+        // fact rather than claiming quiet.
+        announce({ status: 'unknown' });
+      });
+  }
+</script>

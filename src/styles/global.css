@@ -113,6 +113,9 @@
 .stat-number { color: var(--panel-text); font-family: var(--mono); font-size: clamp(1.5rem, 5.5vw, 2rem); font-weight: 500; line-height: 1; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
 .stat-label { margin-top: .5625rem; color: var(--panel-soft); font-family: var(--mono); font-size: .625rem; letter-spacing: .09em; text-transform: uppercase; }
 .instrument-panel { background: var(--panel); border: 1px solid var(--panel-line); color: var(--panel-text); }
+.live-status { display: inline-flex; align-items: center; gap: .5rem; font-family: var(--mono); font-size: .75rem; font-variant-numeric: tabular-nums; }
+.live-status__dot { flex: 0 0 auto; width: .5rem; height: .5rem; border-radius: 50%; background: currentColor; opacity: .55; }
+.live-status[data-state="live"] .live-status__dot { background: var(--accent-bright); opacity: 1; }
 .signal-log { list-style: none; margin: 0; padding: 0; color: var(--panel-text); font-family: var(--mono); font-size: .8125rem; line-height: 1.9; }
 .signal-log li { display: grid; grid-template-columns: 3.375rem 1fr; gap: .875rem; }
 .signal-time { color: var(--panel-soft); font-variant-numeric: tabular-nums; }

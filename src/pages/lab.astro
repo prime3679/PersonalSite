@@ -2,8 +2,12 @@
 import Base from '../layouts/Base.astro';
 import PageIntro from '../components/PageIntro.astro';
 import StatTile from '../components/StatTile.astro';
+import LiveStatus from '../components/LiveStatus.astro';
+import { daysRunning } from '../data/rogue';
 
-const rogueDays = 67;
+// epoch-derived at build time; the LiveStatus script corrects it client side
+// so the number never goes stale between deploys.
+const rogueDays = daysRunning(new Date());
 const toys = [
   { label: 'the crazy wall', href: '/lab/crazy-wall/' },
   { label: 'fable field recorder', href: '/lab/fable-field-recorder/' },
@@ -29,6 +33,7 @@ const toys = [
       <div class="readouts" aria-label="rogue stats">
         <StatTile value={rogueDays} label="days running" />
       </div>
+      <p class="mt-5 text-[var(--ink-soft)]"><LiveStatus /></p>
       <a href="/signal-room">read signal room</a>
     </article>
   </section>

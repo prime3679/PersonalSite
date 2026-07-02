@@ -1,0 +1,14 @@
+name = "rogue-status"
+main = "worker.js"
+compatibility_date = "2026-06-01"
+
+routes = [
+  { pattern = "api.adrianlumley.co", custom_domain = true }
+]
+
+kv_namespaces = [
+  { binding = "ROGUE_STATUS", id = "REPLACE_WITH_KV_NAMESPACE_ID" }
+]
+
+# secrets (set via `wrangler secret put`):
+#   HEARTBEAT_TOKEN, bearer token the mac mini uses to post heartbeats

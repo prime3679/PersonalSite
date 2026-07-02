@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Panel from '../components/Panel.astro';
 import LiveStatus from '../components/LiveStatus.astro';
+import SignalTrace from '../components/SignalTrace.astro';
 import { getEpisodes } from '../lib/content';
 import { padEpisode } from '../lib/format';
 
@@ -35,6 +36,7 @@ const latestEpisodeNumber = episodes[0]?.data.episode ?? 0;
     </div>
 
     <Panel id="instrument-strip" ariaLabel="rogue status" label="rogue · status" class="mb-8">
+      <SignalTrace />
       <p class="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-xs text-[var(--panel-soft)]">
         <LiveStatus />
         <span aria-hidden="true">·</span>

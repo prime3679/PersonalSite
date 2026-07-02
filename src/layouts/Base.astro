@@ -3,6 +3,7 @@ import '../styles/global.css';
 import { siteMetadata } from '../data/siteMetadata';
 import { navItems } from '../data/nav';
 import Header from '../components/Header.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
 
 interface ArticleData {
   headline: string;
@@ -69,6 +70,17 @@ const structuredData: Record<string, unknown> = {
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <script is:inline>
+    // night shift: runs before the stylesheet so there is no light flash.
+    (() => {
+      let dark = false;
+      try {
+        const stored = localStorage.getItem('theme');
+        dark = stored ? stored === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+      } catch {}
+      if (dark) document.documentElement.classList.add('dark');
+    })();
+  </script>
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cloud.umami.is; connect-src 'self' https://cloud.umami.is https://api.adrianlumley.co; style-src 'self' 'unsafe-inline'; form-action 'self' https://formspree.io; object-src 'none'; base-uri 'self'; upgrade-insecure-requests;">
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -104,11 +116,12 @@ const structuredData: Record<string, unknown> = {
   <footer class="border-t border-[var(--line)] py-8">
     <div class="site-footer-inner mx-auto flex max-w-[52rem] flex-col items-start justify-between gap-4 font-sans text-xs text-[var(--ink-soft)] sm:flex-row sm:items-center">
       <span>adrian lumley · nyc</span>
-      <nav class="flex flex-wrap gap-x-5 gap-y-2" aria-label="footer">
+      <nav class="flex flex-wrap items-center gap-x-5 gap-y-2" aria-label="footer">
         {navItems.map((item) => (
           <a href={item.href}>{item.label}</a>
         ))}
         <a href="/rss.xml">rss</a>
+        <ThemeToggle />
       </nav>
     </div>
   </footer>

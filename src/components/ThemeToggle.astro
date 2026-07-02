@@ -1,0 +1,50 @@
+---
+// night shift toggle, named for signal room episode 01. lives in the
+// footer: the 320px header has no room to spare and the wordmark must
+// never wrap.
+---
+
+<button type="button" class="theme-toggle" data-theme-toggle aria-pressed="false">night shift</button>
+
+<script>
+  const DARK_THEME_COLOR = '#16130e';
+  const LIGHT_THEME_COLOR = '#f7f3ea';
+
+  const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]'));
+  const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+
+  const reflect = () => {
+    const dark = document.documentElement.classList.contains('dark');
+    for (const b of buttons) b.setAttribute('aria-pressed', String(dark));
+    if (meta) meta.content = dark ? DARK_THEME_COLOR : LIGHT_THEME_COLOR;
+  };
+
+  for (const b of buttons) {
+    b.addEventListener('click', () => {
+      const dark = document.documentElement.classList.toggle('dark');
+      try {
+        localStorage.setItem('theme', dark ? 'dark' : 'light');
+      } catch {}
+      reflect();
+    });
+  }
+
+  reflect();
+</script>
+
+<style>
+  .theme-toggle {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--ink-soft);
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: .6875rem;
+    letter-spacing: .04em;
+    padding: .25rem .625rem;
+    min-height: 32px;
+  }
+  .theme-toggle:hover { border-color: var(--accent); color: var(--ink); }
+  .theme-toggle[aria-pressed="true"] { border-color: var(--accent); color: var(--accent-ink); }
+</style>

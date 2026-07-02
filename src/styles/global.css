@@ -42,6 +42,24 @@
   color-scheme: light;
 }
 
+/* night shift: the paper tokens remap onto the panel family. the panel
+   tokens themselves stay put, so instrument panels remain the darkest
+   surface and keep their own register. links lighten to stay readable. */
+html.dark {
+  --paper: #16130e;
+  --paper-raised: #1e1a13;
+  --ink: #eae4d7;
+  --ink-soft: #9c9384;
+  --line: #2b261d;
+  --line-strong: #3a3428;
+  --accent-ink: #c9663f;
+  color-scheme: dark;
+}
+
+html.dark body { background: var(--paper); }
+html.dark ::selection { background: var(--accent-bright); color: var(--panel); }
+html.dark .instrument-panel { border-color: var(--line-strong); }
+
 @layer base {
   *, *::before, *::after { box-sizing: border-box; border-color: var(--line); }
   html { background: var(--paper); scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }

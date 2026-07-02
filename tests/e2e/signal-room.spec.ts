@@ -9,6 +9,9 @@ test('signal room: index lists every episode newest-first', async ({ page }) => 
   await expect(links).toHaveCount(8);
   await expect(links.first()).toContainText('the narrow door');
   await expect(links.last()).toContainText('night shift');
+
+  // onramp for new readers sits outside the episodes section
+  await expect(page.getByText('new here? start with')).toBeVisible();
 });
 
 test('signal room: an episode page renders prose and serial nav', async ({ page }) => {

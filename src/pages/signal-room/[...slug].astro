@@ -14,6 +14,7 @@ export async function getStaticPaths() {
       episode,
       prev: i > 0 ? episodes[i - 1] : null,
       next: i < episodes.length - 1 ? episodes[i + 1] : null,
+      first: episodes[0],
     },
   }));
 }
@@ -22,9 +23,10 @@ interface Props {
   episode: CollectionEntry<'signal-room'>;
   prev: CollectionEntry<'signal-room'> | null;
   next: CollectionEntry<'signal-room'> | null;
+  first: CollectionEntry<'signal-room'>;
 }
 
-const { episode, prev, next } = Astro.props;
+const { episode, prev, next, first } = Astro.props;
 const { Content } = await episode.render();
 
 const pageTitle = `${episode.data.title} · signal room`;
@@ -68,7 +70,12 @@ const pageTitle = `${episode.data.title} · signal room`;
         <a href={episodePath(next.slug)} class="text-right">{padEpisode(next.data.episode)} · {next.data.title} →</a>
       ) : <span />}
     </nav>
-    <p class="ui-copy mt-6">signal room · a fiction serial · published on adrianlumley.co</p>
+    <p class="ui-copy mt-6">
+      signal room · a fiction serial · published on adrianlumley.co
+      {episode.data.episode !== 1 && (
+        <> · <a href={episodePath(first.slug)}>start from episode 01</a></>
+      )}
+    </p>
   </footer>
 
 </Base>

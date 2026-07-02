@@ -1,5 +1,8 @@
 ---
 import '../styles/global.css';
+import newsreaderWoff2 from '@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2?url';
+import geistWoff2 from '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url';
+import geistMonoWoff2 from '@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2?url';
 import { siteMetadata } from '../data/siteMetadata';
 import { navItems } from '../data/nav';
 import Header from '../components/Header.astro';
@@ -97,6 +100,9 @@ const structuredData: Record<string, unknown> = {
   <meta name="twitter:image" content={ogImageUrl} />
   <link rel="canonical" href={Astro.url.href} />
   <link rel="alternate" type="application/rss+xml" title={`${siteMetadata.title} · writing`} href="/rss.xml" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href={newsreaderWoff2} />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href={geistWoff2} />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href={geistMonoWoff2} />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/site.webmanifest" />
@@ -120,6 +126,7 @@ const structuredData: Record<string, unknown> = {
         {navItems.map((item) => (
           <a href={item.href}>{item.label}</a>
         ))}
+        <a href="/about">about</a>
         <a href="/rss.xml">rss</a>
         <ThemeToggle />
       </nav>

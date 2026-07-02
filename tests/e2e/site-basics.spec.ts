@@ -36,4 +36,7 @@ test('nav: header shows the home wordmark + canonical primary tabs', async ({ pa
   for (const href of ['/work', '/lab', '/writing', '/signal-room', '/contact']) {
     await expect(page.locator(`header a[href="${href}"]`).first()).toBeVisible();
   }
+  // about stays out of the primary nav but is reachable from the footer
+  await expect(page.locator('header a[href="/about"]')).toHaveCount(0);
+  await expect(page.locator('footer a[href="/about"]')).toBeVisible();
 });

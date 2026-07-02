@@ -17,7 +17,7 @@ const isCurrentPage = (href: string) => currentPath === normalizePath(href);
   <div class="site-header__bar" data-header-bar>
     <a href="/" class="site-header__wordmark site-header__logo">adrian lumley</a>
 
-    <nav class="site-header__desktop-nav site-header__nav--desktop" data-header-desktop-nav aria-label="Primary">
+    <nav class="site-header__desktop-nav" data-header-desktop-nav aria-label="Primary">
       {navItems.map((item) => (
         <a
           href={item.href}
@@ -104,21 +104,28 @@ const isCurrentPage = (href: string) => currentPath === normalizePath(href);
 </script>
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;450;500&family=Newsreader:opsz,wght@6..72,500&display=swap');
-
   .site-header {
-    --paper: #f7f2ea;
-    --ink: #201915;
-    --ink-soft: #6d625a;
-    --line: rgba(32, 25, 21, 0.16);
-    --accent: #b6694f;
-    --accent-ink: #8f442f;
-
     position: relative;
     z-index: 40;
     background: var(--paper);
     border-bottom: 1px solid var(--line);
     color: var(--ink);
+  }
+
+  .site-header__logo {
+    display: inline-flex;
+    min-width: 0;
+    min-height: 45px;
+    align-items: center;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  .site-header__mobile-link {
+    display: flex;
+    min-height: 45px;
+    align-items: center;
+    padding: .3125rem 0;
   }
 
   .site-header__bar {
@@ -137,7 +144,7 @@ const isCurrentPage = (href: string) => currentPath === normalizePath(href);
   .site-header__wordmark {
     flex: 0 0 auto;
     color: var(--ink);
-    font-family: 'Newsreader', Georgia, 'Times New Roman', serif;
+    font-family: var(--serif);
     font-size: 1.2rem;
     font-weight: 500;
     line-height: 1;
@@ -158,7 +165,7 @@ const isCurrentPage = (href: string) => currentPath === normalizePath(href);
   .site-header__nav-link,
   .site-header__mobile-link {
     color: var(--ink-soft);
-    font-family: 'Geist Mono', 'JetBrains Mono', 'SF Mono', Monaco, Consolas, monospace;
+    font-family: var(--mono);
     font-size: 13px;
     font-weight: 450;
     letter-spacing: 0.03em;

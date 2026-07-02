@@ -12,7 +12,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const GET: APIRoute<{ title: string; description: string }> = async ({ props }) => {
   const { title, description } = props;
-  const png = await generateOgImage(title, description);
+  const png = await generateOgImage(title, description, 'writing');
 
   return pngResponse(png);
 };

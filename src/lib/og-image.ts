@@ -3,26 +3,41 @@ import sharp from 'sharp';
 import fs from 'node:fs';
 import path from 'node:path';
 
-// Self-hosted JetBrains Mono (the site's font), read at build time. Using a
-// local TTF keeps the OG cards on-brand and removes the build-time Google Fonts
-// fetch. Satori needs TTF/OTF/WOFF , not the WOFF2 the browser uses.
-let fontData: Buffer | null = null;
+// Self-hosted Newsreader + Geist Mono (the site's fonts), read at build time.
+// Using local woff files keeps the OG cards on-brand and removes the
+// build-time Google Fonts fetch. Satori needs TTF/OTF/WOFF , not the WOFF2
+// the browser uses.
+let serifFont: Buffer | null = null;
+let monoFont: Buffer | null = null;
 
-function getFont(): Buffer {
-  if (!fontData) {
+function getFonts(): { serif: Buffer; mono: Buffer } {
+  if (!serifFont || !monoFont) {
     // Read from source at build time. This is a static build (CWD = project
     // root, src/ present, OG PNGs generated ahead of time), so cwd-relative is
     // reliable here. `new URL(..., import.meta.url)` does NOT work: it resolves
-    // to the bundled dist/ location where the font isn't copied.
-    fontData = fs.readFileSync(
-      path.join(process.cwd(), 'src/lib/fonts/JetBrainsMono-Regular.ttf'),
+    // to the bundled dist/ location where the fonts aren't copied.
+    serifFont = fs.readFileSync(
+      path.join(process.cwd(), 'src/lib/fonts/newsreader-latin-500-normal.woff'),
+    );
+    monoFont = fs.readFileSync(
+      path.join(process.cwd(), 'src/lib/fonts/geist-mono-latin-400-normal.woff'),
     );
   }
-  return fontData;
+  return { serif: serifFont, mono: monoFont };
 }
 
-export async function generateOgImage(title: string, subtitle: string): Promise<Buffer> {
-  const font = getFont();
+const PAPER = '#f7f3ea';
+const INK = '#1c1814';
+const INK_SOFT = '#574f44';
+const ACCENT = '#a8472c';
+
+export async function generateOgImage(
+  title: string,
+  subtitle: string,
+  kicker = 'adrianlumley.co',
+): Promise<Buffer> {
+  const { serif, mono } = getFonts();
+  const titleSize = title.length > 40 ? 52 : 64;
 
   const svg = await satori(
     {
@@ -31,47 +46,22 @@ export async function generateOgImage(title: string, subtitle: string): Promise<
         style: {
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'center',
           width: '100%',
           height: '100%',
-          backgroundColor: '#0a0a0a',
-          padding: '80px',
-          fontFamily: 'JetBrains Mono',
+          backgroundColor: PAPER,
+          fontFamily: 'Geist Mono',
         },
         children: [
+          // Masthead rule across the very top of the card.
           {
             type: 'div',
             props: {
               style: {
                 display: 'flex',
-                flexDirection: 'column',
-                gap: '24px',
+                width: '100%',
+                height: '4px',
+                backgroundColor: ACCENT,
               },
-              children: [
-                {
-                  type: 'div',
-                  props: {
-                    style: {
-                      fontSize: '48px',
-                      fontWeight: 400,
-                      color: '#fafafa',
-                      lineHeight: 1.3,
-                    },
-                    children: title,
-                  },
-                },
-                {
-                  type: 'div',
-                  props: {
-                    style: {
-                      fontSize: '20px',
-                      color: '#a1a1aa',
-                      lineHeight: 1.5,
-                    },
-                    children: subtitle,
-                  },
-                },
-              ],
             },
           },
           {
@@ -79,14 +69,104 @@ export async function generateOgImage(title: string, subtitle: string): Promise<
             props: {
               style: {
                 display: 'flex',
-                position: 'absolute',
-                bottom: '80px',
-                left: '80px',
-                fontSize: '18px',
-                color: '#52525b',
-                letterSpacing: '0.05em',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                flex: 1,
+                padding: '80px',
               },
-              children: 'adrianlumley.co',
+              children: [
+                {
+                  type: 'div',
+                  props: {
+                    style: {
+                      display: 'flex',
+                      flexDirection: 'column',
+                    },
+                    children: [
+                      {
+                        type: 'div',
+                        props: {
+                          style: {
+                            display: 'flex',
+                            fontFamily: 'Geist Mono',
+                            fontSize: '20px',
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.08em',
+                            color: ACCENT,
+                            marginBottom: '28px',
+                          },
+                          children: kicker,
+                        },
+                      },
+                      {
+                        type: 'div',
+                        props: {
+                          style: {
+                            display: 'flex',
+                            fontFamily: 'Newsreader',
+                            fontWeight: 500,
+                            fontSize: `${titleSize}px`,
+                            color: INK,
+                            lineHeight: 1.1,
+                            marginBottom: '28px',
+                          },
+                          children: title,
+                        },
+                      },
+                      {
+                        type: 'div',
+                        props: {
+                          style: {
+                            display: 'flex',
+                            fontFamily: 'Geist Mono',
+                            fontSize: '22px',
+                            color: INK_SOFT,
+                            lineHeight: 1.5,
+                          },
+                          children: subtitle,
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  type: 'div',
+                  props: {
+                    style: {
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      width: '100%',
+                    },
+                    children: [
+                      {
+                        type: 'div',
+                        props: {
+                          style: {
+                            display: 'flex',
+                            fontFamily: 'Geist Mono',
+                            fontSize: '18px',
+                            color: INK_SOFT,
+                          },
+                          children: 'adrianlumley.co',
+                        },
+                      },
+                      {
+                        type: 'div',
+                        props: {
+                          style: {
+                            display: 'flex',
+                            width: '10px',
+                            height: '10px',
+                            backgroundColor: ACCENT,
+                          },
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
             },
           },
         ],
@@ -97,8 +177,14 @@ export async function generateOgImage(title: string, subtitle: string): Promise<
       height: 630,
       fonts: [
         {
-          name: 'JetBrains Mono',
-          data: font,
+          name: 'Newsreader',
+          data: serif,
+          weight: 500,
+          style: 'normal' as const,
+        },
+        {
+          name: 'Geist Mono',
+          data: mono,
           weight: 400,
           style: 'normal' as const,
         },

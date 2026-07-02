@@ -41,33 +41,33 @@ const pageTitle = `${episode.data.title} · signal room`;
   }}
 >
 
-  <article class="fade-in">
-    <a href="/signal-room/" class="text-xs uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors">← signal room</a>
+  <header class="page-header reveal">
+    <a href="/signal-room/" class="font-sans text-xs uppercase tracking-[.08em] text-[var(--ink-soft)] hover:text-[var(--ink)] transition-colors">← signal room</a>
 
-    <div class="flex flex-wrap gap-2 mt-6 mb-6">
+    <div class="flex flex-wrap gap-2 mt-6 mb-5">
       {episode.data.badges.map((badge) => (
-        <span class="text-xs uppercase tracking-wider text-muted-foreground border border-border rounded-full px-3 py-1">{badge}</span>
+        <span class="font-mono text-[.6875rem] uppercase tracking-[.08em] text-[var(--ink-soft)] border border-[var(--line)] rounded-full px-3 py-1">{badge}</span>
       ))}
-      <span class="text-xs uppercase tracking-wider text-muted-foreground border border-border rounded-full px-3 py-1">{formatLongDate(episode.data.date)}</span>
+      <span class="font-mono text-[.6875rem] uppercase tracking-[.08em] text-[var(--ink-soft)] border border-[var(--line)] rounded-full px-3 py-1">{formatLongDate(episode.data.date)}</span>
     </div>
 
-    <h1 class="text-2xl font-normal mb-8 leading-relaxed">{episode.data.title}</h1>
+    <h1 class="page-title">{episode.data.title}</h1>
+  </header>
 
-    <div class="space-y-4 text-base leading-relaxed text-foreground/80">
-      <Content />
-    </div>
+  <article class="prose reveal">
+    <Content />
   </article>
 
-  <!-- Episode nav -->
-  <nav class="mt-12 pt-8 border-t border-border flex justify-between gap-4 text-sm">
-    {prev ? (
-      <a href={episodePath(prev.slug)} class="underline hover:no-underline text-muted-foreground hover:text-foreground transition-colors">← {padEpisode(prev.data.episode)} · {prev.data.title}</a>
-    ) : <span />}
-    {next ? (
-      <a href={episodePath(next.slug)} class="underline hover:no-underline text-muted-foreground hover:text-foreground transition-colors text-right">{padEpisode(next.data.episode)} · {next.data.title} →</a>
-    ) : <span />}
-  </nav>
-
-  <p class="text-xs text-muted-foreground border-t border-border pt-8 mt-12">signal room · a fiction serial · published on adrianlumley.co</p>
+  <footer class="mt-16 border-t border-[var(--line)] pt-8 reveal">
+    <nav class="flex justify-between gap-6 font-sans text-sm" aria-label="episode navigation">
+      {prev ? (
+        <a href={episodePath(prev.slug)}>← {padEpisode(prev.data.episode)} · {prev.data.title}</a>
+      ) : <span />}
+      {next ? (
+        <a href={episodePath(next.slug)} class="text-right">{padEpisode(next.data.episode)} · {next.data.title} →</a>
+      ) : <span />}
+    </nav>
+    <p class="ui-copy mt-6">signal room · a fiction serial · published on adrianlumley.co</p>
+  </footer>
 
 </Base>

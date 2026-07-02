@@ -5,15 +5,20 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        mono: ['"JetBrains Mono"', '"SF Mono"', 'Monaco', 'Inconsolata', '"Roboto Mono"', '"Source Code Pro"', 'Menlo', 'monospace'],
+        serif: ['Newsreader Variable', 'Newsreader', 'Georgia', 'serif'],
+        sans: ['Geist Variable', 'Geist', 'system-ui', 'sans-serif'],
+        mono: ['Geist Mono Variable', 'Geist Mono', 'ui-monospace', 'monospace'],
       },
       colors: {
-        border: 'hsl(var(--border))',
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
+        border: 'var(--line)',
+        background: 'var(--paper)',
+        // rgb literal must equal --ink (#1c1814) in src/styles/global.css.
+        // legacy text-foreground/NN utilities need an alpha-capable value,
+        // so var(--ink) cannot be used here.
+        foreground: 'rgb(28 24 20 / <alpha-value>)',
         muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))',
+          DEFAULT: 'var(--paper-raised)',
+          foreground: 'var(--ink-soft)',
         },
       },
     },

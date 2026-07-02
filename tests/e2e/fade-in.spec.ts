@@ -1,23 +1,23 @@
 import { test, expect } from '@playwright/test';
 
-test('FamilyOS page loads and has fade-in elements', async ({ page }) => {
-  await page.goto('/familyos');
+test('Homepage loads and has reveal elements', async ({ page }) => {
+  await page.goto('/');
 
   // Check for the main heading
-  await expect(page.locator('main h1')).toContainText('familyos');
+  await expect(page.locator('main h1')).toBeVisible();
 
-  // Check for fade-in class on sections
-  const fadeInSection = page.locator('section.fade-in').first();
-  await expect(fadeInSection).toBeVisible();
+  // Check for reveal class on sections
+  const revealSection = page.locator('section.reveal').first();
+  await expect(revealSection).toBeVisible();
 });
 
-test('Lab page loads and has fade-in elements', async ({ page }) => {
+test('Lab page loads and has reveal elements', async ({ page }) => {
   await page.goto('/lab');
 
   // Check for the main heading
   await expect(page.locator('main h1')).toContainText('lab');
 
-  // Check for fade-in class on sections
-  const fadeInSection = page.locator('section.fade-in').first();
-  await expect(fadeInSection).toBeVisible();
+  // Check for reveal class on sections (the lean lab has no project cards)
+  const revealSection = page.locator('section.reveal').first();
+  await expect(revealSection).toBeVisible();
 });

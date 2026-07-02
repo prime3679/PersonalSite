@@ -3,8 +3,8 @@ import { generateOgImage, pngResponse } from '../../lib/og-image';
 
 export const GET: APIRoute = async () => {
   const png = await generateOgImage(
-    'Adrian Lumley',
-    'Director of Product at Salesforce. Building at the intersection of AI and enterprise.',
+    'adrian lumley',
+    'director of product at salesforce. building ai systems hands-on in nyc.',
   );
 
   return pngResponse(png);

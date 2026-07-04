@@ -142,6 +142,7 @@ const isCurrentPage = (href: string) => currentPath === normalizePath(href);
   }
 
   .site-header__wordmark {
+    position: relative;
     flex: 0 0 auto;
     color: var(--ink);
     font-family: var(--serif);
@@ -151,6 +152,35 @@ const isCurrentPage = (href: string) => currentPath === normalizePath(href);
     letter-spacing: -0.015em;
     text-decoration: none;
     white-space: nowrap;
+    transition: font-weight 220ms var(--ease);
+  }
+
+  /* a small accent dot answers the hover, like a status light coming on.
+     absolutely positioned so the wordmark never gains width or wraps. */
+  .site-header__wordmark::after {
+    content: '';
+    position: absolute;
+    right: -0.65em;
+    top: 50%;
+    width: 0.3em;
+    height: 0.3em;
+    margin-top: -0.15em;
+    border-radius: 999px;
+    background: var(--accent);
+    opacity: 0;
+    transform: scale(0.4);
+    transition: opacity 200ms var(--ease), transform 200ms var(--ease);
+  }
+
+  .site-header__wordmark:hover,
+  .site-header__wordmark:focus-visible {
+    font-weight: 585;
+  }
+
+  .site-header__wordmark:hover::after,
+  .site-header__wordmark:focus-visible::after {
+    opacity: 1;
+    transform: scale(1);
   }
 
   .site-header__desktop-nav {
@@ -178,6 +208,32 @@ const isCurrentPage = (href: string) => currentPath === normalizePath(href);
   .site-header__nav-link:hover,
   .site-header__mobile-link:hover {
     color: var(--ink);
+  }
+
+  /* desktop nav underline draws in from the left on hover */
+  .site-header__nav-link {
+    position: relative;
+  }
+
+  .site-header__nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -4px;
+    height: 1.5px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 200ms var(--ease);
+  }
+
+  .site-header__nav-link:hover::after {
+    transform: scaleX(1);
+  }
+
+  .site-header__nav-link.is-active::after {
+    display: none;
   }
 
   .site-header__nav-link.is-active {

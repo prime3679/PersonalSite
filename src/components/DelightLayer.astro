@@ -8,6 +8,11 @@
 //   2. the konami code drops paper confetti in the site palette
 //   3. typing "rogue" wakes the instrument panel via rogue:status
 //   4. flipping night shift five times quickly earns a dry remark
+//   5. typing "konami" literally gets you gently corrected
+//   6. poking the rogue status dot escalates until confetti
+//   7. selecting the words "mac mini" earns a confirmation
+//   8. visiting between midnight and 5am gets a nod of respect
+//   9. printed pages carry a small note about the confetti
 ---
 
 <div class="delight-toast" data-delight-toast role="status" aria-live="polite" hidden>
@@ -44,7 +49,7 @@
   // 1. console note for the curious
   try {
     console.log(
-      '%cadrian lumley%c\nyou found the console. two more secrets live on the page:\ntype "rogue" anywhere, or enter the konami code.',
+      '%cadrian lumley%c\nyou found the console. a couple of the secrets:\ntype "rogue" anywhere, or enter the konami code.\nthere are others.',
       'font-family: Georgia, serif; font-size: 16px; color: #a8472c;',
       'font-family: monospace; font-size: 12px; color: #8a8172;'
     );
@@ -65,13 +70,13 @@
   ];
   let konamiIndex = 0;
 
-  function dropConfetti() {
+  function dropConfetti(count = 64) {
     if (reducedMotion()) return;
     const host = document.createElement('div');
     host.className = 'delight-confetti';
     host.setAttribute('aria-hidden', 'true');
     const colors = ['var(--accent)', 'var(--accent-bright)', 'var(--line-strong)', 'var(--ink-soft)'];
-    for (let i = 0; i < 64; i++) {
+    for (let i = 0; i < count; i++) {
       const piece = document.createElement('span');
       piece.style.left = `${Math.random() * 100}%`;
       piece.style.background = colors[i % colors.length];
@@ -87,19 +92,24 @@
 
   // 3. typing "rogue" wakes the instrument panel. SignalTrace already
   // listens for rogue:status, so the strip chart genuinely goes live.
-  const ROGUE = 'rogue';
-  let rogueBuffer = '';
+  // typing "konami" literally gets you pointed at the arrows instead.
+  let letterBuffer = '';
+  const LONGEST_WORD = 6;
 
-  function wakeRogue() {
-    showToast('rogue is listening');
+  function pulsePanels(loops: number) {
     document.dispatchEvent(
-      new CustomEvent('rogue:status', { detail: { status: 'live', loops_today: 24 } })
+      new CustomEvent('rogue:status', { detail: { status: 'live', loops_today: loops } })
     );
     document.querySelectorAll('.instrument-panel').forEach((panel) => {
       panel.classList.remove('is-rogue-awake');
       if (panel instanceof HTMLElement) void panel.offsetWidth;
       panel.classList.add('is-rogue-awake');
     });
+  }
+
+  function wakeRogue() {
+    showToast('rogue is listening');
+    pulsePanels(24);
   }
 
   function isTypingTarget(target: EventTarget | null) {
@@ -125,10 +135,13 @@
     }
 
     if (/^[a-z]$/.test(event.key)) {
-      rogueBuffer = (rogueBuffer + event.key).slice(-ROGUE.length);
-      if (rogueBuffer === ROGUE) {
-        rogueBuffer = '';
+      letterBuffer = (letterBuffer + event.key).slice(-LONGEST_WORD);
+      if (letterBuffer.endsWith('rogue')) {
+        letterBuffer = '';
         wakeRogue();
+      } else if (letterBuffer === 'konami') {
+        letterBuffer = '';
+        showToast('nice try. use the arrows.');
       }
     }
   });
@@ -146,6 +159,46 @@
       showToast('easy on the lights');
     }
   });
+
+  // 5. poking the rogue status escalates, then pays out
+  const POKE_LINES = ['you poked rogue', 'again?', "rogue: ok. that's enough."];
+  let pokes = 0;
+  document.addEventListener('click', (event) => {
+    if (!(event.target instanceof Element) || !event.target.closest('.live-status')) return;
+    pokes += 1;
+    if (pokes < 5) {
+      showToast(POKE_LINES[Math.min(pokes, POKE_LINES.length) - 1]);
+      pulsePanels(10 + pokes * 12);
+    } else {
+      pokes = 0;
+      showToast('fine. confetti.');
+      dropConfetti(32);
+    }
+  });
+
+  // 6. selecting the words "mac mini" earns a confirmation
+  let macMiniNoted = false;
+  let selectionTimer = 0;
+  document.addEventListener('selectionchange', () => {
+    if (macMiniNoted) return;
+    window.clearTimeout(selectionTimer);
+    selectionTimer = window.setTimeout(() => {
+      const text = String(document.getSelection() ?? '').toLowerCase();
+      if (text.includes('mac mini')) {
+        macMiniNoted = true;
+        showToast('yes. really. a mac mini.');
+      }
+    }, 350);
+  });
+
+  // 7. a nod for the night owls, once per session
+  try {
+    const hour = new Date().getHours();
+    if (hour < 5 && !sessionStorage.getItem('delight-night-owl')) {
+      sessionStorage.setItem('delight-night-owl', '1');
+      window.setTimeout(() => showToast('night shift hours. respect.'), 2500);
+    }
+  } catch {}
 </script>
 
 <style is:global>
@@ -228,6 +281,23 @@
   @keyframes delight-glow {
     50% {
       box-shadow: 0 0 0 3px rgb(201 102 63 / 0.25);
+    }
+  }
+
+  /* a small note for anyone who prints a page */
+  @media print {
+    .delight-toast,
+    .delight-confetti {
+      display: none !important;
+    }
+    body::after {
+      content: "printed from adrianlumley.co. the confetti doesn't print.";
+      display: block;
+      margin-top: 2rem;
+      font-family: var(--mono);
+      font-size: 0.6875rem;
+      letter-spacing: 0.04em;
+      color: #574f44;
     }
   }
 </style>

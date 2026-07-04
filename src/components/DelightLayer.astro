@@ -1,0 +1,233 @@
+---
+// easter eggs and small delights. everything here is optional garnish:
+// no page depends on it, reduced motion switches the animation off, and
+// the copy stays lowercase like the rest of the surface.
+//
+// current secrets:
+//   1. a note in the browser console for the curious
+//   2. the konami code drops paper confetti in the site palette
+//   3. typing "rogue" wakes the instrument panel via rogue:status
+//   4. flipping night shift five times quickly earns a dry remark
+---
+
+<div class="delight-toast" data-delight-toast role="status" aria-live="polite" hidden>
+  <span class="delight-toast__dot" aria-hidden="true"></span>
+  <span data-delight-toast-text></span>
+</div>
+
+<script>
+  const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const toast = document.querySelector<HTMLElement>('[data-delight-toast]');
+  const toastText = document.querySelector<HTMLElement>('[data-delight-toast-text]');
+  let toastTimer = 0;
+  let toastHideTimer = 0;
+
+  function showToast(message: string) {
+    if (!toast || !toastText) return;
+    window.clearTimeout(toastTimer);
+    window.clearTimeout(toastHideTimer);
+    toast.hidden = false;
+    toastText.textContent = message;
+    toast.classList.remove('is-visible');
+    // force a reflow so a replacing toast restarts its slide-in
+    void toast.offsetWidth;
+    toast.classList.add('is-visible');
+    toastTimer = window.setTimeout(() => {
+      toast.classList.remove('is-visible');
+      toastHideTimer = window.setTimeout(() => {
+        toast.hidden = true;
+      }, 400);
+    }, 3600);
+  }
+
+  // 1. console note for the curious
+  try {
+    console.log(
+      '%cadrian lumley%c\nyou found the console. two more secrets live on the page:\ntype "rogue" anywhere, or enter the konami code.',
+      'font-family: Georgia, serif; font-size: 16px; color: #a8472c;',
+      'font-family: monospace; font-size: 12px; color: #8a8172;'
+    );
+  } catch {}
+
+  // 2. konami code: paper confetti in the site palette
+  const KONAMI = [
+    'ArrowUp',
+    'ArrowUp',
+    'ArrowDown',
+    'ArrowDown',
+    'ArrowLeft',
+    'ArrowRight',
+    'ArrowLeft',
+    'ArrowRight',
+    'b',
+    'a',
+  ];
+  let konamiIndex = 0;
+
+  function dropConfetti() {
+    if (reducedMotion()) return;
+    const host = document.createElement('div');
+    host.className = 'delight-confetti';
+    host.setAttribute('aria-hidden', 'true');
+    const colors = ['var(--accent)', 'var(--accent-bright)', 'var(--line-strong)', 'var(--ink-soft)'];
+    for (let i = 0; i < 64; i++) {
+      const piece = document.createElement('span');
+      piece.style.left = `${Math.random() * 100}%`;
+      piece.style.background = colors[i % colors.length];
+      piece.style.animationDuration = `${2.4 + Math.random() * 1.8}s`;
+      piece.style.animationDelay = `${Math.random() * 0.6}s`;
+      const spin = (Math.random() > 0.5 ? 1 : -1) * (420 + Math.floor(Math.random() * 400));
+      piece.style.setProperty('--spin', `${spin}deg`);
+      host.appendChild(piece);
+    }
+    document.body.appendChild(host);
+    window.setTimeout(() => host.remove(), 5400);
+  }
+
+  // 3. typing "rogue" wakes the instrument panel. SignalTrace already
+  // listens for rogue:status, so the strip chart genuinely goes live.
+  const ROGUE = 'rogue';
+  let rogueBuffer = '';
+
+  function wakeRogue() {
+    showToast('rogue is listening');
+    document.dispatchEvent(
+      new CustomEvent('rogue:status', { detail: { status: 'live', loops_today: 24 } })
+    );
+    document.querySelectorAll('.instrument-panel').forEach((panel) => {
+      panel.classList.remove('is-rogue-awake');
+      if (panel instanceof HTMLElement) void panel.offsetWidth;
+      panel.classList.add('is-rogue-awake');
+    });
+  }
+
+  function isTypingTarget(target: EventTarget | null) {
+    return (
+      target instanceof Element &&
+      target.closest('input, textarea, select, [contenteditable="true"]') !== null
+    );
+  }
+
+  document.addEventListener('keydown', (event) => {
+    if (event.metaKey || event.ctrlKey || event.altKey) return;
+    if (isTypingTarget(event.target)) return;
+
+    if (event.key === KONAMI[konamiIndex]) {
+      konamiIndex += 1;
+      if (konamiIndex === KONAMI.length) {
+        konamiIndex = 0;
+        showToast('manual override accepted');
+        dropConfetti();
+      }
+    } else {
+      konamiIndex = event.key === KONAMI[0] ? 1 : 0;
+    }
+
+    if (/^[a-z]$/.test(event.key)) {
+      rogueBuffer = (rogueBuffer + event.key).slice(-ROGUE.length);
+      if (rogueBuffer === ROGUE) {
+        rogueBuffer = '';
+        wakeRogue();
+      }
+    }
+  });
+
+  // 4. flipping night shift too fast
+  let toggleTimes: number[] = [];
+  let lightsNoted = false;
+  document.addEventListener('click', (event) => {
+    if (lightsNoted) return;
+    if (!(event.target instanceof Element) || !event.target.closest('[data-theme-toggle]')) return;
+    const now = Date.now();
+    toggleTimes = [...toggleTimes.filter((t) => now - t < 3000), now];
+    if (toggleTimes.length >= 5) {
+      lightsNoted = true;
+      showToast('easy on the lights');
+    }
+  });
+</script>
+
+<style is:global>
+  .delight-toast {
+    position: fixed;
+    left: 1rem;
+    bottom: 1rem;
+    z-index: 70;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    max-width: calc(100vw - 2rem);
+    padding: 0.5625rem 0.875rem;
+    border: 1px solid var(--panel-line);
+    border-radius: var(--radius-panel);
+    background: var(--panel);
+    color: var(--panel-text);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
+    pointer-events: none;
+  }
+  .delight-toast.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+  .delight-toast__dot {
+    flex: 0 0 auto;
+    width: 0.4375rem;
+    height: 0.4375rem;
+    border-radius: 999px;
+    background: var(--accent-bright);
+  }
+
+  .delight-confetti {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .delight-confetti span {
+    position: absolute;
+    top: -3vh;
+    width: 7px;
+    height: 13px;
+    opacity: 0.9;
+    animation-name: delight-fall;
+    animation-timing-function: cubic-bezier(0.3, 0, 0.7, 1);
+    animation-fill-mode: forwards;
+  }
+
+  .instrument-panel.is-rogue-awake {
+    border-color: var(--accent-bright);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .delight-toast.is-visible .delight-toast__dot {
+      animation: delight-pulse 1.6s ease-in-out infinite;
+    }
+    .instrument-panel.is-rogue-awake {
+      animation: delight-glow 1.2s var(--ease) 2;
+    }
+  }
+
+  @keyframes delight-fall {
+    to {
+      transform: translateY(106vh) rotate(var(--spin, 540deg));
+      opacity: 0.7;
+    }
+  }
+  @keyframes delight-pulse {
+    50% {
+      opacity: 0.35;
+    }
+  }
+  @keyframes delight-glow {
+    50% {
+      box-shadow: 0 0 0 3px rgb(201 102 63 / 0.25);
+    }
+  }
+</style>

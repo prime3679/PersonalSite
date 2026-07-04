@@ -12,10 +12,10 @@ export default {
       colors: {
         border: 'var(--line)',
         background: 'var(--paper)',
-        // rgb literal must equal --ink (#1c1814) in src/styles/global.css.
         // legacy text-foreground/NN utilities need an alpha-capable value,
-        // so var(--ink) cannot be used here.
-        foreground: 'rgb(28 24 20 / <alpha-value>)',
+        // so var(--ink) cannot be used directly. --ink-rgb tracks --ink in
+        // src/styles/global.css for both light and night shift.
+        foreground: 'rgb(var(--ink-rgb) / <alpha-value>)',
         muted: {
           DEFAULT: 'var(--paper-raised)',
           foreground: 'var(--ink-soft)',

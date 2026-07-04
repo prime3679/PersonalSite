@@ -10,6 +10,7 @@
   --paper: #f7f3ea;
   --paper-raised: #fbf8f1;
   --ink: #1c1814;
+  --ink-rgb: 28 24 20;
   --ink-soft: #574f44;
   --line: #e4decf;
   --line-strong: #d3cbb8;
@@ -49,6 +50,7 @@ html.dark {
   --paper: #16130e;
   --paper-raised: #1e1a13;
   --ink: #eae4d7;
+  --ink-rgb: 234 228 215;
   --ink-soft: #9c9384;
   --line: #2b261d;
   --line-strong: #3a3428;

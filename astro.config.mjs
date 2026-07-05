@@ -12,7 +12,7 @@ export default defineConfig({
     sitemap({
       // /blog and /blog/<slug> are meta-refresh stubs kept for old links;
       // crawlers should discover the /writing/ pages instead.
-      filter: (page) => !new URL(page).pathname.startsWith('/blog'),
+      filter: (page) => !/^\/blog(\/|$)/.test(new URL(page).pathname),
     }),
   ],
   markdown: {

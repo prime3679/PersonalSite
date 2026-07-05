@@ -3,7 +3,6 @@ title: "I built a benchmark tool to stop making AI model choices on vibes."
 date: 2026-03-09
 tags: ["ai", "building"]
 description: "Haiku vs Sonnet vs Opus vs GPT , I was just guessing. So I built something to run the same task across all of them and look at the actual numbers."
-draft: false
 published: false
 ---
 

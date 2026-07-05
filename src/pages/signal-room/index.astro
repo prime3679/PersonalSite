@@ -8,6 +8,7 @@ import { formatLongDate, padEpisode } from '../../lib/format';
 
 const episodes = await getEpisodes('desc');
 const latest = episodes[0];
+const first = episodes[episodes.length - 1];
 
 const logEntries = [
   { time: '02:22', text: 'rogue marks four items: not morning-safe' },
@@ -20,7 +21,9 @@ const logEntries = [
 <Base title="signal room" description="short fiction about rogue, systems, households, truth, and mercy." ogImage="/og/signal-room.png">
   <PageIntro title="signal room" standfirst="short fiction about rogue and the human side of systems that try to help without becoming the weather." />
 
-  <p class="ui-copy -mt-10 mb-12 reveal">new here? start with <a href="/signal-room/night-shift/">episode 01, night shift</a>.</p>
+  {first && (
+    <p class="ui-copy -mt-10 mb-12 reveal">new here? start with <a href={episodePath(first.slug)}>episode {padEpisode(first.data.episode)}, {first.data.title}</a>.</p>
+  )}
 
   <Panel ariaLabel="signal room episode log" label="signal.room 07:11">
     <SignalLog entries={logEntries} />

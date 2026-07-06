@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="light" />
+<title>ink field | a living sumi-e study</title>
+<meta name="description" content="a living sumi-e study. sumi ink poured onto warm bone paper, drifting through a seeded noise field, with rare embers of clay." />
+<style>
+  :root{
+    --paper:#efe5d1;
+    --paper-deep:#e7dcc3;
+    --ink:#1b1712;
+    --ink-soft:#6d6353;
+    --clay:#bd5a34;
+    --line:rgba(27,23,18,.16);
+    --serif:Georgia,"Times New Roman",serif;
+    --sans:ui-sans-serif,-apple-system,"Segoe UI",system-ui,sans-serif;
+    --mono:ui-monospace,"SF Mono","Menlo",monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--serif);
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  #field{position:fixed;inset:0;z-index:0;display:block;touch-action:none;cursor:crosshair}
+
+  /* warm bone paper grain, sitting over the canvas as a static tooth */
+  .grain{
+    position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.5;
+    mix-blend-mode:multiply;
+    background-image:
+      radial-gradient(circle at 18% 24%,rgba(27,23,18,.06) 0 1px,transparent 1.6px),
+      radial-gradient(circle at 68% 62%,rgba(27,23,18,.05) 0 1px,transparent 1.4px),
+      radial-gradient(circle at 42% 84%,rgba(27,23,18,.04) 0 1px,transparent 1.3px);
+    background-size:15px 17px,21px 23px,27px 31px;
+  }
+  /* soft vignette so the pour sits in a page, not a screen */
+  .vignette{position:fixed;inset:0;z-index:1;pointer-events:none;
+    background:radial-gradient(120% 120% at 50% 42%,transparent 55%,rgba(27,23,18,.12) 100%)}
+
+  /* title overture */
+  .overture{
+    position:fixed;inset:0;z-index:6;display:grid;place-content:center;text-align:center;
+    background:var(--paper);gap:.4rem;
+    animation:overture 3.2s ease-in forwards;
+  }
+  .overture h1{margin:0;font-weight:400;font-size:clamp(2.4rem,9vw,5.2rem);letter-spacing:-.02em;line-height:.95}
+  .overture p{margin:0;font-style:italic;color:var(--ink-soft);font-size:clamp(.95rem,3.4vw,1.15rem)}
+  @keyframes overture{0%{opacity:1}62%{opacity:1}100%{opacity:0;visibility:hidden}}
+
+  /* console */
+  .console{
+    position:fixed;z-index:4;left:clamp(14px,3vw,28px);top:clamp(14px,3vw,28px);
+    width:min(300px,calc(100vw - 28px));
+    background:rgba(239,229,209,.82);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:18px 18px 16px;
+    backdrop-filter:blur(10px);
+    box-shadow:0 18px 50px -30px rgba(27,23,18,.7);
+    transition:opacity .35s ease,transform .35s ease;
+  }
+  .console[hidden]{display:none}
+  .console.away{opacity:0;transform:translateY(-8px);pointer-events:none}
+  .console-head{display:flex;align-items:baseline;justify-content:space-between;gap:.75rem;margin-bottom:.4rem}
+  .console-head h2{margin:0;font-size:1.05rem;font-weight:400}
+  .seed{font-family:var(--mono);font-size:.7rem;letter-spacing:.04em;color:var(--ink-soft)}
+  .tagline{margin:0 0 14px;font-style:italic;font-size:.82rem;color:var(--ink-soft)}
+  .control{margin:0 0 12px}
+  .control label{display:flex;justify-content:space-between;font-family:var(--sans);
+    font-size:.72rem;letter-spacing:.02em;color:var(--ink-soft);margin-bottom:5px}
+  .control label b{font-family:var(--mono);font-weight:400;color:var(--ink)}
+  input[type=range]{
+    -webkit-appearance:none;appearance:none;width:100%;height:2px;border-radius:2px;
+    background:var(--line);outline-offset:4px;margin:0;cursor:pointer;
+  }
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;
+    width:14px;height:14px;border-radius:50%;background:var(--ink);border:2px solid var(--paper)}
+  input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;
+    background:var(--ink);border:2px solid var(--paper)}
+  .buttons{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .btn{
+    font-family:var(--sans);font-size:.76rem;letter-spacing:.01em;
+    padding:8px 13px;border-radius:999px;border:1px solid var(--ink);
+    background:var(--ink);color:var(--paper);cursor:pointer;text-decoration:none;
+    transition:transform .15s ease,background .2s ease,color .2s ease;
+  }
+  .btn:hover,.btn:focus-visible{transform:translateY(-1px)}
+  .btn.ghost{background:transparent;color:var(--ink)}
+  .btn.ghost:hover{background:rgba(27,23,18,.06)}
+
+  /* reveal handle when the console is hidden */
+  .reveal{
+    position:fixed;z-index:4;left:clamp(14px,3vw,28px);top:clamp(14px,3vw,28px);
+    font-family:var(--sans);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;
+    padding:9px 14px;border-radius:999px;border:1px solid var(--line);
+    background:rgba(239,229,209,.82);color:var(--ink);cursor:pointer;backdrop-filter:blur(10px);
+  }
+  .reveal[hidden]{display:none}
+
+  /* corner signature + hint */
+  .signature{position:fixed;z-index:3;right:clamp(16px,3vw,30px);bottom:clamp(14px,3vw,26px);
+    font-style:italic;font-size:.95rem;color:var(--ink-soft);pointer-events:none;letter-spacing:.01em}
+  .hint{position:fixed;z-index:3;left:50%;bottom:clamp(16px,4vw,30px);transform:translateX(-50%);
+    font-family:var(--sans);font-size:.72rem;letter-spacing:.05em;color:var(--ink-soft);
+    pointer-events:none;transition:opacity 1s ease}
+  .hint.gone{opacity:0}
+
+  :focus-visible{outline:2px solid var(--clay);outline-offset:3px}
+
+  @media (prefers-reduced-motion: reduce){
+    .overture{animation:none;opacity:0;visibility:hidden}
+    .console{transition:none}
+  }
+</style>
+</head>
+<body>
+  <canvas id="field"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <div class="overture" id="overture" aria-hidden="true">
+    <h1>ink field</h1>
+    <p>a living sumi-e study</p>
+  </div>
+
+  <section class="console" id="console" aria-label="ink field controls">
+    <div class="console-head">
+      <h2>ink field</h2>
+      <span class="seed" id="seedLabel">seed 0000</span>
+    </div>
+    <p class="tagline">sumi ink on warm bone paper, drifting through a seeded field.</p>
+
+    <div class="control">
+      <label for="turbulence">turbulence <b id="turbulenceVal">0.60</b></label>
+      <input id="turbulence" type="range" min="0" max="1.5" step="0.01" value="0.6" />
+    </div>
+    <div class="control">
+      <label for="drift">drift <b id="driftVal">0.35</b></label>
+      <input id="drift" type="range" min="0" max="1" step="0.01" value="0.35" />
+    </div>
+    <div class="control">
+      <label for="density">density <b id="densityVal">520</b></label>
+      <input id="density" type="range" min="120" max="1200" step="20" value="520" />
+    </div>
+    <div class="control">
+      <label for="embers">embers <b id="embersVal">0.20</b></label>
+      <input id="embers" type="range" min="0" max="1" step="0.01" value="0.2" />
+    </div>
+
+    <div class="buttons">
+      <button class="btn" id="pour" type="button">new pour</button>
+      <a class="btn ghost" id="save" href="#" download>save print</a>
+      <button class="btn ghost" id="hide" type="button">hide console</button>
+    </div>
+  </section>
+
+  <button class="reveal" id="reveal" type="button" hidden>show console</button>
+
+  <p class="signature" aria-hidden="true">ink field</p>
+  <p class="hint" id="hint">tap the paper to pour ink</p>
+
+<script>
+(() => {
+  'use strict';
+
+  const canvas = document.getElementById('field');
+  const ctx = canvas.getContext('2d', { alpha: false });
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const els = {
+    seedLabel: document.getElementById('seedLabel'),
+    turbulence: document.getElementById('turbulence'),
+    drift: document.getElementById('drift'),
+    density: document.getElementById('density'),
+    embers: document.getElementById('embers'),
+    turbulenceVal: document.getElementById('turbulenceVal'),
+    driftVal: document.getElementById('driftVal'),
+    densityVal: document.getElementById('densityVal'),
+    embersVal: document.getElementById('embersVal'),
+    pour: document.getElementById('pour'),
+    save: document.getElementById('save'),
+    hide: document.getElementById('hide'),
+    reveal: document.getElementById('reveal'),
+    console: document.getElementById('console'),
+    overture: document.getElementById('overture'),
+    hint: document.getElementById('hint'),
+  };
+
+  const PAPER = '#efe5d1';
+  const TAU = Math.PI * 2;
+
+  // ---- seeded randomness (mulberry32) --------------------------------------
+  function mulberry32(seed) {
+    let a = seed >>> 0;
+    return function () {
+      a |= 0; a = (a + 0x6d2b79f5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  // ---- seeded value noise + fBm --------------------------------------------
+  function hash(ix, iy, seed) {
+    let h = Math.imul(ix, 374761393) + Math.imul(iy, 668265263) + Math.imul(seed, 362437);
+    h = Math.imul(h ^ (h >>> 13), 1274126177);
+    h ^= h >>> 16;
+    return (h >>> 0) / 4294967296;
+  }
+  const smooth = (t) => t * t * (3 - 2 * t);
+  function valueNoise(x, y, seed) {
+    const x0 = Math.floor(x), y0 = Math.floor(y);
+    const fx = smooth(x - x0), fy = smooth(y - y0);
+    const v00 = hash(x0, y0, seed), v10 = hash(x0 + 1, y0, seed);
+    const v01 = hash(x0, y0 + 1, seed), v11 = hash(x0 + 1, y0 + 1, seed);
+    const a = v00 + (v10 - v00) * fx;
+    const b = v01 + (v11 - v01) * fx;
+    return a + (b - a) * fy;
+  }
+  function fbm(x, y, seed) {
+    let amp = 0.5, freq = 1, sum = 0, norm = 0;
+    for (let o = 0; o < 4; o++) {
+      sum += amp * valueNoise(x * freq, y * freq, seed + o * 131);
+      norm += amp; amp *= 0.5; freq *= 2;
+    }
+    return sum / norm; // 0..1
+  }
+
+  // ---- state ---------------------------------------------------------------
+  let seed = 1000 + Math.floor(Math.random() * 8999);
+  let rand = mulberry32(seed);
+  let w = 0, h = 0, dpr = 1;
+  const NOISE_SCALE = 0.0016;
+  let time = 0;
+  let particles = [];
+
+  const params = {
+    turbulence: parseFloat(els.turbulence.value),
+    drift: parseFloat(els.drift.value),
+    density: parseInt(els.density.value, 10),
+    embers: parseFloat(els.embers.value),
+  };
+
+  function makeParticle(x, y) {
+    const ember = rand() < params.embers * 0.05;
+    return {
+      x: typeof x === 'number' ? x : rand() * w,
+      y: typeof y === 'number' ? y : rand() * h,
+      life: 60 + rand() * 220,
+      speed: 0.4 + rand() * 1.1,
+      ember,
+    };
+  }
+
+  function seedField() {
+    rand = mulberry32(seed);
+    els.seedLabel.textContent = 'seed ' + String(seed).padStart(4, '0');
+    updateSaveName();
+    particles = [];
+    resizeParticles();
+  }
+
+  function resizeParticles() {
+    const target = params.density;
+    while (particles.length < target) particles.push(makeParticle());
+    if (particles.length > target) particles.length = target;
+  }
+
+  // ---- rendering -----------------------------------------------------------
+  function paintPaper() {
+    ctx.fillStyle = PAPER;
+    ctx.fillRect(0, 0, w, h);
+  }
+
+  function step(fade) {
+    // a whisper of paper each frame keeps the wash alive instead of drowning
+    if (fade) {
+      ctx.fillStyle = 'rgba(239,229,209,0.006)';
+      ctx.fillRect(0, 0, w, h);
+    }
+
+    const driftAngle = params.drift * TAU * 0.12 + Math.PI * 0.5; // settles gently downward
+    const driftMag = params.drift * 0.55;
+    const dx = Math.cos(driftAngle) * driftMag;
+    const dy = Math.sin(driftAngle) * driftMag;
+
+    for (const p of particles) {
+      const angle = fbm(p.x * NOISE_SCALE, p.y * NOISE_SCALE + time, seed) * TAU * 2 * params.turbulence;
+      const vx = (Math.cos(angle) * p.speed + dx) || 0;
+      const vy = (Math.sin(angle) * p.speed + dy) || 0;
+
+      if (p.ember) {
+        ctx.fillStyle = `rgba(189,90,52,${0.07 + rand() * 0.07})`;
+        ctx.fillRect(p.x, p.y, 1.6, 1.6);
+      } else {
+        ctx.fillStyle = `rgba(27,23,18,${0.05 + rand() * 0.06})`;
+        ctx.fillRect(p.x, p.y, 1.3, 1.3);
+      }
+
+      p.x += vx;
+      p.y += vy;
+      p.life -= 1;
+
+      if (p.life <= 0 || p.x < 0 || p.x > w || p.y < 0 || p.y > h) {
+        Object.assign(p, makeParticle());
+      }
+    }
+  }
+
+  // a deterministic pour: a soft burst seeded from the field
+  function pourAt(cx, cy, count) {
+    for (let i = 0; i < count; i++) {
+      const a = rand() * TAU;
+      const r = rand() * rand() * 70; // clustered toward the center
+      particles.push(makeParticle(cx + Math.cos(a) * r, cy + Math.sin(a) * r));
+    }
+    if (particles.length > params.density * 1.8) {
+      particles.splice(0, particles.length - Math.floor(params.density * 1.8));
+    }
+  }
+
+  function stillPrint() {
+    // reduced-motion: advance the field silently into one finished print
+    paintPaper();
+    for (let frame = 0; frame < 520; frame++) {
+      time += 0.0016;
+      step(false);
+    }
+  }
+
+  let running = false;
+  function loop() {
+    if (!running) return;
+    time += 0.0016;
+    step(true);
+    requestAnimationFrame(loop);
+  }
+
+  // ---- sizing --------------------------------------------------------------
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = window.innerWidth;
+    h = window.innerHeight;
+    canvas.width = Math.floor(w * dpr);
+    canvas.height = Math.floor(h * dpr);
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    paintPaper();
+    resizeParticles();
+    if (reduceMotion) stillPrint();
+  }
+
+  // ---- controls ------------------------------------------------------------
+  function bindRange(input, valEl, key, decimals) {
+    const render = () => {
+      const v = decimals != null ? parseFloat(input.value) : parseInt(input.value, 10);
+      params[key] = v;
+      valEl.textContent = decimals != null ? v.toFixed(decimals) : v;
+      if (key === 'density') resizeParticles();
+      if (reduceMotion) stillPrint();
+    };
+    input.addEventListener('input', render);
+    render();
+  }
+  bindRange(els.turbulence, els.turbulenceVal, 'turbulence', 2);
+  bindRange(els.drift, els.driftVal, 'drift', 2);
+  bindRange(els.density, els.densityVal, 'density', null);
+  bindRange(els.embers, els.embersVal, 'embers', 2);
+
+  function printName() {
+    return `ink-field-${String(seed).padStart(4, '0')}.png`;
+  }
+  function updateSaveName() {
+    els.save.setAttribute('download', printName());
+  }
+
+  els.pour.addEventListener('click', () => {
+    seed = 1000 + Math.floor(Math.random() * 8999);
+    paintPaper();
+    seedField();
+    if (reduceMotion) stillPrint();
+  });
+
+  els.save.addEventListener('click', event => {
+    event.preventDefault();
+    try {
+      updateSaveName();
+      const a = document.createElement('a');
+      a.download = printName();
+      a.href = canvas.toDataURL('image/png');
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } catch (err) {
+      // toDataURL can throw if the canvas is tainted; never break the click
+      console.warn('save print unavailable:', err);
+    }
+  });
+
+  function toggleConsole(show) {
+    if (show) {
+      els.console.hidden = false;
+      requestAnimationFrame(() => els.console.classList.remove('away'));
+      els.reveal.hidden = true;
+    } else {
+      els.console.classList.add('away');
+      els.reveal.hidden = false;
+      setTimeout(() => { els.console.hidden = true; }, 360);
+    }
+  }
+  els.hide.addEventListener('click', () => toggleConsole(false));
+  els.reveal.addEventListener('click', () => toggleConsole(true));
+
+  // ---- pointer pours -------------------------------------------------------
+  let hintDismissed = false;
+  function dismissHint() {
+    if (hintDismissed) return;
+    hintDismissed = true;
+    els.hint.classList.add('gone');
+  }
+  function pointerPos(e) {
+    return { x: e.clientX, y: e.clientY };
+  }
+  function onDown(e) {
+    if (e.target.closest('.console') || e.target.closest('.reveal')) return;
+    dismissHint();
+    const p = pointerPos(e);
+    pourAt(p.x, p.y, 90);
+    if (reduceMotion) { step(false); }
+  }
+  function onMove(e) {
+    if (e.buttons !== 1) return;
+    if (e.target.closest('.console')) return;
+    const p = pointerPos(e);
+    pourAt(p.x, p.y, 8);
+    if (reduceMotion) { step(false); }
+  }
+  canvas.addEventListener('pointerdown', onDown);
+  canvas.addEventListener('pointermove', onMove);
+
+  // ---- boot ----------------------------------------------------------------
+  window.addEventListener('resize', resize);
+  seedField();
+  resize();
+
+  if (!reduceMotion) {
+    running = true;
+    requestAnimationFrame(loop);
+    // let the overture read, then dismiss the hint on its own after a while
+    setTimeout(dismissHint, 6500);
+  } else {
+    els.hint.textContent = 'reduced motion: a still print';
+  }
+})();
+</script>
+</body>
+</html>

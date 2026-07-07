@@ -1,0 +1,5 @@
+[allowlist]
+description = "Historical false positive from vendored p5.js minified bundle. Keep pre-commit protection active for future staged changes."
+commits = [
+  "d5fed0f28eb213a4d687faa89b3dd5319b043f76",
+]

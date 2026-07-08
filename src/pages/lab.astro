@@ -57,8 +57,27 @@ const toys = [
     <h2 class="section-title">also built</h2>
     <p class="plain-links">
       {toys.map((toy, index) => (
-        <><a href={toy.href}>{toy.label}</a>{index < toys.length - 1 && <span aria-hidden="true">·</span>}</>
+        <>
+          <a href={toy.href}>{toy.label}</a>
+          {index < toys.length - 1 && <span aria-hidden="true">·</span>}
+        </>
       ))}
     </p>
+  </section>
+
+  <section class="mt-16 reveal" id="feedback-gate">
+    <article class="card">
+      <div class="card-head">
+        <h2 class="card-title">feedback gate</h2>
+        <span class="tag">feedback</span>
+      </div>
+      <p class="card-copy">the claim of this page is simple: i can turn ambiguity into a working personal operating system with taste, restraint, and receipts.</p>
+      <p class="card-copy card-note">the question worth answering is not whether the page is impressive. it is what the page makes you trust me to build.</p>
+      <p class="plain-links">
+        <a href="/contact">send the sentence</a>
+        <span aria-hidden="true">·</span>
+        <span>what did this make you believe i am good at?</span>
+      </p>
+    </article>
   </section>
 </Base>

@@ -9,7 +9,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "test": "npx playwright test",
-    "test:ui": "npx playwright test --ui"
+    "test:ui": "npx playwright test --ui",
+    "deploy:cloudflare": "npm run build && wrangler deploy"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^6.3.10",

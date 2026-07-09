@@ -1,0 +1,9 @@
+name = "adrianlumley-co"
+compatibility_date = "2026-07-09"
+
+assets = { directory = "./dist" }
+
+routes = [
+  "adrianlumley.co/*",
+  "www.adrianlumley.co/*",
+]

@@ -1,23 +1,25 @@
 import { test, expect } from '@playwright/test';
 
-test('homepage surfaces the current hero, sections, and contact links', async ({ page }) => {
+test('homepage surfaces the premium editorial opening, sections, and contact links', async ({ page }) => {
   await page.goto('/');
 
-  await expect(page.locator('main h1')).toHaveText('i build software that helps without getting in the way.');
-  await expect(page.locator('body')).toContainText('director of product at salesforce');
+  await expect(page.locator('main h1')).toHaveText('AI is easy to buy. Adoption is the work.');
+  await expect(page.locator('main')).toContainText('I run product where enterprise AI has to survive contact with real users.');
+  await expect(page.locator('main')).toContainText('The hard part of enterprise AI was never the model.');
 
-  await expect(page.locator('main')).toContainText('the work');
-  await expect(page.locator('main')).toContainText('the building');
-  await expect(page.locator('main')).toContainText('the thinking');
-  await expect(page.locator('main')).toContainText("building something in ai? i'd like to hear about it.");
+  await expect(page.getByRole('heading', { name: 'Selected writing' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'From the lab' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Notes on making' })).toBeVisible();
+  await expect(page.locator('[data-live-status]').first()).toBeVisible();
+  await expect(page.locator('[data-signal-trace]')).toBeVisible();
 
-  const workLink = page.locator('main a[href="/work"]');
-  await expect(workLink).toBeVisible();
+  const writingLink = page.locator('main a[href="/writing/meeting-cost"]');
+  await expect(writingLink).toBeVisible();
 
-  const labLink = page.locator('main a[href="/lab"]');
+  const labLink = page.locator('main a[href="/lab/meeting-cost/"]');
   await expect(labLink).toBeVisible();
 
-  const signalRoomLink = page.locator('main a[href="/signal-room"]').first();
+  const signalRoomLink = page.locator('main a[href="/signal-room"]');
   await expect(signalRoomLink).toBeVisible();
 
   const emailLink = page.locator('main a[href="/contact"]');

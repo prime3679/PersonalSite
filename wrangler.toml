@@ -5,5 +5,4 @@ assets = { directory = "./dist" }
 
 routes = [
   "adrianlumley.co/*",
-  "www.adrianlumley.co/*",
 ]

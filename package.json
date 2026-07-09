@@ -10,7 +10,9 @@
     "astro": "astro",
     "test": "npx playwright test",
     "test:ui": "npx playwright test --ui",
-    "deploy:cloudflare": "npm run build && npx wrangler deploy"
+    "deploy:cloudflare": "npm run build && npx wrangler deploy",
+    "deploy:cloudflare:www": "npx wrangler deploy -c wrangler.www.toml",
+    "deploy:cloudflare:all": "npm run deploy:cloudflare && npm run deploy:cloudflare:www"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^6.3.10",

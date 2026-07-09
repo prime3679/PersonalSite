@@ -27,3 +27,4 @@ dev_server*.log
 # playwright
 test-results/
 playwright-report/
+.vercel

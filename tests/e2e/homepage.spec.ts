@@ -1,17 +1,18 @@
 import { test, expect } from '@playwright/test';
 
-test('homepage opens with the editorial thesis, sections, and contact links', async ({ page }) => {
+test('homepage opens with a factual identity, the real work, and contact links', async ({ page }) => {
   await page.goto('/');
 
-  await expect(page.locator('main h1')).toHaveText('Adrian Lumley');
-  await expect(page.locator('main')).not.toContainText('AI is easy to buy.');
-  await expect(page.locator('main')).not.toContainText('Adoption is the work.');
-  await expect(page.locator('main')).toContainText('The hard part of enterprise AI was never the model.');
-  await expect(page.locator('main')).toContainText('Adoption is the product; everything upstream is capability looking for a home.');
+  await expect(page.locator('main h1')).toHaveText('adrian lumley');
+  await expect(page.locator('main')).toContainText('where ai meets enterprise adoption');
+  await expect(page.locator('main')).toContainText('director of product · salesforce');
+  // the old manifesto/thesis copy must be gone
+  await expect(page.locator('main')).not.toContainText('The hard part of enterprise AI was never the model.');
+  await expect(page.locator('main')).not.toContainText('Notes on making');
 
-  await expect(page.getByRole('heading', { name: 'Selected writing' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'From the lab' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Notes on making' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'writing', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'lab', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'signal room', exact: true })).toBeVisible();
   await expect(page.locator('[data-live-status]').first()).toBeVisible();
   await expect(page.locator('[data-signal-trace]')).toBeVisible();
 

@@ -18,7 +18,7 @@ test.describe('mobile homepage navigation', () => {
       const mobileNav = page.locator('#mobile-nav');
       const desktopNav = page.locator('.site-header__nav--desktop');
       const logo = page.locator('.site-header__logo');
-      const opening = page.locator('.opening-eyebrow');
+      const opening = page.locator('.home-kicker');
 
       await expect(toggle).toBeVisible();
       await expect(mobileNav).toBeHidden();
@@ -81,7 +81,7 @@ test('mobile: tapping outside the open menu closes it', async ({ page }) => {
   await toggle.click();
   await expect(mobileNav).toBeVisible();
 
-  await page.locator('#thesis').click(); // anywhere outside the header
+  await page.locator('main h1').click(); // anywhere outside the header
   await expect(mobileNav).toBeHidden();
   await expect(toggle).toHaveAttribute('aria-expanded', 'false');
 });

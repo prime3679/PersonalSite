@@ -3,769 +3,439 @@ import Base from '../layouts/Base.astro';
 import Panel from '../components/Panel.astro';
 import LiveStatus from '../components/LiveStatus.astro';
 import SignalTrace from '../components/SignalTrace.astro';
-import { getEpisodes } from '../lib/content';
-import { padEpisode } from '../lib/format';
+import { getPublishedPosts, getEpisodes, postPath } from '../lib/content';
+import { formatMonthYear, padEpisode } from '../lib/format';
 
-// Homepage — premium editorial direction.
-// Warm paper · ink text · muted clay accent · deliberate research-margin notes.
-// Self-contained for visual stability: no external font loads.
+// homepage: a filed dossier front page. an issue masthead (nameplate, lede,
+// and a bordered identity record with a file tab), then the real work filed
+// under numbered folio sections whose left rail is a composed tab carrying a
+// factual field note. everything reads off the global paper/ink/line/accent
+// tokens only, so night shift comes for free.
 
-const writing = [
-  {
-    n: '01',
-    title: 'The honest record',
-    note: 'A quieter standard for agentic systems: what actually happened.',
-    href: '/writing/the-honest-record',
-    year: '2026',
-  },
-  {
-    n: '02',
-    title: 'Your meetings are a budget line',
-    note: 'Most rooms treat time as free. It isn’t.',
-    href: '/writing/meeting-cost',
-    year: '2026',
-  },
-  {
-    n: '03',
-    title: 'Second-order effects in product organizations',
-    note: 'The best decisions weigh what happens after what happens.',
-    href: '/writing/second-order-effects',
-    year: '2026',
-  },
-];
+const allWriting = await getPublishedPosts();
+const selectedWriting = allWriting.slice(0, 3);
+const latestWriting = selectedWriting[0];
 
-const lab = [
-  {
-    n: '01',
-    title: 'Meeting Cost',
-    note: 'Real-time calculator. Add the room, hit start, watch the number climb.',
-    href: '/lab/meeting-cost/',
-  },
-  {
-    n: '02',
-    title: 'Iron Log',
-    note: 'A workout tracker that runs on nothing — no accounts, no backend.',
-    href: '/lab/iron-log/',
-  },
-  {
-    n: '03',
-    title: 'Ink Field',
-    note: 'A quiet generative field: touch, drift, reset, breathe.',
-    href: '/lab/ink-field/',
-  },
+const labWork = [
+  { title: 'meeting cost', note: 'a real-time meeting price tag. add the room, hit start, watch it climb.', href: '/lab/meeting-cost/' },
+  { title: 'iron log', note: 'a workout tracker that runs on nothing: no accounts, no backend.', href: '/lab/iron-log/' },
+  { title: 'ink field', note: 'a living sumi-e study. tap the paper to pour, then save the print.', href: '/lab/ink-field/' },
 ];
 
 const episodes = await getEpisodes('desc');
 const latestEpisodeNumber = episodes[0]?.data.episode ?? 0;
+
+const writingNote = latestWriting
+  ? `latest · ${formatMonthYear(latestWriting.data.date).toLowerCase()}`
+  : `${allWriting.length} on file`;
 ---
 
 <Base
   description="Adrian Lumley is a product leader working where AI meets enterprise adoption."
   ogImage="/og/home.png"
-  extraMainClass="premium-home-shell"
 >
-  <div class="paper-light" aria-hidden="true"></div>
+  <header class="masthead reveal">
+    <p class="folio">
+      <span class="home-kicker"><span class="home-kicker__tick" aria-hidden="true"></span>product · ai · enterprise</span>
+      <span class="folio__place">new york city</span>
+    </p>
 
-  <div class="page premium-homepage">
+    <h1 class="hero-title masthead__name">adrian lumley</h1>
 
-    <h1 class="sr-only">Adrian Lumley</h1>
+    <div class="masthead__grid">
+      <p class="masthead__lede">director of product at salesforce, working where ai meets enterprise adoption. builds the systems hands-on, then writes down what actually happened.</p>
 
-      <!-- ─────────────────────── THESIS ─────────────────────── -->
-      <section class="thesis thesis-open reveal" id="thesis" aria-label="Operating thesis">
-      <p class="eyebrow opening-eyebrow" data-reveal>
-        <span class="tick" aria-hidden="true"></span>
-        Adrian Lumley — Product · AI · Enterprise
-      </p>
-      <div class="manuscript">
-        <div class="stanza" data-reveal>
-          <p class="para drop">
-            The hard part of enterprise AI was never the model. It's the thousand
-            small frictions between a capable system and a person who has to trust
-            it at four o'clock on a Friday. Adoption is the product; everything
-            upstream is capability looking for a home.
-          </p>
-        </div>
+      <aside class="record" aria-label="on file">
+        <p class="record__tab">on file</p>
+        <dl class="ledger">
+          <div class="ledger__row">
+            <dt>now</dt>
+            <dd>director of product · salesforce</dd>
+          </div>
+          <div class="ledger__row">
+            <dt>previously</dt>
+            <dd>siriusxm · disney+ · ea</dd>
+          </div>
+          <div class="ledger__row">
+            <dt>work</dt>
+            <dd><a class="record__link touch-link" href="/work">case studies →</a></dd>
+          </div>
+        </dl>
+      </aside>
+    </div>
+  </header>
 
-        <div class="stanza" data-reveal>
-          <p class="para">
-            The best model is rarely the right one.<a
-              class="ref" href="#note-1" id="ref-1" aria-describedby="note-1">1</a>
-            Most work wants the cheapest tool that clears the bar — the discipline
-            is knowing where the bar sits, then routing around it. Horsepower is
-            cheap; judgment about when to spend it isn't.
-          </p>
-          <aside class="note" id="note-1" role="note">
-            <span class="note-n">1</span>Routing, not upgrading, cut my own
-            inference bill by roughly 70%.
-          </aside>
-        </div>
-
-        <div class="stanza" data-reveal>
-          <p class="para">
-            So I build small to understand large. The tools I ship for myself — a
-            calculator that makes a meeting's cost visible, a log that runs on
-            nothing<a class="ref" href="#note-2" id="ref-2" aria-describedby="note-2">2</a> —
-            pressure-test what I'd ask a real team to build. If a thing can't
-            survive one demanding user, it won't survive a thousand indifferent ones.
-          </p>
-          <aside class="note" id="note-2" role="note">
-            <span class="note-n">2</span>Both ship as a single file — no backend,
-            no accounts, nothing to wait for.
-          </aside>
-        </div>
-      </div>
-    </section>
-
-    <!-- ─────────────────────── WRITING ─────────────────────── -->
-    <section class="index reveal" aria-labelledby="writing-h">
-      <div class="section-head" data-reveal>
-        <span class="idx">§ 01</span>
-        <h2 id="writing-h">Selected writing</h2>
-      </div>
-
-      <ul class="entries">
-        {writing.map((item) => (
-          <li data-reveal>
-            <a href={item.href} class="entry">
-              <span class="entry-n">{item.n}</span>
-              <span class="entry-main">
-                <span class="entry-title">{item.title}</span>
-                <span class="entry-note">{item.note}</span>
+  <section id="writing" class="folio-section reveal" aria-labelledby="writing-h">
+    <div class="rail">
+      <span class="rail__tab">
+        <span class="rail__tick" aria-hidden="true"></span>
+        <span class="rail__ord" aria-hidden="true">01</span>
+        <h2 id="writing-h" class="rail__label">writing</h2>
+      </span>
+      <span class="rail__note">{writingNote}</span>
+    </div>
+    <div class="folio-body">
+      <ol class="entries">
+        {selectedWriting.map((post) => (
+          <li class="entry">
+            <a href={postPath(post.slug)} class="entry__link">
+              <span class="entry__head">
+                <span class="entry__title">{post.data.title}</span>
+                <span class="entry__meta">{formatMonthYear(post.data.date)}</span>
               </span>
-              <span class="entry-year">{item.year}</span>
-              <span class="entry-arrow" aria-hidden="true">→</span>
+              <span class="entry__note">{post.data.description}</span>
             </a>
           </li>
         ))}
-      </ul>
-      <a class="more" href="/writing" data-reveal>All writing<span aria-hidden="true"> →</span></a>
-    </section>
+      </ol>
+      <a class="folio-more touch-link" href="/writing">all writing<span aria-hidden="true"> →</span></a>
+    </div>
+  </section>
 
-    <!-- ───────────────────────── LAB ───────────────────────── -->
-    <section class="index reveal" aria-labelledby="lab-h">
-      <div class="section-head" data-reveal>
-        <span class="idx">§ 02</span>
-        <h2 id="lab-h">From the lab</h2>
-      </div>
-      <p class="index-sub" data-reveal>
-        Small, self-contained things — each one runs on a single HTML file and
-        nothing else. Proof, not slideware.
-      </p>
-
-      <ul class="entries">
-        {lab.map((item) => (
-          <li data-reveal>
-            <a href={item.href} class="entry">
-              <span class="entry-n">{item.n}</span>
-              <span class="entry-main">
-                <span class="entry-title">{item.title}</span>
-                <span class="entry-note">{item.note}</span>
+  <section id="lab" class="folio-section reveal" aria-labelledby="lab-h">
+    <div class="rail">
+      <span class="rail__tab">
+        <span class="rail__tick" aria-hidden="true"></span>
+        <span class="rail__ord" aria-hidden="true">02</span>
+        <h2 id="lab-h" class="rail__label">lab</h2>
+      </span>
+      <span class="rail__note">single-file</span>
+    </div>
+    <div class="folio-body">
+      <ol class="entries">
+        {labWork.map((item) => (
+          <li class="entry">
+            <a href={item.href} class="entry__link">
+              <span class="entry__head">
+                <span class="entry__title">{item.title}</span>
+                <span class="entry__meta" aria-hidden="true">↗</span>
               </span>
-              <span class="entry-arrow" aria-hidden="true">↗</span>
+              <span class="entry__note">{item.note}</span>
             </a>
           </li>
         ))}
-      </ul>
-      <a class="more" href="/lab" data-reveal>Full lab<span aria-hidden="true"> →</span></a>
-    </section>
+      </ol>
+      <a class="folio-more touch-link" href="/lab">full lab<span aria-hidden="true"> →</span></a>
+    </div>
+  </section>
 
-    <section class="signal-card reveal" aria-label="Rogue status" data-reveal>
-      <Panel id="instrument-strip" ariaLabel="rogue status" label="rogue · status">
+  <section id="signal-room" class="folio-section reveal" aria-labelledby="signal-h">
+    <div class="rail">
+      <span class="rail__tab">
+        <span class="rail__tick" aria-hidden="true"></span>
+        <span class="rail__ord" aria-hidden="true">03</span>
+        <h2 id="signal-h" class="rail__label">signal room</h2>
+      </span>
+      <span class="rail__note">instrument</span>
+    </div>
+    <div class="folio-body">
+      <p class="folio-lede">a quiet instrument for rogue, the agent that runs behind the site. the line moves when it does.</p>
+      <Panel id="instrument-strip" class="signal-panel" ariaLabel="rogue status" label="rogue · status">
         <SignalTrace />
         <p class="signal-line">
           <LiveStatus />
-          <span aria-hidden="true">·</span>
-          <a class="touch-link" href="/signal-room">signal room ep {padEpisode(latestEpisodeNumber)} live</a>
+          <span class="signal-line__sep" aria-hidden="true">·</span>
+          <a class="touch-link" href="/signal-room">ep {padEpisode(latestEpisodeNumber)} live<span aria-hidden="true"> →</span></a>
         </p>
       </Panel>
-    </section>
+    </div>
+  </section>
 
-    <!-- ────────────────── PROOF OF TASTE / COLOPHON ────────────────── -->
-    <section class="colophon reveal" aria-labelledby="craft-h">
-      <div class="section-head" data-reveal>
-        <span class="idx">§ 03</span>
-        <h2 id="craft-h">Notes on making</h2>
-      </div>
-
-      <div class="craft-grid">
-        <div class="craft" data-reveal>
-          <span class="craft-k">Belief</span>
-          <p>Elegant beats clever. If it needs explaining, it isn't finished.</p>
-        </div>
-        <div class="craft" data-reveal>
-          <span class="craft-k">Method</span>
-          <p>Ship the smallest thing that tells the truth, then listen to what breaks.</p>
-        </div>
-        <div class="craft" data-reveal>
-          <span class="craft-k">Off the page</span>
-          <p>Muay thai and jiu jitsu. A science-fiction novel I'm writing slowly, on purpose.</p>
-        </div>
-      </div>
-
-      <p class="set-in" data-reveal>
-        Set in your system's own serif and sans — nothing to download, nothing
-        to wait for. Paper, ink, a little clay, and two notes in the margin.
+  <section id="contact" class="folio-section reveal" aria-labelledby="contact-h">
+    <div class="rail">
+      <span class="rail__tab">
+        <span class="rail__tick" aria-hidden="true"></span>
+        <span class="rail__ord" aria-hidden="true">04</span>
+        <h2 id="contact-h" class="rail__label">contact</h2>
+      </span>
+      <span class="rail__note">open</span>
+    </div>
+    <div class="folio-body">
+      <p class="folio-lede">building something where ai has to earn its adoption? let's talk.</p>
+      <p class="plain-links contact-links">
+        <a class="touch-link" href="/contact">email</a>
+        <span aria-hidden="true">·</span>
+        <a class="touch-link" href="https://www.linkedin.com/in/adrianlumley/" target="_blank" rel="noopener noreferrer">linkedin</a>
+        <span aria-hidden="true">·</span>
+        <a class="touch-link" href="https://github.com/prime3679" target="_blank" rel="noopener noreferrer">github</a>
       </p>
-    </section>
+    </div>
+  </section>
 
-    <!-- ─────────────────────── CONTACT ─────────────────────── -->
-    <section class="contact reveal" id="connect" aria-labelledby="connect-h">
-      <h2 id="connect-h" class="contact-h" data-reveal>
-        Building something where AI has to earn its adoption?
-        <span class="mark">Let's talk.</span>
-      </h2>
-      <div class="contact-links" data-reveal>
-        <a href="/contact" class="cta">Email me</a>
-        <a href="https://www.linkedin.com/in/adrianlumley/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-        <a href="https://github.com/prime3679" target="_blank" rel="noopener noreferrer">GitHub</a>
-        <a href="/work">Work</a>
-        <a href="https://minoritymusings.substack.com/?r=4evku&amp;utm_campaign=pub-share-checklist" target="_blank" rel="noopener noreferrer">Read my writing</a>
-      </div>
-    </section>
-  </div>
-  <style is:global>
-    html:has(.premium-home-shell),
-    .premium-home-shell {
-      /* Paper & ink */
-      --paper:      #f6f2ea;
-      --paper-deep: #efe8da;
-      --ink:        #23201a;
-      --ink-soft:   #57503f;
-      --ink-faint:  #8c8371;
-      --rule:       #ddd4c2;
-      /* Accents */
-      --clay:       #b1502a;
-      --clay-deep:  #8f3f20;
-      --blue:       #2f4bd8;
-
-      --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua",
-               "Hoefler Text", Georgia, "Times New Roman", serif;
-      --sans:  ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-               "Helvetica Neue", Arial, sans-serif;
-      --mono:  "SF Mono", ui-monospace, "Cascadia Code", Menlo, Monaco,
-               "Roboto Mono", monospace;
-
-      --wrap: 44rem;
+  <style>
+    /* ---- issue masthead ---------------------------------------------- */
+    .masthead {
+      margin-bottom: clamp(var(--s6), 7vw, var(--s8));
     }
-
-    html:has(.premium-home-shell) {
-      background: var(--paper);
-      color-scheme: light;
-    }
-
-    html:has(.premium-home-shell) .site-header,
-    html:has(.premium-home-shell) footer {
-      background: var(--paper);
-      border-color: var(--rule);
-      color: var(--ink);
-    }
-
-    html:has(.premium-home-shell) .site-footer-inner,
-    html:has(.premium-home-shell) .site-header__nav-link,
-    html:has(.premium-home-shell) .site-header__mobile-link {
-      color: var(--ink-soft);
-    }
-
-    * { box-sizing: border-box; }
-
-    html { -webkit-text-size-adjust: 100%; }
-
-    body {
-      margin: 0;
-      background-color: var(--paper);
-      background-image:
-        radial-gradient(circle at 12% 8%, rgba(255, 250, 238, 0.72), transparent 34%),
-        linear-gradient(180deg, rgba(255, 249, 238, 0.42), transparent 36%);
-      color: var(--ink);
-      font-family: var(--sans);
-      font-size: clamp(1rem, 0.96rem + 0.2vw, 1.075rem);
-      line-height: 1.65;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
-      overflow-x: hidden;
-    }
-
-    ::selection { background: var(--clay); color: var(--paper); }
-
-    a { color: inherit; }
-
-    .skip {
-      position: absolute;
-      left: -999px;
-      top: 0;
-      background: var(--ink);
-      color: var(--paper);
-      padding: 0.6rem 1rem;
-      z-index: 50;
-      font-family: var(--mono);
-      font-size: 0.8rem;
-    }
-    .skip:focus { left: 1rem; top: 1rem; }
-
-    :focus-visible {
-      outline: 2px solid var(--blue);
-      outline-offset: 3px;
-      border-radius: 2px;
-    }
-
-    /* Cursor-aware paper light — sits behind content, follows pointer. */
-    .paper-light {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.6s ease;
-      background: radial-gradient(
-        26rem 26rem at var(--mx, 50%) var(--my, 30%),
-        rgba(255, 250, 238, 0.9),
-        rgba(255, 248, 235, 0.35) 38%,
-        transparent 68%
-      );
-      mix-blend-mode: soft-light;
-    }
-    .paper-light.lit { opacity: 1; }
-
-    .page {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      max-width: none;
-      margin: 0 auto;
-      padding: 0;
-    }
-
-    /* ── Reveal cadence ──
-       Content stays visible by default so full-page screenshots, print, and
-       no-JS contexts never show a ghost page. JS adds only a light entrance
-       transform to elements as they pass through the viewport. */
-    [data-reveal] {
-      opacity: 1;
-      transform: none;
-      transition:
-        opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
-        transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-    [data-reveal]:not(.shown) { transform: translateY(10px); }
-    [data-reveal].shown { opacity: 1; transform: none; }
-
-    /* ───────────── HERO ───────────── */
-    .hero {
-      display: none;
-    }
-
-    .opening-eyebrow {
-      max-width: var(--wrap);
-    }
-
-    .eyebrow {
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
-      margin: 0 0 clamp(1.15rem, 2.5vh, 1.6rem);
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--ink-soft);
-    }
-    .tick {
-      width: 1.6rem;
-      height: 1px;
-      background: var(--clay);
-      display: inline-block;
-    }
-
-    .lede {
-      margin: 0;
-      font-family: var(--serif);
-      font-weight: 400;
-      font-size: clamp(1.95rem, 1.35rem + 2.75vw, 3.15rem);
-      line-height: 1.08;
-      letter-spacing: -0.015em;
-      text-wrap: balance;
-      color: var(--ink);
-    }
-
-    /* clay ink highlight on key phrases, drawn under the text */
-    .mark {
-      position: relative;
-      white-space: nowrap;
-      color: var(--clay-deep);
-    }
-    .mark::after {
-      content: "";
-      position: absolute;
-      left: -0.05em;
-      right: -0.05em;
-      bottom: 0.06em;
-      height: 0.09em;
-      background: var(--clay);
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.35s;
-    }
-    .shown .mark::after,
-    [data-reveal].shown.contact-h .mark::after { transform: scaleX(1); }
-
-    .sub {
-      max-width: 34rem;
-      margin: clamp(1.1rem, 2.6vh, 1.5rem) 0 0;
-      font-size: 1rem;
-      line-height: 1.7;
-      color: var(--ink-soft);
-    }
-
-    .hero-meta {
+    .folio {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 0.85rem;
-      margin-top: clamp(1.2rem, 3vh, 1.8rem);
-      font-family: var(--mono);
-      font-size: 0.74rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--ink-faint);
-    }
-    .hero-meta a {
-      color: var(--ink);
-      text-decoration: none;
-      border-bottom: 1px solid var(--clay);
-      padding-bottom: 1px;
-      transition: color 0.2s ease;
-    }
-    .hero-meta a:hover { color: var(--clay-deep); }
-    .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--rule); display: inline-block; }
-
-    /* ───────────── SECTIONS ───────────── */
-    .premium-homepage > section { padding: clamp(3.5rem, 10vh, 6rem) 0; border-bottom: 1px solid var(--rule); }
-    .thesis-open { padding-top: clamp(1.4rem, 4vh, 2.25rem); }
-
-    .section-head {
-      display: flex;
-      align-items: baseline;
-      gap: 1rem;
-      margin-bottom: clamp(1.75rem, 5vh, 2.75rem);
-    }
-    .idx {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--clay);
-      padding-top: 0.15rem;
-      white-space: nowrap;
-    }
-    .section-head h2 {
-      margin: 0;
-      font-family: var(--serif);
-      font-weight: 400;
-      font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2.1rem);
-      line-height: 1.1;
-      letter-spacing: -0.01em;
-    }
-
-    /* ── Thesis / annotated manuscript ── */
-    .stanza { margin: 0 0 1.4rem; }
-    .stanza:last-child { margin-bottom: 0; }
-    .para {
-      margin: 0;
-      font-size: clamp(1.1rem, 1.02rem + 0.3vw, 1.28rem);
-      line-height: 1.72;
+      justify-content: space-between;
+      gap: .35rem 1rem;
+      margin: 0 0 clamp(var(--s5), 5vw, var(--s6));
+      padding-block: .8rem;
+      border-top: 1px solid var(--line-strong);
+      border-bottom: 1px solid var(--line);
       color: var(--ink-soft);
-      max-width: 34rem;
-    }
-    .para.drop { color: var(--ink); }
-    .drop::first-letter {
-      font-family: var(--serif);
-      float: left;
-      font-size: 3.6em;
-      line-height: 0.74;
-      padding: 0.06em 0.12em 0 0;
-      color: var(--clay-deep);
-      font-weight: 400;
-    }
-
-    /* Research blue — a deliberate two-note margin layer.
-       Mobile default: the note inlines below its paragraph, indented.
-       Desktop (≥68rem): the note floats into the true right margin. */
-    .ref {
       font-family: var(--mono);
-      font-size: 0.62em;
-      font-weight: 600;
-      vertical-align: super;
-      line-height: 0;
-      color: var(--blue);
-      text-decoration: none;
-      padding: 0 0.08em;
-    }
-    .ref:hover { text-decoration: underline; text-underline-offset: 2px; }
-    .note {
-      margin: 0.75rem 0 0;
-      padding-left: 0.9rem;
-      border-left: 2px solid rgba(47, 75, 216, 0.4);
-      font-family: var(--mono);
-      font-size: 0.78rem;
-      line-height: 1.55;
-      letter-spacing: 0.01em;
-      color: var(--blue);
-      max-width: 26rem;
-    }
-    .note-n { font-weight: 600; margin-right: 0.45rem; }
-
-    /* ── Index (writing / lab) ── */
-    .index-sub {
-      margin: -0.75rem 0 1.75rem;
-      color: var(--ink-soft);
-      max-width: 34rem;
-    }
-    .entries { list-style: none; margin: 0; padding: 0; }
-    .entries li { border-top: 1px solid var(--rule); }
-    .entries li:last-child { border-bottom: 1px solid var(--rule); }
-
-    .entry {
-      display: grid;
-      grid-template-columns: 2.4rem 1fr auto auto;
-      align-items: baseline;
-      gap: 0.6rem 1.1rem;
-      padding: 1.25rem 0.25rem 1.3rem;
-      text-decoration: none;
-      transition: padding 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-    .entry-n {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      color: var(--ink-faint);
-      padding-top: 0.35rem;
-      transition: color 0.3s ease;
-    }
-    .entry-main { display: flex; flex-direction: column; gap: 0.28rem; }
-    .entry-title {
-      font-family: var(--serif);
-      font-size: clamp(1.18rem, 1.05rem + 0.5vw, 1.5rem);
-      line-height: 1.18;
-      letter-spacing: -0.01em;
-      color: var(--ink);
-      transition: color 0.25s ease;
-    }
-    .entry-note {
-      font-size: 0.92rem;
-      line-height: 1.5;
-      color: var(--ink-soft);
-    }
-    .entry-year {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      color: var(--ink-faint);
-      align-self: center;
-    }
-    .entry-arrow {
-      align-self: center;
-      font-size: 1.05rem;
-      color: var(--clay);
-      transform: translateX(-4px);
-      opacity: 0;
-      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease;
-    }
-
-    @media (hover: hover) {
-      .entry:hover { padding-left: 0.9rem; }
-      .entry:hover .entry-title { color: var(--clay-deep); }
-      .entry:hover .entry-n { color: var(--clay); }
-      .entry:hover .entry-arrow { transform: translateX(0); opacity: 1; }
-    }
-
-    .more {
-      display: inline-block;
-      margin-top: 1.6rem;
-      font-family: var(--mono);
-      font-size: 0.76rem;
-      letter-spacing: 0.08em;
+      font-size: .6875rem;
+      letter-spacing: .12em;
       text-transform: uppercase;
-      text-decoration: none;
-      color: var(--ink);
-      border-bottom: 1px solid var(--clay);
-      padding-bottom: 2px;
-      transition: color 0.2s ease;
     }
-    .more:hover { color: var(--clay-deep); }
-
-    .touch-link,
-    .contact-links a,
-    .more {
-      min-height: 44px;
+    .home-kicker {
       display: inline-flex;
       align-items: center;
+      gap: .6rem;
+    }
+    .home-kicker__tick {
+      display: inline-block;
+      width: 1.5rem;
+      height: 1px;
+      background: var(--accent);
+    }
+    .folio__place { color: var(--ink-soft); }
+
+    /* the nameplate keeps the global .hero-title responsive sizing (tuned so
+       the mobile name never swallows the first screen); this only refines the
+       dossier register: tighter measure, weight, and tracking. */
+    .masthead__name {
+      margin: 0 0 clamp(var(--s4), 3.5vw, var(--s5));
+      max-width: 14ch;
+      font-weight: 460;
+      line-height: 1.02;
+      letter-spacing: -.025em;
     }
 
+    .masthead__grid { display: grid; gap: clamp(var(--s5), 5vw, var(--s6)); }
+    .masthead__lede {
+      max-width: 42ch;
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: clamp(1.1rem, 1.2vw + .9rem, 1.28rem);
+      line-height: 1.5;
+    }
+
+    /* the identity record: a bordered dossier card with a file tab. this is
+       the signature surface, so it carries a hair more contrast than the page. */
+    .record {
+      position: relative;
+      align-self: start;
+      padding: clamp(1.1rem, 3vw, 1.4rem);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      background: var(--paper-raised);
+    }
+    .record__tab {
+      margin: 0 0 .9rem;
+      padding-bottom: .7rem;
+      border-bottom: 1px solid var(--line);
+      color: var(--accent-ink);
+      font-family: var(--mono);
+      font-size: .625rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+    .ledger { margin: 0; display: grid; gap: .7rem; }
+    .ledger__row { display: grid; gap: .15rem; }
+    .ledger dt {
+      color: var(--ink-soft);
+      font-family: var(--mono);
+      font-size: .625rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      line-height: 1.4;
+    }
+    .ledger dd {
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: .8125rem;
+      line-height: 1.45;
+    }
+    .record__link { text-decoration: none; }
+    .record__link:hover { color: var(--ink); }
+
+    /* ---- numbered folio sections ------------------------------------- */
+    .folio-section { margin-top: clamp(var(--s6), 7vw, 3.25rem); }
+    .rail {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: var(--s5);
+      padding-bottom: .7rem;
+      border-bottom: 1px solid var(--line-strong);
+    }
+    .rail__tab { display: inline-flex; align-items: baseline; gap: .55rem; }
+    .rail__tick {
+      align-self: center;
+      width: .4rem;
+      height: .4rem;
+      background: var(--accent);
+    }
+    .rail__ord {
+      color: var(--accent-ink);
+      font-family: var(--mono);
+      font-size: .75rem;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: .04em;
+    }
+    .rail__label {
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: .8125rem;
+      font-weight: 500;
+      letter-spacing: .07em;
+      text-transform: lowercase;
+    }
+    .rail__note {
+      flex: 0 0 auto;
+      color: var(--ink-soft);
+      font-family: var(--mono);
+      font-size: .6875rem;
+      letter-spacing: .05em;
+      text-transform: lowercase;
+    }
+
+    .folio-lede {
+      max-width: var(--measure);
+      margin: 0 0 var(--s5);
+      color: var(--ink-soft);
+      font-family: var(--sans);
+      font-size: .96rem;
+      line-height: 1.6;
+    }
+
+    .entries { margin: 0; padding: 0; list-style: none; }
+    .entry { border-top: 1px solid var(--line); }
+    .entry:first-child { border-top: 0; }
+    .entry__link {
+      position: relative;
+      display: block;
+      padding: clamp(.85rem, 2.4vw, 1.15rem) 0 clamp(.85rem, 2.4vw, 1.15rem) 0;
+      text-decoration: none;
+    }
+    /* a hair of accent grows in from the left edge on hover: the filed item
+       being pulled from the stack. */
+    .entry__link::before {
+      content: '';
+      position: absolute;
+      left: -.9rem;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--accent);
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform var(--dur) var(--ease);
+    }
+    .entry__link:hover::before,
+    .entry__link:focus-visible::before { transform: scaleY(1); }
+    .entry__head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: .5rem 1rem;
+    }
+    .entry__title {
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: clamp(1.18rem, 1vw + 1rem, 1.42rem);
+      font-weight: 500;
+      line-height: 1.24;
+      letter-spacing: -.01em;
+      transition: color var(--dur) var(--ease);
+    }
+    .entry__meta {
+      flex: 0 0 auto;
+      color: var(--ink-soft);
+      font-family: var(--mono);
+      font-size: .7rem;
+      letter-spacing: .05em;
+      font-variant-numeric: tabular-nums;
+    }
+    .entry__note {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      margin-top: .4rem;
+      max-width: 62ch;
+      color: var(--ink-soft);
+      font-family: var(--sans);
+      font-size: .88rem;
+      line-height: 1.5;
+    }
+    .entry__link:hover .entry__title,
+    .entry__link:focus-visible .entry__title { color: var(--accent-ink); }
+
+    .folio-more {
+      display: inline-flex;
+      align-items: center;
+      margin-top: var(--s4);
+      color: var(--ink-soft);
+      font-family: var(--mono);
+      font-size: .72rem;
+      letter-spacing: .05em;
+      text-decoration: none;
+    }
+    .folio-more:hover { color: var(--ink); }
+
+    /* the instrument stays a quiet strip, not a headline block. the panel
+       root is rendered by Panel.astro, so reach it through the scoped body. */
+    .folio-body :global(.signal-panel) { max-width: 34rem; padding: 1.35rem; }
+    .folio-body :global(.signal-panel > div) { margin-bottom: 1.1rem; padding-bottom: 1.1rem; }
     .signal-line {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 0.5rem;
+      gap: .5rem;
       margin: 0;
+      color: var(--panel-soft);
       font-family: var(--mono);
-      font-size: 0.78rem;
-      color: var(--ink-soft);
+      font-size: .8125rem;
     }
+    .signal-line__sep { color: var(--panel-line); }
+    .signal-line a { color: var(--panel-text); }
+    .contact-links { font-size: .95rem; }
 
-    .signal-card .instrument-panel {
-      margin: 0;
-    }
-
-    /* ── Colophon ── */
-    .craft-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.6rem;
-    }
-    .craft { border-left: 2px solid var(--clay); padding-left: 1.1rem; }
-    .craft-k {
-      display: block;
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--clay);
-      margin-bottom: 0.4rem;
-    }
-    .craft p { margin: 0; color: var(--ink); font-size: 1.05rem; line-height: 1.6; }
-    .set-in {
-      margin: 2.4rem 0 0;
-      max-width: 34rem;
-      font-family: var(--serif);
-      font-size: 1.15rem;
-      font-style: italic;
-      line-height: 1.6;
-      color: var(--ink-soft);
-    }
-
-    /* ── Contact ── */
-    .contact { border-bottom: none; }
-    .contact-h {
-      margin: 0 0 clamp(1.75rem, 5vh, 2.5rem);
-      max-width: 32rem;
-      font-family: var(--serif);
-      font-weight: 400;
-      font-size: clamp(1.6rem, 1.2rem + 2vw, 2.5rem);
-      line-height: 1.14;
-      letter-spacing: -0.015em;
-    }
-    .contact-links {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 0.75rem 1.5rem;
-      font-family: var(--mono);
-      font-size: 0.82rem;
-      letter-spacing: 0.03em;
-    }
-    .contact-links a {
-      text-decoration: none;
-      color: var(--ink-soft);
-      border-bottom: 1px solid transparent;
-      padding-bottom: 2px;
-      transition: color 0.2s ease, border-color 0.2s ease;
-    }
-    .contact-links a:hover { color: var(--ink); border-color: var(--clay); }
-    .cta {
-      color: var(--paper) !important;
-      background: var(--ink);
-      padding: 0.7rem 1.3rem;
-      border-radius: 2px;
-      border: none !important;
-      transition: background 0.25s ease, transform 0.25s ease;
-    }
-    .cta:hover { background: var(--clay-deep); transform: translateY(-1px); }
-
-    /* ── Desktop refinements ── */
-    @media (min-width: 46rem) {
-      .craft-grid { grid-template-columns: repeat(3, 1fr); gap: 2rem; }
-      .entry { grid-template-columns: 2.6rem 1fr auto 1.5rem; }
-    }
-
-    /* True margin notes: only once there's room to the right of the column.
-       The asymmetric right rail is the page's one deliberate rhythm break. */
-    @media (min-width: 68rem) {
-      .stanza { position: relative; }
-      .note {
-        position: absolute;
-        top: 0.25rem;
-        left: calc(100% + 1.75rem);
-        width: 11rem;
-        max-width: none;
-        margin: 0;
+    /* ---- composed editorial layout on wider screens ------------------ */
+    @media (min-width: 48rem) {
+      .masthead__grid {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 17.5rem);
+        gap: clamp(2rem, 5vw, 3.5rem);
+        align-items: start;
       }
+      .masthead .masthead__name { font-size: clamp(2.9rem, 4.5vw, 3.7rem); }
+
+      .folio-section {
+        display: grid;
+        grid-template-columns: 8.5rem minmax(0, 1fr);
+        column-gap: clamp(2rem, 4vw, 3rem);
+        align-items: start;
+      }
+      .rail {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: .5rem;
+        margin: 0;
+        padding: .2rem 0 0;
+        border: 0;
+      }
+      .rail__tab { flex-direction: column; align-items: flex-start; gap: .45rem; }
+      .rail__tick { align-self: flex-start; }
+      .folio-body {
+        border-left: 1px solid var(--line);
+        padding-left: clamp(1.5rem, 3vw, 2.5rem);
+      }
+      /* re-anchor the hover accent to the body's own left rule */
+      .entry__link::before { left: calc(-1 * clamp(1.5rem, 3vw, 2.5rem)); width: 1px; }
     }
 
-    /* On narrow screens, drop the year column so titles keep room. */
-    @media (max-width: 30rem) {
-      .entry { grid-template-columns: 1.9rem 1fr auto; }
-      .entry-year { display: none; }
-    }
-
-    /* ── Reduced motion: everything static and visible ── */
-    @media (prefers-reduced-motion: reduce) {
-      [data-reveal] { opacity: 1 !important; transform: none !important; transition: none !important; }
-      .mark::after { transform: scaleX(1) !important; transition: none !important; }
-      .paper-light { display: none; }
-      .entry, .entry-arrow, .cta, .ref { transition: none !important; }
-      * { scroll-behavior: auto !important; }
+    @media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+      .entry__link::before { transition: transform var(--dur) var(--ease); }
     }
   </style>
-
-  <script>
-    // ── Motion, gated on prefers-reduced-motion ──
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    // 1) Scroll-reveal cadence, staggered per section group.
-    const revealEls = Array.from(document.querySelectorAll('[data-reveal]'));
-    if (reduce || !('IntersectionObserver' in window)) {
-      revealEls.forEach((el) => el.classList.add('shown'));
-    } else {
-      const io = new IntersectionObserver(
-        (entries, obs) => {
-          entries.forEach((entry) => {
-            if (!entry.isIntersecting) return;
-            const el = entry.target as HTMLElement;
-            // small stagger within a shared parent for a hand-dealt cadence
-            const siblings = Array.from(el.parentElement?.querySelectorAll(':scope > [data-reveal]') || []);
-            const i = Math.max(0, siblings.indexOf(el));
-            el.style.transitionDelay = `${Math.min(i, 6) * 70}ms`;
-            el.classList.add('shown');
-            obs.unobserve(el);
-          });
-        },
-        { rootMargin: '0px 0px -12% 0px', threshold: 0.15 }
-      );
-      revealEls.forEach((el) => io.observe(el));
-    }
-
-    // 2) Cursor-aware paper light — pointer:fine devices only, never on touch.
-    const light = document.querySelector('.paper-light') as HTMLElement | null;
-    const finePointer = window.matchMedia('(pointer: fine)').matches;
-    if (light && finePointer && !reduce) {
-      let raf = 0;
-      let x = 50, y = 30;
-      window.addEventListener(
-        'pointermove',
-        (e) => {
-          if (e.pointerType === 'touch') return;
-          x = (e.clientX / window.innerWidth) * 100;
-          y = (e.clientY / window.innerHeight) * 100;
-          if (!raf) {
-            raf = window.requestAnimationFrame(() => {
-              light.style.setProperty('--mx', x + '%');
-              light.style.setProperty('--my', y + '%');
-              light.classList.add('lit');
-              raf = 0;
-            });
-          }
-        },
-        { passive: true }
-      );
-      window.addEventListener('pointerleave', () => light.classList.remove('lit'));
-    }
-  </script>
 </Base>

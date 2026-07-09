@@ -68,34 +68,14 @@ const latestEpisodeNumber = episodes[0]?.data.episode ?? 0;
 
   <div class="page premium-homepage">
 
-    <!-- ───────────────────────── HERO ───────────────────────── -->
-    <header class="hero" id="top">
-      <p class="eyebrow" data-reveal>
-        <span class="tick" aria-hidden="true"></span>
-        Adrian Lumley — Product · AI · Enterprise
-      </p>
-
-      <h1 class="lede hero-title" data-reveal>
-        AI is easy to buy.
-        <span class="mark">Adoption is the work.</span>
-      </h1>
-
-      <p class="sub standfirst" data-reveal>
-        I run product where enterprise AI has to survive contact with real users.
-        Off the clock, I build small tools for an audience of one.
-      </p>
-
-      <div class="hero-meta" data-reveal>
-        <span>New York</span>
-        <span class="dot" aria-hidden="true"></span>
-        <span>40.71°N&nbsp;74.01°W</span>
-        <span class="dot" aria-hidden="true"></span>
-        <a href="#connect">Say hello</a>
-      </div>
-    </header>
+    <h1 class="sr-only">Adrian Lumley</h1>
 
       <!-- ─────────────────────── THESIS ─────────────────────── -->
       <section class="thesis thesis-open reveal" id="thesis" aria-label="Operating thesis">
+      <p class="eyebrow opening-eyebrow" data-reveal>
+        <span class="tick" aria-hidden="true"></span>
+        Adrian Lumley — Product · AI · Enterprise
+      </p>
       <div class="manuscript">
         <div class="stanza" data-reveal>
           <p class="para drop">
@@ -244,6 +224,7 @@ const latestEpisodeNumber = episodes[0]?.data.episode ?? 0;
     </section>
   </div>
   <style is:global>
+    html:has(.premium-home-shell),
     .premium-home-shell {
       /* Paper & ink */
       --paper:      #f6f2ea;
@@ -265,6 +246,24 @@ const latestEpisodeNumber = episodes[0]?.data.episode ?? 0;
                "Roboto Mono", monospace;
 
       --wrap: 44rem;
+    }
+
+    html:has(.premium-home-shell) {
+      background: var(--paper);
+      color-scheme: light;
+    }
+
+    html:has(.premium-home-shell) .site-header,
+    html:has(.premium-home-shell) footer {
+      background: var(--paper);
+      border-color: var(--rule);
+      color: var(--ink);
+    }
+
+    html:has(.premium-home-shell) .site-footer-inner,
+    html:has(.premium-home-shell) .site-header__nav-link,
+    html:has(.premium-home-shell) .site-header__mobile-link {
+      color: var(--ink-soft);
     }
 
     * { box-sizing: border-box; }
@@ -352,8 +351,11 @@ const latestEpisodeNumber = episodes[0]?.data.episode ?? 0;
 
     /* ───────────── HERO ───────────── */
     .hero {
-      padding: clamp(3.25rem, 10vh, 5.75rem) 0 clamp(1.75rem, 5vh, 2.5rem);
-      border-bottom: 1px solid var(--rule);
+      display: none;
+    }
+
+    .opening-eyebrow {
+      max-width: var(--wrap);
     }
 
     .eyebrow {

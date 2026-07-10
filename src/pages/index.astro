@@ -3,55 +3,439 @@ import Base from '../layouts/Base.astro';
 import Panel from '../components/Panel.astro';
 import LiveStatus from '../components/LiveStatus.astro';
 import SignalTrace from '../components/SignalTrace.astro';
-import { getEpisodes } from '../lib/content';
-import { padEpisode } from '../lib/format';
+import { getPublishedPosts, getEpisodes, postPath } from '../lib/content';
+import { formatMonthYear, padEpisode } from '../lib/format';
+
+// homepage: a filed dossier front page. an issue masthead (nameplate, lede,
+// and a bordered identity record with a file tab), then the real work filed
+// under numbered folio sections whose left rail is a composed tab carrying a
+// factual field note. everything reads off the global paper/ink/line/accent
+// tokens only, so night shift comes for free.
+
+const allWriting = await getPublishedPosts();
+const selectedWriting = allWriting.slice(0, 3);
+const latestWriting = selectedWriting[0];
+
+const labWork = [
+  { title: 'meeting cost', note: 'a real-time meeting price tag. add the room, hit start, watch it climb.', href: '/lab/meeting-cost/' },
+  { title: 'iron log', note: 'a workout tracker that runs on nothing: no accounts, no backend.', href: '/lab/iron-log/' },
+  { title: 'ink field', note: 'a living sumi-e study. tap the paper to pour, then save the print.', href: '/lab/ink-field/' },
+];
 
 const episodes = await getEpisodes('desc');
 const latestEpisodeNumber = episodes[0]?.data.episode ?? 0;
+
+const writingNote = latestWriting
+  ? `latest · ${formatMonthYear(latestWriting.data.date).toLowerCase()}`
+  : `${allWriting.length} on file`;
 ---
 
-<Base description="director of product at salesforce. before that, disney+, siriusxm, and ea. building ai systems hands-on on a mac mini in nyc." ogImage="/og/home.png">
-  <section class="reveal">
-    <h1 class="hero-title">i build software that helps without getting in the way.</h1>
-    <p class="hero-standfirst">
-      director of product at salesforce. before that, disney+, siriusxm, and ea. but the work i care about most happens at home, on a mac mini running an agent i built myself.
+<Base
+  description="Adrian Lumley is a product leader working where AI meets enterprise adoption."
+  ogImage="/og/home.png"
+>
+  <header class="masthead reveal">
+    <p class="folio">
+      <span class="home-kicker"><span class="home-kicker__tick" aria-hidden="true"></span>product · ai · enterprise</span>
+      <span class="folio__place">new york city</span>
     </p>
 
-    <div class="pillars">
-      <div>
-        <h2 class="pillar-title">the work</h2>
-        <p class="pillar-copy">products at real scale, with the numbers attached.</p>
-        <a class="touch-link" href="/work">see the work</a>
-      </div>
-      <div>
-        <h2 class="pillar-title">the building</h2>
-        <p class="pillar-copy">rogue: an agent i built. runs my ops, made this site. live.</p>
-        <a class="touch-link" href="/lab">open the lab</a>
-      </div>
-      <div>
-        <h2 class="pillar-title">the thinking</h2>
-        <p class="pillar-copy">writing on ai and enterprise, plus a fiction serial.</p>
-        <a class="touch-link" href="/signal-room">read signal room</a>
-      </div>
+    <h1 class="hero-title masthead__name">adrian lumley</h1>
+
+    <div class="masthead__grid">
+      <p class="masthead__lede">director of product at salesforce, working where ai meets enterprise adoption. builds the systems hands-on, then writes down what actually happened.</p>
+
+      <aside class="record" aria-label="on file">
+        <p class="record__tab">on file</p>
+        <dl class="ledger">
+          <div class="ledger__row">
+            <dt>now</dt>
+            <dd>director of product · salesforce</dd>
+          </div>
+          <div class="ledger__row">
+            <dt>previously</dt>
+            <dd>siriusxm · disney+ · ea</dd>
+          </div>
+          <div class="ledger__row">
+            <dt>work</dt>
+            <dd><a class="record__link touch-link" href="/work">case studies →</a></dd>
+          </div>
+        </dl>
+      </aside>
     </div>
+  </header>
 
-    <Panel id="instrument-strip" ariaLabel="rogue status" label="rogue · status" class="mb-8">
-      <SignalTrace />
-      <p class="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-xs text-[var(--panel-soft)]">
-        <LiveStatus />
-        <span aria-hidden="true">·</span>
-        <span>signal room ep {padEpisode(latestEpisodeNumber)} live</span>
-      </p>
-    </Panel>
-
-    <div class="cta-row">
-      <span class="cta-copy">building something in ai? i'd like to hear about it.</span>
-      <span class="plain-links" aria-label="contact links">
-        <a class="touch-link" href="/contact">email</a><span aria-hidden="true">·</span>
-        <a class="touch-link" href="https://www.linkedin.com/in/adrianlumley/" target="_blank" rel="noopener noreferrer">linkedin</a><span aria-hidden="true">·</span>
-        <a class="touch-link" href="https://github.com/prime3679" target="_blank" rel="noopener noreferrer">github</a><span aria-hidden="true">·</span>
-        <a class="touch-link" href="/about">more about me</a>
+  <section id="writing" class="folio-section reveal" aria-labelledby="writing-h">
+    <div class="rail">
+      <span class="rail__tab">
+        <span class="rail__tick" aria-hidden="true"></span>
+        <span class="rail__ord" aria-hidden="true">01</span>
+        <h2 id="writing-h" class="rail__label">writing</h2>
       </span>
+      <span class="rail__note">{writingNote}</span>
+    </div>
+    <div class="folio-body">
+      <ol class="entries">
+        {selectedWriting.map((post) => (
+          <li class="entry">
+            <a href={postPath(post.slug)} class="entry__link">
+              <span class="entry__head">
+                <span class="entry__title">{post.data.title}</span>
+                <span class="entry__meta">{formatMonthYear(post.data.date)}</span>
+              </span>
+              <span class="entry__note">{post.data.description}</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+      <a class="folio-more touch-link" href="/writing">all writing<span aria-hidden="true"> →</span></a>
     </div>
   </section>
+
+  <section id="lab" class="folio-section reveal" aria-labelledby="lab-h">
+    <div class="rail">
+      <span class="rail__tab">
+        <span class="rail__tick" aria-hidden="true"></span>
+        <span class="rail__ord" aria-hidden="true">02</span>
+        <h2 id="lab-h" class="rail__label">lab</h2>
+      </span>
+      <span class="rail__note">single-file</span>
+    </div>
+    <div class="folio-body">
+      <ol class="entries">
+        {labWork.map((item) => (
+          <li class="entry">
+            <a href={item.href} class="entry__link">
+              <span class="entry__head">
+                <span class="entry__title">{item.title}</span>
+                <span class="entry__meta" aria-hidden="true">↗</span>
+              </span>
+              <span class="entry__note">{item.note}</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+      <a class="folio-more touch-link" href="/lab">full lab<span aria-hidden="true"> →</span></a>
+    </div>
+  </section>
+
+  <section id="signal-room" class="folio-section reveal" aria-labelledby="signal-h">
+    <div class="rail">
+      <span class="rail__tab">
+        <span class="rail__tick" aria-hidden="true"></span>
+        <span class="rail__ord" aria-hidden="true">03</span>
+        <h2 id="signal-h" class="rail__label">signal room</h2>
+      </span>
+      <span class="rail__note">instrument</span>
+    </div>
+    <div class="folio-body">
+      <p class="folio-lede">a quiet instrument for rogue, the agent that runs behind the site. the line moves when it does.</p>
+      <Panel id="instrument-strip" class="signal-panel" ariaLabel="rogue status" label="rogue · status">
+        <SignalTrace />
+        <p class="signal-line">
+          <LiveStatus />
+          <span class="signal-line__sep" aria-hidden="true">·</span>
+          <a class="touch-link" href="/signal-room">ep {padEpisode(latestEpisodeNumber)} live<span aria-hidden="true"> →</span></a>
+        </p>
+      </Panel>
+    </div>
+  </section>
+
+  <section id="contact" class="folio-section reveal" aria-labelledby="contact-h">
+    <div class="rail">
+      <span class="rail__tab">
+        <span class="rail__tick" aria-hidden="true"></span>
+        <span class="rail__ord" aria-hidden="true">04</span>
+        <h2 id="contact-h" class="rail__label">contact</h2>
+      </span>
+      <span class="rail__note">open</span>
+    </div>
+    <div class="folio-body">
+      <p class="folio-lede">building something where ai has to earn its adoption? let's talk.</p>
+      <p class="plain-links contact-links">
+        <a class="touch-link" href="/contact">email</a>
+        <span aria-hidden="true">·</span>
+        <a class="touch-link" href="https://www.linkedin.com/in/adrianlumley/" target="_blank" rel="noopener noreferrer">linkedin</a>
+        <span aria-hidden="true">·</span>
+        <a class="touch-link" href="https://github.com/prime3679" target="_blank" rel="noopener noreferrer">github</a>
+      </p>
+    </div>
+  </section>
+
+  <style>
+    /* ---- issue masthead ---------------------------------------------- */
+    .masthead {
+      margin-bottom: clamp(var(--s6), 7vw, var(--s8));
+    }
+    .folio {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: .35rem 1rem;
+      margin: 0 0 clamp(var(--s5), 5vw, var(--s6));
+      padding-block: .8rem;
+      border-top: 1px solid var(--line-strong);
+      border-bottom: 1px solid var(--line);
+      color: var(--ink-soft);
+      font-family: var(--mono);
+      font-size: .6875rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .home-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: .6rem;
+    }
+    .home-kicker__tick {
+      display: inline-block;
+      width: 1.5rem;
+      height: 1px;
+      background: var(--accent);
+    }
+    .folio__place { color: var(--ink-soft); }
+
+    /* the nameplate keeps the global .hero-title responsive sizing (tuned so
+       the mobile name never swallows the first screen); this only refines the
+       dossier register: tighter measure, weight, and tracking. */
+    .masthead__name {
+      margin: 0 0 clamp(var(--s4), 3.5vw, var(--s5));
+      max-width: 14ch;
+      font-weight: 460;
+      line-height: 1.02;
+      letter-spacing: -.025em;
+    }
+
+    .masthead__grid { display: grid; gap: clamp(var(--s5), 5vw, var(--s6)); }
+    .masthead__lede {
+      max-width: 42ch;
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: clamp(1.1rem, 1.2vw + .9rem, 1.28rem);
+      line-height: 1.5;
+    }
+
+    /* the identity record: a bordered dossier card with a file tab. this is
+       the signature surface, so it carries a hair more contrast than the page. */
+    .record {
+      position: relative;
+      align-self: start;
+      padding: clamp(1.1rem, 3vw, 1.4rem);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      background: var(--paper-raised);
+    }
+    .record__tab {
+      margin: 0 0 .9rem;
+      padding-bottom: .7rem;
+      border-bottom: 1px solid var(--line);
+      color: var(--accent-ink);
+      font-family: var(--mono);
+      font-size: .625rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+    .ledger { margin: 0; display: grid; gap: .7rem; }
+    .ledger__row { display: grid; gap: .15rem; }
+    .ledger dt {
+      color: var(--ink-soft);
+      font-family: var(--mono);
+      font-size: .625rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      line-height: 1.4;
+    }
+    .ledger dd {
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: .8125rem;
+      line-height: 1.45;
+    }
+    .record__link { text-decoration: none; }
+    .record__link:hover { color: var(--ink); }
+
+    /* ---- numbered folio sections ------------------------------------- */
+    .folio-section { margin-top: clamp(var(--s6), 7vw, 3.25rem); }
+    .rail {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: var(--s5);
+      padding-bottom: .7rem;
+      border-bottom: 1px solid var(--line-strong);
+    }
+    .rail__tab { display: inline-flex; align-items: baseline; gap: .55rem; }
+    .rail__tick {
+      align-self: center;
+      width: .4rem;
+      height: .4rem;
+      background: var(--accent);
+    }
+    .rail__ord {
+      color: var(--accent-ink);
+      font-family: var(--mono);
+      font-size: .75rem;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: .04em;
+    }
+    .rail__label {
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: .8125rem;
+      font-weight: 500;
+      letter-spacing: .07em;
+      text-transform: lowercase;
+    }
+    .rail__note {
+      flex: 0 0 auto;
+      color: var(--ink-soft);
+      font-family: var(--mono);
+      font-size: .6875rem;
+      letter-spacing: .05em;
+      text-transform: lowercase;
+    }
+
+    .folio-lede {
+      max-width: var(--measure);
+      margin: 0 0 var(--s5);
+      color: var(--ink-soft);
+      font-family: var(--sans);
+      font-size: .96rem;
+      line-height: 1.6;
+    }
+
+    .entries { margin: 0; padding: 0; list-style: none; }
+    .entry { border-top: 1px solid var(--line); }
+    .entry:first-child { border-top: 0; }
+    .entry__link {
+      position: relative;
+      display: block;
+      padding: clamp(.85rem, 2.4vw, 1.15rem) 0 clamp(.85rem, 2.4vw, 1.15rem) 0;
+      text-decoration: none;
+    }
+    /* a hair of accent grows in from the left edge on hover: the filed item
+       being pulled from the stack. */
+    .entry__link::before {
+      content: '';
+      position: absolute;
+      left: -.9rem;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--accent);
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform var(--dur) var(--ease);
+    }
+    .entry__link:hover::before,
+    .entry__link:focus-visible::before { transform: scaleY(1); }
+    .entry__head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: .5rem 1rem;
+    }
+    .entry__title {
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: clamp(1.18rem, 1vw + 1rem, 1.42rem);
+      font-weight: 500;
+      line-height: 1.24;
+      letter-spacing: -.01em;
+      transition: color var(--dur) var(--ease);
+    }
+    .entry__meta {
+      flex: 0 0 auto;
+      color: var(--ink-soft);
+      font-family: var(--mono);
+      font-size: .7rem;
+      letter-spacing: .05em;
+      font-variant-numeric: tabular-nums;
+    }
+    .entry__note {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      margin-top: .4rem;
+      max-width: 62ch;
+      color: var(--ink-soft);
+      font-family: var(--sans);
+      font-size: .88rem;
+      line-height: 1.5;
+    }
+    .entry__link:hover .entry__title,
+    .entry__link:focus-visible .entry__title { color: var(--accent-ink); }
+
+    .folio-more {
+      display: inline-flex;
+      align-items: center;
+      margin-top: var(--s4);
+      color: var(--ink-soft);
+      font-family: var(--mono);
+      font-size: .72rem;
+      letter-spacing: .05em;
+      text-decoration: none;
+    }
+    .folio-more:hover { color: var(--ink); }
+
+    /* the instrument stays a quiet strip, not a headline block. the panel
+       root is rendered by Panel.astro, so reach it through the scoped body. */
+    .folio-body :global(.signal-panel) { max-width: 34rem; padding: 1.35rem; }
+    .folio-body :global(.signal-panel > div) { margin-bottom: 1.1rem; padding-bottom: 1.1rem; }
+    .signal-line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: .5rem;
+      margin: 0;
+      color: var(--panel-soft);
+      font-family: var(--mono);
+      font-size: .8125rem;
+    }
+    .signal-line__sep { color: var(--panel-line); }
+    .signal-line a { color: var(--panel-text); }
+    .contact-links { font-size: .95rem; }
+
+    /* ---- composed editorial layout on wider screens ------------------ */
+    @media (min-width: 48rem) {
+      .masthead__grid {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 17.5rem);
+        gap: clamp(2rem, 5vw, 3.5rem);
+        align-items: start;
+      }
+      .masthead .masthead__name { font-size: clamp(2.9rem, 4.5vw, 3.7rem); }
+
+      .folio-section {
+        display: grid;
+        grid-template-columns: 8.5rem minmax(0, 1fr);
+        column-gap: clamp(2rem, 4vw, 3rem);
+        align-items: start;
+      }
+      .rail {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: .5rem;
+        margin: 0;
+        padding: .2rem 0 0;
+        border: 0;
+      }
+      .rail__tab { flex-direction: column; align-items: flex-start; gap: .45rem; }
+      .rail__tick { align-self: flex-start; }
+      .folio-body {
+        border-left: 1px solid var(--line);
+        padding-left: clamp(1.5rem, 3vw, 2.5rem);
+      }
+      /* re-anchor the hover accent to the body's own left rule */
+      .entry__link::before { left: calc(-1 * clamp(1.5rem, 3vw, 2.5rem)); width: 1px; }
+    }
+
+    @media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+      .entry__link::before { transition: transform var(--dur) var(--ease); }
+    }
+  </style>
 </Base>

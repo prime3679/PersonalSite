@@ -1,7 +1,6 @@
 ---
-// night shift toggle, named for signal room episode 01. lives in the
-// footer: the 320px header has no room to spare and the wordmark must
-// never wrap.
+// night shift toggle, named for signal room episode 01. used in the
+// header and footer; all instances sync through the shared script below.
 ---
 
 <button type="button" class="theme-toggle" data-theme-toggle aria-pressed="false">night shift</button>
@@ -46,5 +45,6 @@
     min-height: 32px;
   }
   .theme-toggle:hover { border-color: var(--accent); color: var(--ink); }
+  .theme-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
   .theme-toggle[aria-pressed="true"] { border-color: var(--accent); color: var(--accent-ink); }
 </style>

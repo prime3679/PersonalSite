@@ -1,0 +1,7 @@
+name = "adrianlumley-co-www-redirect"
+main = "src/www-redirect.js"
+compatibility_date = "2026-07-09"
+
+routes = [
+  "www.adrianlumley.co/*",
+]

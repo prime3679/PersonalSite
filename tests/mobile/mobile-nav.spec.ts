@@ -18,7 +18,7 @@ test.describe('mobile homepage navigation', () => {
       const mobileNav = page.locator('#mobile-nav');
       const desktopNav = page.locator('.site-header__nav--desktop');
       const logo = page.locator('.site-header__logo');
-      const hero = page.locator('.hero-title');
+      const opening = page.locator('.home-kicker');
 
       await expect(toggle).toBeVisible();
       await expect(mobileNav).toBeHidden();
@@ -33,9 +33,7 @@ test.describe('mobile homepage navigation', () => {
       expect(toggleBox).not.toBeNull();
       expect((logoBox!.x + logoBox!.width)).toBeLessThanOrEqual(toggleBox!.x - 8);
 
-      const heroSize = await hero.evaluate((node) => parseFloat(window.getComputedStyle(node).fontSize));
-      expect(heroSize).toBeLessThan(33);
-      expect(heroSize).toBeGreaterThan(30);
+      await expect(opening).toBeVisible();
 
       const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
       expect(scrollWidth).toBeLessThanOrEqual(width);

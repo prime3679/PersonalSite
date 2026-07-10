@@ -1,5 +1,6 @@
 ---
 import { navItems } from '../data/nav';
+import ThemeToggle from './ThemeToggle.astro';
 
 const pathname = Astro.url.pathname;
 const normalizePath = (path: string) => path.endsWith('/') && path !== '/' ? path.slice(0, -1) : path;
@@ -17,31 +18,37 @@ const isCurrentPage = (href: string) => currentPath === normalizePath(href);
   <div class="site-header__bar" data-header-bar>
     <a href="/" class="site-header__wordmark site-header__logo">adrian lumley</a>
 
-    <nav class="site-header__desktop-nav" data-header-desktop-nav aria-label="Primary">
-      {navItems.map((item) => (
-        <a
-          href={item.href}
-          aria-current={isCurrentPage(item.href) ? 'page' : undefined}
-          class:list={['site-header__nav-link', isActive(item.href) && 'is-active']}
-        >
-          {item.label}
-        </a>
-      ))}
-    </nav>
+    <div class="site-header__actions">
+      <nav class="site-header__desktop-nav" data-header-desktop-nav aria-label="Primary">
+        {navItems.map((item) => (
+          <a
+            href={item.href}
+            aria-current={isCurrentPage(item.href) ? 'page' : undefined}
+            class:list={['site-header__nav-link', isActive(item.href) && 'is-active']}
+          >
+            {item.label}
+          </a>
+        ))}
+      </nav>
 
-    <button
-      id="menu-toggle"
-      class="site-header__menu-toggle"
-      data-header-menu-toggle
-      type="button"
-      aria-label="Open site menu"
-      aria-expanded="false"
-      aria-controls="mobile-nav"
-    >
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-    </button>
+      <div class="site-header__theme-toggle" aria-label="Theme">
+        <ThemeToggle />
+      </div>
+
+      <button
+        id="menu-toggle"
+        class="site-header__menu-toggle"
+        data-header-menu-toggle
+        type="button"
+        aria-label="Open site menu"
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+      >
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </button>
+    </div>
   </div>
 
   <nav
@@ -192,6 +199,29 @@ const isCurrentPage = (href: string) => currentPath === normalizePath(href);
     white-space: nowrap;
   }
 
+  .site-header__actions {
+    display: flex;
+    min-width: 0;
+    flex: 0 1 auto;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .site-header__theme-toggle {
+    display: inline-flex;
+    flex: 0 0 auto;
+  }
+
+  .site-header :global(.theme-toggle) {
+    min-height: 40px;
+    border-radius: 999px;
+    padding: 0 .7rem;
+    background: color-mix(in srgb, var(--paper-raised) 68%, transparent);
+    font-size: .64rem;
+    white-space: nowrap;
+  }
+
   .site-header__nav-link,
   .site-header__mobile-link {
     color: var(--ink-soft);
@@ -335,6 +365,10 @@ const isCurrentPage = (href: string) => currentPath === normalizePath(href);
 
     .site-header__desktop-nav {
       display: flex;
+    }
+
+    .site-header__actions {
+      gap: 14px;
     }
 
     .site-header__menu-toggle,

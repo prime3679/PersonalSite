@@ -22,7 +22,7 @@ test.describe('Base Layout Meta Tags', () => {
 
     // Description
     const description = await page.locator('meta[name="description"]').getAttribute('content');
-    expect(description).toBe('director of product at salesforce. before that, disney+, siriusxm, and ea. building ai systems hands-on on a mac mini in nyc.');
+    expect(description).toBe('Adrian Lumley is a product leader working where AI meets enterprise adoption.');
 
     // OG Title
     const ogTitle = await page.locator('meta[property="og:title"]').getAttribute('content');
@@ -30,7 +30,7 @@ test.describe('Base Layout Meta Tags', () => {
 
     // OG Description
     const ogDescription = await page.locator('meta[property="og:description"]').getAttribute('content');
-    expect(ogDescription).toBe('director of product at salesforce. before that, disney+, siriusxm, and ea. building ai systems hands-on on a mac mini in nyc.');
+    expect(ogDescription).toBe('Adrian Lumley is a product leader working where AI meets enterprise adoption.');
 
     // OG Image (home uses a custom generated card at /og/home.png)
     const ogImage = await page.locator('meta[property="og:image"]').getAttribute('content');

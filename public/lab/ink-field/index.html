@@ -57,12 +57,11 @@
   .console{
     position:fixed;z-index:4;left:clamp(14px,3vw,28px);top:clamp(14px,3vw,28px);
     width:min(300px,calc(100vw - 28px));
-    background:rgba(239,229,209,.82);
-    border:1px solid var(--line);
-    border-radius:14px;
-    padding:18px 18px 16px;
-    backdrop-filter:blur(10px);
-    box-shadow:0 18px 50px -30px rgba(27,23,18,.7);
+    background:var(--paper);
+    border:1px solid rgba(27,23,18,.22);
+    border-radius:6px;
+    padding:16px 16px 14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.45) inset,0 2px 8px -6px rgba(27,23,18,.62);
     transition:opacity .35s ease,transform .35s ease;
   }
   .console[hidden]{display:none}
@@ -86,7 +85,7 @@
   .buttons{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
   .btn{
     font-family:var(--sans);font-size:.76rem;letter-spacing:.01em;
-    padding:8px 13px;border-radius:999px;border:1px solid var(--ink);
+    padding:7px 10px;border-radius:6px;border:1px solid var(--ink);
     background:var(--ink);color:var(--paper);cursor:pointer;text-decoration:none;
     transition:transform .15s ease,background .2s ease,color .2s ease;
   }
@@ -97,9 +96,10 @@
   /* reveal handle when the console is hidden */
   .reveal{
     position:fixed;z-index:4;left:clamp(14px,3vw,28px);top:clamp(14px,3vw,28px);
-    font-family:var(--sans);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;
-    padding:9px 14px;border-radius:999px;border:1px solid var(--line);
-    background:rgba(239,229,209,.82);color:var(--ink);cursor:pointer;backdrop-filter:blur(10px);
+    font-family:var(--sans);font-size:.76rem;letter-spacing:.01em;
+    padding:7px 10px;border-radius:6px;border:1px solid rgba(27,23,18,.22);
+    background:var(--paper);color:var(--ink);cursor:pointer;
+    box-shadow:0 1px 0 rgba(255,255,255,.45) inset,0 2px 8px -6px rgba(27,23,18,.62);
   }
   .reveal[hidden]{display:none}
 
@@ -112,6 +112,10 @@
   .hint.gone{opacity:0}
 
   :focus-visible{outline:2px solid var(--clay);outline-offset:3px}
+
+  @media (max-width: 600px){
+    .signature{display:none}
+  }
 
   @media (prefers-reduced-motion: reduce){
     .overture{animation:none;opacity:0;visibility:hidden}

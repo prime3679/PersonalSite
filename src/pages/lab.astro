@@ -1,13 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
 import PageIntro from '../components/PageIntro.astro';
-import StatTile from '../components/StatTile.astro';
-import LiveStatus from '../components/LiveStatus.astro';
-import { daysRunning } from '../data/rogue';
+import { ROGUE_EPOCH } from '../data/rogue';
 
-// epoch-derived at build time; the LiveStatus script corrects it client side
-// so the number never goes stale between deploys.
-const rogueDays = daysRunning(new Date());
+const rogueSince = new Date(`${ROGUE_EPOCH}T00:00:00Z`)
+  .toLocaleString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' })
+  .toLowerCase();
 const toys = [
   { label: 'the crazy wall', href: '/lab/crazy-wall/' },
   { label: 'fable field recorder', href: '/lab/fable-field-recorder/' },
@@ -28,10 +26,7 @@ const metaLabel = 'font-mono text-xs tracking-[.08em] text-[var(--ink-soft)]';
     <h2 class="lab-lede mt-2">rogue</h2>
     <p class="ui-copy mt-4" style="max-width:var(--measure)">the agent i actually use. lives on a mac mini, wired to claude and codex, runs the ops i used to do by hand, and builds things, this site included. signal room is fiction about a system like it.</p>
     <p class="body-copy mt-3 italic" style="max-width:var(--measure)">i ran a stack of agents and kept the combination that worked.</p>
-    <div class="readouts mt-6" aria-label="rogue stats">
-      <StatTile value={rogueDays} label="days running" />
-    </div>
-    <p class="mt-4 text-[var(--ink-soft)]"><LiveStatus /></p>
+    <p class="body-copy mt-3 text-[var(--ink-soft)]" style="max-width:var(--measure)">running since {rogueSince}, not as a demo but as the local system i keep using.</p>
     <p class="plain-links mt-5"><a href="/signal-room">read signal room</a></p>
   </section>
 

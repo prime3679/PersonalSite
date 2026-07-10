@@ -1,95 +1,60 @@
 ---
 import Base from '../layouts/Base.astro';
 
-const auditItems = [
-  'spend breakdown by model and task type',
-  'routing recommendations with projected savings',
-  'implementation guidance, no vendor lock-in'
+const services = [
+  {
+    title: 'ai cost audit',
+    availability: 'by request',
+    blurb:
+      'review your openai or anthropic usage and identify where multi-model routing would reduce spend. most teams overpay because they route everything through their most expensive model. the fix is usually straightforward.',
+    items: [
+      'spend breakdown by model and task type',
+      'routing recommendations with projected savings',
+      'implementation guidance, no vendor lock-in',
+    ],
+  },
+  {
+    title: 'product advisory',
+    availability: 'selective',
+    blurb:
+      "occasional advisory for early-stage teams building ai-native products. particularly useful if you're navigating 0-to-1, figuring out what to measure, or need someone who's actually shipped at scale to pressure-test your thinking.",
+    items: [
+      'product strategy and roadmap clarity',
+      'team and org design for ai products',
+      'investor narrative and positioning',
+    ],
+  },
 ];
-
-const advisoryItems = [
-  'product strategy and roadmap clarity',
-  'team and org design for ai products',
-  'investor narrative and positioning'
-];
+const metaLabel = 'font-mono text-xs tracking-[.08em] text-[var(--ink-soft)]';
 ---
 
 <Base
   title="services"
-  description="AI cost optimization consulting. Reduce your API spend without the enterprise pricing."
+  description="occasional consulting on ai cost optimization and product strategy, from real experience cutting a production ai stack 70%."
 >
-
-  <!-- Intro -->
-  <section class="mb-12 fade-in">
-    <h1 class="text-2xl font-normal mb-3">services</h1>
-    <p class="text-sm leading-relaxed text-foreground/60">
+  <header class="page-header reveal">
+    <h1 class="page-title">services</h1>
+    <p class="page-standfirst">
       occasional consulting on ai cost optimization and product strategy.
       based on real experience cutting a production ai stack 70% in cost.
     </p>
-  </section>
+  </header>
 
-  <!-- Services -->
-  <section class="space-y-4 fade-in">
+  <div>
+    {services.map((svc, index) => (
+      <article class:list={['reveal', index > 0 && 'rule-top mt-16 pt-16']}>
+        <p class={metaLabel}>{svc.availability}</p>
+        <h2 class="card-title mt-2">{svc.title}</h2>
+        <p class="ui-copy mt-3" style="max-width:var(--measure)">{svc.blurb}</p>
+        <ul class="list-lines mt-6">
+          {svc.items.map((item) => <li>{item}</li>)}
+        </ul>
+        <p class="plain-links mt-6"><a href="/contact">get in touch</a></p>
+      </article>
+    ))}
+  </div>
 
-    <!-- AI Cost Audit -->
-    <article class="border border-foreground/10 rounded-xl p-6">
-      <div class="flex items-start justify-between mb-3">
-        <h2 class="text-base font-medium">ai cost audit</h2>
-        <span class="text-xs px-2 py-0.5 rounded border border-foreground/10 text-muted-foreground shrink-0 ml-4">by request</span>
-      </div>
-      <p class="text-sm leading-relaxed text-foreground/70 mb-5">
-        review your openai or anthropic usage and identify where multi-model routing
-        would reduce spend. most teams overpay because they route everything through
-        their most expensive model. the fix is usually straightforward.
-      </p>
-      <div class="mb-5 space-y-1.5">
-        {auditItems.map(item => (
-          <div class="flex items-start gap-2 text-sm text-foreground/60">
-            <span class="mt-0.5 shrink-0">→</span>
-            <span>{item}</span>
-          </div>
-        ))}
-      </div>
-      <a
-        href="/contact"
-        class="inline-block w-full text-center py-2.5 px-4 text-sm border border-foreground/20 rounded hover:border-foreground/60 transition-colors duration-200"
-      >
-        get in touch
-      </a>
-    </article>
-
-    <!-- Product Advisory -->
-    <article class="border border-foreground/10 rounded-xl p-6">
-      <div class="flex items-start justify-between mb-3">
-        <h2 class="text-base font-medium">product advisory</h2>
-        <span class="text-xs px-2 py-0.5 rounded border border-foreground/10 text-muted-foreground shrink-0 ml-4">selective</span>
-      </div>
-      <p class="text-sm leading-relaxed text-foreground/70 mb-5">
-        occasional advisory for early-stage teams building ai-native products.
-        particularly useful if you're navigating 0-to-1, figuring out what to measure,
-        or need someone who's actually shipped at scale to pressure-test your thinking.
-      </p>
-      <div class="mb-5 space-y-1.5">
-        {advisoryItems.map(item => (
-          <div class="flex items-start gap-2 text-sm text-foreground/60">
-            <span class="mt-0.5 shrink-0">→</span>
-            <span>{item}</span>
-          </div>
-        ))}
-      </div>
-      <a
-        href="/contact"
-        class="inline-block w-full text-center py-2.5 px-4 text-sm border border-foreground/20 rounded hover:border-foreground/60 transition-colors duration-200"
-      >
-        get in touch
-      </a>
-    </article>
-
-  </section>
-
-  <!-- Footer note -->
-  <p class="text-xs text-muted-foreground mt-10 fade-in">
+  <p class="ui-copy rule-top mt-16 pt-8 reveal" style="max-width:var(--measure)">
     i take on a limited number of projects. if the fit is right, i'll say yes.
   </p>
-
 </Base>

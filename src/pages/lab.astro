@@ -17,43 +17,36 @@ const toys = [
   { label: 'chaos garden', href: '/lab/chaos-garden/' },
   { label: 'meeting price tag', href: '/lab/meeting-cost/' },
 ];
+const metaLabel = 'font-mono text-xs tracking-[.08em] text-[var(--ink-soft)]';
 ---
 
 <Base title="lab" description="things i'm building. not a portfolio, an honest record of what's running and what survived contact with reality.">
   <PageIntro title="lab" standfirst="things i'm building. not a portfolio, an honest record of what's running, what's in progress, and what didn't survive contact with reality." />
 
-  <section class="reveal">
-    <article class="card" id="rogue">
-      <div class="card-head">
-        <h2 class="card-title">rogue</h2>
-        <span class="tag">active</span>
-      </div>
-      <p class="card-copy">the agent i actually use. lives on a mac mini, wired to claude and codex, runs the ops i used to do by hand, and builds things, this site included. signal room is fiction about a system like it.</p>
-      <p class="card-copy card-note">i ran a stack of agents and kept the combination that worked.</p>
-      <div class="readouts" aria-label="rogue stats">
-        <StatTile value={rogueDays} label="days running" />
-      </div>
-      <p class="mt-5 text-[var(--ink-soft)]"><LiveStatus /></p>
-      <a href="/signal-room">read signal room</a>
-    </article>
+  <section class="reveal" id="rogue">
+    <p class={metaLabel}>flagship</p>
+    <h2 class="lab-lede mt-2">rogue</h2>
+    <p class="ui-copy mt-4" style="max-width:var(--measure)">the agent i actually use. lives on a mac mini, wired to claude and codex, runs the ops i used to do by hand, and builds things, this site included. signal room is fiction about a system like it.</p>
+    <p class="body-copy mt-3 italic" style="max-width:var(--measure)">i ran a stack of agents and kept the combination that worked.</p>
+    <div class="readouts mt-6" aria-label="rogue stats">
+      <StatTile value={rogueDays} label="days running" />
+    </div>
+    <p class="mt-4 text-[var(--ink-soft)]"><LiveStatus /></p>
+    <p class="plain-links mt-5"><a href="/signal-room">read signal room</a></p>
   </section>
 
-  <section class="mt-16 reveal" id="ink-field">
-    <article class="card">
-      <div class="card-head">
-        <h2 class="card-title">ink field</h2>
-        <span class="tag">toy</span>
-      </div>
-      <p class="card-copy">a living sumi-e study. sumi ink pours onto warm bone paper and drifts through a seeded noise field, with rare embers of clay. tap the paper to pour, then save the print. it runs on nothing but a single html file.</p>
-      <p class="plain-links">
-        <a href="/lab/ink-field/">open</a>
-        <span aria-hidden="true">·</span>
-        <a href="https://github.com/prime3679/ink-field">source</a>
-      </p>
-    </article>
+  <section class="reveal rule-top mt-16 pt-16" id="ink-field">
+    <p class={metaLabel}>toy</p>
+    <h2 class="card-title mt-2">ink field</h2>
+    <p class="ui-copy mt-3" style="max-width:var(--measure)">a living sumi-e study. sumi ink pours onto warm bone paper and drifts through a seeded noise field, with rare embers of clay. tap the paper to pour, then save the print. it runs on nothing but a single html file.</p>
+    <p class="plain-links mt-4">
+      <a href="/lab/ink-field/">open</a>
+      <span aria-hidden="true">·</span>
+      <a href="https://github.com/prime3679/ink-field">source</a>
+    </p>
   </section>
 
-  <section class="mt-16 reveal" id="also-built">
+  <section class="reveal rule-top mt-16 pt-16" id="also-built">
     <h2 class="section-title">also built</h2>
     <p class="plain-links">
       {toys.map((toy, index) => (
@@ -65,19 +58,14 @@ const toys = [
     </p>
   </section>
 
-  <section class="mt-16 reveal" id="feedback-gate">
-    <article class="card">
-      <div class="card-head">
-        <h2 class="card-title">feedback gate</h2>
-        <span class="tag">feedback</span>
-      </div>
-      <p class="card-copy">the claim of this page is simple: i can turn ambiguity into a working personal operating system with taste, restraint, and receipts.</p>
-      <p class="card-copy card-note">the question worth answering is not whether the page is impressive. it is what the page makes you trust me to build.</p>
-      <p class="plain-links">
-        <a href="/contact">send the sentence</a>
-        <span aria-hidden="true">·</span>
-        <span>what did this make you believe i am good at?</span>
-      </p>
-    </article>
+  <section class="reveal rule-top mt-16 pt-16" id="feedback-gate">
+    <p class={metaLabel}>feedback</p>
+    <p class="body-copy mt-3" style="max-width:var(--measure)">the claim of this page is simple: i can turn ambiguity into a working personal operating system with taste, restraint, and receipts.</p>
+    <p class="ui-copy mt-3" style="max-width:var(--measure)">the question worth answering is not whether the page is impressive. it is what the page makes you trust me to build.</p>
+    <p class="plain-links mt-5">
+      <a href="/contact">send the sentence</a>
+      <span aria-hidden="true">·</span>
+      <span>what did this make you believe i am good at?</span>
+    </p>
   </section>
 </Base>

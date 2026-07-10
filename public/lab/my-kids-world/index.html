@@ -8,680 +8,227 @@
   <style>
     :root {
       color-scheme: light;
-      --sky: #fff9ef;
-      --sky-glow: #ffe9c9;
-      --grass: #f4ffe0;
-      --panel: rgba(255, 253, 247, 0.9);
-      --panel-strong: rgba(255, 249, 238, 0.98);
-      --line: rgba(157, 111, 62, 0.16);
-      --line-strong: rgba(157, 111, 62, 0.28);
-      --text: #5a3a22;
-      --muted: #8d6541;
-      --peach: #ffd7b5;
-      --apricot: #ffc592;
-      --rose: #ffb7c8;
-      --lavender: #d7c8ff;
-      --mint: #c8f2c0;
-      --butter: #ffe99e;
-      --pond: #bfe9ff;
-      --shadow: 0 18px 40px rgba(182, 122, 73, 0.16);
-      --radius-xl: 34px;
-      --radius-lg: 28px;
-      --radius-md: 22px;
+      --paper: #fbf3e2;
+      --card: #fffaf0;
+      --ink: #4a3324;
+      --muted: #8a6c50;
+      --line: #e7d7bd;
+      --line-strong: #d9c3a2;
+      --accent: #dd8a1f;
+      --accent-ink: #a5620f;
+      --accent-soft: #f7e5c6;
+      --radius: 18px;
     }
 
     * { box-sizing: border-box; }
     html, body {
       margin: 0;
       min-height: 100%;
-      font-family: "Avenir Next", "Nunito", "Trebuchet MS", ui-rounded, system-ui, sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(255, 213, 158, 0.8), transparent 28%),
-        radial-gradient(circle at top right, rgba(215, 200, 255, 0.55), transparent 25%),
-        radial-gradient(circle at bottom center, rgba(200, 242, 192, 0.85), transparent 30%),
-        linear-gradient(180deg, #fffaf2 0%, #fff4e6 48%, #f4ffe5 100%);
-    }
-
-    body::before,
-    body::after {
-      content: "";
-      position: fixed;
-      inset: auto;
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
-      filter: blur(30px);
-      opacity: 0.45;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    body::before {
-      left: -40px;
-      bottom: 80px;
-      background: rgba(255, 183, 200, 0.7);
-    }
-
-    body::after {
-      right: -20px;
-      top: 90px;
-      background: rgba(191, 233, 255, 0.75);
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Nunito", "Avenir Next", "Trebuchet MS", ui-rounded, system-ui, sans-serif;
+      font-size: 18px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
     }
 
     .page {
-      position: relative;
-      z-index: 1;
-      width: min(100%, 1080px);
+      width: min(100%, 860px);
       margin: 0 auto;
-      padding: max(18px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
+      padding: max(20px, env(safe-area-inset-top)) 18px max(28px, env(safe-area-inset-bottom));
     }
 
-    .hero-shell {
-      position: relative;
-      overflow: hidden;
-      border-radius: var(--radius-xl);
-      border: 1px solid var(--line);
-      background:
-        radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.9), transparent 24%),
-        linear-gradient(180deg, rgba(255, 248, 237, 0.96), rgba(252, 255, 246, 0.96));
-      box-shadow: var(--shadow);
-      padding: 22px;
-      margin-bottom: 18px;
-    }
-
-    .hero-shell::before {
-      content: "";
-      position: absolute;
-      inset: auto -8% -60px;
-      height: 150px;
-      background: radial-gradient(circle, rgba(200, 242, 192, 0.95), transparent 67%);
-      pointer-events: none;
-    }
-
-    .hero-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 18px;
-      flex-wrap: wrap;
-    }
-
-    .kicker {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 14px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.76);
-      border: 1px solid rgba(157, 111, 62, 0.12);
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
+    .intro { margin-bottom: 4px; }
     h1 {
-      margin: 14px 0 10px;
-      font-size: clamp(2.55rem, 7vw, 4.75rem);
-      line-height: 0.92;
-      letter-spacing: -0.06em;
-      max-width: 8ch;
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 6vw, 2.9rem);
+      line-height: 1.02;
+      letter-spacing: -0.02em;
     }
-
-    .hero-copy {
-      max-width: 34rem;
-    }
-
-    .hero-copy p {
+    .lede {
       margin: 0;
+      max-width: 42ch;
       color: var(--muted);
-      font-size: 17px;
-      line-height: 1.55;
-    }
-
-    .hero-badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.78);
-      border: 1px solid rgba(157, 111, 62, 0.12);
-      color: var(--text);
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    .little-world {
-      min-width: 240px;
-      padding: 16px;
-      border-radius: 28px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.84), rgba(255,244,228,0.9));
-      border: 1px solid rgba(157, 111, 62, 0.12);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.9);
-    }
-
-    .little-world .label {
-      color: var(--muted);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-weight: 800;
-      margin-bottom: 10px;
-    }
-
-    .friends {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      font-size: 28px;
-      margin-bottom: 10px;
-    }
-
-    .little-world p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.45;
-      max-width: 20ch;
-    }
-
-    .stage {
-      position: relative;
-      display: grid;
-      grid-template-columns: minmax(0, 1.35fr) minmax(270px, 0.9fr);
-      gap: 16px;
-      margin-bottom: 18px;
-    }
-
-    .story-panel,
-    .feedback-panel {
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--line);
-      background: var(--panel);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-    }
-
-    .story-panel {
-      padding: 18px;
-      overflow: hidden;
-      position: relative;
-      background:
-        radial-gradient(circle at top right, rgba(255, 233, 158, 0.5), transparent 30%),
-        linear-gradient(180deg, rgba(255, 251, 243, 0.94), rgba(253, 255, 248, 0.95));
-    }
-
-    .story-panel::after {
-      content: "";
-      position: absolute;
-      right: -30px;
-      bottom: -30px;
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255, 183, 200, 0.28), transparent 68%);
-      pointer-events: none;
-    }
-
-    .story-kicker {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.72);
-      border: 1px solid rgba(157, 111, 62, 0.1);
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    .prompt-title {
-      margin: 14px 0 6px;
-      font-size: clamp(1.75rem, 4vw, 2.45rem);
-      letter-spacing: -0.05em;
-    }
-
-    .prompt-text {
-      margin: 0;
-      font-size: 16px;
-      line-height: 1.55;
-      color: var(--muted);
-      max-width: 36rem;
-    }
-
-    .actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 18px;
-    }
-
-    button {
-      appearance: none;
-      border: 0;
-      cursor: pointer;
-      font: inherit;
-      transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
-    }
-
-    .pill-btn {
-      border-radius: 999px;
-      padding: 14px 18px;
-      font-size: 15px;
-      font-weight: 800;
-      color: #6d421f;
-      background: linear-gradient(180deg, var(--butter), #ffd975);
-      box-shadow: 0 10px 24px rgba(255, 201, 90, 0.28);
-    }
-
-    .pill-btn.secondary {
-      color: var(--text);
-      background: rgba(255,255,255,0.72);
-      border: 1px solid rgba(157, 111, 62, 0.14);
-      box-shadow: none;
-    }
-
-    .pill-btn:active,
-    .card:active {
-      transform: scale(0.97);
-    }
-
-    .tiny-steps {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .tiny-step {
-      padding: 10px 12px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.68);
-      border: 1px solid rgba(157, 111, 62, 0.12);
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .feedback-panel {
-      padding: 18px;
-      display: grid;
-      gap: 14px;
-      align-content: start;
-      background:
-        radial-gradient(circle at top, rgba(191,233,255,0.48), transparent 32%),
-        linear-gradient(180deg, rgba(255, 252, 245, 0.94), rgba(245, 255, 247, 0.95));
-    }
-
-    .feedback-card {
-      padding: 16px;
-      border-radius: 24px;
-      background: rgba(255,255,255,0.74);
-      border: 1px solid rgba(157, 111, 62, 0.12);
-    }
-
-    .feedback-icon {
-      width: 68px;
-      height: 68px;
-      border-radius: 24px;
-      display: grid;
-      place-items: center;
-      font-size: 34px;
-      background: linear-gradient(180deg, rgba(255, 215, 181, 0.85), rgba(255, 183, 200, 0.82));
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
-      transform-origin: center;
-      margin-bottom: 14px;
-    }
-
-    .feedback-card h2 {
-      margin: 0;
-      font-size: 24px;
-      letter-spacing: -0.04em;
-    }
-
-    .feedback-card p {
-      margin: 8px 0 0;
-      color: var(--muted);
-      font-size: 15px;
+      font-size: 1.0625rem;
       line-height: 1.5;
     }
 
-    .mode-chip {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: fit-content;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(200, 242, 192, 0.65);
-      border: 1px solid rgba(109, 163, 91, 0.22);
-      color: #547642;
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 10px;
-    }
-
-    .scoreboard {
+    .bar {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 20px;
+      align-items: start;
+      margin-top: 22px;
+      padding: 20px 0 22px;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
     }
-
-    .score-pill {
-      padding: 12px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.72);
-      border: 1px solid rgba(157, 111, 62, 0.12);
+    .mode {
+      margin: 0 0 6px;
+      color: var(--accent-ink);
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
     }
-
-    .score-pill .small {
-      display: block;
-      font-size: 12px;
+    .prompt-title {
+      margin: 0 0 6px;
+      font-size: clamp(1.4rem, 3.6vw, 1.9rem);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+    }
+    .prompt-text {
+      margin: 0;
+      max-width: 34ch;
       color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+      font-size: 1rem;
+      line-height: 1.45;
+    }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+
+    button { appearance: none; border: 0; cursor: pointer; font: inherit; }
+    .btn {
+      border-radius: 12px;
+      padding: 13px 18px;
+      font-size: 1rem;
       font-weight: 800;
-      margin-bottom: 6px;
+      color: #3a2716;
+      background: var(--accent);
+      transition: transform 0.14s ease, background 0.14s ease, border-color 0.14s ease;
     }
-
-    .score-pill strong {
-      font-size: 20px;
-      letter-spacing: -0.04em;
+    .btn.ghost {
+      background: transparent;
+      color: var(--ink);
+      border: 1.5px solid var(--line-strong);
+      font-weight: 700;
     }
+    .btn:active { transform: scale(0.97); }
+    .btn:focus-visible, .card:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 
-    .cards-wrap {
+    .react { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: center; }
+    .burst { font-size: 44px; line-height: 1; }
+    .feedback-title { margin: 0; font-size: 1.15rem; letter-spacing: -0.01em; }
+    .feedback-text { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; line-height: 1.4; }
+    .tallies { grid-column: 1 / -1; margin: 12px 0 0; color: var(--muted); font-size: 0.85rem; font-weight: 700; }
+    .tallies span { color: var(--ink); }
+
+    .grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 14px;
+      margin-top: 22px;
     }
-
     .card {
       position: relative;
-      min-height: 210px;
-      padding: 18px;
-      border-radius: 30px;
-      text-align: left;
-      color: var(--text);
-      border: 1px solid rgba(157, 111, 62, 0.14);
-      box-shadow: 0 16px 28px rgba(182, 122, 73, 0.13), inset 0 1px 0 rgba(255,255,255,0.75);
-      overflow: hidden;
-      isolation: isolate;
-      transform: translateY(0);
-      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 20px 32px rgba(182, 122, 73, 0.16), inset 0 1px 0 rgba(255,255,255,0.8);
-    }
-
-    .card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(255,255,255,0.45), rgba(255,255,255,0.1));
-      z-index: -2;
-    }
-
-    .card::after {
-      content: "";
-      position: absolute;
-      inset: auto -20px -28px auto;
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.25);
-      z-index: -1;
-    }
-
-    .card.active {
-      animation: hop 0.45s ease;
-      border-color: rgba(121, 178, 95, 0.45);
-    }
-
-    .card.correct {
-      border-color: rgba(105, 179, 95, 0.58);
-      box-shadow: 0 0 0 4px rgba(200, 242, 192, 0.45), 0 18px 28px rgba(103, 168, 91, 0.18);
-    }
-
-    .card.wrong {
-      border-color: rgba(226, 132, 153, 0.55);
-      animation: wiggle 0.34s ease;
-    }
-
-    .sparkle {
-      position: absolute;
-      top: 12px;
-      right: 14px;
-      font-size: 24px;
-      opacity: 0.9;
-    }
-
-    .emoji {
-      font-size: 66px;
-      line-height: 1;
-      display: inline-block;
-      margin-bottom: 10px;
-      filter: drop-shadow(0 10px 18px rgba(123, 79, 46, 0.14));
-    }
-
-    .card-name {
-      font-size: 28px;
-      line-height: 1;
-      font-weight: 900;
-      letter-spacing: -0.05em;
-      margin-bottom: 10px;
-    }
-
-    .card-sub {
-      font-size: 15px;
-      line-height: 1.45;
-      color: rgba(90, 58, 34, 0.82);
-      max-width: 16ch;
-    }
-
-    .tap-row {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-top: 14px;
-      flex-wrap: wrap;
+      flex-direction: column;
+      min-height: 180px;
+      padding: 18px 16px;
+      text-align: left;
+      color: var(--ink);
+      background: var(--card);
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
     }
+    .card:hover { border-color: var(--line-strong); }
+    .card:active { transform: scale(0.97); }
+    .card.active { animation: hop 0.45s ease; }
+    .card.correct { border-color: var(--accent); background: var(--accent-soft); }
+    .card.wrong { border-color: var(--line-strong); animation: wiggle 0.34s ease; }
 
-    .tap-badge,
-    .sound-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 800;
-      background: rgba(255,255,255,0.62);
-      border: 1px solid rgba(157, 111, 62, 0.12);
-      color: var(--muted);
-    }
+    .emoji { font-size: 64px; line-height: 1; }
+    .card-name { margin-top: 8px; font-size: 1.6rem; font-weight: 900; letter-spacing: -0.02em; text-transform: lowercase; }
+    .card-sub { margin-top: 6px; color: var(--muted); font-size: 0.9rem; line-height: 1.35; }
+    .tap-badge { margin-top: auto; padding-top: 12px; color: var(--muted); font-size: 0.75rem; font-weight: 700; }
 
     .celebration {
       position: absolute;
       left: 50%;
-      top: 50%;
+      top: 44%;
       transform: translate(-50%, -50%);
       pointer-events: none;
       font-size: 30px;
       opacity: 0;
     }
+    .celebration.show { animation: float-up 0.9s ease forwards; }
 
-    .celebration.show {
-      animation: float-up 0.9s ease forwards;
-    }
-
-    .footer-note {
-      text-align: center;
-      margin: 18px 0 8px;
-      font-size: 13px;
-      color: rgba(109, 74, 48, 0.72);
-    }
-
-    .c1 { background: linear-gradient(180deg, #ffe5c7, #ffd6b9); }
-    .c2 { background: linear-gradient(180deg, #ffe5f0, #ffd4e3); }
-    .c3 { background: linear-gradient(180deg, #ffeeb7, #ffe09f); }
-    .c4 { background: linear-gradient(180deg, #dff4ff, #cdeaff); }
-    .c5 { background: linear-gradient(180deg, #f1ebff, #dfd3ff); }
-    .c6 { background: linear-gradient(180deg, #ffe1bc, #ffd09b); }
-    .c7 { background: linear-gradient(180deg, #dff9ee, #ccf1df); }
-    .c8 { background: linear-gradient(180deg, #ffe9bf, #ffd998); }
-    .c9 { background: linear-gradient(180deg, #dcf7d7, #c9eebf); }
+    .foot { margin: 26px 0 4px; color: var(--muted); font-size: 0.85rem; }
 
     @keyframes hop {
       0% { transform: translateY(0) scale(1); }
-      35% { transform: translateY(-10px) scale(1.03) rotate(-1deg); }
-      70% { transform: translateY(0) scale(0.99) rotate(1deg); }
-      100% { transform: translateY(0) scale(1) rotate(0); }
+      35% { transform: translateY(-8px) scale(1.02); }
+      70% { transform: translateY(0) scale(0.99); }
+      100% { transform: translateY(0) scale(1); }
     }
-
     @keyframes wiggle {
       0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-5px) rotate(-1deg); }
-      75% { transform: translateX(5px) rotate(1deg); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
     }
-
     @keyframes pulse-burst {
-      0% { transform: scale(0.92) rotate(0); }
-      45% { transform: scale(1.1) rotate(8deg); }
-      100% { transform: scale(1) rotate(0); }
+      0% { transform: scale(0.92); }
+      45% { transform: scale(1.12); }
+      100% { transform: scale(1); }
     }
-
     @keyframes float-up {
       0% { opacity: 0; transform: translate(-50%, -10%) scale(0.7); }
       25% { opacity: 1; }
-      100% { opacity: 0; transform: translate(-50%, -95%) scale(1.22); }
+      100% { opacity: 0; transform: translate(-50%, -95%) scale(1.2); }
     }
 
-    @media (max-width: 920px) {
-      .stage,
-      .cards-wrap {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .stage {
-        grid-template-columns: 1fr;
-      }
+    @media (max-width: 620px) {
+      .bar { grid-template-columns: 1fr; gap: 16px; }
+      .grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
     }
-
-    @media (max-width: 640px) {
-      .page { padding-left: 12px; padding-right: 12px; }
-      .hero-shell,
-      .story-panel,
-      .feedback-panel,
-      .card { border-radius: 24px; }
-      .cards-wrap { grid-template-columns: 1fr 1fr; gap: 12px; }
-      .card { min-height: 190px; padding: 16px; }
-      .emoji { font-size: 56px; }
-      .card-name { font-size: 24px; }
-      .feedback-icon { width: 60px; height: 60px; font-size: 30px; }
-    }
-
-    @media (max-width: 440px) {
-      h1 { max-width: none; }
-      .cards-wrap { grid-template-columns: 1fr; }
-      .scoreboard { grid-template-columns: 1fr; }
-      .actions { flex-direction: column; }
-      .pill-btn { width: 100%; }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
     }
   </style>
 </head>
 <body>
   <main class="page">
-    <section class="hero-shell">
-      <div class="hero-top">
-        <div class="hero-copy">
-          <div class="kicker">🌈 My Kid's World</div>
-          <h1>Animal garden for little taps</h1>
-          <p>
-            A cozy play patch full of friendly animals. Tap once for the sound, tap again for the spoken name,
-            then try the tiny find-it game when you're ready.
-          </p>
-          <div class="hero-badges" aria-hidden="true">
-            <div class="hero-badge">🐾 9 animal friends</div>
-            <div class="hero-badge">🔊 tap for sound, then name</div>
-            <div class="hero-badge">🎈 tiny game inside</div>
-          </div>
-        </div>
-        <aside class="little-world" aria-hidden="true">
-          <div class="label">today in the garden</div>
-          <div class="friends">🐶 🐱 🐮 🦆 🐑 🦁 🐘 🐵 🐸</div>
-          <p>Sunny grass, soft colors, and big touchable cards made to feel playful instead of app-like.</p>
-        </aside>
-      </div>
-    </section>
+    <header class="intro">
+      <h1>animal garden</h1>
+      <p class="lede">tap an animal to hear it. tap again to hear its name. play find-it when you're ready.</p>
+    </header>
 
-    <section class="stage">
-      <div class="story-panel">
-        <div class="story-kicker">✨ Touch a friend</div>
-        <h2 class="prompt-title" id="prompt-title">Say hello to the animals</h2>
-        <p class="prompt-text" id="prompt-text">Pick any card. First comes the animal sound. Second comes the spoken name.</p>
+    <section class="bar">
+      <div class="bar-main">
+        <p class="mode" id="mode-label">free play meadow</p>
+        <h2 class="prompt-title" id="prompt-title">say hello to the animals</h2>
+        <p class="prompt-text" id="prompt-text">pick any card. first comes the animal sound. second comes the spoken name.</p>
         <div class="actions">
-          <button id="game-toggle" class="pill-btn" type="button">Play “Where is it?”</button>
-          <button id="reset-progress" class="pill-btn secondary" type="button">Start fresh</button>
-        </div>
-        <div class="tiny-steps" aria-hidden="true">
-          <div class="tiny-step">1. Tap to hear the sound</div>
-          <div class="tiny-step">2. Tap again for the name</div>
-          <div class="tiny-step">3. Try the find-it cheer game</div>
+          <button id="game-toggle" class="btn" type="button">play “where is it?”</button>
+          <button id="reset-progress" class="btn ghost" type="button">start fresh</button>
         </div>
       </div>
 
-      <aside class="feedback-panel" aria-live="polite">
-        <div class="feedback-card">
-          <div class="mode-chip" id="mode-label">free play meadow</div>
-          <div class="feedback-icon" id="feedback-burst">🐾</div>
-          <h2 id="feedback-title">Ready for a happy tap</h2>
-          <p id="feedback-text">Choose any animal card below. If your device is muted, turn sound on and tap again.</p>
+      <div class="react" aria-live="polite">
+        <div class="burst" id="feedback-burst">🐾</div>
+        <div>
+          <h2 class="feedback-title" id="feedback-title">ready for a happy tap</h2>
+          <p class="feedback-text" id="feedback-text">choose any animal card below. if your device is muted, turn sound on and tap again.</p>
         </div>
-        <div class="scoreboard">
-          <div class="score-pill">
-            <span class="small">game score</span>
-            <strong id="score-value">0 cheers</strong>
-          </div>
-          <div class="score-pill">
-            <span class="small">play style</span>
-            <strong id="status-value">sound → name</strong>
-          </div>
-        </div>
-      </aside>
+        <p class="tallies"><span id="score-value">0 cheers</span> · <span id="status-value">sound → name</span></p>
+      </div>
     </section>
 
-    <section class="cards-wrap" id="cards"></section>
+    <section class="grid" id="cards"></section>
 
-    <p class="footer-note">A tiny self-contained play world. No ads, no clutter, just cheerful animal moments.</p>
+    <p class="foot">a tiny self-contained play world. no ads, no clutter, just animals.</p>
   </main>
 
   <script>
     const animals = [
-      { name: 'Dog', slug: 'dog', emoji: '🐶', soundText: 'woof', icon: '🦴', prompt: 'The puppy wants a pat.', cardClass: 'c1', sparkle: '☀️' },
-      { name: 'Cat', slug: 'cat', emoji: '🐱', soundText: 'meow', icon: '🧶', prompt: 'The kitten is feeling cozy.', cardClass: 'c2', sparkle: '🌸' },
-      { name: 'Cow', slug: 'cow', emoji: '🐮', soundText: 'moo', icon: '🌾', prompt: 'The cow is by the hay.', cardClass: 'c3', sparkle: '🌼' },
-      { name: 'Duck', slug: 'duck', emoji: '🦆', soundText: 'quack', icon: '💦', prompt: 'The duck is splashing near the pond.', cardClass: 'c4', sparkle: '💧' },
-      { name: 'Sheep', slug: 'sheep', emoji: '🐑', soundText: 'baa', icon: '☁️', prompt: 'The sheep feels soft and fluffy.', cardClass: 'c5', sparkle: '☁️' },
-      { name: 'Lion', slug: 'lion', emoji: '🦁', soundText: 'roar', icon: '👑', prompt: 'The lion gives a gentle brave roar.', cardClass: 'c6', sparkle: '⭐' },
-      { name: 'Elephant', slug: 'elephant', emoji: '🐘', soundText: 'pawoo', icon: '🌿', prompt: 'The elephant swings by the trees.', cardClass: 'c7', sparkle: '🍃' },
-      { name: 'Monkey', slug: 'monkey', emoji: '🐵', soundText: 'ooh-ooh', icon: '🍌', prompt: 'The monkey is ready to play.', cardClass: 'c8', sparkle: '🍌' },
-      { name: 'Frog', slug: 'frog', emoji: '🐸', soundText: 'ribbit', icon: '🌱', prompt: 'The frog is hopping in the grass.', cardClass: 'c9', sparkle: '🫧' }
+      { name: 'Dog', slug: 'dog', emoji: '🐶', soundText: 'woof', icon: '🦴', prompt: 'the puppy wants a pat.', cardClass: 'c1', sparkle: '☀️' },
+      { name: 'Cat', slug: 'cat', emoji: '🐱', soundText: 'meow', icon: '🧶', prompt: 'the kitten is feeling cozy.', cardClass: 'c2', sparkle: '🌸' },
+      { name: 'Cow', slug: 'cow', emoji: '🐮', soundText: 'moo', icon: '🌾', prompt: 'the cow is by the hay.', cardClass: 'c3', sparkle: '🌼' },
+      { name: 'Duck', slug: 'duck', emoji: '🦆', soundText: 'quack', icon: '💦', prompt: 'the duck is splashing near the pond.', cardClass: 'c4', sparkle: '💧' },
+      { name: 'Sheep', slug: 'sheep', emoji: '🐑', soundText: 'baa', icon: '☁️', prompt: 'the sheep feels soft and fluffy.', cardClass: 'c5', sparkle: '☁️' },
+      { name: 'Lion', slug: 'lion', emoji: '🦁', soundText: 'roar', icon: '👑', prompt: 'the lion gives a gentle brave roar.', cardClass: 'c6', sparkle: '⭐' },
+      { name: 'Elephant', slug: 'elephant', emoji: '🐘', soundText: 'pawoo', icon: '🌿', prompt: 'the elephant swings by the trees.', cardClass: 'c7', sparkle: '🍃' },
+      { name: 'Monkey', slug: 'monkey', emoji: '🐵', soundText: 'ooh-ooh', icon: '🍌', prompt: 'the monkey is ready to play.', cardClass: 'c8', sparkle: '🍌' },
+      { name: 'Frog', slug: 'frog', emoji: '🐸', soundText: 'ribbit', icon: '🌱', prompt: 'the frog is hopping in the grass.', cardClass: 'c9', sparkle: '🫧' }
     ];
 
     const cardsEl = document.getElementById('cards');
@@ -808,8 +355,8 @@
     function chooseTarget(excludeName) {
       const pool = animals.filter(a => a.name !== excludeName);
       currentTarget = pool[Math.floor(Math.random() * pool.length)];
-      promptTitle.textContent = 'Can you find the ' + currentTarget.name.toLowerCase() + '?';
-      promptText.textContent = 'Tap the matching animal card for a big happy cheer.';
+      promptTitle.textContent = 'can you find the ' + currentTarget.name.toLowerCase() + '?';
+      promptText.textContent = 'tap the matching animal card for a big happy cheer.';
       statusValue.textContent = 'find the friend';
     }
 
@@ -820,13 +367,13 @@
     function updateModeUi() {
       if (gameMode) {
         modeLabel.textContent = 'find-it game';
-        toggleButton.textContent = 'Back to free play';
+        toggleButton.textContent = 'back to free play';
         if (!currentTarget) chooseTarget();
       } else {
         modeLabel.textContent = 'free play meadow';
-        toggleButton.textContent = 'Play “Where is it?”';
-        promptTitle.textContent = 'Say hello to the animals';
-        promptText.textContent = 'Pick any card. First comes the animal sound. Second comes the spoken name.';
+        toggleButton.textContent = 'play “where is it?”';
+        promptTitle.textContent = 'say hello to the animals';
+        promptText.textContent = 'pick any card. first comes the animal sound. second comes the spoken name.';
         statusValue.textContent = 'sound → name';
         currentTarget = null;
       }
@@ -840,7 +387,7 @@
       document.querySelectorAll('.tap-badge').forEach(el => {
         el.textContent = 'first tap: sound';
       });
-      setFeedback('Fresh and ready', 'All the animal cards are reset. Tap once for the sound and again for the name.', '🐾');
+      setFeedback('fresh and ready', 'all the animal cards are reset. tap once for the sound and again for the name.', '🐾');
       if (gameMode) {
         chooseTarget();
       } else {
@@ -863,7 +410,7 @@
         const didPlay = await playAnimalSound(animal);
         setFeedback(
           animal.soundText + '!',
-          didPlay ? animal.name + ' says ' + animal.soundText + '. ' + animal.prompt : animal.name + ' is ready, but your device blocked audio. Tap again after unmuting.',
+          didPlay ? animal.name + ' says ' + animal.soundText + '. ' + animal.prompt : animal.name + ' is ready, but your device blocked audio. tap again after unmuting.',
           animal.emoji
         );
         statusValue.textContent = didPlay ? animal.soundText + ' time' : 'sound blocked';
@@ -872,7 +419,7 @@
         const didSpeak = await playAnimalName(animal);
         setFeedback(
           animal.name,
-          didSpeak ? 'Hello, ' + animal.name + '! Tap again to hear the sound first.' : animal.name + ' is ready, but spoken audio is unavailable on this device right now.',
+          didSpeak ? 'hello, ' + animal.name + '! tap again to hear the sound first.' : animal.name + ' is ready, but spoken audio is unavailable on this device right now.',
           animal.icon
         );
         statusValue.textContent = didSpeak ? animal.name.toLowerCase() + ' spoken' : 'name blocked';
@@ -885,13 +432,13 @@
           updateScore();
           card.classList.add('correct');
           await playAnimalName(animal, 'Yay! ' + animal.name);
-          setFeedback('You found the ' + animal.name + '!', 'Great job. ' + scoreValue.textContent + '. Let\'s find another friend.', '🎉');
+          setFeedback('you found the ' + animal.name + '!', 'great job. ' + scoreValue.textContent + '. let\'s find another friend.', '🎉');
           statusValue.textContent = 'big cheer!';
           celebrate(card, ['🎉', '⭐', '🥳', '🌈']);
           chooseTarget(animal.name);
         } else {
           card.classList.add('wrong');
-          setFeedback('Almost!', 'That was the ' + animal.name.toLowerCase() + '. Now find the ' + currentTarget.name.toLowerCase() + '.', '💞');
+          setFeedback('almost!', 'that was the ' + animal.name.toLowerCase() + '. now find the ' + currentTarget.name.toLowerCase() + '.', '💞');
           statusValue.textContent = 'try again';
         }
       }
@@ -903,14 +450,10 @@
       card.className = 'card ' + animal.cardClass;
       card.setAttribute('aria-label', animal.name);
       card.innerHTML = `
-        <div class="sparkle">${animal.sparkle}</div>
         <div class="emoji">${animal.emoji}</div>
         <div class="card-name">${animal.name}</div>
         <div class="card-sub">${animal.prompt}</div>
-        <div class="tap-row">
-          <div class="sound-badge">🔊 ${animal.soundText}</div>
-          <div class="tap-badge">first tap: sound</div>
-        </div>
+        <div class="tap-badge">first tap: sound</div>
         <div class="celebration">✨</div>
       `;
       card.addEventListener('click', () => handleTap(animal, card));
@@ -922,9 +465,9 @@
       resetCardStates();
       updateModeUi();
       if (gameMode) {
-        setFeedback('Game time!', 'Listen to the prompt and tap the right animal for a cheerful celebration.', '🧩');
+        setFeedback('game time!', 'listen to the prompt and tap the right animal for a cheerful celebration.', '🧩');
       } else {
-        setFeedback('Back to free play', 'Wander the garden again. First tap makes the sound. Second tap says the name.', '🐾');
+        setFeedback('back to free play', 'wander the garden again. first tap makes the sound. second tap says the name.', '🐾');
       }
     });
 

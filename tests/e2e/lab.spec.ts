@@ -14,12 +14,13 @@ test('lab page has correct title, heading, and rogue card', async ({ page }) => 
   await expect(rogueCard).toBeVisible();
   await expect(rogueCard).toContainText('agent');
 
-  // Exactly one stat tile on the lean lab page
-  await expect(page.locator('.stat')).toHaveCount(1);
+  // The current lean flagship keeps a factual running-since receipt instead of a stat tile.
+  await expect(rogueCard).toContainText('running since');
 
   // The "also built" section is a plain-text row of links, not toy cards
   const alsoBuilt = page.locator('#also-built');
   await expect(alsoBuilt).toBeVisible();
+  await expect(alsoBuilt.locator('a[href="/lab/the-cap-is-gone/"]')).toHaveText('the cap is gone');
   await expect(alsoBuilt.locator('a')).not.toHaveCount(0);
   await expect(alsoBuilt.locator('.card')).toHaveCount(0);
 });

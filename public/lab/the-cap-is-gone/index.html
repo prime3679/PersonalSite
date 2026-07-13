@@ -1,0 +1,738 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>THE CAP IS GONE</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='19' fill='%23F2ECDC' stroke='%231C1A17' stroke-width='3'/%3E%3Cpath d='M22 34l8-6 7 8 7-6' fill='none' stroke='%23B3341F' stroke-width='3'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --ink: #1C1A17;
+      --paper: #F2ECDC;
+      --red: #B3341F;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --snap: 260ms var(--ease);
+      color: var(--ink);
+      background: var(--paper);
+      font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      overflow: hidden;
+      background: var(--paper);
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+    }
+
+    .toy {
+      position: relative;
+      display: grid;
+      min-height: 100svh;
+      width: 100%;
+      place-items: center;
+      padding: 34px 18px 44px;
+      overflow: hidden;
+      isolation: isolate;
+      cursor: pointer;
+      outline: 0;
+      touch-action: manipulation;
+      user-select: none;
+    }
+
+    .toy:focus-visible,
+    .restart:focus-visible {
+      outline: 2px solid var(--red);
+      outline-offset: 6px;
+    }
+
+    .paper-grain {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -2;
+    }
+
+    .composition {
+      position: relative;
+      width: min(100%, 430px);
+      min-height: 640px;
+      display: grid;
+      align-content: start;
+      justify-items: center;
+      padding-top: 136px;
+    }
+
+    .restart {
+      position: fixed;
+      z-index: 10;
+      top: 18px;
+      right: 16px;
+      min-width: 44px;
+      min-height: 44px;
+      padding: 8px 0;
+      border: 0;
+      border-bottom: 1px solid color-mix(in srgb, var(--ink) 42%, transparent);
+      background: transparent;
+      text-align: right;
+      letter-spacing: 0;
+      text-transform: lowercase;
+      cursor: pointer;
+    }
+
+
+    .cap-mark {
+      position: relative;
+      width: 82px;
+      height: 82px;
+      margin-bottom: 28px;
+      color: var(--ink);
+      animation: first-wobble 4.8s var(--ease) infinite;
+      transform-origin: 50% 54%;
+      transition: transform var(--snap), opacity var(--snap);
+      will-change: transform;
+    }
+
+    .cap-mark svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .cap-mark path,
+    .cap-mark line,
+    .cap-mark circle,
+    .cap-mark polyline {
+      vector-effect: non-scaling-stroke;
+      transition: transform var(--snap), opacity var(--snap), stroke var(--snap);
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    .headline {
+      position: relative;
+      z-index: 3;
+      margin: 0;
+      max-width: 354px;
+      font-family: Georgia, "Iowan Old Style", serif;
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 0.92;
+      letter-spacing: 0;
+      text-align: center;
+      text-wrap: balance;
+      color: var(--ink);
+      transition: transform var(--snap), opacity var(--snap);
+    }
+
+    .word {
+      display: inline-block;
+      white-space: nowrap;
+      transition: transform var(--snap), opacity var(--snap);
+      transform-origin: 50% 55%;
+    }
+
+    .char {
+      display: inline-block;
+      transition: transform var(--snap), opacity var(--snap);
+      transform-origin: 50% 58%;
+      will-change: transform;
+    }
+
+    .underline {
+      width: 158px;
+      height: 1px;
+      margin-top: 22px;
+      background: var(--red);
+      transform: scaleX(1);
+      transform-origin: center;
+      transition: transform var(--snap), opacity var(--snap);
+    }
+
+    .cue {
+      margin: 34px 0 0;
+      font-size: 12px;
+      letter-spacing: 0;
+      text-transform: lowercase;
+      opacity: 0.58;
+      transition: transform var(--snap), opacity var(--snap);
+    }
+
+    .cracks,
+    .fragments,
+    .ticks,
+    .doctrines {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .crack {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      width: var(--w);
+      height: 1px;
+      background: var(--ink);
+      opacity: 0;
+      transform: rotate(var(--r)) scaleX(0.1);
+      transform-origin: left center;
+      transition: transform var(--snap), opacity var(--snap);
+    }
+
+    .crack.red {
+      background: var(--red);
+    }
+
+    .flake,
+    .tick {
+      position: absolute;
+      opacity: 0;
+      transition: transform var(--snap), opacity var(--snap);
+      transform-origin: center;
+      will-change: transform;
+    }
+
+    .flake {
+      left: 50%;
+      top: 268px;
+      width: var(--fw);
+      height: var(--fh);
+      border: 1px solid var(--ink);
+      background: transparent;
+      clip-path: polygon(8% 0, 100% 16%, 78% 100%, 0 72%);
+      transform: translate(-50%, -50%) rotate(var(--r0));
+    }
+
+    .flake.red {
+      border-color: var(--red);
+    }
+
+    .tick {
+      left: var(--x);
+      top: var(--y);
+      width: var(--w);
+      height: 2px;
+      background: var(--red);
+      transform: rotate(var(--r)) scaleX(0);
+      transform-origin: left center;
+    }
+
+    .doctrine {
+      position: absolute;
+      z-index: 4;
+      max-width: 240px;
+      padding: 6px 8px;
+      border: 1px solid currentColor;
+      color: var(--red);
+      background: color-mix(in srgb, var(--paper) 86%, transparent);
+      font-size: 11px;
+      line-height: 1.18;
+      letter-spacing: 0;
+      text-align: left;
+      opacity: 0;
+      transform: translate(var(--tx0), var(--ty0)) rotate(var(--r0)) scale(0.96);
+      transform-origin: center;
+      transition: transform var(--snap), opacity var(--snap);
+    }
+
+    .d1 {
+      left: 24px;
+      top: 356px;
+      --tx0: -18px;
+      --ty0: 16px;
+      --r0: -4deg;
+      --tx1: 0px;
+      --ty1: 0px;
+      --r1: -5deg;
+    }
+
+    .d2 {
+      right: 18px;
+      top: 464px;
+      --tx0: 22px;
+      --ty0: 18px;
+      --r0: 5deg;
+      --tx1: 0px;
+      --ty1: 0px;
+      --r1: 6deg;
+    }
+
+    .d3 {
+      left: 58px;
+      top: 546px;
+      --tx0: -14px;
+      --ty0: 18px;
+      --r0: 3deg;
+      --tx1: 0px;
+      --ty1: 0px;
+      --r1: -3deg;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @keyframes first-wobble {
+      0%, 100% { transform: rotate(-0.45deg) translateY(0); }
+      50% { transform: rotate(0.45deg) translateY(-1px); }
+    }
+
+    @keyframes settle-breathe {
+      0%, 100% { transform: translateY(0) rotate(0); }
+      50% { transform: translateY(-2px) rotate(-0.25deg); }
+    }
+
+    [data-stage="crack"] .cap-mark,
+    [data-stage="lift"] .cap-mark,
+    [data-stage="fragment"] .cap-mark,
+    [data-stage="scatter"] .cap-mark,
+    [data-stage="chaos"] .cap-mark,
+    [data-stage="settle"] .cap-mark {
+      animation: none;
+    }
+
+    [data-stage="crack"] .cap-mark {
+      transform: rotate(-2deg) translateY(-2px);
+    }
+
+    [data-stage="lift"] .cap-mark {
+      transform: translateY(-28px) rotate(-8deg);
+    }
+
+    [data-stage="fragment"] .cap-mark {
+      transform: translateY(-56px) rotate(-15deg) scale(0.88);
+      opacity: 0.72;
+    }
+
+    [data-stage="scatter"] .cap-mark {
+      transform: translateY(-88px) translateX(-54px) rotate(-28deg) scale(0.72);
+      opacity: 0.36;
+    }
+
+    [data-stage="chaos"] .cap-mark {
+      transform: translateY(-112px) translateX(88px) rotate(42deg) scale(0.52);
+      opacity: 0.18;
+    }
+
+    [data-stage="settle"] .cap-mark {
+      animation: settle-breathe 3.2s var(--ease) infinite;
+      transform: translateY(-26px) rotate(-3deg) scale(0.78);
+      opacity: 0.28;
+    }
+
+    [data-stage="crack"] .cap-ridge-a { transform: translateX(-2px) rotate(-4deg); }
+    [data-stage="crack"] .cap-ridge-b { transform: translateX(2px) rotate(4deg); }
+    [data-stage="lift"] .cap-lip { transform: translateY(-5px); }
+    [data-stage="fragment"] .cap-ridge-a { transform: translate(-8px, -4px) rotate(-18deg); }
+    [data-stage="fragment"] .cap-ridge-b { transform: translate(10px, -2px) rotate(16deg); }
+    [data-stage="scatter"] .cap-ridge-a { transform: translate(-18px, -14px) rotate(-34deg); }
+    [data-stage="scatter"] .cap-ridge-b { transform: translate(24px, -18px) rotate(31deg); }
+    [data-stage="chaos"] .cap-ridge-a { transform: translate(-36px, 12px) rotate(-70deg); opacity: 0.38; }
+    [data-stage="chaos"] .cap-ridge-b { transform: translate(42px, -8px) rotate(74deg); opacity: 0.38; }
+
+    [data-stage="crack"] .crack {
+      opacity: 0.34;
+      transform: rotate(var(--r)) scaleX(0.55);
+    }
+
+    [data-stage="lift"] .crack {
+      opacity: 0.42;
+      transform: rotate(var(--r)) scaleX(0.8);
+    }
+
+    [data-stage="fragment"] .crack,
+    [data-stage="scatter"] .crack,
+    [data-stage="chaos"] .crack {
+      opacity: var(--o);
+      transform: rotate(var(--r)) scaleX(1);
+    }
+
+    [data-stage="settle"] .crack {
+      opacity: 0.18;
+      transform: rotate(var(--r)) scaleX(0.72);
+    }
+
+    [data-stage="crack"] .char {
+      transform: translate(var(--x1), var(--y1)) rotate(var(--r1));
+    }
+
+    [data-stage="lift"] .char {
+      transform: translate(var(--x2), var(--y2)) rotate(var(--r2));
+    }
+
+    [data-stage="fragment"] .char {
+      transform: translate(var(--x3), var(--y3)) rotate(var(--r3));
+    }
+
+    [data-stage="scatter"] .char {
+      transform: translate(var(--x4), var(--y4)) rotate(var(--r4));
+    }
+
+    [data-stage="chaos"] .char {
+      transform: translate(var(--x5), var(--y5)) rotate(var(--r5));
+    }
+
+    [data-stage="settle"] .char {
+      transform: translate(var(--xs), var(--ys)) rotate(var(--rs));
+    }
+
+    [data-stage="settle"].punched .char {
+      transform: translate(var(--xp), var(--yp)) rotate(var(--rp)) scale(var(--sp));
+    }
+
+    [data-stage="lift"] .word:nth-child(1) { transform: translateY(-4px); }
+    [data-stage="lift"] .word:nth-child(2) { transform: translateY(3px); }
+    [data-stage="fragment"] .word:nth-child(1) { transform: translate(-6px, -7px); }
+    [data-stage="fragment"] .word:nth-child(2) { transform: translate(5px, 2px); }
+    [data-stage="fragment"] .word:nth-child(3) { transform: translate(-2px, 8px); }
+    [data-stage="fragment"] .word:nth-child(4) { transform: translate(8px, -3px); }
+    [data-stage="scatter"] .word:nth-child(1) { transform: translate(-14px, -18px) rotate(-2deg); }
+    [data-stage="scatter"] .word:nth-child(2) { transform: translate(18px, -4px) rotate(2deg); }
+    [data-stage="scatter"] .word:nth-child(3) { transform: translate(-16px, 14px) rotate(-4deg); }
+    [data-stage="scatter"] .word:nth-child(4) { transform: translate(16px, 20px) rotate(3deg); }
+    [data-stage="chaos"] .word:nth-child(1) { transform: translate(-28px, -36px) rotate(-5deg); }
+    [data-stage="chaos"] .word:nth-child(2) { transform: translate(26px, -16px) rotate(6deg); }
+    [data-stage="chaos"] .word:nth-child(3) { transform: translate(-34px, 20px) rotate(-8deg); }
+    [data-stage="chaos"] .word:nth-child(4) { transform: translate(22px, 36px) rotate(4deg); }
+    [data-stage="settle"] .word { transform: translate(0, 0) rotate(0); }
+
+    [data-stage="crack"] .underline {
+      transform: scaleX(1.08) translateY(-1px);
+    }
+
+    [data-stage="lift"] .underline {
+      transform: scaleX(0.84) translateY(8px) rotate(-2deg);
+    }
+
+    [data-stage="fragment"] .underline {
+      transform: scaleX(1.18) translate(12px, 16px) rotate(5deg);
+    }
+
+    [data-stage="scatter"] .underline {
+      transform: scaleX(0.72) translate(-48px, 34px) rotate(-11deg);
+    }
+
+    [data-stage="chaos"] .underline {
+      transform: scaleX(1.32) translate(72px, 78px) rotate(17deg);
+      opacity: 0.72;
+    }
+
+    [data-stage="settle"] .underline {
+      transform: scaleX(0.66) translateY(24px) rotate(-2deg);
+      opacity: 0.55;
+    }
+
+    [data-stage="crack"] .cue { transform: translateY(4px); opacity: 0.5; }
+    [data-stage="lift"] .cue { transform: translateY(16px); opacity: 0.4; }
+    [data-stage="fragment"] .cue { transform: translateY(26px) rotate(-1deg); opacity: 0.32; }
+    [data-stage="scatter"] .cue { transform: translate(-48px, 46px) rotate(-7deg); opacity: 0.26; }
+    [data-stage="chaos"] .cue { transform: translate(72px, 92px) rotate(10deg); opacity: 0.2; }
+    [data-stage="settle"] .cue { transform: translateY(52px); opacity: 0.44; }
+
+    [data-stage="lift"] .d1 {
+      opacity: 0.26;
+      transform: translate(var(--tx1), var(--ty1)) rotate(var(--r1)) scale(1);
+    }
+
+    [data-stage="fragment"] .d1,
+    [data-stage="scatter"] .d1,
+    [data-stage="chaos"] .d1,
+    [data-stage="settle"] .d1 {
+      opacity: 0.88;
+      transform: translate(var(--tx1), var(--ty1)) rotate(var(--r1)) scale(1);
+    }
+
+    [data-stage="scatter"] .d2,
+    [data-stage="chaos"] .d2,
+    [data-stage="settle"] .d2 {
+      opacity: 0.86;
+      transform: translate(var(--tx1), var(--ty1)) rotate(var(--r1)) scale(1);
+    }
+
+    [data-stage="chaos"] .d3 {
+      opacity: 0.88;
+      transform: translate(var(--tx1), var(--ty1)) rotate(var(--r1)) scale(1);
+    }
+
+    [data-stage="settle"] .d3 {
+      opacity: 0.7;
+      transform: translate(-18px, -34px) rotate(2deg) scale(0.96);
+    }
+
+    [data-stage="fragment"] .flake {
+      opacity: 0.48;
+      transform: translate(var(--fx1), var(--fy1)) rotate(var(--fr1));
+    }
+
+    [data-stage="scatter"] .flake {
+      opacity: 0.64;
+      transform: translate(var(--fx2), var(--fy2)) rotate(var(--fr2));
+    }
+
+    [data-stage="chaos"] .flake {
+      opacity: 0.86;
+      transform: translate(var(--fx3), var(--fy3)) rotate(var(--fr3));
+    }
+
+    [data-stage="settle"] .flake {
+      opacity: 0.22;
+      transform: translate(var(--fxs), var(--fys)) rotate(var(--frs));
+    }
+
+    [data-stage="settle"].punched .flake {
+      opacity: 0.46;
+      transform: translate(var(--fxp), var(--fyp)) rotate(var(--frp));
+    }
+
+    [data-stage="chaos"] .tick {
+      opacity: 0.74;
+      transform: rotate(var(--r)) scaleX(1);
+    }
+
+    [data-stage="settle"] .tick {
+      opacity: 0.18;
+      transform: rotate(var(--r)) scaleX(0.58);
+    }
+
+    [data-stage="settle"].punched .tick {
+      opacity: 0.52;
+      transform: rotate(calc(var(--r) + 4deg)) scaleX(1);
+    }
+
+
+    @media (max-width: 430px) {
+      [data-stage="chaos"] .headline {
+        transform: scale(0.82);
+      }
+    }
+
+    @media (min-width: 720px) {
+      .composition {
+        width: 560px;
+        min-height: 710px;
+        padding-top: 150px;
+      }
+
+      .headline {
+        max-width: 520px;
+        font-size: 64px;
+      }
+
+      .cap-mark {
+        width: 96px;
+        height: 96px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body data-stage="restraint">
+  <div class="sr-only" id="stageLive" aria-live="polite">stage restraint. tap, click, enter, or space to begin.</div>
+
+  <main class="toy" id="toy" role="button" tabindex="0" aria-label="THE CAP IS GONE. Tap or click anywhere, or press Enter or Space, to advance the toy.">
+    <svg class="paper-grain" aria-hidden="true">
+      <defs>
+        <filter id="paperNoise" x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="2" seed="11" result="grain"></feTurbulence>
+          <feColorMatrix type="saturate" values="0"></feColorMatrix>
+        </filter>
+      </defs>
+      <rect width="100%" height="100%" fill="#F2ECDC"></rect>
+      <rect width="100%" height="100%" filter="url(#paperNoise)" opacity="0.045"></rect>
+    </svg>
+
+    <section class="composition" aria-hidden="true">
+      <div class="cracks">
+        <i class="crack" style="--x: 33%; --y: 210px; --w: 52px; --r: -12deg; --o: 0.46;"></i>
+        <i class="crack" style="--x: 51%; --y: 214px; --w: 68px; --r: 10deg; --o: 0.5;"></i>
+        <i class="crack red" style="--x: 44%; --y: 250px; --w: 38px; --r: 72deg; --o: 0.62;"></i>
+        <i class="crack" style="--x: 27%; --y: 306px; --w: 92px; --r: -7deg; --o: 0.42;"></i>
+        <i class="crack" style="--x: 62%; --y: 334px; --w: 86px; --r: 16deg; --o: 0.4;"></i>
+        <i class="crack" style="--x: 14%; --y: 408px; --w: 76px; --r: 38deg; --o: 0.34;"></i>
+        <i class="crack red" style="--x: 73%; --y: 430px; --w: 54px; --r: -44deg; --o: 0.56;"></i>
+        <i class="crack" style="--x: 36%; --y: 512px; --w: 122px; --r: 4deg; --o: 0.28;"></i>
+        <i class="crack" style="--x: 18%; --y: 586px; --w: 86px; --r: -22deg; --o: 0.24;"></i>
+        <i class="crack" style="--x: 66%; --y: 610px; --w: 74px; --r: 27deg; --o: 0.24;"></i>
+      </div>
+
+      <div class="fragments">
+        <span class="flake" style="--fw: 18px; --fh: 11px; --r0: -8deg; --fx1: -64px; --fy1: -16px; --fr1: -24deg; --fx2: -116px; --fy2: 20px; --fr2: -58deg; --fx3: -152px; --fy3: -72px; --fr3: -104deg; --fxs: -116px; --fys: 88px; --frs: -12deg; --fxp: -132px; --fyp: 72px; --frp: -42deg;"></span>
+        <span class="flake red" style="--fw: 14px; --fh: 18px; --r0: 18deg; --fx1: 46px; --fy1: -30px; --fr1: 38deg; --fx2: 112px; --fy2: -6px; --fr2: 72deg; --fx3: 158px; --fy3: 66px; --fr3: 128deg; --fxs: 92px; --fys: 118px; --frs: 18deg; --fxp: 124px; --fyp: 98px; --frp: 48deg;"></span>
+        <span class="flake" style="--fw: 21px; --fh: 12px; --r0: 32deg; --fx1: 18px; --fy1: 18px; --fr1: 54deg; --fx2: 72px; --fy2: 72px; --fr2: 98deg; --fx3: 108px; --fy3: -126px; --fr3: 164deg; --fxs: 44px; --fys: -72px; --frs: 34deg; --fxp: 68px; --fyp: -98px; --frp: 74deg;"></span>
+        <span class="flake" style="--fw: 11px; --fh: 26px; --r0: -42deg; --fx1: -20px; --fy1: -42px; --fr1: -76deg; --fx2: -68px; --fy2: -98px; --fr2: -132deg; --fx3: -30px; --fy3: 146px; --fr3: -184deg; --fxs: -20px; --fys: 102px; --frs: -8deg; --fxp: -48px; --fyp: 84px; --frp: -38deg;"></span>
+        <span class="flake red" style="--fw: 17px; --fh: 10px; --r0: 4deg; --fx1: 72px; --fy1: 6px; --fr1: 14deg; --fx2: 138px; --fy2: 118px; --fr2: 44deg; --fx3: -124px; --fy3: 126px; --fr3: -24deg; --fxs: -86px; --fys: 136px; --frs: 12deg; --fxp: -110px; --fyp: 116px; --frp: -26deg;"></span>
+        <span class="flake" style="--fw: 13px; --fh: 13px; --r0: 58deg; --fx1: -46px; --fy1: 28px; --fr1: 82deg; --fx2: -146px; --fy2: -46px; --fr2: 122deg; --fx3: 154px; --fy3: -156px; --fr3: 202deg; --fxs: 126px; --fys: -74px; --frs: 24deg; --fxp: 148px; --fyp: -92px; --frp: 62deg;"></span>
+      </div>
+
+      <div class="ticks">
+        <span class="tick" style="--x: 8%; --y: 170px; --w: 34px; --r: -8deg;"></span>
+        <span class="tick" style="--x: 74%; --y: 188px; --w: 42px; --r: 14deg;"></span>
+        <span class="tick" style="--x: 20%; --y: 248px; --w: 26px; --r: 78deg;"></span>
+        <span class="tick" style="--x: 84%; --y: 278px; --w: 34px; --r: -48deg;"></span>
+        <span class="tick" style="--x: 9%; --y: 352px; --w: 58px; --r: 22deg;"></span>
+        <span class="tick" style="--x: 68%; --y: 386px; --w: 66px; --r: -12deg;"></span>
+        <span class="tick" style="--x: 28%; --y: 452px; --w: 42px; --r: -66deg;"></span>
+        <span class="tick" style="--x: 78%; --y: 506px; --w: 36px; --r: 64deg;"></span>
+        <span class="tick" style="--x: 12%; --y: 596px; --w: 46px; --r: -18deg;"></span>
+        <span class="tick" style="--x: 58%; --y: 642px; --w: 64px; --r: 10deg;"></span>
+      </div>
+
+      <div class="cap-mark">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <circle class="cap-lip" cx="50" cy="50" r="31" fill="none" stroke="currentColor" stroke-width="2"></circle>
+          <path class="cap-ridge-a" d="M26 35 L17 30 M34 24 L30 14 M47 19 L47 8 M60 21 L65 11 M72 30 L82 23" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"></path>
+          <path class="cap-ridge-b" d="M24 64 L14 68 M33 76 L27 86 M47 81 L46 93 M61 78 L68 89 M73 67 L84 74" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"></path>
+          <polyline class="cap-score" points="34,52 45,45 52,55 63,47" fill="none" stroke="#B3341F" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter" opacity="0.86"></polyline>
+        </svg>
+      </div>
+
+      <h1 class="headline" aria-label="THE CAP IS GONE">
+        <span class="word">
+          <span class="char" style="--x1: -1px; --y1: 1px; --r1: -1deg; --x2: -2px; --y2: -2px; --r2: -2deg; --x3: -8px; --y3: -4px; --r3: -4deg; --x4: -18px; --y4: -12px; --r4: -8deg; --x5: -22px; --y5: -30px; --r5: -14deg; --xs: -4px; --ys: -2px; --rs: -1deg; --xp: -18px; --yp: -10px; --rp: -8deg; --sp: 1.04;">T</span><span class="char" style="--x1: 0px; --y1: -1px; --r1: 1deg; --x2: 1px; --y2: -3px; --r2: 1deg; --x3: -2px; --y3: -8px; --r3: 2deg; --x4: -6px; --y4: -20px; --r4: 5deg; --x5: -6px; --y5: -44px; --r5: 8deg; --xs: 0px; --ys: -3px; --rs: 1deg; --xp: 4px; --yp: -18px; --rp: 7deg; --sp: 1.03;">H</span><span class="char" style="--x1: 1px; --y1: 1px; --r1: -1deg; --x2: 2px; --y2: 2px; --r2: 2deg; --x3: 7px; --y3: -3px; --r3: 4deg; --x4: 14px; --y4: -11px; --r4: 9deg; --x5: 24px; --y5: -20px; --r5: 13deg; --xs: 5px; --ys: 0px; --rs: 1deg; --xp: 20px; --yp: -8px; --rp: 10deg; --sp: 1.05;">E</span>
+        </span>
+        <span class="word">
+          <span class="char" style="--x1: -1px; --y1: -1px; --r1: 1deg; --x2: -1px; --y2: -5px; --r2: -2deg; --x3: -10px; --y3: 5px; --r3: -5deg; --x4: -24px; --y4: -2px; --r4: -11deg; --x5: -40px; --y5: -12px; --r5: -18deg; --xs: -3px; --ys: 4px; --rs: -1deg; --xp: -22px; --yp: -2px; --rp: -10deg; --sp: 1.04;">C</span><span class="char" style="--x1: 1px; --y1: 0px; --r1: -1deg; --x2: 2px; --y2: -4px; --r2: 3deg; --x3: 2px; --y3: 8px; --r3: 5deg; --x4: 2px; --y4: 8px; --r4: 12deg; --x5: 6px; --y5: 4px; --r5: 20deg; --xs: 2px; --ys: 3px; --rs: 1deg; --xp: 8px; --yp: -8px; --rp: 12deg; --sp: 1.02;">A</span><span class="char" style="--x1: 0px; --y1: 1px; --r1: 1deg; --x2: 4px; --y2: -2px; --r2: 2deg; --x3: 11px; --y3: 3px; --r3: 7deg; --x4: 27px; --y4: -9px; --r4: 16deg; --x5: 48px; --y5: -28px; --r5: 27deg; --xs: 4px; --ys: 1px; --rs: 2deg; --xp: 26px; --yp: -18px; --rp: 15deg; --sp: 1.04;">P</span>
+        </span>
+        <span class="word">
+          <span class="char" style="--x1: -1px; --y1: 0px; --r1: -1deg; --x2: -3px; --y2: 4px; --r2: -3deg; --x3: -9px; --y3: 10px; --r3: -8deg; --x4: -20px; --y4: 20px; --r4: -18deg; --x5: -58px; --y5: 22px; --r5: -26deg; --xs: -4px; --ys: 4px; --rs: -1deg; --xp: -24px; --yp: 16px; --rp: -14deg; --sp: 1.04;">I</span><span class="char" style="--x1: 1px; --y1: 1px; --r1: 1deg; --x2: 2px; --y2: 5px; --r2: 2deg; --x3: 9px; --y3: 9px; --r3: 7deg; --x4: 18px; --y4: 18px; --r4: 14deg; --x5: -16px; --y5: 44px; --r5: 22deg; --xs: 3px; --ys: 3px; --rs: 1deg; --xp: 18px; --yp: 20px; --rp: 12deg; --sp: 1.03;">S</span>
+        </span>
+        <span class="word">
+          <span class="char" style="--x1: 0px; --y1: -1px; --r1: -1deg; --x2: -2px; --y2: 2px; --r2: -2deg; --x3: -7px; --y3: 6px; --r3: -6deg; --x4: -22px; --y4: 16px; --r4: -12deg; --x5: -20px; --y5: 36px; --r5: -20deg; --xs: -4px; --ys: 3px; --rs: -1deg; --xp: -24px; --yp: 16px; --rp: -14deg; --sp: 1.03;">G</span><span class="char" style="--x1: 1px; --y1: 0px; --r1: 1deg; --x2: 0px; --y2: 4px; --r2: 1deg; --x3: 1px; --y3: 11px; --r3: 3deg; --x4: 0px; --y4: 26px; --r4: 4deg; --x5: 10px; --y5: 52px; --r5: 8deg; --xs: 0px; --ys: 5px; --rs: 1deg; --xp: 6px; --yp: 22px; --rp: 8deg; --sp: 1.02;">O</span><span class="char" style="--x1: -1px; --y1: 1px; --r1: -1deg; --x2: 1px; --y2: 2px; --r2: 2deg; --x3: 8px; --y3: 8px; --r3: 5deg; --x4: 20px; --y4: 18px; --r4: 10deg; --x5: 42px; --y5: 38px; --r5: 16deg; --xs: 5px; --ys: 4px; --rs: 1deg; --xp: 22px; --yp: 18px; --rp: 10deg; --sp: 1.03;">N</span><span class="char" style="--x1: 0px; --y1: -1px; --r1: 1deg; --x2: 3px; --y2: 0px; --r2: 2deg; --x3: 14px; --y3: 2px; --r3: 8deg; --x4: 34px; --y4: 8px; --r4: 18deg; --x5: 66px; --y5: 18px; --r5: 28deg; --xs: 8px; --ys: 1px; --rs: 2deg; --xp: 30px; --yp: 8px; --rp: 14deg; --sp: 1.05;">E</span>
+        </span>
+      </h1>
+
+      <div class="underline"></div>
+      <p class="cue">tap.</p>
+
+      <div class="doctrines">
+        <div class="doctrine d1">SPECIFIC BEATS IMPRESSIVE</div>
+        <div class="doctrine d2">GRAY BEATS FALSE GREEN</div>
+        <div class="doctrine d3">FAMILY CONSTRAINT = DESIGN BRIEF</div>
+      </div>
+    </section>
+  </main>
+
+  <button class="restart" id="restart" type="button" aria-label="Restart THE CAP IS GONE">restart.</button>
+
+  <script>
+    (() => {
+      const body = document.body;
+      const toy = document.getElementById("toy");
+      const restart = document.getElementById("restart");
+      const live = document.getElementById("stageLive");
+
+
+      let tapCount = 0;
+      let punchTimer = 0;
+
+      const stages = {
+        restraint: "stage 00 / restraint",
+        crack: "stage 01 / crack",
+        lift: "stage 02 / lift",
+        fragment: "stage 03 / fragment",
+        scatter: "stage 04 / scatter",
+        chaos: "stage 05 / peak chaos",
+        settle: "stage 06 / settle"
+      };
+
+      function stageFor(count) {
+        if (count <= 0) return "restraint";
+        if (count <= 2) return "crack";
+        if (count <= 5) return "lift";
+        if (count <= 10) return "fragment";
+        if (count <= 18) return "scatter";
+        if (count <= 28) return "chaos";
+        return "settle";
+      }
+
+      function setStage(stage) {
+        body.dataset.stage = stage;
+        body.dataset.count = String(tapCount);
+        live.textContent = `${stages[stage].replace("/", "")}. tap ${tapCount}.`;
+      }
+
+      function punchSettled() {
+        clearTimeout(punchTimer);
+        body.classList.remove("punched");
+        body.offsetWidth;
+        body.classList.add("punched");
+        punchTimer = window.setTimeout(() => {
+          body.classList.remove("punched");
+        }, 210);
+      }
+
+      function advance() {
+        const previous = stageFor(tapCount);
+        tapCount += 1;
+        const next = stageFor(tapCount);
+        setStage(next);
+        if (previous === "settle" && next === "settle") {
+          punchSettled();
+        }
+      }
+
+      function reset() {
+        tapCount = 0;
+        clearTimeout(punchTimer);
+        body.classList.remove("punched");
+        setStage("restraint");
+        toy.focus({ preventScroll: true });
+      }
+
+      toy.addEventListener("click", (event) => {
+        if (event.target.closest("button")) return;
+        advance();
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (document.activeElement === restart) return;
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          advance();
+        }
+      });
+
+      restart.addEventListener("click", (event) => {
+        event.stopPropagation();
+        reset();
+      });
+
+      setStage("restraint");
+    })();
+  </script>
+</body>
+</html>

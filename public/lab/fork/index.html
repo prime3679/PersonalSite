@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>fork | a regret map for one hard decision</title>
+<meta name="description" content="one decision, three futures, and a map of what each would cost you. no account, no ai, nothing leaves the page.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23f7f3ea'/%3E%3Cpath d='M3 8h4c3 0 3-5 6-5M7 8c3 0 3 5 6 5M7 8c3 0 3-2 6-2' fill='none' stroke='%231c1814' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --paper: #f7f3ea;
+    --ink: #1c1814;
+    --graphite: #574f44;
+    --hairline: #e4decf;
+    --strong-hairline: #d3cbb8;
+    --rust: #a8472c;
+    --serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+    --ease: cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  button,
+  input {
+    font: inherit;
+  }
+
+  button {
+    min-height: 44px;
+    color: inherit;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--rust);
+    outline-offset: 4px;
+  }
+
+  .page {
+    min-height: 100dvh;
+    display: grid;
+    place-items: center;
+    padding: clamp(18px, 5vw, 28px);
+  }
+
+  .fork-shell {
+    width: min(100%, 34rem);
+    min-height: min(720px, calc(100dvh - clamp(36px, 10vw, 56px)));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(28px, 8vh, 64px);
+  }
+
+  .fork-shell.is-map {
+    width: min(100%, 44rem);
+    justify-content: flex-start;
+    padding-block: clamp(8px, 3vh, 22px);
+  }
+
+  .topbar {
+    min-height: 44px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .text-control {
+    border: 0;
+    background: transparent;
+    padding: 10px 0;
+    color: var(--graphite);
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .text-control[hidden] {
+    display: none;
+  }
+
+  .screen {
+    display: grid;
+    gap: clamp(18px, 5vw, 28px);
+    animation: step-in 320ms var(--ease) both;
+  }
+
+  h1 {
+    max-width: 12em;
+    margin: 0;
+    font-weight: 400;
+    font-size: clamp(2.25rem, 15vw, 5rem);
+    line-height: 0.95;
+    letter-spacing: 0;
+  }
+
+  [data-step="decision"] h1,
+  [data-step="futures"] h1,
+  [data-step^="rate"] h1,
+  [data-step="map"] h1 {
+    max-width: 13em;
+    font-size: clamp(2rem, 10vw, 3.7rem);
+    line-height: 1;
+  }
+
+  .body {
+    display: grid;
+    gap: 18px;
+  }
+
+  .copy,
+  .observation,
+  .margin-question {
+    margin: 0;
+    color: var(--ink);
+    font-size: clamp(1.05rem, 4.2vw, 1.25rem);
+    line-height: 1.45;
+  }
+
+  .copy.small,
+  .hint {
+    color: var(--graphite);
+    font-size: 1rem;
+    line-height: 1.45;
+  }
+
+  .hint {
+    margin: 0;
+  }
+
+  .hint[hidden] {
+    display: none;
+  }
+
+  .legend,
+  .map-label,
+  .branch-label {
+    font-family: var(--mono);
+    letter-spacing: 0;
+    fill: var(--graphite);
+  }
+
+  .legend {
+    margin: -6px 0 0;
+    color: var(--graphite);
+    font-size: 0.76rem;
+  }
+
+  .stack {
+    display: grid;
+    gap: 22px;
+  }
+
+  .writing-line {
+    display: block;
+    min-height: 54px;
+  }
+
+  .writing-line input {
+    width: 100%;
+    min-height: 54px;
+    border: 0;
+    border-bottom: 1px solid var(--strong-hairline);
+    border-radius: 0;
+    background: transparent;
+    color: var(--ink);
+    padding: 8px 0 10px;
+    font-size: clamp(1.3rem, 6vw, 1.9rem);
+    line-height: 1.2;
+  }
+
+  .writing-line input::placeholder {
+    color: color-mix(in srgb, var(--graphite) 62%, transparent);
+    opacity: 1;
+  }
+
+  .control-button {
+    width: fit-content;
+    max-width: 100%;
+    border: 1px solid var(--ink);
+    border-radius: 3px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 11px 16px;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 0.83rem;
+    letter-spacing: 0;
+    transition: transform 320ms var(--ease), background 320ms var(--ease), color 320ms var(--ease);
+  }
+
+  .control-button:hover {
+    transform: translateY(-1px);
+  }
+
+  .control-button.secondary {
+    background: transparent;
+    color: var(--ink);
+  }
+
+  .slider-group {
+    display: grid;
+    gap: 12px;
+  }
+
+  .slider-group label,
+  .choice-group legend {
+    max-width: 28rem;
+    color: var(--ink);
+    font-size: clamp(1.05rem, 4.2vw, 1.22rem);
+    line-height: 1.35;
+  }
+
+  .range-row {
+    display: grid;
+    grid-template-columns: minmax(48px, auto) minmax(120px, 1fr) minmax(40px, auto);
+    align-items: center;
+    gap: 12px;
+    color: var(--graphite);
+    font-family: var(--mono);
+    font-size: 0.76rem;
+  }
+
+  input[type="range"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    min-height: 44px;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  input[type="range"]::-webkit-slider-runnable-track {
+    height: 2px;
+    background: var(--strong-hairline);
+  }
+
+  input[type="range"]::-moz-range-track {
+    height: 2px;
+    background: var(--strong-hairline);
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    margin-top: -10px;
+    border: 2px solid var(--ink);
+    border-radius: 50%;
+    background: var(--paper);
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--ink);
+    border-radius: 50%;
+    background: var(--paper);
+  }
+
+  .choice-group {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .choice {
+    min-height: 48px;
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    color: var(--graphite);
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+
+  .choice input {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--ink);
+  }
+
+  .fork-map {
+    width: min(100%, 44rem);
+    aspect-ratio: 760 / 360;
+    display: block;
+    overflow: visible;
+  }
+
+  .map-label {
+    font-size: 13px;
+  }
+
+  .branch-label {
+    font-size: 12px;
+  }
+
+  .map-trunk,
+  .map-branch {
+    stroke-dasharray: 900;
+    stroke-dashoffset: 900;
+    animation: draw-line 320ms var(--ease) forwards;
+  }
+
+  .map-branch {
+    animation-delay: 120ms;
+  }
+
+  .observations {
+    display: grid;
+    gap: 12px;
+    padding-top: 8px;
+    border-top: 1px solid var(--hairline);
+  }
+
+  .margin-question {
+    padding-top: 18px;
+    border-top: 1px solid var(--hairline);
+    font-style: italic;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @keyframes step-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes draw-line {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .fork-shell {
+      min-height: calc(100dvh - 36px);
+      gap: 16px;
+    }
+
+    .topbar {
+      min-height: 40px;
+    }
+
+    h1 {
+      font-size: clamp(2.15rem, 14vw, 3rem);
+    }
+
+    [data-step="decision"] h1,
+    [data-step="futures"] h1,
+    [data-step^="rate"] h1,
+    [data-step="map"] h1 {
+      font-size: clamp(1.85rem, 9vw, 2.35rem);
+    }
+
+    .body,
+    .stack {
+      gap: 15px;
+    }
+
+    .range-row {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+
+    .range-row span:last-child {
+      justify-self: end;
+    }
+
+    .actions {
+      display: grid;
+    }
+
+    .control-button {
+      width: 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 1ms;
+      animation-delay: 0ms;
+      transition-duration: 1ms;
+      scroll-behavior: auto;
+    }
+
+    .screen,
+    .map-trunk,
+    .map-branch {
+      animation: none;
+      stroke-dashoffset: 0;
+    }
+  }
+</style>
+</head>
+<body>
+  <main class="page" data-fork-app data-step="cover">
+    <section class="fork-shell" data-step-shell aria-labelledby="screen-title">
+      <div class="topbar">
+        <button class="text-control" id="back-button" type="button" hidden>back</button>
+        <button class="text-control" id="start-over-button" type="button" hidden>start over</button>
+      </div>
+      <div class="screen">
+        <h1 id="screen-title">fork</h1>
+        <div class="body" id="screen-body"></div>
+      </div>
+      <p class="sr-only" id="step-live" aria-live="polite"></p>
+    </section>
+  </main>
+  <script type="module" src="fork-logic.js"></script>
+</body>
+</html>

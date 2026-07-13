@@ -17,6 +17,15 @@ test('lab page has correct title, heading, and rogue card', async ({ page }) => 
   // The current lean flagship keeps a factual running-since receipt instead of a stat tile.
   await expect(rogueCard).toContainText('running since');
 
+  const fork = page.locator('#fork');
+  await expect(fork).toBeVisible();
+  await expect(fork).toContainText('one hard decision, three futures, three marks each');
+  await expect(fork.locator('a[href="/lab/fork/"]')).toHaveText('open');
+
+  const sectionIds = await page.locator('main section').evaluateAll((sections) => sections.map((section) => section.id));
+  expect(sectionIds.indexOf('fork')).toBeGreaterThan(sectionIds.indexOf('rogue'));
+  expect(sectionIds.indexOf('fork')).toBeLessThan(sectionIds.indexOf('ink-field'));
+
   // The "also built" section is a plain-text row of links, not toy cards
   const alsoBuilt = page.locator('#also-built');
   await expect(alsoBuilt).toBeVisible();

@@ -87,11 +87,60 @@ test('fork fits and remains tappable at 320px', async ({ page }) => {
   const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
   expect(scrollWidth).toBeLessThanOrEqual(320);
 
+  const mapBox = await page.locator('.fork-map').boundingBox();
+  expect(mapBox).not.toBeNull();
+  expect(mapBox!.height).toBeGreaterThanOrEqual(330);
+
+  const branchLabelHeight = await page.locator('.branch-label').first().evaluate((node) => node.getBoundingClientRect().height);
+  expect(branchLabelHeight).toBeGreaterThanOrEqual(9);
+
   for (const button of await page.getByRole('button').all()) {
     const box = await button.boundingBox();
     expect(box).not.toBeNull();
     expect(box!.height).toBeGreaterThanOrEqual(44);
   }
+});
+
+test('fork moves focus to the map heading and exposes rich map summary text', async ({ page }) => {
+  await completeFork(page);
+
+  await expect(page.getByRole('heading', { name: 'choose the next chapter' })).toBeFocused();
+  await expect(page.locator('.sr-only li').nth(0)).toContainText('stay put, pulls hard today, barely stings at ten years, ink.');
+  await expect(page.locator('.sr-only li').nth(1)).toContainText('take offer, pulls lightly today, stings like a scar at ten years, pencil.');
+});
+
+test('fork associates validation hints with the fields that need them', async ({ page }) => {
+  await page.goto('/lab/fork/');
+  await page.getByRole('button', { name: 'draw the fork' }).click();
+  await page.getByRole('button', { name: 'next' }).click();
+
+  const decision = page.getByPlaceholder('leave the job, stay in the city, say it out loud');
+  await expect(decision).toHaveAttribute('aria-describedby', 'decision-hint');
+  await expect(page.locator('#decision-hint')).toBeVisible();
+
+  await decision.fill('choose the next chapter');
+  await page.getByRole('button', { name: 'next' }).click();
+  await page.getByRole('button', { name: 'next' }).click();
+  await expect(page.getByPlaceholder('stay put')).toHaveAttribute('aria-describedby', 'futures-hint');
+  await expect(page.locator('#futures-hint')).toBeVisible();
+});
+
+test('fork announces slider values as they change and restores marked sliders', async ({ page }) => {
+  await page.goto('/lab/fork/');
+  await page.getByRole('button', { name: 'draw the fork' }).click();
+  await page.getByPlaceholder('leave the job, stay in the city, say it out loud').fill('choose the next chapter');
+  await page.getByRole('button', { name: 'next' }).click();
+  await page.getByPlaceholder('stay put').fill('stay put');
+  await page.getByPlaceholder('take the offer').fill('take offer');
+  await page.getByPlaceholder('start over').fill('start over');
+  await page.getByRole('button', { name: 'next' }).click();
+
+  const pull = page.locator('input[type="range"]').first();
+  await expect(pull).toHaveAttribute('aria-valuetext', 'about 5 of 10, from barely to hard');
+  await setRange(pull, 72);
+  await expect(pull).toHaveAttribute('aria-valuetext', 'about 7 of 10, from barely to hard');
+  await page.reload();
+  await expect(page.locator('input[type="range"]').first()).toHaveAttribute('aria-valuetext', 'about 7 of 10, from barely to hard');
 });
 
 test('fork downloads a legible 1080 by 1350 png', async ({ page }, testInfo) => {

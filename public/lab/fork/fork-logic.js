@@ -185,11 +185,38 @@ function appendSvgText(parent, text, x, y, attrs = {}) {
   return element;
 }
 
+function scaleLabel(value) {
+  return Math.round(clampInt(value) / 10);
+}
+
+function sliderValueText(value, low, high) {
+  return `about ${scaleLabel(value)} of 10, from ${low} to ${high}`;
+}
+
+function pullQuality(value) {
+  const score = clampInt(value);
+  if (score <= 20) return 'barely pulls today';
+  if (score <= 45) return 'pulls lightly today';
+  if (score <= 65) return 'pulls steadily today';
+  if (score <= 85) return 'pulls strongly today';
+  return 'pulls hard today';
+}
+
+function stingQuality(value) {
+  const score = clampInt(value);
+  if (score <= 20) return 'barely stings at ten years';
+  if (score <= 45) return 'stings lightly at ten years';
+  if (score <= 65) return 'stings steadily at ten years';
+  if (score <= 85) return 'stings sharply at ten years';
+  return 'stings like a scar at ten years';
+}
+
 export function mapGeometry(input, width = 760, height = 360) {
   const state = normalizeState(input);
-  const top = 70;
-  const bottom = height - 78;
-  const leftX = 132;
+  const compact = width <= 420;
+  const top = compact ? 78 : 70;
+  const bottom = height - (compact ? 92 : 78);
+  const leftX = compact ? 58 : 132;
   const rightX = width - 124;
   const entries = state.futures.map((future, index) => {
     const mark = state.marks[index];
@@ -210,9 +237,12 @@ export function mapGeometry(input, width = 760, height = 360) {
 export function renderMapSvg(svg, input) {
   const state = normalizeState(input);
   while (svg.firstChild) svg.removeChild(svg.firstChild);
-  const width = 760;
-  const height = 360;
+  const viewportWidth = svg.ownerDocument && svg.ownerDocument.defaultView ? svg.ownerDocument.defaultView.innerWidth : 760;
+  const width = viewportWidth <= 380 ? 320 : 760;
+  const height = viewportWidth <= 380 ? 420 : 360;
   svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+  svg.setAttribute('width', String(width));
+  svg.setAttribute('height', String(height));
   svg.setAttribute('role', 'img');
   svg.setAttribute('aria-label', `fork map for ${state.decision || 'one decision'}`);
 
@@ -223,8 +253,9 @@ export function renderMapSvg(svg, input) {
   appendSvgText(svg, 'stings at ten years', geometry.rightX, 34, { 'text-anchor': 'middle', class: 'map-label' });
 
   const averagePullY = geometry.entries.reduce((sum, entry) => sum + entry.leftY, 0) / geometry.entries.length;
+  const trunkStartX = width <= 420 ? 16 : 30;
   svg.append(makeSvgElement('path', {
-    d: `M 30 ${averagePullY.toFixed(1)} C 62 ${(averagePullY - 4).toFixed(1)} 88 ${(averagePullY + 3).toFixed(1)} ${geometry.leftX} ${averagePullY.toFixed(1)}`,
+    d: `M ${trunkStartX} ${averagePullY.toFixed(1)} C ${trunkStartX + 32} ${(averagePullY - 4).toFixed(1)} ${geometry.leftX - 44} ${(averagePullY + 3).toFixed(1)} ${geometry.leftX} ${averagePullY.toFixed(1)}`,
     fill: 'none',
     stroke: COLORS.ink,
     'stroke-linecap': 'round',
@@ -244,7 +275,7 @@ export function renderMapSvg(svg, input) {
       class: 'map-branch',
       'data-branch': String(entry.index),
     }));
-    appendSvgText(svg, truncateLabel(entry.name, 13), geometry.rightX + 18, entry.rightY + 4, { class: 'branch-label' });
+    appendSvgText(svg, truncateLabel(entry.name, width <= 420 ? 10 : 13), geometry.rightX + (width <= 420 ? 10 : 18), entry.rightY + 4, { class: 'branch-label' });
   });
 
   if (geometry.crossing) {
@@ -264,6 +295,12 @@ export function renderMapSvg(svg, input) {
 }
 
 function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 8) {
+  const lines = canvasTextLines(ctx, text, maxWidth, maxLines);
+  lines.forEach((item, index) => ctx.fillText(item, x, y + index * lineHeight));
+  return y + lines.length * lineHeight;
+}
+
+function canvasTextLines(ctx, text, maxWidth, maxLines = 8) {
   const words = String(text).split(/\s+/).filter(Boolean);
   const lines = [];
   let line = '';
@@ -277,8 +314,7 @@ function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 8) {
     }
   });
   if (line) lines.push(line);
-  lines.slice(0, maxLines).forEach((item, index) => ctx.fillText(item, x, y + index * lineHeight));
-  return y + Math.min(lines.length, maxLines) * lineHeight;
+  return lines.slice(0, maxLines);
 }
 
 function drawCanvasBranch(ctx, entry) {
@@ -306,9 +342,20 @@ export function drawExportCanvas(canvas, input, now = new Date()) {
 
   ctx.fillStyle = COLORS.ink;
   ctx.font = '34px Georgia, "Iowan Old Style", serif';
-  let y = wrapCanvasText(ctx, state.decision, 88, 232, 904, 44, 3) + 34;
+  let y = wrapCanvasText(ctx, state.decision, 88, 232, 904, 44, 3) + 28;
 
-  const scale = 1.15;
+  const footerRuleY = 1168;
+  const contentBottom = footerRuleY - 34;
+  const observations = readMap(state);
+  ctx.font = '28px Georgia, "Iowan Old Style", serif';
+  const observationHeight = observations.reduce((sum, observation) => (
+    sum + canvasTextLines(ctx, observation, 904, 3).length * 36 + 16
+  ), 0);
+  const futuresHeight = 3 * 40 + 38;
+  const mapGap = 34;
+  const availableMapHeight = contentBottom - y - futuresHeight - observationHeight - mapGap;
+  const scale = Math.max(0.74, Math.min(1.02, availableMapHeight / 360));
+
   const offsetX = 82;
   const offsetY = y;
   const geometry = mapGeometry(state, 760, 360);
@@ -354,33 +401,33 @@ export function drawExportCanvas(canvas, input, now = new Date()) {
   }
   ctx.restore();
 
-  y += 500;
+  y += 360 * scale + mapGap;
   ctx.fillStyle = COLORS.ink;
-  ctx.font = '28px Georgia, "Iowan Old Style", serif';
+  ctx.font = '27px Georgia, "Iowan Old Style", serif';
   state.futures.forEach((future, index) => {
     const mark = state.marks[index];
     const line = `${future}: ${mark.reversibility === 'ink' ? 'ink' : 'pencil'}`;
-    ctx.fillText(line, 88, y + index * 42);
+    ctx.fillText(line, 88, y + index * 40);
   });
-  y += 162;
+  y += futuresHeight;
 
   ctx.font = '28px Georgia, "Iowan Old Style", serif';
-  readMap(state).forEach((observation) => {
-    y = wrapCanvasText(ctx, observation, 88, y, 904, 38, 3) + 18;
+  observations.forEach((observation) => {
+    y = wrapCanvasText(ctx, observation, 88, y, 904, 36, 3) + 16;
   });
 
   ctx.strokeStyle = COLORS.strongHairline;
   ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.moveTo(88, 1142);
-  ctx.lineTo(992, 1142);
+  ctx.moveTo(88, footerRuleY);
+  ctx.lineTo(992, footerRuleY);
   ctx.stroke();
   ctx.fillStyle = COLORS.ink;
   ctx.font = '27px Georgia, "Iowan Old Style", serif';
-  wrapCanvasText(ctx, 'one question the map cannot hold: which of these doors is closing on its own, whether or not you choose?', 88, 1192, 904, 38, 3);
+  wrapCanvasText(ctx, 'one question the map cannot hold: which of these doors is closing on its own, whether or not you choose?', 88, footerRuleY + 48, 904, 36, 3);
   ctx.fillStyle = COLORS.graphite;
   ctx.font = '22px ui-monospace, "SF Mono", Menlo, monospace';
-  ctx.fillText(now.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }).toLowerCase(), 88, 1292);
+  ctx.fillText(now.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }).toLowerCase(), 88, 1308);
 }
 
 export function saveMapPng(input, documentRef = document, now = new Date()) {
@@ -400,7 +447,6 @@ function initForkApp() {
   let state = restoreState();
   let confirmStart = false;
   let sliderId = 0;
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const els = {
     shell: document.querySelector('[data-step-shell]'),
@@ -466,6 +512,7 @@ function initForkApp() {
     els.startOver.hidden = state.step === 'cover';
     els.startOver.textContent = 'start over';
     els.shell.classList.remove('is-map');
+    els.title.removeAttribute('tabindex');
     const announce = stepAnnouncement(state.step);
     els.live.textContent = announce;
 
@@ -474,8 +521,6 @@ function initForkApp() {
     if (state.step === 'futures') renderFutures();
     if (state.step.startsWith('rate')) renderRate(Number(state.step.replace('rate', '')));
     if (state.step === 'map') renderMap();
-
-    if (reduceMotion) els.shell.classList.add('reduce-motion');
   }
 
   function stepAnnouncement(step) {
@@ -511,6 +556,8 @@ function initForkApp() {
     input.placeholder = 'leave the job, stay in the city, say it out loud';
     input.value = state.decision;
     const hint = paragraph('give it a name, even a rough one.', 'hint');
+    hint.id = 'decision-hint';
+    input.setAttribute('aria-describedby', hint.id);
     input.addEventListener('input', () => {
       state = normalizeState({ ...state, decision: input.value });
       persist();
@@ -563,7 +610,9 @@ function initForkApp() {
       return input;
     });
     const hint = paragraph('give each branch a name.', 'hint');
+    hint.id = 'futures-hint';
     hint.hidden = true;
+    inputs.forEach((input) => input.setAttribute('aria-describedby', hint.id));
     form.append(hint, button('next', () => {
       const futures = inputs.map((input) => cleanText(input.value, 18));
       if (futures.some((future) => !future)) {
@@ -586,12 +635,12 @@ function initForkApp() {
     const mark = { ...state.marks[index] };
     const form = document.createElement('form');
     form.className = 'stack';
-    const pull = sliderBlock('pull', 'how hard does it pull, today?', 'barely', 'hard', mark.pull, (value) => {
+    const pull = sliderBlock('pull', 'how hard does it pull, today?', 'barely', 'hard', mark.pull, mark.pullSet, (value) => {
       mark.pull = value;
       mark.pullSet = true;
       saveMark(index, mark);
     });
-    const sting = sliderBlock('sting', 'ten years from now, you chose something else. how much does losing this one sting?', 'a shrug', 'a scar', mark.sting, (value) => {
+    const sting = sliderBlock('sting', 'ten years from now, you chose something else. how much does losing this one sting?', 'a shrug', 'a scar', mark.sting, mark.stingSet, (value) => {
       mark.sting = value;
       mark.stingSet = true;
       saveMark(index, mark);
@@ -601,7 +650,12 @@ function initForkApp() {
       saveMark(index, mark);
     });
     const hint = paragraph('mark both lines and choose pencil or ink.', 'hint');
+    hint.id = `rate-hint-${index}`;
     hint.hidden = hasCompleteMark(mark);
+    [pull, sting, radios].forEach((group) => {
+      group.setAttribute('aria-describedby', hint.id);
+      group.querySelectorAll('input').forEach((input) => input.setAttribute('aria-describedby', hint.id));
+    });
     const nextText = index === 2 ? 'draw the map' : 'next';
     const next = button(nextText, () => {
       if (!hasCompleteMark(mark)) {
@@ -631,7 +685,7 @@ function initForkApp() {
     return Boolean(mark.pullSet && mark.stingSet && mark.reversibility);
   }
 
-  function sliderBlock(name, question, low, high, value, onChange) {
+  function sliderBlock(name, question, low, high, value, isSet, onChange) {
     const group = document.createElement('div');
     group.className = 'slider-group';
     const label = document.createElement('label');
@@ -651,12 +705,13 @@ function initForkApp() {
     input.step = '1';
     input.value = String(value);
     input.setAttribute('aria-label', question);
-    input.setAttribute('aria-valuetext', `${low} to ${high}`);
-    input.dataset.set = 'false';
+    input.setAttribute('aria-valuetext', sliderValueText(value, low, high));
+    input.dataset.set = isSet ? 'true' : 'false';
     const highNode = document.createElement('span');
     highNode.textContent = high;
     input.addEventListener('input', () => {
       input.dataset.set = 'true';
+      input.setAttribute('aria-valuetext', sliderValueText(input.value, low, high));
       onChange(clampInt(input.value));
     });
     row.append(lowNode, input, highNode);
@@ -699,7 +754,8 @@ function initForkApp() {
     hiddenList.className = 'sr-only';
     state.futures.forEach((future, index) => {
       const item = document.createElement('li');
-      item.textContent = `${future}, ${state.marks[index].reversibility}`;
+      const mark = state.marks[index];
+      item.textContent = `${future}, ${pullQuality(mark.pull)}, ${stingQuality(mark.sting)}, ${mark.reversibility === 'ink' ? 'ink' : 'pencil'}.`;
       hiddenList.append(item);
     });
     const legend = paragraph('ink does not erase. pencil can.', 'legend');
@@ -714,6 +770,8 @@ function initForkApp() {
       button('change my marks', () => setStep('rate0'), 'secondary'),
     );
     els.body.append(svg, hiddenList, legend, observations, question, actions);
+    els.title.setAttribute('tabindex', '-1');
+    els.title.focus({ preventScroll: true });
   }
 
   els.back.addEventListener('click', () => {

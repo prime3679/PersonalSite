@@ -80,26 +80,34 @@ test('fork is keyboard completable with native sliders and radios', async ({ pag
   await expect(page.getByRole('img', { name: /fork map for one consequential choice/ })).toBeVisible();
 });
 
-test('fork fits and remains tappable at 320px', async ({ page }) => {
-  await page.setViewportSize({ width: 320, height: 720 });
-  await completeFork(page);
+for (const width of [320, 390, 414]) {
+  test(`fork uses the compact portrait map at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 720 });
+    await completeFork(page);
 
-  const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
-  expect(scrollWidth).toBeLessThanOrEqual(320);
+    const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+    expect(scrollWidth).toBeLessThanOrEqual(width);
 
-  const mapBox = await page.locator('.fork-map').boundingBox();
-  expect(mapBox).not.toBeNull();
-  expect(mapBox!.height).toBeGreaterThanOrEqual(330);
+    const map = page.locator('.fork-map');
+    await expect(map).toHaveAttribute('viewBox', '0 0 320 420');
+    await expect(map).toHaveAttribute('width', '320');
+    await expect(map).toHaveAttribute('height', '420');
 
-  const branchLabelHeight = await page.locator('.branch-label').first().evaluate((node) => node.getBoundingClientRect().height);
-  expect(branchLabelHeight).toBeGreaterThanOrEqual(9);
+    const mapBox = await map.boundingBox();
+    expect(mapBox).not.toBeNull();
+    expect(mapBox!.height).toBeGreaterThanOrEqual(330);
+    expect(mapBox!.width).toBeLessThanOrEqual(width);
 
-  for (const button of await page.getByRole('button').all()) {
-    const box = await button.boundingBox();
-    expect(box).not.toBeNull();
-    expect(box!.height).toBeGreaterThanOrEqual(44);
-  }
-});
+    const branchLabelHeight = await page.locator('.branch-label').first().evaluate((node) => node.getBoundingClientRect().height);
+    expect(branchLabelHeight).toBeGreaterThanOrEqual(9);
+
+    for (const button of await page.getByRole('button').all()) {
+      const box = await button.boundingBox();
+      expect(box).not.toBeNull();
+      expect(box!.height).toBeGreaterThanOrEqual(44);
+    }
+  });
+}
 
 test('fork moves focus to the map heading and exposes rich map summary text', async ({ page }) => {
   await completeFork(page);

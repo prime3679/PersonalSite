@@ -238,8 +238,8 @@ export function renderMapSvg(svg, input) {
   const state = normalizeState(input);
   while (svg.firstChild) svg.removeChild(svg.firstChild);
   const viewportWidth = svg.ownerDocument && svg.ownerDocument.defaultView ? svg.ownerDocument.defaultView.innerWidth : 760;
-  const width = viewportWidth <= 380 ? 320 : 760;
-  const height = viewportWidth <= 380 ? 420 : 360;
+  const width = viewportWidth <= 440 ? 320 : 760;
+  const height = viewportWidth <= 440 ? 420 : 360;
   svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
   svg.setAttribute('width', String(width));
   svg.setAttribute('height', String(height));

@@ -74,12 +74,9 @@ test('live status: stale heartbeat renders the quiet state, never live', async (
   await expect(status).toContainText('last signal 10 hours ago');
 });
 
-test('live status: lab stat is epoch-derived and updates client side', async ({ page }) => {
-  await page.route(STATUS_URL, (route) => route.abort('failed'));
+test('lab uses the factual running-since receipt instead of a stale stat tile', async ({ page }) => {
   await page.goto('/lab');
-  const stat = page.locator('#rogue .stat-number');
-  await expect(stat).toHaveText(/^\d+$/);
-  const days = Number(await stat.textContent());
-  // 67 was the last hardcoded value (2026-06-21); the derived count only grows
-  expect(days).toBeGreaterThanOrEqual(67);
+  const rogue = page.locator('#rogue');
+  await expect(rogue).toContainText('running since april 2026');
+  await expect(rogue.locator('.stat-number')).toHaveCount(0);
 });

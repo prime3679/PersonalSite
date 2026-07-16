@@ -41,6 +41,34 @@ afterEach(() => {
   }
 });
 
+function makeBaseContract(commands: Array<Record<string, unknown>>): Record<string, unknown> {
+  return {
+    version: 1,
+    repo: 'temp',
+    canonical_doctrine: 'doctrine.md',
+    source_of_truth: ['doctrine.md'],
+    required_files: ['doctrine.md'],
+    boundaries: {
+      portable_paths: ['.agent/', 'scripts/', 'src/agent/', 'doctrine.md'],
+      protected_paths: ['src/'],
+      forbidden_actions: ['deploy'],
+    },
+    review: {
+      rules: ['keep it local'],
+      classification: {
+        one_off_judgment: 'review only',
+        repeatable_defect: 'guardrail',
+        missing_domain_knowledge: 'doc gap',
+        agent_behavior_failure: 'process bug',
+      },
+    },
+    escalate_if: ['conflict'],
+    verification: {
+      commands,
+    },
+  };
+}
+
 describe('contribution gate', () => {
   it('audits the PersonalSite contract successfully', () => {
     const result = runGate(['audit', '--repo-root', repoRoot, '--json']);
@@ -64,36 +92,16 @@ describe('contribution gate', () => {
     writeFileSync(resolve(root, 'README.md'), 'temp repo\n');
     writeFileSync(resolve(root, 'doctrine.md'), 'doctrine\n');
     writeFileSync(resolve(root, 'runner.py'), 'from pathlib import Path\nPath("ran.txt").write_text("ran\\n", encoding="utf-8")\n');
+    const contract = makeBaseContract([
+      {
+        id: 'runner',
+        cwd: '.',
+        argv: [python, 'runner.py'],
+      },
+    ]);
     writeContract(root, {
-      version: 1,
-      repo: 'temp',
-      canonical_doctrine: 'doctrine.md',
-      source_of_truth: ['doctrine.md'],
+      ...contract,
       required_files: ['doctrine.md', 'missing.md'],
-      boundaries: {
-        portable_paths: ['.agent/', 'doctrine.md'],
-        protected_paths: ['src/'],
-        forbidden_actions: ['deploy'],
-      },
-      review: {
-        rules: ['keep it local'],
-        classification: {
-          one_off_judgment: 'review only',
-          repeatable_defect: 'guardrail',
-          missing_domain_knowledge: 'doc gap',
-          agent_behavior_failure: 'process bug',
-        },
-      },
-      escalate_if: ['conflict'],
-      verification: {
-        commands: [
-          {
-            id: 'runner',
-            cwd: '.',
-            argv: [python, 'runner.py'],
-          },
-        ],
-      },
     });
 
     const result = runGate(['verify', '--repo-root', root, '--json']);
@@ -115,39 +123,15 @@ describe('contribution gate', () => {
       resolve(root, 'scripts/fail.py'),
       'raise SystemExit(7)\n',
     );
-    writeContract(root, {
-      version: 1,
-      repo: 'temp',
-      canonical_doctrine: 'doctrine.md',
-      source_of_truth: ['doctrine.md'],
-      required_files: ['doctrine.md'],
-      boundaries: {
-        portable_paths: ['.agent/', 'scripts/', 'doctrine.md'],
-        protected_paths: ['src/'],
-        forbidden_actions: ['deploy'],
+    writeContract(root, makeBaseContract([
+      {
+        id: 'fails',
+        cwd: '.',
+        argv: [python, 'scripts/fail.py'],
+        timeout_seconds: 10,
+        output_limit_bytes: 4096,
       },
-      review: {
-        rules: ['keep it local'],
-        classification: {
-          one_off_judgment: 'review only',
-          repeatable_defect: 'guardrail',
-          missing_domain_knowledge: 'doc gap',
-          agent_behavior_failure: 'process bug',
-        },
-      },
-      escalate_if: ['conflict'],
-      verification: {
-        commands: [
-          {
-            id: 'fails',
-            cwd: '.',
-            argv: [python, 'scripts/fail.py'],
-            timeout_seconds: 10,
-            output_limit_bytes: 4096,
-          },
-        ],
-      },
-    });
+    ]));
 
     const result = runGate(['verify', '--repo-root', root, '--json']);
 
@@ -158,5 +142,113 @@ describe('contribution gate', () => {
     expect(payload.commands[0].id).toBe('fails');
     expect(payload.commands[0].returncode).toBe(7);
     expect(payload.errors).toContain("command 'fails' failed with exit code 7.");
+  });
+
+  it('rejects shell-inline execution before verify runs commands', () => {
+    const root = makeTempRepo('gate-shell-inline');
+    writeFileSync(resolve(root, 'README.md'), 'temp repo\n');
+    writeFileSync(resolve(root, 'doctrine.md'), 'doctrine\n');
+    writeContract(root, makeBaseContract([
+      {
+        id: 'shell-inline',
+        cwd: '.',
+        argv: ['bash', '-c', 'echo unsafe'],
+      },
+    ]));
+
+    const result = runGate(['verify', '--repo-root', root, '--json']);
+
+    expect(result.status).toBe(1);
+    const payload = JSON.parse(result.stdout);
+    expect(payload.ok).toBe(false);
+    expect(payload.commands).toEqual([]);
+    expect(payload.errors).toContain(
+      'verification.commands[0] uses shell-inline execution, which is forbidden.',
+    );
+  });
+
+  it('rejects inline Python and Node execution before verify runs commands', () => {
+    const root = makeTempRepo('gate-inline-code');
+    writeFileSync(resolve(root, 'README.md'), 'temp repo\n');
+    writeFileSync(resolve(root, 'doctrine.md'), 'doctrine\n');
+    writeContract(root, makeBaseContract([
+      {
+        id: 'python-inline',
+        cwd: '.',
+        argv: ['python3', '-c', 'print("unsafe")'],
+      },
+      {
+        id: 'node-inline',
+        cwd: '.',
+        argv: ['node', '-e', 'console.log("unsafe")'],
+      },
+    ]));
+
+    const result = runGate(['verify', '--repo-root', root, '--json']);
+
+    expect(result.status).toBe(1);
+    const payload = JSON.parse(result.stdout);
+    expect(payload.ok).toBe(false);
+    expect(payload.commands).toEqual([]);
+    expect(payload.errors).toContain(
+      'verification.commands[0] uses inline code execution, which is forbidden.',
+    );
+    expect(payload.errors).toContain(
+      'verification.commands[1] uses inline code execution, which is forbidden.',
+    );
+  });
+
+  it('rejects network executors before verify runs commands', () => {
+    const root = makeTempRepo('gate-network');
+    writeFileSync(resolve(root, 'README.md'), 'temp repo\n');
+    writeFileSync(resolve(root, 'doctrine.md'), 'doctrine\n');
+    writeContract(root, makeBaseContract([
+      {
+        id: 'network',
+        cwd: '.',
+        argv: ['curl', 'https://example.com'],
+      },
+    ]));
+
+    const result = runGate(['verify', '--repo-root', root, '--json']);
+
+    expect(result.status).toBe(1);
+    const payload = JSON.parse(result.stdout);
+    expect(payload.ok).toBe(false);
+    expect(payload.commands).toEqual([]);
+    expect(payload.errors).toContain(
+      "verification.commands[0] uses a network-oriented executable ('curl'), which is forbidden.",
+    );
+  });
+
+  it('rejects package install commands before verify runs commands', () => {
+    const root = makeTempRepo('gate-install');
+    writeFileSync(resolve(root, 'README.md'), 'temp repo\n');
+    writeFileSync(resolve(root, 'doctrine.md'), 'doctrine\n');
+    writeContract(root, makeBaseContract([
+      {
+        id: 'npm-install',
+        cwd: '.',
+        argv: ['npm', 'install'],
+      },
+      {
+        id: 'python-pip-install',
+        cwd: '.',
+        argv: ['python3', '-m', 'pip', 'install', 'pytest'],
+      },
+    ]));
+
+    const result = runGate(['verify', '--repo-root', root, '--json']);
+
+    expect(result.status).toBe(1);
+    const payload = JSON.parse(result.stdout);
+    expect(payload.ok).toBe(false);
+    expect(payload.commands).toEqual([]);
+    expect(payload.errors).toContain(
+      'verification.commands[0] looks like setup/install work, which is forbidden.',
+    );
+    expect(payload.errors).toContain(
+      'verification.commands[1] looks like setup/install work, which is forbidden.',
+    );
   });
 });

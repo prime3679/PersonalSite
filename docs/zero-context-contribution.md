@@ -2,14 +2,14 @@
 
 This repo is self-briefing for fresh coding agents. Start here, then follow the repo-local doctrine in order.
 
-## precedence
+## authority precedence
 1. `AGENTS.md`
 2. `CLAUDE.md`
 3. `REVIEW.md`
 4. `.agent/contribution-contract.json`
 5. this document
 
-If instructions conflict, the higher-precedence file wins. Escalate instead of guessing when a conflict would change site behavior.
+If instructions conflict, the higher-precedence file wins. Read order is onboarding sequence, not authority precedence. Escalate instead of guessing when a conflict would change site behavior.
 
 ## what this repo is
 - Adrian Lumley's public personal site
@@ -20,6 +20,7 @@ If instructions conflict, the higher-precedence file wins. Escalate instead of g
 - preserve the canonical public nav and lowercase editorial voice already defined in `AGENTS.md`
 - do not change public site source, content, visuals, dependencies, lockfiles, workflows, deploy config, auth, or services for zero-context contribution work unless the task explicitly requires it
 - treat `src/`, `public/`, `.github/`, package manifests, and deploy/config files as protected by default
+- contribution-only infrastructure under `src/agent/` is the discoverable exception for repo-owned gate tests; keep the rest of `src/` protected
 - keep portable docs and contracts free of credentials, channel ids, family/logistics details, and local absolute paths
 - honest boundary: gate `verify` runs trusted repo-owned commands with defense in depth, but it is not a sandbox
 

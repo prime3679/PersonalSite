@@ -2,11 +2,13 @@
 
 Fresh agents should read this file first, then `AGENTS.md`, `CLAUDE.md`, and `docs/zero-context-contribution.md`.
 
-## precedence
+## authority
 - `AGENTS.md` sets public-site doctrine and verification requirements
 - `CLAUDE.md` adds repo structure and deployment context
 - `.agent/contribution-contract.json` defines the enforceable contribution contract
 - `docs/zero-context-contribution.md` explains how to apply the standard
+
+Read order is for onboarding only, not authority precedence.
 
 ## boundaries
 - this repo is Adrian's public site, not a general sandbox

@@ -245,10 +245,104 @@ describe('contribution gate', () => {
     expect(payload.ok).toBe(false);
     expect(payload.commands).toEqual([]);
     expect(payload.errors).toContain(
-      'verification.commands[0] looks like setup/install work, which is forbidden.',
+      'verification.commands[0] looks like setup/install or ephemeral package-fetch work, which is forbidden.',
     );
     expect(payload.errors).toContain(
-      'verification.commands[1] looks like setup/install work, which is forbidden.',
+      'verification.commands[1] looks like setup/install or ephemeral package-fetch work, which is forbidden.',
+    );
+  });
+
+  it('rejects npm ci and env-wrapped npx fetch commands before verify runs commands', () => {
+    const root = makeTempRepo('gate-package-fetch');
+    writeFileSync(resolve(root, 'README.md'), 'temp repo\n');
+    writeFileSync(resolve(root, 'doctrine.md'), 'doctrine\n');
+    writeContract(root, makeBaseContract([
+      {
+        id: 'npm-ci',
+        cwd: '.',
+        argv: ['npm', 'ci'],
+      },
+      {
+        id: 'env-npx',
+        cwd: '.',
+        argv: ['env', 'NODE_ENV=test', 'npx', 'tsx', '--version'],
+      },
+    ]));
+
+    const result = runGate(['verify', '--repo-root', root, '--json']);
+
+    expect(result.status).toBe(1);
+    const payload = JSON.parse(result.stdout);
+    expect(payload.ok).toBe(false);
+    expect(payload.commands).toEqual([]);
+    expect(payload.errors).toContain(
+      'verification.commands[0] looks like setup/install or ephemeral package-fetch work, which is forbidden.',
+    );
+    expect(payload.errors).toContain(
+      'verification.commands[1] looks like setup/install or ephemeral package-fetch work, which is forbidden.',
+    );
+  });
+
+  it('allows trusted npm run commands to execute during verify', () => {
+    const root = makeTempRepo('gate-npm-run');
+    writeFileSync(resolve(root, 'README.md'), 'temp repo\n');
+    writeFileSync(resolve(root, 'doctrine.md'), 'doctrine\n');
+    writeFileSync(
+      resolve(root, 'runner.py'),
+      'from pathlib import Path\nPath("ran.txt").write_text("ran\\n", encoding="utf-8")\n',
+    );
+    writeFileSync(
+      resolve(root, 'package.json'),
+      JSON.stringify({
+        name: 'temp-repo',
+        private: true,
+        scripts: {
+          verify: `${python} runner.py`,
+        },
+      }, null, 2) + '\n',
+    );
+    writeContract(root, makeBaseContract([
+      {
+        id: 'npm-run',
+        cwd: '.',
+        argv: ['npm', 'run', 'verify'],
+        timeout_seconds: 10,
+        output_limit_bytes: 4096,
+      },
+    ]));
+
+    const result = runGate(['verify', '--repo-root', root, '--json']);
+
+    expect(result.status).toBe(0);
+    const payload = JSON.parse(result.stdout);
+    expect(payload.ok).toBe(true);
+    expect(payload.errors).toEqual([]);
+    expect(payload.commands).toHaveLength(1);
+    expect(payload.commands[0].id).toBe('npm-run');
+    expect(payload.commands[0].returncode).toBe(0);
+    expect(readFileSync(resolve(root, 'ran.txt'), 'utf-8')).toBe('ran\n');
+  });
+
+  it('rejects env-wrapped package fetch commands even when they would otherwise look trusted', () => {
+    const root = makeTempRepo('gate-env-package-fetch');
+    writeFileSync(resolve(root, 'README.md'), 'temp repo\n');
+    writeFileSync(resolve(root, 'doctrine.md'), 'doctrine\n');
+    writeContract(root, makeBaseContract([
+      {
+        id: 'env-pnpx',
+        cwd: '.',
+        argv: ['env', 'CI=1', 'pnpx', 'vitest', '--version'],
+      },
+    ]));
+
+    const result = runGate(['verify', '--repo-root', root, '--json']);
+
+    expect(result.status).toBe(1);
+    const payload = JSON.parse(result.stdout);
+    expect(payload.ok).toBe(false);
+    expect(payload.commands).toEqual([]);
+    expect(payload.errors).toContain(
+      'verification.commands[0] looks like setup/install or ephemeral package-fetch work, which is forbidden.',
     );
   });
 });

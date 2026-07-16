@@ -1,0 +1,160 @@
+{
+  "version": 1,
+  "repo": "PersonalSite",
+  "canonical_doctrine": "docs/zero-context-contribution.md",
+  "source_of_truth": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "REVIEW.md",
+    "docs/zero-context-contribution.md",
+    ".agent/contribution-contract.json"
+  ],
+  "required_files": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "README.md",
+    "REVIEW.md",
+    "docs/zero-context-contribution.md",
+    ".agent/contribution-contract.json",
+    ".agent/contribution_gate.py"
+  ],
+  "boundaries": {
+    "portable_paths": [
+      "AGENTS.md",
+      "CLAUDE.md",
+      "README.md",
+      "REVIEW.md",
+      "docs/",
+      ".agent/",
+      "src/"
+    ],
+    "protected_paths": [
+      "src/",
+      "public/",
+      ".github/",
+      "package.json",
+      "package-lock.json",
+      "pnpm-lock.yaml",
+      "yarn.lock",
+      "bun.lockb",
+      "astro.config.mjs",
+      "playwright.config.ts",
+      "vitest.config.ts"
+    ],
+    "forbidden_actions": [
+      "automatic dependency installation or bootstrap",
+      "editing user-facing site surfaces for contribution-only work",
+      "deploying, pushing, or touching live state",
+      "reading or printing secrets from local environments"
+    ]
+  },
+  "review": {
+    "rules": [
+      "preserve and tighten repo-specific doctrine instead of replacing it",
+      "prefer repo-owned guardrails for repeatable failures",
+      "keep contribution verification scoped to trusted repo-owned commands",
+      "treat verify as defense in depth, not as a sandbox"
+    ],
+    "classification": {
+      "one_off_judgment": "editorial or product judgment that should stay in review unless explicitly promoted",
+      "repeatable_defect": "a recurring bug, missing guardrail, or flaky workflow that should become local infrastructure",
+      "missing_domain_knowledge": "important repo context is missing locally and should be added to doctrine or contract files",
+      "agent_behavior_failure": "an agent process failure such as skipped verification, unsafe commands, or ignored boundaries that should be hardened locally"
+    }
+  },
+  "escalate_if": [
+    "existing instructions conflict materially and cannot be reconciled without changing site behavior",
+    "full verification requires installing dependencies or accessing secrets",
+    "any action would trigger a public deploy or touch live state"
+  ],
+  "verification": {
+    "honest_boundary": "verify runs trusted repo-owned commands with bounded output and timeouts, but it is not a sandbox",
+    "profiles": {
+      "static_context_only": [
+        "astro-check",
+        "public-surface-scan"
+      ],
+      "full_public_site": [
+        "astro-check",
+        "astro-build",
+        "vitest",
+        "public-surface-scan",
+        "mobile-homepage",
+        "playwright-targeted"
+      ]
+    },
+    "commands": [
+      {
+        "id": "astro-check",
+        "description": "Type and content validation for the Astro project.",
+        "cwd": ".",
+        "argv": [
+          "node_modules/.bin/astro",
+          "check"
+        ],
+        "timeout_seconds": 180,
+        "output_limit_bytes": 32768
+      },
+      {
+        "id": "astro-build",
+        "description": "Production build of the public site.",
+        "cwd": ".",
+        "argv": [
+          "node_modules/.bin/astro",
+          "build"
+        ],
+        "timeout_seconds": 240,
+        "output_limit_bytes": 32768
+      },
+      {
+        "id": "vitest",
+        "description": "Repo unit tests, including contribution-gate coverage.",
+        "cwd": ".",
+        "argv": [
+          "node_modules/.bin/vitest",
+          "run"
+        ],
+        "timeout_seconds": 180,
+        "output_limit_bytes": 32768
+      },
+      {
+        "id": "public-surface-scan",
+        "description": "Repo-local doctrine scan for forbidden public-surface strings.",
+        "cwd": ".",
+        "argv": [
+          "node",
+          ".hermes/verifiers/public-surface-scan.mjs"
+        ],
+        "timeout_seconds": 60,
+        "output_limit_bytes": 16384
+      },
+      {
+        "id": "mobile-homepage",
+        "description": "Repo-local mobile homepage verifier.",
+        "cwd": ".",
+        "argv": [
+          "node",
+          ".hermes/verifiers/mobile-homepage.mjs"
+        ],
+        "timeout_seconds": 120,
+        "output_limit_bytes": 16384
+      },
+      {
+        "id": "playwright-targeted",
+        "description": "Targeted public-surface browser checks for desktop and mobile.",
+        "cwd": ".",
+        "argv": [
+          "node_modules/.bin/playwright",
+          "test",
+          "tests/mobile/mobile-nav.spec.ts",
+          "tests/header.spec.ts",
+          "tests/e2e/homepage.spec.ts",
+          "--project=mobile-chrome",
+          "--project=chromium"
+        ],
+        "timeout_seconds": 240,
+        "output_limit_bytes": 65536
+      }
+    ]
+  }
+}

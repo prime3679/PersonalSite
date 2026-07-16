@@ -62,6 +62,12 @@ Recent site work has included:
 - lab project additions
 - header polish, including live NYC time in the nav
 
+## Agent contribution path
+
+Fresh coding agents should start with `REVIEW.md`, then read `AGENTS.md`, `CLAUDE.md`, and `docs/zero-context-contribution.md`.
+
+The repo-owned contribution contract lives at `.agent/contribution-contract.json`, and the local gate lives at `.agent/contribution_gate.py`.
+
 ## URL
 
 - Production: [adrianlumley.co](https://adrianlumley.co)

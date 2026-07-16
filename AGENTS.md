@@ -80,3 +80,10 @@ Rogue loop contracts and signal bus live outside this repo:
 ```
 
 Coding agents should read those when working on loops, PR babysitting, Signal Room publishing, or personal-site health.
+
+## zero-context contribution
+For fresh-agent contribution work, read `REVIEW.md` first, then this file, `CLAUDE.md`, and `docs/zero-context-contribution.md`.
+
+The repo-owned contract lives at `.agent/contribution-contract.json`, and the local gate lives at `.agent/contribution_gate.py`.
+
+Zero-context contribution work should tighten doctrine, contracts, tests, and verification without changing the public site surface unless the task explicitly asks for site changes.

@@ -1,5 +1,6 @@
 const CANONICAL_ORIGIN = 'https://adrianlumley.co';
 const CANONICAL_HOSTNAME = 'adrianlumley.co';
+const CANONICAL_ROOT_URL = `${CANONICAL_ORIGIN}/`;
 
 export function normalizeCanonicalPath(pathname) {
   if (!pathname || pathname === '/') {
@@ -7,7 +8,13 @@ export function normalizeCanonicalPath(pathname) {
   }
 
   const normalized = pathname.replace(/\/{2,}/g, '/');
-  return normalized.endsWith('/') ? normalized.slice(0, -1) : normalized;
+  const hasFileExtension = /\/[^/]+\.[^/]+$/.test(normalized);
+
+  if (hasFileExtension) {
+    return normalized.endsWith('/') ? normalized.slice(0, -1) : normalized;
+  }
+
+  return normalized.endsWith('/') ? normalized : `${normalized}/`;
 }
 
 export function getCanonicalRedirectUrl(input) {
@@ -46,6 +53,6 @@ export async function handleCanonicalAssetRequest(request, env) {
 }
 
 export function createCanonicalRedirectResponse(request) {
-  const redirectUrl = getCanonicalRedirectUrl(request.url) ?? CANONICAL_ORIGIN;
+  const redirectUrl = getCanonicalRedirectUrl(request.url) ?? CANONICAL_ROOT_URL;
   return Response.redirect(redirectUrl, 308);
 }

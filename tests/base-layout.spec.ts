@@ -2,11 +2,11 @@ import { expect, test, type Page } from '@playwright/test';
 
 const exactTitles = [
   ['/', 'Adrian Lumley | AI Diligence Analyst and Product Leader', 'https://adrianlumley.co/'],
-  ['/writing', 'Writing | Adrian Lumley', 'https://adrianlumley.co/writing'],
-  ['/lab', 'Lab | Adrian Lumley', 'https://adrianlumley.co/lab'],
-  ['/work', 'Work | Adrian Lumley', 'https://adrianlumley.co/work'],
-  ['/signal-room', 'Signal Room | Adrian Lumley', 'https://adrianlumley.co/signal-room'],
-  ['/contact', 'Contact | Adrian Lumley', 'https://adrianlumley.co/contact'],
+  ['/writing', 'Writing | Adrian Lumley', 'https://adrianlumley.co/writing/'],
+  ['/lab', 'Lab | Adrian Lumley', 'https://adrianlumley.co/lab/'],
+  ['/work', 'Work | Adrian Lumley', 'https://adrianlumley.co/work/'],
+  ['/signal-room', 'Signal Room | Adrian Lumley', 'https://adrianlumley.co/signal-room/'],
+  ['/contact', 'Contact | Adrian Lumley', 'https://adrianlumley.co/contact/'],
 ] as const;
 
 async function readStructuredData(page: Page) {
@@ -94,20 +94,20 @@ test.describe('base layout seo', () => {
     await page.goto('/writing/meeting-cost');
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       'href',
-      'https://adrianlumley.co/writing/meeting-cost',
+      'https://adrianlumley.co/writing/meeting-cost/',
     );
 
     const postStructuredData = await readStructuredData(page);
     const postArticle = postStructuredData['@graph'].find((entry: { '@type': string }) => entry['@type'] === 'Article');
     expect(postArticle).toMatchObject({
-      url: 'https://adrianlumley.co/writing/meeting-cost',
+      url: 'https://adrianlumley.co/writing/meeting-cost/',
     });
     expect(JSON.stringify(postStructuredData)).not.toContain('worksFor');
 
     await page.goto('/signal-room/night-shift/');
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       'href',
-      'https://adrianlumley.co/signal-room/night-shift',
+      'https://adrianlumley.co/signal-room/night-shift/',
     );
     await expect(page.locator('meta[property="og:type"]')).toHaveAttribute('content', 'article');
   });

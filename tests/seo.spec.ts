@@ -16,10 +16,10 @@ test.describe('technical canonicals and indexing', () => {
 
     const xml = await response.text();
     expect(xml).toContain('<loc>https://adrianlumley.co/</loc>');
-    expect(xml).toContain('<loc>https://adrianlumley.co/about</loc>');
-    expect(xml).toContain('<loc>https://adrianlumley.co/writing/meeting-cost</loc>');
-    expect(xml).toContain('<loc>https://adrianlumley.co/signal-room/night-shift</loc>');
-    expect(xml).toContain('<loc>https://adrianlumley.co/lab/fork</loc>');
+    expect(xml).toContain('<loc>https://adrianlumley.co/about/</loc>');
+    expect(xml).toContain('<loc>https://adrianlumley.co/writing/meeting-cost/</loc>');
+    expect(xml).toContain('<loc>https://adrianlumley.co/signal-room/night-shift/</loc>');
+    expect(xml).toContain('<loc>https://adrianlumley.co/lab/fork/</loc>');
     expect(xml).not.toContain('/360');
     expect(xml).not.toContain('/404');
     expect(xml).not.toContain('/rss.xml');
@@ -34,7 +34,7 @@ test.describe('technical canonicals and indexing', () => {
     await expect(page).toHaveTitle('fork | a regret map for one hard decision');
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       'href',
-      'https://adrianlumley.co/lab/fork',
+      'https://adrianlumley.co/lab/fork/',
     );
     await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
       'content',
@@ -42,7 +42,7 @@ test.describe('technical canonicals and indexing', () => {
     );
     await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
       'content',
-      'https://adrianlumley.co/lab/fork',
+      'https://adrianlumley.co/lab/fork/',
     );
     await expect(page.locator('meta[property="og:type"]')).toHaveAttribute('content', 'website');
     await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
@@ -60,7 +60,7 @@ test.describe('technical canonicals and indexing', () => {
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       'href',
-      'https://adrianlumley.co/360',
+      'https://adrianlumley.co/360/',
     );
 
     await page.goto('/');

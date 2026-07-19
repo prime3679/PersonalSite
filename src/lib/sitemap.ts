@@ -3,14 +3,14 @@ import { join } from 'node:path';
 
 export const canonicalPublicAstroPaths = [
   '/',
-  '/about',
-  '/contact',
-  '/joytap-privacy',
-  '/lab',
-  '/services',
-  '/signal-room',
-  '/work',
-  '/writing',
+  '/about/',
+  '/contact/',
+  '/joytap-privacy/',
+  '/lab/',
+  '/services/',
+  '/signal-room/',
+  '/work/',
+  '/writing/',
 ] as const;
 
 export function getIndexableStaticLabPaths(
@@ -19,7 +19,7 @@ export function getIndexableStaticLabPaths(
   return readdirSync(labRoot, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
     .filter((entry) => existsSync(join(labRoot, entry.name, 'index.html')))
-    .map((entry) => `/lab/${entry.name}`)
+    .map((entry) => `/lab/${entry.name}/`)
     .sort();
 }
 

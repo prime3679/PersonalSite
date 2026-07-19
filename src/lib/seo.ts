@@ -8,7 +8,13 @@ export function normalizeCanonicalPath(pathname: string): string {
   }
 
   const normalized = pathname.replace(/\/{2,}/g, '/');
-  return normalized.endsWith('/') ? normalized.slice(0, -1) : normalized;
+  const hasFileExtension = /\/[^/]+\.[^/]+$/.test(normalized);
+
+  if (hasFileExtension) {
+    return normalized.endsWith('/') ? normalized.slice(0, -1) : normalized;
+  }
+
+  return normalized.endsWith('/') ? normalized : `${normalized}/`;
 }
 
 export function canonicalUrl(input: string | URL): string {

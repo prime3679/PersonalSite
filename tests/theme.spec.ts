@@ -14,8 +14,9 @@ async function expectToggleState(
   pressed: 'true' | 'false',
   themeColor: '#16130e' | '#f7f3ea',
 ) {
+  await expect(page.locator('[data-theme-toggle]')).toHaveCount(1);
   await expect(page.locator('header [data-theme-toggle]')).toHaveAttribute('aria-pressed', pressed);
-  await expect(page.locator('footer [data-theme-toggle]')).toHaveAttribute('aria-pressed', pressed);
+  await expect(page.locator('footer [data-theme-toggle]')).toHaveCount(0);
   await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', themeColor);
 }
 
@@ -73,15 +74,17 @@ test.describe('night shift theme', () => {
     await expectToggleState(page, 'false', '#f7f3ea');
   });
 
-  test('theme buttons toggle once, sync both instances, and persist', async ({ page }) => {
+  test('header theme button stays singular, labeled, and persists', async ({ page }) => {
     await blockAnalytics(page);
     await page.emulateMedia({ colorScheme: 'light' });
     await page.goto('/');
 
     const toggles = page.locator('[data-theme-toggle]');
     const headerToggle = page.locator('header [data-theme-toggle]');
-    await expect(toggles).toHaveCount(2);
+    await expect(toggles).toHaveCount(1);
     await expect(headerToggle).toHaveText('night shift');
+    await expect(headerToggle).toBeVisible();
+    await expect(page.locator('footer [data-theme-toggle]')).toHaveCount(0);
     await expectToggleState(page, 'false', '#f7f3ea');
 
     await headerToggle.click();

@@ -7,7 +7,6 @@ import { siteMetadata } from '../data/siteMetadata';
 import { navItems } from '../data/nav';
 import { absoluteUrl, canonicalUrl } from '../lib/seo';
 import Header from '../components/Header.astro';
-import ThemeToggle from '../components/ThemeToggle.astro';
 import DelightLayer from '../components/DelightLayer.astro';
 
 interface ArticleData {
@@ -135,7 +134,6 @@ const structuredData: Record<string, unknown> = {
         ))}
         <a href="/about">about</a>
         <a href="/rss.xml">rss</a>
-        <ThemeToggle />
       </nav>
     </div>
   </footer>

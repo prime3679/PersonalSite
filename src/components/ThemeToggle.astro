@@ -8,27 +8,72 @@
 <script>
   const DARK_THEME_COLOR = '#16130e';
   const LIGHT_THEME_COLOR = '#f7f3ea';
+  const SURFACE_IGNORE_SELECTOR = [
+    'a',
+    'button',
+    'input',
+    'select',
+    'textarea',
+    'label',
+    'summary',
+    'details',
+    'audio',
+    'video',
+    '[role="button"]',
+    '[role="link"]',
+    '[contenteditable]',
+    '[data-theme-surface-ignore]',
+  ].join(',');
 
-  const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]'));
-  const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+  type ThemeController = {
+    reflect: () => void;
+  };
+
+  const win = window as Window & {
+    __themeToggleController__?: ThemeController;
+  };
 
   const reflect = () => {
+    const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]'));
+    const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
     const dark = document.documentElement.classList.contains('dark');
     for (const b of buttons) b.setAttribute('aria-pressed', String(dark));
     if (meta) meta.content = dark ? DARK_THEME_COLOR : LIGHT_THEME_COLOR;
   };
 
-  for (const b of buttons) {
-    b.addEventListener('click', () => {
-      const dark = document.documentElement.classList.toggle('dark');
-      try {
-        localStorage.setItem('theme', dark ? 'dark' : 'light');
-      } catch {}
-      reflect();
+  const toggleTheme = () => {
+    const dark = !document.documentElement.classList.contains('dark');
+    document.documentElement.classList.toggle('dark', dark);
+    try {
+      localStorage.setItem('theme', dark ? 'dark' : 'light');
+    } catch {}
+    reflect();
+  };
+
+  const hasActiveTextSelection = () => {
+    const selection = window.getSelection();
+    return Boolean(selection && !selection.isCollapsed && selection.toString().trim());
+  };
+
+  if (!win.__themeToggleController__) {
+    document.addEventListener('click', (event) => {
+      if (event.defaultPrevented || event.button !== 0 || hasActiveTextSelection()) return;
+
+      const target = event.target instanceof Element ? event.target : null;
+      if (target?.closest('[data-theme-toggle]')) {
+        toggleTheme();
+        return;
+      }
+
+      if (target?.closest(SURFACE_IGNORE_SELECTOR)) return;
+
+      toggleTheme();
     });
+
+    win.__themeToggleController__ = { reflect };
   }
 
-  reflect();
+  win.__themeToggleController__.reflect();
 </script>
 
 <style>

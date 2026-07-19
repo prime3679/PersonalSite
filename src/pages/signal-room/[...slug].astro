@@ -4,6 +4,7 @@ import PageIntro from '../../components/PageIntro.astro';
 import type { CollectionEntry } from 'astro:content';
 import { getEpisodes, episodePath, episodeOgPath } from '../../lib/content';
 import { episodeTitle, formatLongDate, padEpisode } from '../../lib/format';
+import { canonicalUrl } from '../../lib/seo';
 
 export async function getStaticPaths() {
   const episodes = await getEpisodes('asc');
@@ -29,7 +30,7 @@ interface Props {
 const { episode, prev, next, first } = Astro.props;
 const { Content } = await episode.render();
 
-const pageTitle = `${episode.data.title} · signal room`;
+const pageTitle = `${episode.data.title} | Signal Room`;
 ---
 
 <Base
@@ -40,7 +41,7 @@ const pageTitle = `${episode.data.title} · signal room`;
     headline: episodeTitle(episode.data.episode, episode.data.title),
     description: episode.data.teaser,
     datePublished: episode.data.date.toISOString(),
-    url: Astro.url.href,
+    url: canonicalUrl(Astro.url),
   }}
 >
 

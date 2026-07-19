@@ -5,6 +5,7 @@ import geistWoff2 from '@fontsource-variable/geist/files/geist-latin-wght-normal
 import geistMonoWoff2 from '@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2?url';
 import { siteMetadata } from '../data/siteMetadata';
 import { navItems } from '../data/nav';
+import { absoluteUrl, canonicalUrl } from '../lib/seo';
 import Header from '../components/Header.astro';
 import ThemeToggle from '../components/ThemeToggle.astro';
 import DelightLayer from '../components/DelightLayer.astro';
@@ -33,8 +34,9 @@ const {
   mainClass = 'site-main',
   extraMainClass,
 } = Astro.props;
-const fullTitle = title === siteMetadata.title ? title : `${title} · ${siteMetadata.title}`;
-const ogImageUrl = new URL(ogImageOverride, Astro.site).href;
+const fullTitle = title === siteMetadata.title ? title : `${title} | ${siteMetadata.siteName}`;
+const canonicalPageUrl = canonicalUrl(Astro.url);
+const ogImageUrl = absoluteUrl(ogImageOverride);
 
 const structuredData: Record<string, unknown> = {
   '@context': 'https://schema.org',
@@ -44,17 +46,21 @@ const structuredData: Record<string, unknown> = {
       '@id': `${siteMetadata.url}/#person`,
       name: siteMetadata.author,
       url: siteMetadata.url,
+      image: absoluteUrl(siteMetadata.image),
       jobTitle: siteMetadata.jobTitle,
-      worksFor: { '@type': 'Organization', name: siteMetadata.worksFor.name },
       sameAs: siteMetadata.social,
-      description: 'director of product at salesforce. previously siriusxm, disney+, and ea. based in nyc.',
-      knowsAbout: ['product management', 'artificial intelligence', 'enterprise software', 'emerging technology'],
+      description: siteMetadata.personDescription,
+      alumniOf: siteMetadata.alumniOf.map((name) => ({
+        '@type': 'CollegeOrUniversity',
+        name,
+      })),
+      knowsAbout: siteMetadata.knowsAbout,
     },
     {
       '@type': 'WebSite',
       '@id': `${siteMetadata.url}/#website`,
       url: siteMetadata.url,
-      name: siteMetadata.title,
+      name: siteMetadata.siteName,
       publisher: { '@id': `${siteMetadata.url}/#person` },
     },
     ...(article ? [{
@@ -64,7 +70,7 @@ const structuredData: Record<string, unknown> = {
       description: article.description,
       author: { '@id': `${siteMetadata.url}/#person` },
       publisher: { '@id': `${siteMetadata.url}/#person` },
-      url: article.url,
+      url: canonicalUrl(article.url),
     }] : []),
   ],
 };
@@ -93,14 +99,14 @@ const structuredData: Record<string, unknown> = {
   <meta property="og:title" content={fullTitle} />
   <meta property="og:description" content={description} />
   <meta property="og:type" content={article ? 'article' : 'website'} />
-  <meta property="og:url" content={Astro.url.href} />
+  <meta property="og:url" content={canonicalPageUrl} />
   <meta property="og:image" content={ogImageUrl} />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={fullTitle} />
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={ogImageUrl} />
-  <link rel="canonical" href={Astro.url.href} />
-  <link rel="alternate" type="application/rss+xml" title={`${siteMetadata.title} · writing`} href="/rss.xml" />
+  <link rel="canonical" href={canonicalPageUrl} />
+  <link rel="alternate" type="application/rss+xml" title={`${siteMetadata.siteName} · writing`} href="/rss.xml" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href={newsreaderWoff2} />
   <link rel="preload" as="font" type="font/woff2" crossorigin href={geistWoff2} />
   <link rel="preload" as="font" type="font/woff2" crossorigin href={geistMonoWoff2} />

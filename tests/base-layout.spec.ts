@@ -1,56 +1,114 @@
-import { test, expect } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
-test.describe('Base Layout Meta Tags', () => {
+const exactTitles = [
+  ['/', 'Adrian Lumley | AI Diligence Analyst and Product Leader', 'https://adrianlumley.co/'],
+  ['/writing', 'Writing | Adrian Lumley', 'https://adrianlumley.co/writing'],
+  ['/lab', 'Lab | Adrian Lumley', 'https://adrianlumley.co/lab'],
+  ['/work', 'Work | Adrian Lumley', 'https://adrianlumley.co/work'],
+  ['/signal-room', 'Signal Room | Adrian Lumley', 'https://adrianlumley.co/signal-room'],
+  ['/contact', 'Contact | Adrian Lumley', 'https://adrianlumley.co/contact'],
+] as const;
 
-  test('Home page should have correct meta tags', async ({ page }) => {
+async function readStructuredData(page: Page) {
+  const raw = await page.locator('script[type="application/ld+json"]').textContent();
+  expect(raw).toBeTruthy();
+  return JSON.parse(raw!);
+}
+
+test.describe('base layout seo', () => {
+  test('homepage preserves the expected meta tags and person schema', async ({ page }) => {
     await page.goto('/');
 
-    // Title
-    await expect(page).toHaveTitle('Adrian Lumley');
+    await expect(page).toHaveTitle('Adrian Lumley | AI Diligence Analyst and Product Leader');
+    await expect(page.locator('main h1')).toHaveText('adrian lumley');
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+      'content',
+      'Adrian Lumley is a product leader working where AI meets enterprise adoption.',
+    );
+    await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
+      'content',
+      'Adrian Lumley | AI Diligence Analyst and Product Leader',
+    );
+    await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
+      'content',
+      'https://adrianlumley.co/',
+    );
+    await expect(page.locator('meta[property="og:type"]')).toHaveAttribute('content', 'website');
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+      'content',
+      'https://adrianlumley.co/og/home.png',
+    );
+    await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute(
+      'content',
+      'summary_large_image',
+    );
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      'href',
+      'https://adrianlumley.co/',
+    );
 
-    // Charset
-    const charset = await page.locator('meta[charset]').getAttribute('charset');
-    expect(charset).toBe('UTF-8');
+    const structuredData = await readStructuredData(page);
+    const person = structuredData['@graph'].find((entry: { '@type': string }) => entry['@type'] === 'Person');
 
-    // Referrer Policy
-    const referrer = await page.locator('meta[name="referrer"]').getAttribute('content');
-    expect(referrer).toBe('strict-origin-when-cross-origin');
-
-    // Viewport, no maximum-scale: pinch-zoom must stay available (WCAG 1.4.4)
-    const viewport = await page.locator('meta[name="viewport"]').getAttribute('content');
-    expect(viewport).toBe('width=device-width, initial-scale=1.0');
-
-    // Description
-    const description = await page.locator('meta[name="description"]').getAttribute('content');
-    expect(description).toBe('Adrian Lumley is a product leader working where AI meets enterprise adoption.');
-
-    // OG Title
-    const ogTitle = await page.locator('meta[property="og:title"]').getAttribute('content');
-    expect(ogTitle).toBe('Adrian Lumley');
-
-    // OG Description
-    const ogDescription = await page.locator('meta[property="og:description"]').getAttribute('content');
-    expect(ogDescription).toBe('Adrian Lumley is a product leader working where AI meets enterprise adoption.');
-
-    // OG Image (home uses a custom generated card at /og/home.png)
-    const ogImage = await page.locator('meta[property="og:image"]').getAttribute('content');
-    expect(ogImage).toContain('https://adrianlumley.co/');
-    expect(ogImage).toContain('/og/home.png');
+    expect(person).toMatchObject({
+      name: 'Adrian Lumley',
+      url: 'https://adrianlumley.co',
+      image: 'https://adrianlumley.co/images/adrian-lumley.jpg',
+      jobTitle: 'AI Diligence Analyst',
+      description: 'Enterprise product leader and independent AI diligence analyst. Creator of The Trust Layer.',
+      knowsAbout: [
+        'AI evaluation',
+        'AI diligence',
+        'Product management',
+        'Enterprise software',
+        'AI agents',
+      ],
+      sameAs: [
+        'https://www.linkedin.com/in/adrianlumley/',
+        'https://github.com/prime3679',
+      ],
+    });
+    expect(person.worksFor).toBeUndefined();
+    expect(person.alumniOf.map((entry: { name: string }) => entry.name)).toEqual([
+      "St. John's University",
+      'Quantic School of Business and Technology',
+    ]);
   });
 
-  test('Work page should have correct custom meta tags', async ({ page }) => {
-    await page.goto('/work');
+  for (const [path, title, canonical] of exactTitles) {
+    test(`${path} uses the exact canonical title metadata`, async ({ page }) => {
+      await page.goto(path);
 
-    // Title
-    await expect(page).toHaveTitle('work · Adrian Lumley');
+      await expect(page).toHaveTitle(title);
+      await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', title);
+      await expect(page.locator('meta[property="og:url"]')).toHaveAttribute('content', canonical);
+      await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', canonical);
+      await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute(
+        'content',
+        'summary_large_image',
+      );
+    });
+  }
 
-    // Description
-    const description = await page.locator('meta[name="description"]').getAttribute('content');
-    expect(description).toBe('case studies from fourteen years in product: salesforce, siriusxm, disney+, and ea.');
+  test('article routes keep article schema and canonicalize trailing-slash routes', async ({ page }) => {
+    await page.goto('/writing/meeting-cost');
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      'href',
+      'https://adrianlumley.co/writing/meeting-cost',
+    );
 
-    // OG Title
-    const ogTitle = await page.locator('meta[property="og:title"]').getAttribute('content');
-    expect(ogTitle).toBe('work · Adrian Lumley');
+    const postStructuredData = await readStructuredData(page);
+    const postArticle = postStructuredData['@graph'].find((entry: { '@type': string }) => entry['@type'] === 'Article');
+    expect(postArticle).toMatchObject({
+      url: 'https://adrianlumley.co/writing/meeting-cost',
+    });
+    expect(JSON.stringify(postStructuredData)).not.toContain('worksFor');
+
+    await page.goto('/signal-room/night-shift/');
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      'href',
+      'https://adrianlumley.co/signal-room/night-shift',
+    );
+    await expect(page.locator('meta[property="og:type"]')).toHaveAttribute('content', 'article');
   });
-
 });

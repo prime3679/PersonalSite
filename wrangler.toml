@@ -1,8 +1,12 @@
 name = "adrianlumley-co"
+main = "src/canonical-worker.js"
 compatibility_date = "2026-07-09"
-
-assets = { directory = "./dist" }
 
 routes = [
   "adrianlumley.co/*",
 ]
+
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+run_worker_first = true

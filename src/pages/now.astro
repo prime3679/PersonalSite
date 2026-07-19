@@ -1,25 +1,26 @@
 ---
 import { absoluteUrl, canonicalUrl } from '../lib/seo';
 
-const destination = '/writing/';
+const destination = '/';
 const canonicalDestination = canonicalUrl(destination);
+const ogImage = absoluteUrl('/og/home.png');
 ---
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="refresh" content={`0; url=${destination}`} />
-    <title>Writing | Adrian Lumley</title>
-    <meta property="og:title" content="Writing | Adrian Lumley" />
+    <title>Adrian Lumley | AI Diligence Analyst and Product Leader</title>
+    <meta property="og:title" content="Adrian Lumley | AI Diligence Analyst and Product Leader" />
     <meta property="og:url" content={canonicalDestination} />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content={absoluteUrl('/og/home.png')} />
+    <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Writing | Adrian Lumley" />
-    <meta name="twitter:image" content={absoluteUrl('/og/home.png')} />
+    <meta name="twitter:title" content="Adrian Lumley | AI Diligence Analyst and Product Leader" />
+    <meta name="twitter:image" content={ogImage} />
     <link rel="canonical" href={canonicalDestination} />
   </head>
   <body>
-    <p><a href={destination}>writing</a></p>
+    <p><a href={destination}>redirecting home</a></p>
   </body>
 </html>

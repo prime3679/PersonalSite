@@ -9,6 +9,9 @@ describe('siteMetadata', () => {
   });
 
   it('should have all required base string fields', () => {
+    expect(typeof siteMetadata.siteName).toBe('string');
+    expect(siteMetadata.siteName.length).toBeGreaterThan(0);
+
     expect(typeof siteMetadata.title).toBe('string');
     expect(siteMetadata.title.length).toBeGreaterThan(0);
 
@@ -23,13 +26,35 @@ describe('siteMetadata', () => {
 
     expect(typeof siteMetadata.jobTitle).toBe('string');
     expect(siteMetadata.jobTitle.length).toBeGreaterThan(0);
+
+    expect(typeof siteMetadata.personDescription).toBe('string');
+    expect(siteMetadata.personDescription.length).toBeGreaterThan(0);
+
+    expect(typeof siteMetadata.image).toBe('string');
+    expect(siteMetadata.image.startsWith('/')).toBe(true);
   });
 
-  it('should have a valid worksFor object', () => {
-    expect(siteMetadata.worksFor).toBeDefined();
-    expect(typeof siteMetadata.worksFor).toBe('object');
-    expect(typeof siteMetadata.worksFor.name).toBe('string');
-    expect(siteMetadata.worksFor.name.length).toBeGreaterThan(0);
+  it('should have exact seo identity fields', () => {
+    expect(siteMetadata.title).toBe('Adrian Lumley | AI Diligence Analyst and Product Leader');
+    expect(siteMetadata.siteName).toBe('Adrian Lumley');
+    expect(siteMetadata.jobTitle).toBe('AI Diligence Analyst');
+    expect(siteMetadata.personDescription).toBe('Enterprise product leader and independent AI diligence analyst. Creator of The Trust Layer.');
+    expect(siteMetadata.alumniOf).toEqual([
+      "St. John's University",
+      'Quantic School of Business and Technology',
+    ]);
+    expect(siteMetadata.knowsAbout).toEqual([
+      'AI evaluation',
+      'AI diligence',
+      'Product management',
+      'Enterprise software',
+      'AI agents',
+    ]);
+    expect(siteMetadata.social).toEqual([
+      'https://www.linkedin.com/in/adrianlumley/',
+      'https://github.com/prime3679',
+    ]);
+    expect(siteMetadata.image).toBe('/images/adrian-lumley.jpg');
   });
 
   it('should have a valid social array with URLs', () => {
@@ -43,9 +68,7 @@ describe('siteMetadata', () => {
   });
 
   it('should contain correct specific literal values for key identifying fields', () => {
-    // These are unlikely to change and are core to the site's identity.
     expect(siteMetadata.author).toBe('Adrian Lumley');
-    expect(siteMetadata.title).toBe('Adrian Lumley');
     expect(siteMetadata.url).toBe('https://adrianlumley.co');
   });
 });

@@ -11,7 +11,7 @@ for (const post of publishedPosts) for (const tag of post.data.tags ?? []) tagCo
 const allTags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([tag]) => tag);
 ---
 
-<Base title="writing" description="notes on ai, enterprise product, and building systems, drawn from real work and the occasional voice memo.">
+<Base title="Writing" description="notes on ai, enterprise product, and building systems, drawn from real work and the occasional voice memo.">
   <PageIntro title="writing" standfirst="notes on ai, enterprise product, and building systems, drawn from real work and the occasional voice memo. published when there's something worth saying, not on a schedule." />
 
   {allTags.length > 0 && (

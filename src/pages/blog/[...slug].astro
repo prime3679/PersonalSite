@@ -1,19 +1,28 @@
 ---
 import { getPublishedPosts, postPath } from '../../lib/content';
+import { absoluteUrl, canonicalUrl } from '../../lib/seo';
 
 export async function getStaticPaths() {
   const published = await getPublishedPosts();
   return published.map((post) => ({ params: { slug: post.slug }, props: { destination: postPath(post.slug) } }));
 }
 const { destination } = Astro.props;
+const canonicalDestination = canonicalUrl(destination);
 ---
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="refresh" content={`0; url=${destination}`} />
-    <link rel="canonical" href={destination} />
-    <title>writing</title>
+    <title>Writing | Adrian Lumley</title>
+    <meta property="og:title" content="Writing | Adrian Lumley" />
+    <meta property="og:url" content={canonicalDestination} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={absoluteUrl('/og/home.png')} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Writing | Adrian Lumley" />
+    <meta name="twitter:image" content={absoluteUrl('/og/home.png')} />
+    <link rel="canonical" href={canonicalDestination} />
   </head>
   <body>
     <p><a href={destination}>writing</a></p>

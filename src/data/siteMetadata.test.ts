@@ -35,9 +35,9 @@ describe('siteMetadata', () => {
   });
 
   it('should have exact seo identity fields', () => {
-    expect(siteMetadata.title).toBe('Adrian Lumley | AI Diligence Analyst and Product Leader');
+    expect(siteMetadata.title).toBe('Adrian Lumley');
     expect(siteMetadata.siteName).toBe('Adrian Lumley');
-    expect(siteMetadata.jobTitle).toBe('AI Diligence Analyst');
+    expect(siteMetadata.jobTitle).toBe('Product Management');
     expect(siteMetadata.personDescription).toBe('Enterprise product leader and independent AI diligence analyst. Creator of The Trust Layer.');
     expect(siteMetadata.alumniOf).toEqual([
       "St. John's University",

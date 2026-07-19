@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 
 const exactTitles = [
-  ['/', 'Adrian Lumley | AI Diligence Analyst and Product Leader', 'https://adrianlumley.co/'],
+  ['/', 'Adrian Lumley', 'https://adrianlumley.co/'],
   ['/writing', 'Writing | Adrian Lumley', 'https://adrianlumley.co/writing/'],
   ['/lab', 'Lab | Adrian Lumley', 'https://adrianlumley.co/lab/'],
   ['/work', 'Work | Adrian Lumley', 'https://adrianlumley.co/work/'],
@@ -19,7 +19,7 @@ test.describe('base layout seo', () => {
   test('homepage preserves the expected meta tags and person schema', async ({ page }) => {
     await page.goto('/');
 
-    await expect(page).toHaveTitle('Adrian Lumley | AI Diligence Analyst and Product Leader');
+    await expect(page).toHaveTitle('Adrian Lumley');
     await expect(page.locator('main h1')).toHaveText('adrian lumley');
     await expect(page.locator('meta[name="description"]')).toHaveAttribute(
       'content',
@@ -27,7 +27,7 @@ test.describe('base layout seo', () => {
     );
     await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
       'content',
-      'Adrian Lumley | AI Diligence Analyst and Product Leader',
+      'Adrian Lumley',
     );
     await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
       'content',
@@ -54,7 +54,7 @@ test.describe('base layout seo', () => {
       name: 'Adrian Lumley',
       url: 'https://adrianlumley.co',
       image: 'https://adrianlumley.co/images/adrian-lumley.jpg',
-      jobTitle: 'AI Diligence Analyst',
+      jobTitle: 'Product Management',
       description: 'Enterprise product leader and independent AI diligence analyst. Creator of The Trust Layer.',
       knowsAbout: [
         'AI evaluation',
@@ -73,6 +73,18 @@ test.describe('base layout seo', () => {
       "St. John's University",
       'Quantic School of Business and Technology',
     ]);
+  });
+
+  test('/now/ keeps the homepage identity metadata while redirecting home', async ({ page }) => {
+    await page.goto('/now/');
+
+    await expect(page).toHaveTitle('Adrian Lumley');
+    await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', 'Adrian Lumley');
+    await expect(page.locator('meta[name="twitter:title"]')).toHaveAttribute('content', 'Adrian Lumley');
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      'href',
+      'https://adrianlumley.co/',
+    );
   });
 
   for (const [path, title, canonical] of exactTitles) {

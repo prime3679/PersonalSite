@@ -35,10 +35,23 @@ const writingNote = latestWriting
   ogImage="/og/home.png"
 >
   <header class="masthead reveal">
-    <p class="folio">
-      <span class="home-kicker"><span class="home-kicker__tick" aria-hidden="true"></span>product · ai · enterprise</span>
-      <span class="folio__place">new york city</span>
-    </p>
+    <div class="masthead__folio-block">
+      <p class="folio">
+        <span class="home-kicker"><span class="home-kicker__tick" aria-hidden="true"></span>product · ai · enterprise</span>
+        <span class="folio__place">new york city</span>
+      </p>
+      <p
+        class="masthead__theme-hint"
+        data-home-theme-hint
+        data-state="hidden"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        hidden
+      >
+        tap anywhere to switch the light
+      </p>
+    </div>
 
     <h1 class="hero-title masthead__name">adrian lumley</h1>
 
@@ -162,10 +175,89 @@ const writingNote = latestWriting
     </div>
   </section>
 
+  <script>
+    const HOMEPAGE_THEME_HINT_KEY = 'homepage-theme-hint-seen';
+    const THEME_TOGGLED_EVENT = 'theme-toggle:changed';
+    const HOMEPAGE_THEME_HINT_TIMEOUT_MS = 8000;
+    const hint = document.querySelector<HTMLElement>('[data-home-theme-hint]');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let dismissTimer = 0;
+    let revealed = false;
+
+    const setSeen = () => {
+      try {
+        localStorage.setItem(HOMEPAGE_THEME_HINT_KEY, 'true');
+      } catch {}
+    };
+
+    const hasSeen = () => {
+      try {
+        return localStorage.getItem(HOMEPAGE_THEME_HINT_KEY) === 'true';
+      } catch {
+        return false;
+      }
+    };
+
+    const removeHint = () => {
+      if (!hint || hint.hidden) return;
+      window.clearTimeout(dismissTimer);
+      revealed = false;
+      hint.dataset.state = 'hidden';
+
+      if (reducedMotion) {
+        hint.hidden = true;
+        return;
+      }
+
+      window.setTimeout(() => {
+        if (hint.dataset.state === 'hidden') hint.hidden = true;
+      }, 180);
+    };
+
+    const dismissHint = () => {
+      setSeen();
+      removeHint();
+    };
+
+    if (hint) {
+      if (hasSeen()) {
+        hint.hidden = true;
+      } else {
+        const revealHint = () => {
+          if (hasSeen() || revealed) return;
+          hint.hidden = false;
+          hint.dataset.state = 'hidden';
+
+          window.requestAnimationFrame(() => {
+            if (hasSeen()) {
+              hint.hidden = true;
+              return;
+            }
+
+            hint.dataset.state = 'visible';
+            revealed = true;
+            dismissTimer = window.setTimeout(dismissHint, HOMEPAGE_THEME_HINT_TIMEOUT_MS);
+          });
+        };
+
+        if (document.readyState === 'complete') {
+          revealHint();
+        } else {
+          window.addEventListener('load', revealHint, { once: true });
+        }
+
+        document.addEventListener(THEME_TOGGLED_EVENT, dismissHint, { once: true });
+      }
+    }
+  </script>
+
   <style>
     /* ---- issue masthead ---------------------------------------------- */
     .masthead {
       margin-bottom: clamp(var(--s6), 7vw, var(--s8));
+    }
+    .masthead__folio-block {
+      margin-bottom: clamp(var(--s5), 5vw, var(--s6));
     }
     .folio {
       display: flex;
@@ -173,7 +265,7 @@ const writingNote = latestWriting
       align-items: center;
       justify-content: space-between;
       gap: .35rem 1rem;
-      margin: 0 0 clamp(var(--s5), 5vw, var(--s6));
+      margin: 0;
       padding-block: .8rem;
       border-top: 1px solid var(--line-strong);
       border-bottom: 1px solid var(--line);
@@ -195,6 +287,16 @@ const writingNote = latestWriting
       background: var(--accent);
     }
     .folio__place { color: var(--ink-soft); }
+    .masthead__theme-hint {
+      margin: .625rem 0 0;
+      color: var(--ink-soft);
+      font-family: var(--mono);
+      font-size: .6875rem;
+      letter-spacing: .05em;
+      opacity: 0;
+      transition: opacity 220ms var(--ease);
+    }
+    .masthead__theme-hint[data-state='visible'] { opacity: 1; }
 
     /* the nameplate keeps the global .hero-title responsive sizing (tuned so
        the mobile name never swallows the first screen); this only refines the
@@ -436,6 +538,10 @@ const writingNote = latestWriting
 
     @media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
       .entry__link::before { transition: transform var(--dur) var(--ease); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .masthead__theme-hint { transition: none; }
     }
   </style>
 </Base>

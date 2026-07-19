@@ -8,6 +8,7 @@
 <script>
   const DARK_THEME_COLOR = '#16130e';
   const LIGHT_THEME_COLOR = '#f7f3ea';
+  const THEME_TOGGLED_EVENT = 'theme-toggle:changed';
   const SURFACE_IGNORE_SELECTOR = [
     'a',
     'button',
@@ -48,6 +49,9 @@
       localStorage.setItem('theme', dark ? 'dark' : 'light');
     } catch {}
     reflect();
+    document.dispatchEvent(new CustomEvent(THEME_TOGGLED_EVENT, {
+      detail: { theme: dark ? 'dark' : 'light' },
+    }));
   };
 
   const hasActiveTextSelection = () => {

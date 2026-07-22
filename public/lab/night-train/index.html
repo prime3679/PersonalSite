@@ -1,0 +1,749 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Night Train</title>
+<link rel="canonical" href="https://adrianlumley.co/lab/night-train/" />
+<meta property="og:title" content="Night Train" />
+<meta property="og:url" content="https://adrianlumley.co/lab/night-train/" />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://adrianlumley.co/og/home.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Night Train" />
+<meta name="twitter:image" content="https://adrianlumley.co/og/home.png" />
+<style>
+  :root{ color-scheme:dark; }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  body{
+    --face: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+    --face-style: normal;
+    --track: .02em;
+    --ink:#f0e6d2;
+    --dimink:#b9a98c;
+    --wall1:#2a1d10;
+    --wall2:#0b0705;
+    --lamp:255,214,160;
+    --sky: linear-gradient(#04070f, #0c1526 48%, #1b2c48 82%, #2c405e);
+    --far-img: radial-gradient(130% 95% at 28% 128%, #111b30 55%, rgba(0,0,0,0) 56%),
+               radial-gradient(150% 100% at 78% 135%, #0d1626 58%, rgba(0,0,0,0) 59%);
+    --far-size: 960px 100%;
+    --mid-img: radial-gradient(2px 2px at 120px 68%, rgba(255,220,150,.8), rgba(0,0,0,0) 60%),
+               radial-gradient(2px 2px at 430px 74%, rgba(255,200,130,.6), rgba(0,0,0,0) 60%),
+               radial-gradient(2px 2px at 660px 71%, rgba(255,230,170,.5), rgba(0,0,0,0) 60%),
+               radial-gradient(2.5px 2.5px at 250px 63%, rgba(255,210,140,.55), rgba(0,0,0,0) 60%),
+               radial-gradient(2px 2px at 560px 66%, rgba(255,225,160,.45), rgba(0,0,0,0) 60%);
+    --mid-size: 760px 100%;
+    --near-img: linear-gradient(90deg, rgba(0,0,0,0) 0 47%, #030509 47% 49%, rgba(0,0,0,0) 49%),
+                linear-gradient(rgba(0,0,0,0) 0 12%, rgba(6,9,15,.85) 12% 12.6%, rgba(0,0,0,0) 12.6%);
+    --near-size: 380px 100%;
+    --rain:0;
+    --plat:#151d2d;
+    --platedge:#2b3a55;
+    --signbg:#101826;
+    --signink:#e9eefb;
+    --glass: rgba(30,45,70,.07);
+  }
+
+  /* ---- per-station worlds ---- */
+  body[data-station="studio"]{
+    --face:'Iowan Old Style', Palatino, Georgia, serif;
+    --ink:#f4e3c8; --dimink:#c4a476;
+    --wall1:#33220f; --wall2:#100a05; --lamp:255,196,120;
+    --sky: linear-gradient(#150b12, #2c151f 55%, #45222c);
+    --far-img: radial-gradient(120% 120% at 22% 148%, #170d13 60%, rgba(0,0,0,0) 61%),
+               radial-gradient(110% 110% at 74% 152%, #120a10 62%, rgba(0,0,0,0) 63%);
+    --mid-img: linear-gradient(90deg, rgba(0,0,0,0) 0 30%, #0e0810 30% 32%, rgba(0,0,0,0) 32% 62%, #0d0710 62% 63.4%, rgba(0,0,0,0) 63.4%),
+               radial-gradient(3px 3px at 220px 66%, rgba(255,180,90,.85), rgba(0,0,0,0) 65%);
+    --plat:#2a1a10; --platedge:#5c3a1e; --signbg:#241408; --signink:#ffdba8;
+    --glass: rgba(90,50,30,.08);
+  }
+  body[data-station="founder"]{
+    --face:'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+    --track:.14em;
+    --ink:#e8eef6; --dimink:#8fa3bb;
+    --wall1:#1c2129; --wall2:#07090d; --lamp:210,225,255;
+    --sky: linear-gradient(#070d18, #182c44 52%, #6b3a24 96%);
+    --far-img: repeating-linear-gradient(90deg, #0a1220 0 60px, #0e1727 60px 64px, #0a1220 64px 140px, #10192b 140px 146px, #0a1220 146px 240px);
+    --far-size: 480px 100%;
+    --mid-img: radial-gradient(2px 2px at 90px 40%, rgba(255,235,180,.8), rgba(0,0,0,0) 60%),
+               radial-gradient(2px 2px at 210px 55%, rgba(180,210,255,.6), rgba(0,0,0,0) 60%),
+               radial-gradient(2px 2px at 350px 34%, rgba(255,220,160,.55), rgba(0,0,0,0) 60%),
+               radial-gradient(2px 2px at 520px 48%, rgba(200,220,255,.5), rgba(0,0,0,0) 60%);
+    --mid-size: 640px 100%;
+    --plat:#131a24; --platedge:#31465f; --signbg:#0d1420; --signink:#dbe8ff;
+    --glass: rgba(120,160,220,.07);
+  }
+  body[data-station="writer"]{
+    --face:'American Typewriter', 'Courier New', monospace;
+    --track:.01em;
+    --ink:#e6ecdc; --dimink:#93a88c;
+    --wall1:#1b2318; --wall2:#080b07; --lamp:220,255,190;
+    --sky: linear-gradient(#060b09, #12211a 60%, #1c3226);
+    --far-img: radial-gradient(140% 90% at 30% 140%, #0a120d 58%, rgba(0,0,0,0) 59%),
+               radial-gradient(160% 95% at 82% 150%, #08100b 60%, rgba(0,0,0,0) 61%);
+    --mid-img: radial-gradient(2.5px 2.5px at 300px 70%, rgba(230,255,190,.75), rgba(0,0,0,0) 60%);
+    --rain:1;
+    --plat:#131b12; --platedge:#2e4426; --signbg:#0d150b; --signink:#dcf0c8;
+    --glass: rgba(70,110,80,.09);
+  }
+  body[data-station="advisor"]{
+    --face: Didot, 'Bodoni 72', 'Times New Roman', serif;
+    --track:.05em;
+    --ink:#efe6f2; --dimink:#a893b3;
+    --wall1:#241a2b; --wall2:#0b0710; --lamp:235,205,255;
+    --sky: linear-gradient(#120d1e, #29203f 50%, #4d2c4c 92%);
+    --far-img: linear-gradient(rgba(0,0,0,0) 0 62%, rgba(90,60,100,.28) 62% 62.5%, rgba(0,0,0,0) 62.5% 70%, rgba(120,80,120,.2) 70% 70.4%, rgba(0,0,0,0) 70.4%),
+               radial-gradient(150% 80% at 50% 160%, #140d1c 60%, rgba(0,0,0,0) 61%);
+    --mid-img: radial-gradient(2px 2px at 110px 58%, rgba(255,215,235,.8), rgba(0,0,0,0) 60%),
+               radial-gradient(2px 2px at 300px 60%, rgba(255,235,200,.6), rgba(0,0,0,0) 60%),
+               radial-gradient(2px 2px at 520px 57%, rgba(230,200,255,.6), rgba(0,0,0,0) 60%);
+    --mid-size: 680px 100%;
+    --plat:#1c1426; --platedge:#463052; --signbg:#170f22; --signink:#f2dcff;
+    --glass: rgba(140,90,150,.07);
+  }
+  body[data-station="family"]{
+    --face: Baskerville, 'Hoefler Text', Georgia, serif;
+    --face-style: italic;
+    --ink:#ffeecf; --dimink:#d1a878;
+    --wall1:#3a2410; --wall2:#120a04; --lamp:255,206,130;
+    --sky: linear-gradient(#170c06, #3c1d0e 50%, #7c4319 96%);
+    --far-img: repeating-linear-gradient(90deg, rgba(0,0,0,0) 0 40px, #190d07 40px 150px, rgba(0,0,0,0) 150px 230px, #150b06 230px 330px, rgba(0,0,0,0) 330px 380px),
+               repeating-linear-gradient(90deg, #1c0f08 0 90px, #21120a 90px 96px, #170d07 96px 200px, #1f1109 200px 206px, #1c0f08 206px 320px);
+    --far-size: 760px 52%, 640px 38%;
+    --mid-img: radial-gradient(3px 3px at 140px 62%, rgba(255,190,100,.9), rgba(0,0,0,0) 62%),
+               radial-gradient(3px 3px at 380px 66%, rgba(255,205,120,.8), rgba(0,0,0,0) 62%),
+               radial-gradient(2px 2px at 560px 60%, rgba(255,180,90,.7), rgba(0,0,0,0) 62%);
+    --plat:#2c1a0c; --platedge:#6b421f; --signbg:#251305; --signink:#ffdfae;
+    --glass: rgba(150,90,40,.09);
+  }
+  body[data-station="unnamed"]{
+    --face: Optima, 'Gill Sans', 'Avenir Next', sans-serif;
+    --track:.22em;
+    --ink:#e4e9f4; --dimink:#7f8aa5;
+    --wall1:#151827; --wall2:#06070d; --lamp:190,205,255;
+    --sky: radial-gradient(150px 150px at 71% 26%, #e8edf8 30%, rgba(232,237,248,0) 70%),
+           radial-gradient(340px 340px at 71% 26%, rgba(190,205,255,.14), rgba(0,0,0,0) 70%),
+           linear-gradient(#05070f, #0b1020 60%, #131a30);
+    --far-img: linear-gradient(rgba(0,0,0,0) 0 78%, #070b16 78% 78.6%, rgba(0,0,0,0) 78.6%);
+    --mid-img: linear-gradient(rgba(0,0,0,0) 0 0);
+    --near-img: linear-gradient(90deg, rgba(0,0,0,0) 0 48.6%, #04060d 48.6% 49.4%, rgba(0,0,0,0) 49.4%);
+    --near-size: 520px 100%;
+    --plat:#10141f; --platedge:#28304a; --signbg:#0b0f1a; --signink:#c6cfe6;
+    --glass: rgba(90,110,170,.06);
+  }
+  body[data-station="between"]{
+    --face: Georgia, serif;
+    --ink:#e8ddc8; --dimink:#8d8272;
+    --wall1:#1c1710; --wall2:#070604; --lamp:255,224,180;
+    --sky: linear-gradient(#020203, #050506);
+    --far-img: linear-gradient(rgba(0,0,0,0) 0 0);
+    --mid-img: linear-gradient(rgba(0,0,0,0) 0 0);
+    --near-img: linear-gradient(rgba(0,0,0,0) 0 0);
+    --glass: rgba(255,214,160,.05);
+  }
+
+  body{
+    font-family: var(--face);
+    font-style: var(--face-style);
+    letter-spacing: var(--track);
+    color: var(--ink);
+    background:
+      radial-gradient(120% 90% at 50% 0%, rgba(var(--lamp), .10), rgba(0,0,0,0) 60%),
+      linear-gradient(var(--wall1), var(--wall2) 78%);
+    height:100dvh; overflow:hidden;
+    transition: color 1.2s, background 1.2s, letter-spacing 1.2s;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  #stage{ position:fixed; inset:0; }
+
+  /* ---- the window ---- */
+  #windowframe{
+    position:absolute; left:50%; top:44%;
+    width:min(78vw, 880px); height:min(50vh, 460px);
+    transform:translate(-50%,-52%);
+    border-radius:26px;
+    padding:14px;
+    background: linear-gradient(160deg, #3d2c18, #17100a 60%);
+    box-shadow: 0 30px 80px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,220,170,.25);
+  }
+  #exterior{
+    position:relative; width:100%; height:100%;
+    border-radius:14px; overflow:hidden;
+    background: var(--sky);
+    box-shadow: inset 0 0 60px rgba(0,0,0,.65);
+    transition: background 1.2s;
+  }
+  .layer{ position:absolute; inset:0; background-repeat:repeat-x; background-position-y:100%; will-change:background-position; }
+  #far { background-image:var(--far-img);  background-size:var(--far-size, 960px 100%); }
+  #mid { background-image:var(--mid-img);  background-size:var(--mid-size, 760px 100%); }
+  #near{ background-image:var(--near-img); background-size:var(--near-size, 380px 100%); }
+
+  #rain{
+    position:absolute; inset:-40% 0 0 0; pointer-events:none;
+    opacity: var(--rain); transition: opacity 1.2s;
+    background-image: repeating-linear-gradient(103deg, rgba(0,0,0,0) 0 9px, rgba(215,235,220,.10) 9px 10px, rgba(0,0,0,0) 10px 17px);
+    animation: rainfall 1.1s linear infinite;
+  }
+  @keyframes rainfall{ from{ transform:translateY(-20px);} to{ transform:translateY(20px);} }
+
+  #platform{
+    position:absolute; inset:auto 0 0 0; height:34%;
+    opacity:0; transform:translateY(12%);
+    transition: opacity 1.4s ease, transform 1.4s ease;
+    pointer-events:none;
+  }
+  .stopped #platform{ opacity:1; transform:none; }
+  #platform .deck{
+    position:absolute; inset:52% 0 0 0;
+    background: linear-gradient(var(--platedge), var(--plat) 22%);
+  }
+  #platform .post{
+    position:absolute; left:27%; bottom:44%; width:5px; height:56%;
+    background:linear-gradient(#000, var(--platedge));
+    transform:translateX(-50%);
+  }
+  #platform .plate{
+    position:absolute; left:27%; bottom:86%; transform:translateX(-50%);
+    background:var(--signbg); color:var(--signink);
+    border:1px solid rgba(255,255,255,.14); border-radius:6px;
+    padding:.5em 1.1em; white-space:nowrap;
+    font-size:clamp(11px, 1.9vw, 15px); letter-spacing:.18em; text-transform:uppercase;
+    box-shadow:0 4px 18px rgba(0,0,0,.5);
+    min-width:6.5em; min-height:2em; text-align:center;
+  }
+  body[data-station="between"] #platform{ display:none; }
+
+  #reflection{
+    position:absolute; inset:0; pointer-events:none; border-radius:14px;
+    background:
+      linear-gradient(115deg, rgba(255,255,255,.06) 0 12%, rgba(0,0,0,0) 13% 60%, rgba(255,255,255,.03) 61% 66%, rgba(0,0,0,0) 67%),
+      radial-gradient(60% 80% at 50% 115%, rgba(var(--lamp), .10), rgba(0,0,0,0) 70%),
+      var(--glassvar, linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0)));
+    box-shadow: inset 0 0 0 100vmax var(--glass);
+    transition: box-shadow 1.2s;
+  }
+  body[data-station="between"] #reflection{
+    background:
+      radial-gradient(42% 60% at 34% 68%, rgba(var(--lamp), .13), rgba(0,0,0,0) 72%),
+      radial-gradient(30% 46% at 66% 60%, rgba(var(--lamp), .07), rgba(0,0,0,0) 70%),
+      linear-gradient(115deg, rgba(255,255,255,.05) 0 12%, rgba(0,0,0,0) 13%);
+  }
+  #dimmer{
+    position:absolute; inset:0; background:#020204; opacity:0;
+    transition:opacity .4s ease; pointer-events:none;
+  }
+  .dim #dimmer{ opacity:1; }
+  #mullion{
+    position:absolute; top:0; bottom:0; left:50%; width:10px; transform:translateX(-50%);
+    background:linear-gradient(90deg, #0c0805, #3a2a16 50%, #0c0805);
+    pointer-events:none;
+  }
+
+  /* ---- interior dressing ---- */
+  #lampglow{
+    position:absolute; left:50%; top:-4%; width:120vw; height:44vh; transform:translateX(-50%);
+    background: radial-gradient(48% 90% at 50% 0%, rgba(var(--lamp), .16), rgba(0,0,0,0) 70%);
+    pointer-events:none; transition: background 1.2s;
+    animation: flicker 7s ease-in-out infinite;
+  }
+  @keyframes flicker{
+    0%,100%{opacity:1} 43%{opacity:.92} 45%{opacity:1} 46%{opacity:.9} 47%{opacity:1} 80%{opacity:.96}
+  }
+  #seats{
+    position:absolute; left:0; right:0; bottom:0; height:24vh; pointer-events:none;
+    background:
+      radial-gradient(60% 130% at 18% 100%, rgba(0,0,0,.75), rgba(0,0,0,0) 62%),
+      radial-gradient(60% 130% at 82% 100%, rgba(0,0,0,.75), rgba(0,0,0,0) 62%),
+      linear-gradient(rgba(0,0,0,0) 0 30%, rgba(4,2,1,.9) 76%);
+  }
+  #seats::before, #seats::after{
+    content:""; position:absolute; bottom:0; width:34%; height:74%;
+    border-radius:22px 22px 0 0;
+    background: linear-gradient(rgba(var(--lamp), .10), rgba(0,0,0,0) 30%), linear-gradient(#171009, #060302);
+    box-shadow: inset 0 2px 0 rgba(var(--lamp), .18);
+  }
+  #seats::before{ left:4%; transform:skewX(3deg); }
+  #seats::after{ right:4%; transform:skewX(-3deg); }
+  #vignette{
+    position:absolute; inset:0; pointer-events:none;
+    background: radial-gradient(120% 100% at 50% 42%, rgba(0,0,0,0) 55%, rgba(0,0,0,.55) 100%);
+  }
+
+  /* ---- text ---- */
+  header{
+    position:absolute; top:max(3.4vh, 22px); left:50%; transform:translateX(-50%);
+    text-align:center; width:92vw; pointer-events:none;
+  }
+  h1{
+    font-weight:400; font-size:clamp(21px, 3.4vw, 34px);
+    letter-spacing:.34em; text-transform:uppercase; text-indent:.34em;
+    text-shadow:0 0 24px rgba(var(--lamp), .35);
+  }
+  #ticket{
+    margin-top:.65em; font-size:clamp(10px, 1.5vw, 12.5px);
+    letter-spacing:.22em; text-transform:uppercase; color:var(--dimink);
+    transition:color 1.2s;
+  }
+  #hint{
+    position:absolute; bottom:calc(max(2.6vh, 16px) + 74px); left:50%; transform:translateX(-50%);
+    width:min(92vw, 620px); text-align:center;
+    font-size:clamp(10.5px, 1.5vw, 12.5px); letter-spacing:.14em; color:var(--dimink);
+    transition: color 1.2s, opacity .8s; pointer-events:none;
+  }
+
+  /* ---- postcard ---- */
+  #postcard{
+    position:absolute; left:50%; top:63%;
+    transform:translate(-50%,-44%) rotate(-1.2deg);
+    width:min(86vw, 450px);
+    background: linear-gradient(168deg, #f4ead3, #e3d3b0);
+    color:#33281a;
+    border-radius:4px; padding:clamp(18px, 3.5vw, 30px) clamp(20px, 4vw, 34px);
+    box-shadow: 0 24px 60px rgba(0,0,0,.65), inset 0 0 40px rgba(120,90,40,.14);
+    opacity:0; visibility:hidden; transition: opacity .9s ease, transform .9s ease, visibility 0s .9s;
+  }
+  #postcard.show{
+    opacity:1; visibility:visible; transition: opacity .9s ease .2s, transform .9s ease .2s;
+    transform:translate(-50%,-48%) rotate(-1.2deg);
+  }
+  #pc-from{
+    font-size:11px; letter-spacing:.24em; text-transform:uppercase; color:#8a7350;
+    border-bottom:1px solid rgba(120,95,55,.35); padding-bottom:.8em; margin-bottom:1em;
+  }
+  #pc-body{
+    font-size:clamp(15px, 2.4vw, 18.5px); line-height:1.65; letter-spacing:.01em;
+    font-style:italic;
+  }
+  #resume{
+    margin-top:1.4em; background:none; border:none; cursor:pointer;
+    font-family:inherit; font-size:11.5px; letter-spacing:.26em; text-transform:uppercase;
+    color:#7a6138; padding:.6em 0; border-top:1px dashed rgba(120,95,55,.4); width:100%;
+    min-height:44px; text-align:center;
+  }
+  #resume:hover, #resume:focus-visible{ color:#3d2f18; outline:none; }
+
+  /* ---- route line ---- */
+  #route{
+    position:absolute; bottom:max(2.6vh, 16px); left:50%; transform:translateX(-50%);
+    width:min(94vw, 780px); display:flex; align-items:flex-start; justify-content:space-between;
+  }
+  #route::before{
+    content:""; position:absolute; top:7px; left:2%; right:2%; height:2px;
+    background:linear-gradient(90deg, rgba(0,0,0,0), rgba(var(--lamp), .4) 12% 88%, rgba(0,0,0,0));
+  }
+  .stop{
+    position:relative; background:none; border:none; cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; gap:9px;
+    min-width:44px; min-height:44px;
+    color:var(--dimink); font-family:inherit; padding:0 2px 6px;
+    transition:color .6s; -webkit-tap-highlight-color:transparent;
+  }
+  .stop i{
+    width:12px; height:12px; border-radius:50%;
+    background:rgba(var(--lamp), .35);
+    box-shadow:0 0 10px rgba(var(--lamp), .3);
+    transition: background .6s, box-shadow .6s, transform .6s;
+  }
+  .stop span{
+    font-size:clamp(8.5px, 1.35vw, 11px); letter-spacing:.13em; text-transform:uppercase;
+    max-width:12ch; text-align:center; line-height:1.5;
+  }
+  .stop:hover, .stop:focus-visible{ color:var(--ink); outline:none; }
+  .stop:hover i, .stop:focus-visible i{ background:rgba(var(--lamp), .85); box-shadow:0 0 16px rgba(var(--lamp), .8); }
+  .stop[aria-current="true"]{ color:var(--ink); }
+  .stop[aria-current="true"] i{
+    background:rgb(var(--lamp)); transform:scale(1.35);
+    box-shadow:0 0 18px rgba(var(--lamp), .95);
+  }
+  .stop.notch{ padding-top:3px; }
+  .stop.notch i{
+    width:5px; height:5px; background:rgba(var(--lamp), .16); box-shadow:none;
+  }
+  .stop.notch:hover i, .stop.notch:focus-visible i{ background:rgba(var(--lamp), .5); }
+
+  /* ---- sound ---- */
+  #sound{
+    position:absolute; top:max(3vh, 20px); right:max(3vw, 18px);
+    background:none; border:1px solid rgba(var(--lamp), .3); border-radius:999px;
+    color:var(--dimink); font-family:inherit; cursor:pointer;
+    font-size:10.5px; letter-spacing:.2em; text-transform:uppercase;
+    min-height:44px; padding:.62em 1.2em; transition: color .5s, border-color .5s;
+  }
+  #sound:hover, #sound:focus-visible{ color:var(--ink); border-color:rgba(var(--lamp), .7); outline:none; }
+  #sound[aria-pressed="true"]{ color:var(--ink); }
+
+  button{ touch-action:manipulation; }
+  #windowframe{ touch-action:manipulation; }
+
+  @media (max-width:600px){
+    #windowframe{ width:92vw; height:44vh; top:41%; }
+    .stop span{ max-width:8ch; }
+    #hint{ bottom:calc(max(2.6vh, 16px) + 82px); }
+    #sound{ top:auto; bottom:calc(max(2.6vh, 16px) + 128px); right:50%; transform:translateX(50%); }
+    #postcard{ top:54%; }
+  }
+
+  @media (max-width:340px){
+    #ticket{ font-size:8.5px; letter-spacing:.12em; white-space:nowrap; }
+    #route{ width:calc(100vw - 8px); }
+    .stop span{ font-size:8.25px; letter-spacing:.08em; }
+  }
+
+  @media (max-width:340px) and (max-height:620px){
+    #sound{ bottom:calc(max(2.6vh, 16px) + 80px); }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    #rain, #lampglow{ animation:none; }
+    #postcard, #postcard.show, #platform{ transition-duration:.01s; transition-delay:0s; }
+  }
+</style>
+</head>
+<body data-station="riding">
+<div id="stage">
+  <div id="lampglow"></div>
+
+  <div id="windowframe">
+    <div id="exterior">
+      <div class="layer" id="far"></div>
+      <div class="layer" id="mid"></div>
+      <div class="layer" id="near"></div>
+      <div id="rain"></div>
+      <div id="platform">
+        <div class="deck"></div>
+        <div class="post"></div>
+        <div class="plate" id="signname"></div>
+      </div>
+      <div id="reflection"></div>
+      <div id="dimmer"></div>
+    </div>
+    <div id="mullion"></div>
+  </div>
+
+  <div id="seats"></div>
+  <div id="vignette"></div>
+
+  <header>
+    <h1>Night Train</h1>
+    <p id="ticket">passenger a. lumley &middot; one seat &middot; any line</p>
+  </header>
+
+  <button id="sound" aria-pressed="false">sound off</button>
+
+  <p id="hint">Six stops are running tonight. Touch a light on the line, or ride the arrow keys.</p>
+
+  <aside id="postcard" aria-live="polite">
+    <p id="pc-from"></p>
+    <p id="pc-body"></p>
+    <button id="resume">pull away</button>
+  </aside>
+
+  <nav id="route" aria-label="stations on the line"></nav>
+</div>
+
+<script>
+'use strict';
+
+/* ---------------- stations ---------------- */
+const ORDER = ['studio','founder','writer','advisor','family','unnamed'];
+const S = {
+  studio:{ name:'Varnish & Pine',
+    card:'The little table sold before the varnish dried. Sawdust in every pocket, and the whole morning answering to no one.',
+    chime:[660, 880], drone:[110, 165], clack:1.0 },
+  founder:{ name:'First Light Yards',
+    card:'Four of us, and a whiteboard that will not stay clean. It might not work. It is already something.',
+    chime:[523, 659, 784], drone:[98, 196], clack:1.15 },
+  writer:{ name:'Margins',
+    card:'Page ninety, and the rain did half the work tonight. The sentence I chased all winter finally sat still.',
+    chime:[440, 554], drone:[87, 131], clack:0.8 },
+  advisor:{ name:'The Long Table',
+    card:'Two founders, three ideas, one worth keeping. The work now is mostly telling the difference, gently.',
+    chime:[587, 494, 740], drone:[104, 156], clack:0.9 },
+  family:{ name:'Sunday Kitchen',
+    card:'The bread came out lopsided and everyone asked for seconds. Nobody important called all week, which made it a good week.',
+    chime:[392, 494, 587], drone:[92, 138], clack:0.85 },
+  unnamed:{ name:'North of the Map', sign:'',
+    card:'The sign on this platform is blank. Somebody left the gate open on purpose.',
+    chime:[831, 415], drone:[73, 110], clack:0.7 },
+  between:{ name:'Between Stations',
+    card:'No station here. Just the stretch of track where you are nobody in particular, and it feels like rest.',
+    chime:[110], drone:[55, 82], clack:0 }
+};
+
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------------- dom ---------------- */
+const $ = id => document.getElementById(id);
+const body = document.body,
+      exterior = $('exterior'),
+      layers = [ {el:$('far'), f:0.10, size:960}, {el:$('mid'), f:0.38, size:760}, {el:$('near'), f:1.7, size:380} ],
+      route = $('route'),
+      postcard = $('postcard'),
+      hint = $('hint');
+
+/* build the route line: six lit stops with an unmarked notch after the third */
+ORDER.forEach((id, i) => {
+  if (i === 3){
+    const n = document.createElement('button');
+    n.className = 'stop notch';
+    n.dataset.id = 'between';
+    n.setAttribute('aria-label', 'an unmarked stop');
+    n.innerHTML = '<i></i>';
+    route.appendChild(n);
+  }
+  const b = document.createElement('button');
+  b.className = 'stop';
+  b.dataset.id = id;
+  b.innerHTML = '<i></i><span>' + S[id].name + '</span>';
+  route.appendChild(b);
+});
+
+/* ---------------- motion ---------------- */
+let current = null;        /* null while riding */
+let v = 1, targetV = 1;    /* landscape velocity */
+let arrived = false;
+const pos = [0,0,0];
+let last = performance.now();
+
+function tick(now){
+  const dt = Math.min(0.05, (now - last) / 1000);
+  last = now;
+  v += (targetV - v) * Math.min(1, dt * (targetV > v ? 0.9 : 0.9));
+  if (Math.abs(targetV - v) < 0.004) v = targetV;
+  layers.forEach((L, i) => {
+    /* 474240 is a common multiple of every station's background tile width,
+       so the wrap point never produces a visible seam */
+    pos[i] = (pos[i] + v * L.f * dt * 260) % 474240;
+    L.el.style.backgroundPositionX = (-pos[i]) + 'px';
+  });
+  if (targetV === 0 && v < 0.03 && !arrived){ arrived = true; onArrive(); }
+  if (audio.on) audio.setSpeed(v);
+  requestAnimationFrame(tick);
+}
+if (!RM) requestAnimationFrame(tick);
+else { v = 0; }
+
+/* ---------------- travel ---------------- */
+let arriveTimer = 0, cardTimer = 0;
+
+function goTo(id){
+  if (id === current) return;
+  clearTimeout(arriveTimer); clearTimeout(cardTimer);
+  current = id;
+  arrived = false;
+  postcard.classList.remove('show');
+  exterior.parentElement.classList.remove('stopped');
+  hint.style.opacity = 0;
+
+  exterior.classList.add('dim');
+  setTimeout(() => {
+    body.dataset.station = id;
+    $('signname').textContent = ('sign' in S[id]) ? S[id].sign : S[id].name;
+    exterior.classList.remove('dim');
+  }, 420);
+
+  route.querySelectorAll('.stop').forEach(b =>
+    b.setAttribute('aria-current', b.dataset.id === id ? 'true' : 'false'));
+
+  targetV = 0;
+  audio.station(id);
+  if (RM){ arrived = true; audio.setSpeed(0); arriveTimer = setTimeout(onArrive, 700); }
+  else {
+    /* fallback in case frames are throttled and the easing loop stalls */
+    arriveTimer = setTimeout(() => { if (!arrived){ arrived = true; v = 0; onArrive(); } }, 3800);
+  }
+}
+
+function onArrive(){
+  exterior.parentElement.classList.add('stopped');
+  audio.chime(S[current].chime);
+  $('pc-from').textContent = 'from ' + S[current].name.toLowerCase();
+  $('pc-body').textContent = S[current].card;
+  cardTimer = setTimeout(() => postcard.classList.add('show'), 500);
+}
+
+function resumeRide(){
+  clearTimeout(arriveTimer); clearTimeout(cardTimer);
+  current = null; arrived = false;
+  postcard.classList.remove('show');
+  exterior.parentElement.classList.remove('stopped');
+  exterior.classList.add('dim');
+  setTimeout(() => {
+    body.dataset.station = 'riding';
+    exterior.classList.remove('dim');
+  }, 420);
+  route.querySelectorAll('.stop').forEach(b => b.setAttribute('aria-current', 'false'));
+  targetV = 1;
+  audio.station(null);
+  if (RM) audio.setSpeed(1);
+  hint.style.opacity = 1;
+}
+
+route.addEventListener('click', e => {
+  const b = e.target.closest('.stop');
+  if (b) goTo(b.dataset.id);
+});
+$('resume').addEventListener('click', resumeRide);
+
+/* triple tap on the window also finds the unmarked stop */
+let taps = 0, tapTimer = 0;
+$('windowframe').addEventListener('click', () => {
+  taps++;
+  clearTimeout(tapTimer);
+  tapTimer = setTimeout(() => taps = 0, 800);
+  if (taps >= 3){ taps = 0; goTo('between'); }
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' || e.key === ' '){
+    if (current){ e.preventDefault(); resumeRide(); }
+    return;
+  }
+  if (e.key === 'ArrowRight' || e.key === 'ArrowLeft'){
+    e.preventDefault();
+    const i = ORDER.indexOf(current);   /* -1 while riding or at the unmarked stop */
+    let next;
+    if (e.key === 'ArrowRight') next = i < 0 ? ORDER[0] : ORDER[(i + 1) % ORDER.length];
+    else next = i < 0 ? ORDER[ORDER.length - 1] : ORDER[(i - 1 + ORDER.length) % ORDER.length];
+    goTo(next);
+    return;
+  }
+  const n = parseInt(e.key, 10);
+  if (n >= 1 && n <= 6) goTo(ORDER[n - 1]);
+});
+
+/* ---------------- sound ---------------- */
+const audio = (() => {
+  let ac = null, master, rumbleGain, clackGain, droneGain, droneA, droneB;
+  let nextClack = 0, schedTimer = 0, speed = 1, clackScale = 1;
+  const api = { on:false };
+
+  function noiseBuffer(seconds){
+    const b = ac.createBuffer(1, ac.sampleRate * seconds, ac.sampleRate);
+    const d = b.getChannelData(0);
+    let lastv = 0;
+    for (let i = 0; i < d.length; i++){
+      const white = Math.random() * 2 - 1;
+      lastv = (lastv + 0.02 * white) / 1.02;   /* brownish */
+      d[i] = lastv * 3.2;
+    }
+    return b;
+  }
+
+  function build(){
+    ac = new (window.AudioContext || window.webkitAudioContext)();
+    master = ac.createGain(); master.gain.value = 0;
+    master.connect(ac.destination);
+
+    /* carriage rumble */
+    const src = ac.createBufferSource();
+    src.buffer = noiseBuffer(3); src.loop = true;
+    const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 120;
+    rumbleGain = ac.createGain(); rumbleGain.gain.value = 0.25;
+    src.connect(lp).connect(rumbleGain).connect(master);
+    src.start();
+
+    /* rail clack bus */
+    clackGain = ac.createGain(); clackGain.gain.value = 0.5;
+    clackGain.connect(master);
+
+    /* station drone: two soft detuned voices */
+    droneGain = ac.createGain(); droneGain.gain.value = 0.05;
+    const dlp = ac.createBiquadFilter(); dlp.type = 'lowpass'; dlp.frequency.value = 600;
+    droneA = ac.createOscillator(); droneA.type = 'triangle'; droneA.frequency.value = 98;
+    droneB = ac.createOscillator(); droneB.type = 'sine'; droneB.frequency.value = 147.5;
+    droneA.connect(dlp); droneB.connect(dlp);
+    dlp.connect(droneGain).connect(master);
+    droneA.start(); droneB.start();
+
+    nextClack = ac.currentTime + 0.3;
+    schedTimer = setInterval(schedule, 110);
+  }
+
+  function clackAt(t, gain){
+    const s = ac.createBufferSource();
+    s.buffer = noiseBuffer(0.09);
+    const bp = ac.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 700; bp.Q.value = 1.4;
+    const g = ac.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(gain, t + 0.006);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.09);
+    s.connect(bp).connect(g).connect(clackGain);
+    s.start(t); s.stop(t + 0.1);
+  }
+
+  function schedule(){
+    if (!ac) return;
+    const horizon = ac.currentTime + 0.28;
+    if (speed < 0.06 || clackScale === 0){ nextClack = Math.max(nextClack, horizon); return; }
+    while (nextClack < horizon){
+      clackAt(nextClack, 0.28 * speed);
+      clackAt(nextClack + 0.13, 0.2 * speed);
+      const gap = (0.55 / (0.15 + speed * 0.85)) * clackScale;
+      nextClack += Math.max(0.35, gap);
+    }
+  }
+
+  api.enable = function(){
+    if (!ac) build();
+    ac.resume();
+    api.on = true;
+    master.gain.setTargetAtTime(0.6, ac.currentTime, 0.4);
+  };
+  api.disable = function(){
+    if (!ac) return;
+    api.on = false;
+    master.gain.setTargetAtTime(0, ac.currentTime, 0.15);
+  };
+  api.setSpeed = function(vv){
+    speed = vv;
+    if (!ac || !api.on) return;
+    rumbleGain.gain.value = 0.06 + 0.24 * vv;
+  };
+  api.station = function(id){
+    if (!ac) return;
+    const t = ac.currentTime;
+    const st = id ? S[id] : null;
+    const d = st ? st.drone : [98, 147.5];
+    clackScale = st ? st.clack : 1;
+    droneA.frequency.setTargetAtTime(d[0], t, 1.2);
+    droneB.frequency.setTargetAtTime(d[1] * 1.005, t, 1.2);
+    droneGain.gain.setTargetAtTime(st ? 0.085 : 0.05, t, 1.5);
+  };
+  api.chime = function(notes){
+    if (!ac || !api.on) return;
+    const t0 = ac.currentTime + 0.15;
+    notes.forEach((f, i) => {
+      const o = ac.createOscillator(); o.type = 'sine'; o.frequency.value = f;
+      const g = ac.createGain();
+      const t = t0 + i * 0.24;
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.16, t + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 1.4);
+      o.connect(g).connect(master);
+      o.start(t); o.stop(t + 1.5);
+    });
+  };
+  return api;
+})();
+
+const soundBtn = $('sound');
+soundBtn.addEventListener('click', () => {
+  if (audio.on){
+    audio.disable();
+    soundBtn.textContent = 'sound off';
+    soundBtn.setAttribute('aria-pressed', 'false');
+  } else {
+    audio.enable();
+    audio.station(current);
+    soundBtn.textContent = 'sound on';
+    soundBtn.setAttribute('aria-pressed', 'true');
+  }
+});
+</script>
+</body>
+</html>

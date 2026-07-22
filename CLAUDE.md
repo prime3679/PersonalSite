@@ -1,11 +1,11 @@
 # PersonalSite, Project Context
 
-Adrian Lumley's personal site. Live at https://adrianlumley.co. GitHub Pages deploys from `main`.
+Adrian Lumley's personal site. Live at https://adrianlumley.co. Cloudflare Workers Assets is the authoritative production runtime for the apex host. GitHub Pages also publishes from `main`, but it is not the authoritative apex release path.
 
 ## Stack
 - **Framework:** Astro + TypeScript + Tailwind CSS
 - **Typography:** premium editorial system using Newsreader, Geist, and Geist Mono via `@fontsource-variable/*`
-- **Deploy:** GitHub Pages (`prime3679/PersonalSite`), push to `main` triggers deploy
+- **Deploy:** Cloudflare Workers Assets for `adrianlumley.co/*`; a separate Cloudflare redirect Worker for `www.adrianlumley.co/*`; an active GitHub Pages workflow also publishes pushes to `main`
 - **Style:** premium editorial/product-leader surface with subtle systems cues, not a terminal dashboard
 
 ## Key Files
@@ -115,14 +115,18 @@ For homepage/header/mobile changes verify 320, 375, 390, and 414px widths:
 - no mockup scaffold labels
 
 ## Deploy
+
+The authoritative production release uses the Cloudflare scripts:
+
 ```bash
-git add -A
-git commit -m "type: concise message"
-git push origin HEAD:main
-gh run watch <run_id> --repo prime3679/PersonalSite --exit-status
+npm run deploy:cloudflare
+npm run deploy:cloudflare:www
+npm run deploy:cloudflare:all
 ```
 
-The job is not complete at push. Wait for GitHub Pages deploy, then verify the live URL.
+`deploy:cloudflare` builds and deploys `dist/` through `wrangler.toml` to the `adrianlumley.co/*` Worker route. `deploy:cloudflare:www` deploys the separate redirect Worker through `wrangler.www.toml`. `deploy:cloudflare:all` performs both in sequence.
+
+The active `.github/workflows/deploy.yml` workflow still builds and publishes a GitHub Pages artifact on pushes to `main`. A push alone does not complete an authoritative apex production release. After an authorized Cloudflare deploy, wait for completion and verify the live URL.
 
 ## Loop Artifacts
 Rogue loop contracts and signal bus live outside this repo:

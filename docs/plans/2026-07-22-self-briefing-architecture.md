@@ -16,7 +16,7 @@ This is contribution infrastructure only. It must not change the public site, de
 - `src/data/nav.ts` is the public navigation source of truth; `src/data/siteMetadata.ts` supplies site and SEO metadata.
 - Astro content collections are defined in `src/content/config.ts`, with separate blog and Signal Room schemas. `src/lib/content.ts` centralizes published-content queries, ordering, and route helpers.
 - Writing, Signal Room, RSS, sitemap, and generated OG endpoints consume the shared content/query layer. Legacy `/blog/` routes remain compatibility redirects.
-- GitHub Actions builds and deploys `main` to GitHub Pages. Repo-owned Vitest, Playwright, and `.hermes/verifiers/` checks cover code and public-surface invariants.
+- Cloudflare Workers Assets is the authoritative production runtime: `npm run deploy:cloudflare` builds and deploys `dist/` through `wrangler.toml` to `adrianlumley.co/*`; the separate `deploy:cloudflare:www` command deploys the `www.adrianlumley.co/*` redirect Worker through `wrangler.www.toml`; `deploy:cloudflare:all` performs both. The active GitHub Actions workflow still builds and publishes `main` to GitHub Pages, but it is not the authoritative apex release path. Repo-owned Vitest, Playwright, and `.hermes/verifiers/` checks cover code and public-surface invariants.
 - Contribution doctrine and enforcement live in `REVIEW.md`, `AGENTS.md`, `CLAUDE.md`, `docs/zero-context-contribution.md`, `.agent/contribution-contract.json`, and `.agent/contribution_gate.py`.
 
 ## implementation

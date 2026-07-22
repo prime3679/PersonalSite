@@ -10,13 +10,13 @@ A personal site and writing home for:
 - small lab projects / demos
 - contact / advisory surface
 
-This repo is active and deployed from `main`.
+This repo is active. Cloudflare Workers Assets is the authoritative production runtime; pushes to `main` also publish through an active GitHub Pages workflow.
 
 ## Stack
 
 - **Framework:** Astro
 - **Styling:** Tailwind CSS
-- **Deploy:** GitHub Pages via GitHub Actions
+- **Deploy:** Cloudflare Workers Assets for the apex host, a separate Cloudflare Worker for `www` redirects, plus an active GitHub Pages pipeline
 - **Testing:** Playwright
 - **Image generation:** Satori + Sharp for dynamic OG images
 
@@ -45,13 +45,20 @@ npm test
 
 ## Deployment
 
-Push to `main` to trigger the GitHub Pages deployment pipeline.
+The authoritative `adrianlumley.co/*` production release builds and deploys `dist/` through `wrangler.toml`:
 
 ```bash
-git add -A
-git commit -m "your message"
-git push origin main
+npm run deploy:cloudflare
 ```
+
+The `www.adrianlumley.co/*` redirect Worker uses its separate configuration. The combined command performs both deployments:
+
+```bash
+npm run deploy:cloudflare:www
+npm run deploy:cloudflare:all
+```
+
+Pushes to `main` still trigger `.github/workflows/deploy.yml`, which builds and publishes a GitHub Pages artifact. That active pipeline is not the authoritative apex production release path, so push-to-main alone does not complete production deployment.
 
 ## Notes
 

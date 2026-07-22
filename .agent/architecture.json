@@ -28,6 +28,7 @@
       "Astro Content Collections with Zod schemas",
       "Satori and Sharp for generated Open Graph images",
       "Vitest and Playwright",
+      "Cloudflare Workers and Workers Assets",
       "GitHub Actions and GitHub Pages"
     ],
     "source_scope": [
@@ -95,7 +96,7 @@
       "dist/**",
       "node_modules/**"
     ],
-    "digest": "380a9afd982ec639cd022b84ae62bb00b575c429e8d6832c3291dbfe861a07dc"
+    "digest": "8810450c9de9f392c29d9ef00b1645e587ecf38dd18bab3a62aeb8ba451d8f94"
   },
   "components": [
     {
@@ -172,8 +173,8 @@
       "id": "deployment-pipeline",
       "name": "deployment pipeline",
       "core": true,
-      "paths": [".github/workflows/deploy.yml", "astro.config.mjs"],
-      "responsibility": "Build the Astro site and publish the generated artifact from main to GitHub Pages."
+      "paths": ["package.json", "wrangler.toml", "wrangler.www.toml", ".github/workflows/deploy.yml", "astro.config.mjs", "src/canonical-worker.js", "src/www-redirect.js"],
+      "responsibility": "Deploy dist through wrangler.toml and the canonical Worker to the authoritative adrianlumley.co Workers Assets runtime, deploy the separate www redirect Worker through wrangler.www.toml, and retain the active main-branch GitHub Pages publication pipeline as a non-authoritative delivery path."
     }
   ],
   "interfaces": {
@@ -205,13 +206,16 @@
     {"id": "signal-room-publish", "from": "src/content/signal-room/*.md", "through": ["signalRoomSchema", "getEpisodes", "Signal Room routes", "RSS and Open Graph endpoints"], "to": "episode index, entry pages, feed items, and social cards"},
     {"id": "lab-delivery", "from": "public/lab/<artifact>/", "through": ["Astro public-file copy"], "to": "self-contained static lab route"},
     {"id": "status-read", "from": "public status JSON", "through": ["LiveStatus.astro client script", "freshness calculation"], "to": "live, quiet, or unknown status presentation"},
-    {"id": "build-deploy", "from": "main branch source", "through": ["GitHub Actions", "withastro/action", "Astro build", "actions/deploy-pages"], "to": "GitHub Pages production deployment"},
+    {"id": "cloudflare-apex-deploy", "from": "npm run deploy:cloudflare", "through": ["npm run build", "dist/", "wrangler.toml", "src/canonical-worker.js", "Cloudflare Workers Assets"], "to": "authoritative production runtime on adrianlumley.co/*"},
+    {"id": "cloudflare-www-deploy", "from": "npm run deploy:cloudflare:www", "through": ["wrangler.www.toml", "src/www-redirect.js"], "to": "separate redirect Worker on www.adrianlumley.co/*"},
+    {"id": "cloudflare-all-deploy", "from": "npm run deploy:cloudflare:all", "through": ["npm run deploy:cloudflare", "npm run deploy:cloudflare:www"], "to": "apex production runtime and www redirect Worker"},
+    {"id": "github-pages-publish", "from": "push to main or workflow dispatch", "through": [".github/workflows/deploy.yml", "withastro/action", "Astro build", "actions/deploy-pages"], "to": "active GitHub Pages publication, not the authoritative apex production release"},
     {"id": "contribution-check", "from": "repo doctrine and architecture-relevant source", "through": ["contribution contract", "architecture fingerprint", "contribution gate"], "to": "audit result or bounded trusted verification commands"}
   ],
   "dependencies": {
     "runtime": ["Astro", "Tailwind CSS", "Astro Content Collections", "Zod", "Satori", "Sharp", "bundled font packages"],
     "development": ["TypeScript", "Astro Check", "Vitest", "happy-dom", "Playwright", "Python 3 standard library for the contribution gate"],
-    "external_services": ["GitHub Actions", "GitHub Pages", "Formspree", "Umami", "Rogue public status worker"],
+    "external_services": ["Cloudflare Workers", "Cloudflare Workers Assets", "GitHub Actions", "GitHub Pages", "Formspree", "Umami", "Rogue public status worker"],
     "dependency_policy": "Contribution-only architecture work does not mutate manifests or install dependencies."
   },
   "invariants": [
@@ -222,6 +226,8 @@
     "Writing publication state and ordering flow through getPublishedPosts; Signal Room ordering flows through getEpisodes.",
     "Post and episode route forms in src/lib/content.ts remain stable because they are used as RSS identifiers.",
     "The public surface follows the lowercase editorial and protected-language rules in AGENTS.md.",
+    "Cloudflare Workers Assets on adrianlumley.co/* is the authoritative production runtime; the active GitHub Pages workflow is a separate, non-authoritative publication path.",
+    "The www.adrianlumley.co/* redirect is deployed as a separate Worker, and deploy:cloudflare:all performs both Cloudflare deployments.",
     "Architecture artifacts use only repo-relative paths and the human map has no external asset dependencies.",
     "Architecture validation runs during contribution audit and before verify executes trusted commands."
   ],

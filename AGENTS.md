@@ -67,9 +67,10 @@ For homepage/header/mobile changes verify 320, 375, 390, and 414px widths:
 
 ## git/deploy
 - direct-to-main pushes are allowed for verified private repo/site work
-- never report done at commit or push only
-- wait for GitHub Pages deploy
-- verify the live URL in browser or via fetch before declaring live
+- Cloudflare Workers Assets is the authoritative production runtime for `adrianlumley.co/*`
+- `npm run deploy:cloudflare` builds and deploys `dist/` through `wrangler.toml`; `npm run deploy:cloudflare:www` deploys the separate `www.adrianlumley.co/*` redirect Worker; `npm run deploy:cloudflare:all` performs both
+- pushes to `main` still trigger the active GitHub Pages workflow, but that pipeline is not the authoritative apex production release path
+- never report done at commit or push only; after an authorized production deploy, wait for it to complete and verify the live URL in browser or via fetch before declaring live
 
 ## loop artifacts
 Rogue loop contracts and signal bus live outside this repo:

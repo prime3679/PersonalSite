@@ -424,7 +424,7 @@
         <li class="component" data-architecture-component="static lab artifacts"><span class="component-index">08</span><h3>static lab artifacts</h3><p>Self-contained experiments under <code>public/lab/</code> bypass Astro composition and copy directly to output.</p></li>
         <li class="component" data-architecture-component="Rogue status integration"><span class="component-index">09</span><h3>Rogue status integration</h3><p>A non-critical browser fetch derives fresh, quiet, or unknown presentation from public status data.</p></li>
         <li class="component" data-architecture-component="contribution gate"><span class="component-index">10</span><h3>contribution gate</h3><p>Python standard-library checks validate doctrine, architecture synchronization, safe command shape, and bounded execution.</p></li>
-        <li class="component" data-architecture-component="deployment pipeline"><span class="component-index">11</span><h3>deployment pipeline</h3><p>GitHub Actions builds the static artifact from <code>main</code> and hands it to GitHub Pages.</p></li>
+        <li class="component" data-architecture-component="deployment pipeline"><span class="component-index">11</span><h3>deployment pipeline</h3><p>Cloudflare Workers Assets serves the authoritative apex runtime; a separate Worker redirects <code>www</code>; GitHub Pages remains an active, non-authoritative publication path.</p></li>
       </ol>
     </section>
 
@@ -462,7 +462,7 @@
           <li><div><strong>page source</strong><p>Route files select content and page-specific components.</p></div></li>
           <li><div><strong>shared composition</strong><p>Components, navigation, metadata, and <code>Base.astro</code> establish one document system.</p></div></li>
           <li><div><strong>Astro build</strong><p>Static HTML, inline CSS, endpoint output, assets, feeds, and images are written to <code>dist/</code>.</p></div></li>
-          <li><div><strong>delivery</strong><p>GitHub Pages serves the built artifact; optional browser integrations fail independently.</p></div></li>
+          <li><div><strong>delivery</strong><p>Cloudflare Workers Assets serves the authoritative apex runtime; optional browser integrations fail independently.</p></div></li>
         </ol>
         <ol class="flow-list">
           <li><div><strong>Markdown body + frontmatter</strong><p>Collection schemas reject invalid writing or episode metadata.</p></div></li>
@@ -475,14 +475,14 @@
 
     <section id="deployment">
       <div class="section-head"><h2>deployment</h2><span class="section-number">07 / 10</span></div>
-      <p class="lead">Production doctrine is unambiguous: a push to <code>main</code> triggers the GitHub Pages workflow, which builds before deploy.</p>
+      <p class="lead">Cloudflare Workers Assets is the authoritative production runtime for <code>adrianlumley.co/*</code>. Production delivery and the separate <code>www</code> redirect are explicit Wrangler deployments.</p>
       <div class="deploy-band">
-        <div class="deploy-step"><span class="label">01 · source</span><strong>verified main branch</strong><span class="muted">GitHub checkout</span></div>
-        <div class="deploy-step"><span class="label">02 · build</span><strong>withastro/action</strong><span class="muted">install + Astro static generation</span></div>
-        <div class="deploy-step"><span class="label">03 · handoff</span><strong>Pages artifact</strong><span class="muted">build job gates deploy job</span></div>
-        <div class="deploy-step"><span class="label">04 · publish</span><strong>actions/deploy-pages</strong><span class="muted">GitHub Pages environment</span></div>
+        <div class="deploy-step"><span class="label">01 · build</span><strong><code>deploy:cloudflare</code></strong><span class="muted">Astro writes <code>dist/</code>, then Wrangler deploys</span></div>
+        <div class="deploy-step"><span class="label">02 · apex</span><strong><code>wrangler.toml</code></strong><span class="muted"><code>canonical-worker.js</code> + Workers Assets on <code>adrianlumley.co/*</code></span></div>
+        <div class="deploy-step"><span class="label">03 · www redirect</span><strong><code>deploy:cloudflare:www</code></strong><span class="muted"><code>wrangler.www.toml</code> routes the separate redirect Worker</span></div>
+        <div class="deploy-step"><span class="label">04 · combined</span><strong><code>deploy:cloudflare:all</code></strong><span class="muted">performs the apex and <code>www</code> deployments in sequence</span></div>
       </div>
-      <p class="muted" style="margin-top: 24px;">Cloudflare worker configuration also exists for canonical host handling and the separate public status boundary. Those supporting files do not replace the documented GitHub Pages production pipeline.</p>
+      <p class="muted" style="margin-top: 24px;"><strong>parallel delivery:</strong> <code>.github/workflows/deploy.yml</code> remains active and publishes a GitHub Pages artifact on pushes to <code>main</code> or manual dispatch. It is a real pipeline, but it is not the authoritative apex production release path; push-to-main alone does not update the Cloudflare runtime.</p>
     </section>
 
     <section id="verification">

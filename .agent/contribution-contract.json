@@ -90,10 +90,12 @@
     "honest_boundary": "verify runs trusted repo-owned commands with bounded output and timeouts, but it is not a sandbox",
     "profiles": {
       "static_context_only": [
+        "architecture-tests",
         "astro-check",
         "public-surface-scan"
       ],
       "full_public_site": [
+        "architecture-tests",
         "astro-check",
         "astro-build",
         "vitest",
@@ -102,6 +104,19 @@
         "playwright-targeted"
       ]
     },
+    "preflight_commands": [
+      {
+        "id": "architecture-tests",
+        "description": "Focused standard-library tests for architecture validation and synchronization.",
+        "cwd": ".",
+        "argv": [
+          "python3",
+          ".agent/architecture_gate_test.py"
+        ],
+        "timeout_seconds": 60,
+        "output_limit_bytes": 16384
+      }
+    ],
     "commands": [
       {
         "id": "astro-check",

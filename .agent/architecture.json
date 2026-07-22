@@ -16,7 +16,7 @@
       "content schemas and shared query helpers",
       "deployment workflows and verification harnesses"
     ],
-    "maintenance_rule": "Update this contract and docs/architecture.html together when architecture-relevant source changes, then refresh source_fingerprint.digest."
+    "maintenance_rule": "Update this contract and docs/architecture.html together when architecture-relevant source changes, refresh source_fingerprint.digest, then refresh the HTML architecture-contract-sha256 marker from the exact architecture JSON bytes."
   },
   "architecture": {
     "purpose": "Build and verify a premium editorial personal site as static output while preserving a small set of runtime integrations and compatibility routes.",
@@ -40,8 +40,8 @@
     ]
   },
   "source_fingerprint": {
-    "algorithm": "sha256-path-null-length-null-bytes-null-v1",
-    "algorithm_description": "Expand include patterns to regular files, remove excluded matches, deduplicate and sort by UTF-8 repo-relative POSIX path, then SHA-256 each frame: path bytes, NUL, decimal byte length, NUL, raw file bytes, NUL.",
+    "algorithm": "sha256-path-null-length-null-crlf-to-lf-bytes-null-v2",
+    "algorithm_description": "Expand include patterns to regular files, remove excluded matches, deduplicate and sort by UTF-8 repo-relative POSIX path. For every file, normalize each CRLF byte pair (\\r\\n) to LF (\\n), compute the decimal byte length after normalization, then SHA-256 each frame: path bytes, NUL, normalized byte length, NUL, normalized file bytes, NUL. All current inputs are text/source files.",
     "include": [
       "AGENTS.md",
       "CLAUDE.md",
@@ -50,6 +50,7 @@
       "docs/zero-context-contribution.md",
       ".agent/contribution-contract.json",
       ".agent/contribution_gate.py",
+      ".agent/architecture_gate_test.py",
       "package.json",
       "astro.config.mjs",
       "tailwind.config.mjs",
@@ -96,7 +97,7 @@
       "dist/**",
       "node_modules/**"
     ],
-    "digest": "8810450c9de9f392c29d9ef00b1645e587ecf38dd18bab3a62aeb8ba451d8f94"
+    "digest": "537fc5adcab9ad9edb8aa06a3a0ab0b6abb5094559cd25be2417cf665c78203b"
   },
   "components": [
     {
@@ -228,6 +229,8 @@
     "The public surface follows the lowercase editorial and protected-language rules in AGENTS.md.",
     "Cloudflare Workers Assets on adrianlumley.co/* is the authoritative production runtime; the active GitHub Pages workflow is a separate, non-authoritative publication path.",
     "The www.adrianlumley.co/* redirect is deployed as a separate Worker, and deploy:cloudflare:all performs both Cloudflare deployments.",
+    "Architecture source fingerprint v2 normalizes CRLF bytes to LF before framing so equivalent text checkouts have one digest.",
+    "The human map carries a SHA-256 marker for the exact architecture JSON bytes; JSON changes require an intentional HTML marker refresh.",
     "Architecture artifacts use only repo-relative paths and the human map has no external asset dependencies.",
     "Architecture validation runs during contribution audit and before verify executes trusted commands."
   ],

@@ -95,7 +95,8 @@ CHILD_ENV_PASSTHROUGH = (
 INLINE_CODE_EXECUTOR_RE = re.compile(r"^python(?:\d+(?:\.\d+)*)?$")
 ENV_ASSIGNMENT_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*=.*$")
 ARCHITECTURE_SCHEMA = "personal-site.architecture"
-ARCHITECTURE_FINGERPRINT_ALGORITHM = "sha256-path-null-length-null-bytes-null-v1"
+ARCHITECTURE_FINGERPRINT_ALGORITHM = "sha256-path-null-length-null-crlf-to-lf-bytes-null-v2"
+ARCHITECTURE_CONTRACT_META_NAME = "architecture-contract-sha256"
 ARCHITECTURE_REQUIRED_KEYS = (
     "schema",
     "version",
@@ -131,6 +132,7 @@ class ArchitectureHTMLParser(HTMLParser):
         self.ids: List[str] = []
         self.components: List[str] = []
         self.routes: List[str] = []
+        self.contract_digests: List[str] = []
         self.asset_references: List[str] = []
         self._inside_style = False
         self.style_text: List[str] = []
@@ -143,6 +145,8 @@ class ArchitectureHTMLParser(HTMLParser):
             self.components.append(values["data-architecture-component"] or "")
         if values.get("data-architecture-route"):
             self.routes.append(values["data-architecture-route"] or "")
+        if tag == "meta" and values.get("name") == ARCHITECTURE_CONTRACT_META_NAME:
+            self.contract_digests.append(values.get("content") or "")
         for attribute in self.ASSET_ATTRIBUTES.get(tag, ()):
             if values.get(attribute):
                 self.asset_references.append(f"{tag}[{attribute}]={values[attribute]!r}")
@@ -464,8 +468,13 @@ def sanitize_command_for_output(command: Dict[str, Any]) -> Dict[str, Any]:
     return result
 
 
-def validate_command_shape(command: Any, index: int, errors: List[str]) -> Dict[str, Any] | None:
-    label = f"verification.commands[{index}]"
+def validate_command_shape(
+    command: Any,
+    index: int,
+    errors: List[str],
+    collection: str = "commands",
+) -> Dict[str, Any] | None:
+    label = f"verification.{collection}[{index}]"
     if not isinstance(command, dict):
         errors.append(f"{label} must be an object.")
         return None
@@ -586,10 +595,10 @@ def expand_architecture_sources(
 
 
 def compute_architecture_fingerprint(repo_root: Path, paths: Sequence[str]) -> str:
-    """Hash sorted path/length/content frames without including generated artifacts."""
+    """Hash sorted path/length/content frames after normalizing CRLF bytes to LF."""
     digest = hashlib.sha256()
     for path in sorted(paths):
-        data = (repo_root / path).read_bytes()
+        data = (repo_root / path).read_bytes().replace(b"\r\n", b"\n")
         digest.update(path.encode("utf-8"))
         digest.update(b"\0")
         digest.update(str(len(data)).encode("ascii"))
@@ -769,7 +778,8 @@ def validate_architecture(
         return errors, report
 
     try:
-        document = json.loads(contract_path.read_text(encoding="utf-8"))
+        contract_bytes = contract_path.read_bytes()
+        document = json.loads(contract_bytes.decode("utf-8"))
     except json.JSONDecodeError as exc:
         errors.append(f"architecture JSON is malformed: {exc}")
         return errors, report
@@ -801,6 +811,27 @@ def validate_architecture(
         errors.append(f"architecture human map could not be parsed: {exc}")
         return errors, report
 
+    expected_contract_digest = hashlib.sha256(contract_bytes).hexdigest()
+    if not parser.contract_digests:
+        errors.append(
+            f"architecture human map is missing the {ARCHITECTURE_CONTRACT_META_NAME!r} meta marker."
+        )
+    elif len(parser.contract_digests) > 1:
+        errors.append(
+            f"architecture human map must contain exactly one {ARCHITECTURE_CONTRACT_META_NAME!r} meta marker."
+        )
+    else:
+        declared_contract_digest = parser.contract_digests[0]
+        if not re.fullmatch(r"[0-9a-f]{64}", declared_contract_digest):
+            errors.append(
+                "architecture human map contract digest marker must be a lowercase SHA-256 hex digest."
+            )
+        elif declared_contract_digest != expected_contract_digest:
+            errors.append(
+                "architecture HTML contract digest is stale: "
+                f"declared {declared_contract_digest}, computed {expected_contract_digest}."
+            )
+
     for section in sections:
         if section not in parser.ids:
             errors.append(f"architecture human map is missing required section id: {section}")
@@ -827,6 +858,7 @@ def validate_architecture(
         errors.append("architecture human map CSS must not use url(), because the file must be self-contained.")
 
     report["human_map"] = human_map_rel
+    report["contract_digest"] = expected_contract_digest
     report["required_sections"] = sections
     return errors, report
 
@@ -842,6 +874,7 @@ def validate_contract(
         "source_of_truth": [],
         "required_files": [],
         "architecture": {},
+        "preflight_commands": [],
         "commands": [],
     }
 
@@ -895,15 +928,28 @@ def validate_contract(
     ensure_string_list(contract.get("escalate_if"), "escalate_if", errors)
 
     verification = contract.get("verification")
+    validated_preflight_commands: List[Dict[str, Any]] = []
     validated_commands: List[Dict[str, Any]] = []
     if not isinstance(verification, dict):
         errors.append("verification must be an object.")
     else:
+        seen_ids = set()
+        preflight_commands = verification.get("preflight_commands", [])
+        if not isinstance(preflight_commands, list):
+            errors.append("verification.preflight_commands must be a list.")
+        else:
+            for index, command in enumerate(preflight_commands):
+                validated = validate_command_shape(command, index, errors, "preflight_commands")
+                if not validated:
+                    continue
+                if validated["id"] in seen_ids:
+                    errors.append(f"verification.preflight_commands[{index}].id must be unique.")
+                seen_ids.add(validated["id"])
+                validated_preflight_commands.append(validated)
         commands = verification.get("commands")
         if not isinstance(commands, list) or not commands:
             errors.append("verification.commands must be a non-empty list.")
         else:
-            seen_ids = set()
             for index, command in enumerate(commands):
                 validated = validate_command_shape(command, index, errors)
                 if not validated:
@@ -946,6 +992,7 @@ def validate_contract(
     report["canonical_doctrine"] = canonical
     report["source_of_truth"] = source_of_truth
     report["required_files"] = required_files
+    report["preflight_commands"] = validated_preflight_commands
     report["commands"] = validated_commands
     return errors, report
 
@@ -1084,6 +1131,10 @@ def build_output(
         "contract_path": str(contract_path),
         "audit": {
             **audit,
+            "preflight_commands": [
+                sanitize_command_for_output(command)
+                for command in audit.get("preflight_commands", [])
+            ],
             "commands": [sanitize_command_for_output(command) for command in audit.get("commands", [])],
         },
         "commands": command_results,
@@ -1104,6 +1155,8 @@ def render_text(payload: Dict[str, Any]) -> str:
         lines.append(f"required_files entries: {len(audit['required_files'])}")
     if audit.get("commands"):
         lines.append(f"verification commands: {len(audit['commands'])}")
+    if audit.get("preflight_commands"):
+        lines.append(f"preflight commands: {len(audit['preflight_commands'])}")
     for command in payload["commands"]:
         state = "ok" if command["ok"] else "failed"
         lines.append(
@@ -1159,7 +1212,10 @@ def main(argv: Sequence[str]) -> int:
         validation_errors, audit = validate_contract(contract, repo_root, contract_path)
         errors.extend(validation_errors)
         if args.mode == "verify" and not errors:
-            command_results, command_errors = run_commands(repo_root, audit["commands"])
+            command_results, command_errors = run_commands(
+                repo_root,
+                [*audit.get("preflight_commands", []), *audit["commands"]],
+            )
             errors.extend(command_errors)
 
     payload = build_output(args.mode, repo_root, contract_path, audit, command_results, errors)

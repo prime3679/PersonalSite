@@ -51,6 +51,11 @@ python3 .agent/contribution_gate.py audit
 Full public-site verification:
 ```bash
 python3 .agent/contribution_gate.py verify
+```
+
+The gate validates the contract, then executes this trusted order:
+```bash
+python3 .agent/architecture_gate_test.py
 node_modules/.bin/astro check
 node_modules/.bin/astro build
 node_modules/.bin/vitest run
@@ -62,6 +67,8 @@ node_modules/.bin/playwright test tests/mobile/mobile-nav.spec.ts tests/header.s
 Notes:
 - do not add automatic install, bootstrap, or dependency mutation commands to the contract
 - `verification.profiles.static_context_only` documents the lighter check set, while the current gate `verify` command executes the full repo-owned verification command list
+- `verify` runs the focused architecture tests first, before any public-site command
+- source fingerprint v2 normalizes CRLF bytes to LF before measuring and hashing each framed source file; the HTML synchronization marker hashes the exact architecture JSON bytes without newline normalization
 - if local `node_modules/` is absent and an already-installed sibling copy is available, a temporary untracked symlink is acceptable for verification only and must be removed afterward
 - for Signal Room publishing, keep using the extra Playwright coverage already documented in `AGENTS.md`
 

@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="A standalone architecture map for the PersonalSite repository.">
+  <meta name="architecture-contract-sha256" content="a417587d5d87f1b085374c2700a73077956d584e29f19ab5ce54797efcdfec21">
   <title>PersonalSite architecture map</title>
   <style>
     :root {
@@ -452,7 +453,7 @@
           </dl>
         </article>
       </div>
-      <p class="muted" style="margin-top: 28px;">Content bodies are intentionally outside the architecture fingerprint. Schemas, shared queries, and route implementations stay inside it, so structural changes invalidate the map while ordinary publication does not.</p>
+      <p class="muted" style="margin-top: 28px;">Content bodies are intentionally outside source fingerprint v2. Schemas, shared queries, focused architecture tests, and route implementations stay inside it, so structural changes invalidate the map while ordinary publication does not. CRLF source bytes normalize to LF before framing; the nonvisual HTML contract marker separately hashes the exact JSON bytes.</p>
     </section>
 
     <section id="data-flow">
@@ -492,7 +493,7 @@
           <span class="eyebrow">architecture + contribution</span>
           <code class="command">python3 .agent/architecture_gate_test.py</code>
           <code class="command">python3 .agent/contribution_gate.py audit</code>
-          <p class="muted">Audit validates both contracts, required files, HTML synchronization, source freshness, protected command shape, and doctrine pointers. Verify runs the same audit before any trusted command.</p>
+          <p class="muted">Audit validates both contracts, required files, exact JSON-to-HTML synchronization, source freshness, protected command shape, and doctrine pointers. Verify runs the same audit, then the focused architecture tests, before any public-site command.</p>
         </div>
         <div>
           <span class="eyebrow">public site</span>

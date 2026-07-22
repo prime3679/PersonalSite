@@ -68,6 +68,8 @@ Fresh coding agents should start with `REVIEW.md`, then read `AGENTS.md`, `CLAUD
 
 The repo-owned contribution contract lives at `.agent/contribution-contract.json`, and the local gate lives at `.agent/contribution_gate.py`.
 
+Before implementation, fresh agents should read `.agent/architecture.json`. Humans can open `docs/architecture.html` directly from disk for the synchronized visual architecture map.
+
 ## URL
 
 - Production: [adrianlumley.co](https://adrianlumley.co)

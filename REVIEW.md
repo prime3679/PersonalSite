@@ -1,11 +1,12 @@
 # review
 
-Fresh agents should read this file first, then `AGENTS.md`, `CLAUDE.md`, and `docs/zero-context-contribution.md`.
+Fresh agents should read this file first, then `AGENTS.md`, `CLAUDE.md`, and `docs/zero-context-contribution.md`. Before implementation, read `.agent/contribution-contract.json` and `.agent/architecture.json`. Humans can open `docs/architecture.html` directly for the visual map.
 
 ## authority
 - `AGENTS.md` sets public-site doctrine and verification requirements
 - `CLAUDE.md` adds repo structure and deployment context
 - `.agent/contribution-contract.json` defines the enforceable contribution contract
+- `.agent/architecture.json` describes the implementation architecture; `docs/architecture.html` is its synchronized human map
 - `docs/zero-context-contribution.md` explains how to apply the standard
 
 Read order is for onboarding only, not authority precedence.

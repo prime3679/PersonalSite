@@ -135,6 +135,8 @@ Rogue loop contracts and signal bus live outside this repo:
 Coding agents should read those when working on loops, PR babysitting, Signal Room publishing, or personal-site health.
 
 ## zero-context contribution
-For fresh-agent contribution work, start with `REVIEW.md`, then `AGENTS.md`, this file, and `docs/zero-context-contribution.md`.
+For fresh-agent contribution work, start with `REVIEW.md`, then `AGENTS.md`, this file, and `docs/zero-context-contribution.md`. Before implementation, read `.agent/contribution-contract.json` and `.agent/architecture.json`.
 
 Use `.agent/contribution-contract.json` as the enforceable contract and `.agent/contribution_gate.py` for local audit and verify runs.
+
+Humans can open `docs/architecture.html` directly from disk for the synchronized visual architecture map.

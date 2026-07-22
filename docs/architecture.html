@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A standalone architecture map for the PersonalSite repository.">
+  <title>PersonalSite architecture map</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f3efe7;
+      --paper-deep: #e7dfd2;
+      --ink: #19201d;
+      --ink-soft: #606862;
+      --moss: #244b3c;
+      --moss-light: #d8e2d9;
+      --rust: #a2492d;
+      --line: rgba(25, 32, 29, 0.18);
+      --serif: Iowan Old Style, Palatino Linotype, Book Antiqua, Palatino, Georgia, serif;
+      --sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif;
+      --mono: SFMono-Regular, Consolas, Liberation Mono, monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      background: var(--paper);
+      color: var(--ink);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.55;
+      background:
+        linear-gradient(90deg, transparent 0, transparent calc(50% - 1px), rgba(25, 32, 29, 0.035) 50%, transparent calc(50% + 1px)),
+        var(--paper);
+    }
+
+    a { color: inherit; }
+    code { font-family: var(--mono); font-size: 0.88em; }
+
+    .page {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .masthead {
+      min-height: 82vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      padding: 26px 0 40px;
+      border-bottom: 1px solid var(--ink);
+    }
+
+    .masthead-bar,
+    .section-head,
+    .footer-line {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .kicker,
+    .folio,
+    .eyebrow,
+    .label,
+    .route-kind {
+      font: 700 0.72rem/1.25 var(--sans);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .folio { color: var(--ink-soft); }
+
+    .hero {
+      align-self: center;
+      display: grid;
+      grid-template-columns: minmax(0, 1.65fr) minmax(240px, 0.7fr);
+      gap: clamp(42px, 8vw, 112px);
+      align-items: end;
+      padding: 80px 0 64px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p { margin-top: 0; }
+
+    h1 {
+      max-width: 850px;
+      margin-bottom: 0;
+      font: 500 clamp(4.3rem, 10vw, 9rem)/0.84 var(--serif);
+      letter-spacing: -0.065em;
+    }
+
+    h1 span { display: block; color: var(--moss); }
+
+    .dek {
+      margin: 0;
+      padding-top: 18px;
+      border-top: 3px solid var(--rust);
+      font: 500 clamp(1.08rem, 1.8vw, 1.35rem)/1.45 var(--serif);
+    }
+
+    .masthead-note {
+      max-width: 680px;
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 0.82rem;
+    }
+
+    .contents {
+      padding: 30px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .contents ol {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px 28px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      counter-reset: architecture;
+    }
+
+    .contents li { counter-increment: architecture; }
+    .contents a { text-decoration: none; font-size: 0.82rem; }
+    .contents a::before {
+      content: counter(architecture, decimal-leading-zero) " ";
+      color: var(--rust);
+      font-family: var(--mono);
+    }
+
+    main > section {
+      padding: 82px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-head { margin-bottom: 48px; }
+
+    h2 {
+      margin-bottom: 0;
+      font: 500 clamp(2.6rem, 5vw, 4.8rem)/0.95 var(--serif);
+      letter-spacing: -0.045em;
+    }
+
+    .section-number { color: var(--rust); font-family: var(--mono); font-size: 0.82rem; }
+
+    h3 {
+      margin-bottom: 12px;
+      font: 600 1.35rem/1.12 var(--serif);
+    }
+
+    .lead {
+      max-width: 780px;
+      margin-bottom: 42px;
+      font: 500 clamp(1.35rem, 2.5vw, 2rem)/1.32 var(--serif);
+    }
+
+    .muted { color: var(--ink-soft); }
+
+    .purpose-grid,
+    .two-col {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: clamp(40px, 8vw, 110px);
+    }
+
+    .pullquote {
+      margin: 0;
+      padding: 22px 0 0 28px;
+      border-left: 3px solid var(--moss);
+      font: 500 1.55rem/1.35 var(--serif);
+    }
+
+    .stack-list,
+    .component-list,
+    .flow-list,
+    .boundary-list,
+    .path-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .stack-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--ink);
+    }
+
+    .stack-list li {
+      min-height: 145px;
+      padding: 20px 22px 28px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .stack-list li:not(:nth-child(3n + 1)) { padding-left: 22px; border-left: 1px solid var(--line); }
+    .stack-list strong { display: block; margin-bottom: 8px; font-family: var(--serif); font-size: 1.4rem; }
+
+    .route-table { border-top: 1px solid var(--ink); }
+
+    .route-row {
+      display: grid;
+      grid-template-columns: minmax(150px, 0.65fr) minmax(180px, 1fr) minmax(220px, 1.2fr);
+      gap: 24px;
+      align-items: baseline;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .route-path { font: 600 1.12rem/1.25 var(--mono); color: var(--moss); }
+    .route-source { color: var(--ink-soft); font: 0.78rem/1.45 var(--mono); overflow-wrap: anywhere; }
+
+    .component-list { border-top: 1px solid var(--ink); }
+
+    .component {
+      display: grid;
+      grid-template-columns: 44px minmax(180px, 0.7fr) minmax(260px, 1.3fr);
+      gap: 24px;
+      padding: 23px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .component-index { color: var(--rust); font-family: var(--mono); font-size: 0.78rem; }
+    .component p { margin: 0; color: var(--ink-soft); }
+
+    .schema {
+      padding: 26px;
+      background: var(--moss);
+      color: #f4f0e7;
+    }
+
+    .schema h3 { font-size: 1.7rem; }
+    .schema dl { margin: 24px 0 0; }
+    .schema div { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 18px; padding: 10px 0; border-top: 1px solid rgba(255, 255, 255, 0.18); }
+    .schema dt { font-family: var(--mono); font-size: 0.78rem; }
+    .schema dd { margin: 0; color: rgba(255, 255, 255, 0.72); font-size: 0.88rem; }
+
+    .flow-list { counter-reset: flow; }
+
+    .flow-list li {
+      counter-increment: flow;
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr);
+      gap: 18px;
+      position: relative;
+      padding: 0 0 36px;
+    }
+
+    .flow-list li::before {
+      content: counter(flow, decimal-leading-zero);
+      display: grid;
+      place-items: center;
+      align-self: start;
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--moss);
+      border-radius: 50%;
+      color: var(--moss);
+      font-family: var(--mono);
+      font-size: 0.72rem;
+    }
+
+    .flow-list li:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      left: 20px;
+      top: 46px;
+      bottom: 4px;
+      width: 1px;
+      background: var(--line);
+    }
+
+    .flow-list strong { font-family: var(--serif); font-size: 1.25rem; }
+    .flow-list p { margin: 4px 0 0; color: var(--ink-soft); }
+
+    .deploy-band {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border: 1px solid var(--ink);
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .deploy-step { min-height: 170px; padding: 22px; }
+    .deploy-step + .deploy-step { border-left: 1px solid var(--ink); }
+    .deploy-step .label { display: block; color: var(--rust); margin-bottom: 34px; }
+    .deploy-step strong { display: block; font: 600 1.25rem/1.15 var(--serif); }
+
+    .command {
+      display: block;
+      margin: 10px 0;
+      padding: 13px 15px;
+      background: rgba(25, 32, 29, 0.07);
+      border-left: 3px solid var(--moss);
+      overflow-wrap: anywhere;
+    }
+
+    .boundary-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+    .boundary-list li { min-height: 150px; padding: 24px; background: var(--paper); }
+    .boundary-list strong { display: block; margin-bottom: 8px; font: 600 1.35rem/1.15 var(--serif); }
+
+    .path-list { counter-reset: path; border-top: 1px solid var(--ink); }
+    .path-list li { counter-increment: path; display: grid; grid-template-columns: 44px 190px 1fr; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+    .path-list li::before { content: counter(path, decimal-leading-zero); color: var(--rust); font-family: var(--mono); font-size: 0.75rem; }
+    .path-list code { color: var(--moss); font-weight: 700; }
+
+    footer { padding: 32px 0 70px; color: var(--ink-soft); font-size: 0.78rem; }
+
+    @media (max-width: 800px) {
+      .page { width: min(100% - 28px, 680px); }
+      .masthead { min-height: auto; }
+      .hero, .purpose-grid, .two-col { grid-template-columns: 1fr; }
+      .hero { padding: 70px 0 54px; }
+      h1 { font-size: clamp(4rem, 21vw, 7rem); }
+      .contents ol { grid-template-columns: repeat(2, 1fr); }
+      main > section { padding: 62px 0; }
+      .stack-list { grid-template-columns: 1fr; }
+      .stack-list li, .stack-list li:not(:nth-child(3n + 1)) { padding: 18px 0 22px; border-left: 0; }
+      .route-row { grid-template-columns: 1fr; gap: 6px; }
+      .component { grid-template-columns: 36px 1fr; }
+      .component p { grid-column: 2; }
+      .deploy-band { grid-template-columns: 1fr 1fr; }
+      .deploy-step + .deploy-step { border-left: 0; }
+      .deploy-step:nth-child(even) { border-left: 1px solid var(--ink); }
+      .deploy-step:nth-child(n + 3) { border-top: 1px solid var(--ink); }
+      .boundary-list { grid-template-columns: 1fr; }
+      .path-list li { grid-template-columns: 34px 1fr; }
+      .path-list li span { grid-column: 2; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .page { width: 100%; }
+      .masthead { min-height: auto; }
+      main > section { break-inside: avoid; padding: 38px 0; }
+      .contents { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="masthead page">
+    <div class="masthead-bar">
+      <span class="kicker">repository field guide</span>
+      <span class="folio">architecture map · v1 · 22 july 2026</span>
+    </div>
+    <div class="hero">
+      <h1>personal<span>site.</span></h1>
+      <p class="dek">One static editorial system, mapped from source and content through build, verification, and contribution.</p>
+    </div>
+    <p class="masthead-note">Open this file directly from disk. Everything on the page is embedded here; the synchronized machine contract lives at <code>.agent/architecture.json</code>.</p>
+  </header>
+
+  <nav class="contents page" aria-label="architecture sections">
+    <ol>
+      <li><a href="#purpose">purpose</a></li>
+      <li><a href="#stack">stack</a></li>
+      <li><a href="#routes">routes</a></li>
+      <li><a href="#components">components</a></li>
+      <li><a href="#content-model">content model</a></li>
+      <li><a href="#data-flow">data flow</a></li>
+      <li><a href="#deployment">deployment</a></li>
+      <li><a href="#verification">verification</a></li>
+      <li><a href="#protected-boundaries">boundaries</a></li>
+      <li><a href="#contribution-path">contribution path</a></li>
+    </ol>
+  </nav>
+
+  <main class="page">
+    <section id="purpose">
+      <div class="section-head"><h2>purpose</h2><span class="section-number">01 / 10</span></div>
+      <div class="purpose-grid">
+        <div>
+          <p class="lead">PersonalSite is Adrian Lumley’s public editorial and product-leader surface: work, writing, experiments, an episodic Signal Room, and a direct contact path.</p>
+          <p class="muted">The build is primarily static. Astro turns route files, typed content, shared components, and local assets into deployable output. A few browser-side integrations are deliberately non-critical: analytics, contact submission, and a public status read.</p>
+        </div>
+        <blockquote class="pullquote">The governing shape is editorial, not operational. Shared systems should make the surface more coherent without making it look like a control panel.</blockquote>
+      </div>
+    </section>
+
+    <section id="stack">
+      <div class="section-head"><h2>stack</h2><span class="section-number">02 / 10</span></div>
+      <ul class="stack-list">
+        <li><strong>Astro 5</strong><span class="muted">file routes, static generation, content collections, build-time endpoints</span></li>
+        <li><strong>TypeScript</strong><span class="muted">typed data, query helpers, endpoint logic, client islands</span></li>
+        <li><strong>Tailwind + CSS</strong><span class="muted">utility composition over global editorial tokens and layout rules</span></li>
+        <li><strong>Zod content schemas</strong><span class="muted">separate contracts for writing posts and Signal Room episodes</span></li>
+        <li><strong>Satori + Sharp</strong><span class="muted">local-font Open Graph cards generated as PNG endpoints</span></li>
+        <li><strong>Vitest + Playwright</strong><span class="muted">unit, document, responsive navigation, and end-to-end verification</span></li>
+      </ul>
+    </section>
+
+    <section id="routes">
+      <div class="section-head"><h2>core routes</h2><span class="section-number">03 / 10</span></div>
+      <p class="lead">Eight named interfaces define the primary public surface and feed. Dynamic entries and compatibility endpoints extend this layer without entering canonical navigation.</p>
+      <div class="route-table" role="table" aria-label="core routes">
+        <div class="route-row" data-architecture-route="/" role="row"><code class="route-path">/</code><span class="route-kind">home</span><code class="route-source">src/pages/index.astro</code></div>
+        <div class="route-row" data-architecture-route="/work/" role="row"><code class="route-path">/work/</code><span class="route-kind">work</span><code class="route-source">src/pages/work.astro</code></div>
+        <div class="route-row" data-architecture-route="/about/" role="row"><code class="route-path">/about/</code><span class="route-kind">about</span><code class="route-source">src/pages/about.astro</code></div>
+        <div class="route-row" data-architecture-route="/writing/" role="row"><code class="route-path">/writing/</code><span class="route-kind">collection index</span><code class="route-source">src/pages/writing.astro</code></div>
+        <div class="route-row" data-architecture-route="/lab/" role="row"><code class="route-path">/lab/</code><span class="route-kind">page + artifact index</span><code class="route-source">src/pages/lab.astro</code></div>
+        <div class="route-row" data-architecture-route="/signal-room/" role="row"><code class="route-path">/signal-room/</code><span class="route-kind">collection index</span><code class="route-source">src/pages/signal-room/index.astro</code></div>
+        <div class="route-row" data-architecture-route="/contact/" role="row"><code class="route-path">/contact/</code><span class="route-kind">page + form boundary</span><code class="route-source">src/pages/contact.astro</code></div>
+        <div class="route-row" data-architecture-route="/rss.xml" role="row"><code class="route-path">/rss.xml</code><span class="route-kind">XML endpoint</span><code class="route-source">src/pages/rss.xml.ts</code></div>
+      </div>
+      <p class="muted" style="margin-top: 24px;"><strong>supporting interfaces:</strong> <code>/writing/&lt;slug&gt;</code>, <code>/signal-room/&lt;slug&gt;/</code>, <code>/sitemap.xml</code>, <code>/og/*.png</code>, and static <code>/lab/&lt;artifact&gt;/</code> trees. Legacy <code>/blog/</code> URLs remain compatibility redirects to writing.</p>
+    </section>
+
+    <section id="components">
+      <div class="section-head"><h2>components</h2><span class="section-number">04 / 10</span></div>
+      <ol class="component-list">
+        <li class="component" data-architecture-component="route layer"><span class="component-index">01</span><h3>route layer</h3><p>Astro files map public pages, dynamic content, XML output, redirects, and image endpoints.</p></li>
+        <li class="component" data-architecture-component="base document shell"><span class="component-index">02</span><h3>base document shell</h3><p><code>Base.astro</code> owns metadata, structured data, accessibility entry points, global presentation, and shared chrome.</p></li>
+        <li class="component" data-architecture-component="navigation shell"><span class="component-index">03</span><h3>navigation shell</h3><p>The header, mobile menu, and footer render one ordered source in <code>src/data/nav.ts</code>.</p></li>
+        <li class="component" data-architecture-component="content collections"><span class="component-index">04</span><h3>content collections</h3><p>Writing and Signal Room Markdown use distinct, typed frontmatter contracts.</p></li>
+        <li class="component" data-architecture-component="content query layer"><span class="component-index">05</span><h3>content query layer</h3><p>Shared helpers own publication filtering, ordering, route forms, and display formatting.</p></li>
+        <li class="component" data-architecture-component="SEO and syndication"><span class="component-index">06</span><h3>SEO and syndication</h3><p>Canonical URLs, structured data, RSS, and sitemap output draw from shared metadata and content.</p></li>
+        <li class="component" data-architecture-component="Open Graph image generation"><span class="component-index">07</span><h3>Open Graph image generation</h3><p>Build-time endpoints use local fonts, Satori, and Sharp to produce social cards.</p></li>
+        <li class="component" data-architecture-component="static lab artifacts"><span class="component-index">08</span><h3>static lab artifacts</h3><p>Self-contained experiments under <code>public/lab/</code> bypass Astro composition and copy directly to output.</p></li>
+        <li class="component" data-architecture-component="Rogue status integration"><span class="component-index">09</span><h3>Rogue status integration</h3><p>A non-critical browser fetch derives fresh, quiet, or unknown presentation from public status data.</p></li>
+        <li class="component" data-architecture-component="contribution gate"><span class="component-index">10</span><h3>contribution gate</h3><p>Python standard-library checks validate doctrine, architecture synchronization, safe command shape, and bounded execution.</p></li>
+        <li class="component" data-architecture-component="deployment pipeline"><span class="component-index">11</span><h3>deployment pipeline</h3><p>GitHub Actions builds the static artifact from <code>main</code> and hands it to GitHub Pages.</p></li>
+      </ol>
+    </section>
+
+    <section id="content-model">
+      <div class="section-head"><h2>content model</h2><span class="section-number">05 / 10</span></div>
+      <div class="two-col">
+        <article class="schema">
+          <h3>writing / <code>blog</code></h3>
+          <p>Collection name and storage retain the historical “blog” label; public routes use writing.</p>
+          <dl>
+            <div><dt>required</dt><dd>title, description, date</dd></div>
+            <div><dt>optional</dt><dd>updatedDate, excerpt, tags</dd></div>
+            <div><dt>publication</dt><dd>published defaults true; false is filtered centrally</dd></div>
+            <div><dt>ordering</dt><dd>newest date first</dd></div>
+          </dl>
+        </article>
+        <article class="schema">
+          <h3>signal room</h3>
+          <p>An episodic collection with explicit identity and index presentation fields.</p>
+          <dl>
+            <div><dt>required</dt><dd>title, episode, date, teaser, badges</dd></div>
+            <div><dt>identity</dt><dd>episode number is the ordering authority</dd></div>
+            <div><dt>ordering</dt><dd>ascending or descending through one helper</dd></div>
+            <div><dt>route</dt><dd><code>/signal-room/&lt;slug&gt;/</code></dd></div>
+          </dl>
+        </article>
+      </div>
+      <p class="muted" style="margin-top: 28px;">Content bodies are intentionally outside the architecture fingerprint. Schemas, shared queries, and route implementations stay inside it, so structural changes invalidate the map while ordinary publication does not.</p>
+    </section>
+
+    <section id="data-flow">
+      <div class="section-head"><h2>data flow</h2><span class="section-number">06 / 10</span></div>
+      <div class="two-col">
+        <ol class="flow-list">
+          <li><div><strong>page source</strong><p>Route files select content and page-specific components.</p></div></li>
+          <li><div><strong>shared composition</strong><p>Components, navigation, metadata, and <code>Base.astro</code> establish one document system.</p></div></li>
+          <li><div><strong>Astro build</strong><p>Static HTML, inline CSS, endpoint output, assets, feeds, and images are written to <code>dist/</code>.</p></div></li>
+          <li><div><strong>delivery</strong><p>GitHub Pages serves the built artifact; optional browser integrations fail independently.</p></div></li>
+        </ol>
+        <ol class="flow-list">
+          <li><div><strong>Markdown body + frontmatter</strong><p>Collection schemas reject invalid writing or episode metadata.</p></div></li>
+          <li><div><strong>canonical queries</strong><p><code>getPublishedPosts</code> and <code>getEpisodes</code> apply shared visibility and ordering.</p></div></li>
+          <li><div><strong>multiple consumers</strong><p>Indexes, entry pages, RSS, SEO, and Open Graph output read the same normalized layer.</p></div></li>
+          <li><div><strong>stable identifiers</strong><p>Central route helpers preserve historical path forms used by feed readers.</p></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="deployment">
+      <div class="section-head"><h2>deployment</h2><span class="section-number">07 / 10</span></div>
+      <p class="lead">Production doctrine is unambiguous: a push to <code>main</code> triggers the GitHub Pages workflow, which builds before deploy.</p>
+      <div class="deploy-band">
+        <div class="deploy-step"><span class="label">01 · source</span><strong>verified main branch</strong><span class="muted">GitHub checkout</span></div>
+        <div class="deploy-step"><span class="label">02 · build</span><strong>withastro/action</strong><span class="muted">install + Astro static generation</span></div>
+        <div class="deploy-step"><span class="label">03 · handoff</span><strong>Pages artifact</strong><span class="muted">build job gates deploy job</span></div>
+        <div class="deploy-step"><span class="label">04 · publish</span><strong>actions/deploy-pages</strong><span class="muted">GitHub Pages environment</span></div>
+      </div>
+      <p class="muted" style="margin-top: 24px;">Cloudflare worker configuration also exists for canonical host handling and the separate public status boundary. Those supporting files do not replace the documented GitHub Pages production pipeline.</p>
+    </section>
+
+    <section id="verification">
+      <div class="section-head"><h2>verification</h2><span class="section-number">08 / 10</span></div>
+      <div class="two-col">
+        <div>
+          <span class="eyebrow">architecture + contribution</span>
+          <code class="command">python3 .agent/architecture_gate_test.py</code>
+          <code class="command">python3 .agent/contribution_gate.py audit</code>
+          <p class="muted">Audit validates both contracts, required files, HTML synchronization, source freshness, protected command shape, and doctrine pointers. Verify runs the same audit before any trusted command.</p>
+        </div>
+        <div>
+          <span class="eyebrow">public site</span>
+          <code class="command">node_modules/.bin/astro check</code>
+          <code class="command">node_modules/.bin/astro build</code>
+          <code class="command">node_modules/.bin/vitest run</code>
+          <code class="command">node .hermes/verifiers/public-surface-scan.mjs</code>
+          <code class="command">node .hermes/verifiers/mobile-homepage.mjs</code>
+          <p class="muted">Targeted Playwright covers the header, homepage, and mobile navigation in Chromium projects. Signal Room publishing adds its own route coverage.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="protected-boundaries">
+      <div class="section-head"><h2>protected boundaries</h2><span class="section-number">09 / 10</span></div>
+      <ul class="boundary-list">
+        <li><strong>public surface</strong><span class="muted"><code>src/</code> and <code>public/</code> are protected for contribution-only work. The existing <code>src/agent/</code> gate tests are the narrow documented exception.</span></li>
+        <li><strong>dependencies + build</strong><span class="muted">Manifests, lockfiles, Astro, Vitest, Playwright, and related configuration do not change without explicit product scope.</span></li>
+        <li><strong>delivery + services</strong><span class="muted"><code>.github/</code>, deploy configuration, authentication, worker state, and external services are never incidental edit targets.</span></li>
+        <li><strong>portable context</strong><span class="muted">Contracts and docs use repo-relative paths and exclude credentials, private logistics, and machine-specific details.</span></li>
+      </ul>
+      <p class="muted" style="margin-top: 28px;"><strong>escalate</strong> when doctrine conflicts would change behavior, verification needs installation or secrets, a boundary cannot be proven from the repository, or an action would touch live state.</p>
+    </section>
+
+    <section id="contribution-path">
+      <div class="section-head"><h2>agent contribution path</h2><span class="section-number">10 / 10</span></div>
+      <p class="lead">Read for authority first, use the machine map for implementation orientation, then let the gate test both contracts before work leaves the repository.</p>
+      <ol class="path-list">
+        <li><code>REVIEW.md</code><span>short onboarding brief and work classification</span></li>
+        <li><code>AGENTS.md</code><span>highest-precedence public-site doctrine and verification requirements</span></li>
+        <li><code>CLAUDE.md</code><span>repository structure, content conventions, and deployment context</span></li>
+        <li><code>docs/zero-context-contribution.md</code><span>authority precedence, boundaries, and contribution procedure</span></li>
+        <li><code>.agent/contribution-contract.json</code><span>enforceable contribution and verification contract</span></li>
+        <li><code>.agent/architecture.json</code><span>machine-readable implementation map, interfaces, flows, invariants, and source fingerprint</span></li>
+        <li><code>contribution_gate.py audit</code><span>deterministic pre-edit and pre-commit architecture/context audit</span></li>
+      </ol>
+      <p class="muted" style="margin-top: 26px;">Read order accelerates onboarding. Authority precedence remains <code>AGENTS.md</code>, <code>CLAUDE.md</code>, <code>REVIEW.md</code>, <code>.agent/contribution-contract.json</code>, then <code>docs/zero-context-contribution.md</code>.</p>
+    </section>
+  </main>
+
+  <footer class="page">
+    <div class="footer-line"><span>PersonalSite architecture map</span><span>standalone · synchronized · repo-owned</span></div>
+  </footer>
+</body>
+</html>

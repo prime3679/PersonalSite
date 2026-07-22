@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 import argparse
+import fnmatch
+import hashlib
 import json
 import os
 import re
@@ -12,6 +14,7 @@ import subprocess
 import sys
 import threading
 import time
+from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any, Dict, List, Sequence, Tuple
 
@@ -91,6 +94,68 @@ CHILD_ENV_PASSTHROUGH = (
 )
 INLINE_CODE_EXECUTOR_RE = re.compile(r"^python(?:\d+(?:\.\d+)*)?$")
 ENV_ASSIGNMENT_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*=.*$")
+ARCHITECTURE_SCHEMA = "personal-site.architecture"
+ARCHITECTURE_FINGERPRINT_ALGORITHM = "sha256-path-null-length-null-bytes-null-v1"
+ARCHITECTURE_REQUIRED_KEYS = (
+    "schema",
+    "version",
+    "repo_identity",
+    "provenance",
+    "architecture",
+    "source_fingerprint",
+    "components",
+    "interfaces",
+    "data_flows",
+    "dependencies",
+    "invariants",
+    "protected_boundaries",
+    "verification",
+    "escalation_conditions",
+    "doctrine",
+)
+
+
+class ArchitectureHTMLParser(HTMLParser):
+    """Collect synchronization markers and asset references from the human map."""
+
+    ASSET_ATTRIBUTES = {
+        "img": ("src", "srcset"),
+        "link": ("href",),
+        "script": ("src",),
+        "source": ("src", "srcset"),
+        "video": ("poster",),
+    }
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.ids: List[str] = []
+        self.components: List[str] = []
+        self.routes: List[str] = []
+        self.asset_references: List[str] = []
+        self._inside_style = False
+        self.style_text: List[str] = []
+
+    def handle_starttag(self, tag: str, attrs: List[Tuple[str, str | None]]) -> None:
+        values = {name: value for name, value in attrs}
+        if values.get("id"):
+            self.ids.append(values["id"] or "")
+        if values.get("data-architecture-component"):
+            self.components.append(values["data-architecture-component"] or "")
+        if values.get("data-architecture-route"):
+            self.routes.append(values["data-architecture-route"] or "")
+        for attribute in self.ASSET_ATTRIBUTES.get(tag, ()):
+            if values.get(attribute):
+                self.asset_references.append(f"{tag}[{attribute}]={values[attribute]!r}")
+        if tag == "style":
+            self._inside_style = True
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag == "style":
+            self._inside_style = False
+
+    def handle_data(self, data: str) -> None:
+        if self._inside_style:
+            self.style_text.append(data)
 
 
 class BoundedStreamCollector(threading.Thread):
@@ -476,6 +541,296 @@ def validate_command_shape(command: Any, index: int, errors: List[str]) -> Dict[
     }
 
 
+def architecture_glob_matches(path: str, pattern: str) -> bool:
+    if pattern.endswith("/**") and path.startswith(pattern[:-3].rstrip("/") + "/"):
+        return True
+    return fnmatch.fnmatchcase(path, pattern)
+
+
+def expand_architecture_sources(
+    repo_root: Path,
+    include: Sequence[str],
+    exclude: Sequence[str],
+    errors: List[str],
+) -> List[str]:
+    matched: set[str] = set()
+    for index, pattern in enumerate(include):
+        clean = safe_rel_path(pattern, f"source_fingerprint.include[{index}]", errors)
+        if not clean:
+            continue
+        try:
+            candidates = list(repo_root.glob(clean)) if any(char in clean for char in "*?[") else [repo_root / clean]
+        except (OSError, ValueError) as exc:
+            errors.append(f"source_fingerprint.include[{index}] is not a usable path pattern: {exc}")
+            continue
+        files = []
+        for candidate in candidates:
+            resolved = candidate.resolve()
+            if is_relative_to(resolved, repo_root) and resolved.is_file():
+                files.append(resolved.relative_to(repo_root).as_posix())
+        if not files:
+            errors.append(f"source_fingerprint.include pattern matched no files: {clean}")
+        matched.update(files)
+
+    clean_excludes = []
+    for index, pattern in enumerate(exclude):
+        clean = safe_rel_path(pattern, f"source_fingerprint.exclude[{index}]", errors)
+        if clean:
+            clean_excludes.append(clean)
+
+    return sorted(
+        path
+        for path in matched
+        if not any(architecture_glob_matches(path, pattern) for pattern in clean_excludes)
+    )
+
+
+def compute_architecture_fingerprint(repo_root: Path, paths: Sequence[str]) -> str:
+    """Hash sorted path/length/content frames without including generated artifacts."""
+    digest = hashlib.sha256()
+    for path in sorted(paths):
+        data = (repo_root / path).read_bytes()
+        digest.update(path.encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(str(len(data)).encode("ascii"))
+        digest.update(b"\0")
+        digest.update(data)
+        digest.update(b"\0")
+    return digest.hexdigest()
+
+
+def require_architecture_object(value: Any, label: str, errors: List[str]) -> Dict[str, Any]:
+    if not isinstance(value, dict) or not value:
+        errors.append(f"architecture.{label} must be a non-empty object.")
+        return {}
+    return value
+
+
+def require_architecture_list(value: Any, label: str, errors: List[str]) -> List[Any]:
+    if not isinstance(value, list) or not value:
+        errors.append(f"architecture.{label} must be a non-empty list.")
+        return []
+    return value
+
+
+def validate_architecture_document(
+    document: Dict[str, Any],
+    repo_root: Path,
+    contract_rel: str,
+    human_map_rel: str,
+    errors: List[str],
+) -> Dict[str, Any]:
+    for key in ARCHITECTURE_REQUIRED_KEYS:
+        if key not in document:
+            errors.append(f"architecture JSON is missing required key: {key}")
+
+    if document.get("schema") != ARCHITECTURE_SCHEMA:
+        errors.append(f"architecture.schema must be {ARCHITECTURE_SCHEMA!r}.")
+    version = document.get("version")
+    if isinstance(version, bool) or not isinstance(version, int) or version < 1:
+        errors.append("architecture.version must be a positive integer.")
+
+    for key in (
+        "repo_identity",
+        "provenance",
+        "architecture",
+        "dependencies",
+        "protected_boundaries",
+        "verification",
+        "doctrine",
+    ):
+        require_architecture_object(document.get(key), key, errors)
+    for key in ("components", "data_flows", "invariants", "escalation_conditions"):
+        require_architecture_list(document.get(key), key, errors)
+
+    components = document.get("components") if isinstance(document.get("components"), list) else []
+    core_components: List[str] = []
+    component_ids: set[str] = set()
+    for index, component in enumerate(components):
+        label = f"architecture.components[{index}]"
+        if not isinstance(component, dict):
+            errors.append(f"{label} must be an object.")
+            continue
+        for key in ("id", "name", "responsibility"):
+            if not isinstance(component.get(key), str) or not component[key].strip():
+                errors.append(f"{label}.{key} must be a non-empty string.")
+        component_id = component.get("id")
+        if isinstance(component_id, str):
+            if component_id in component_ids:
+                errors.append(f"{label}.id must be unique.")
+            component_ids.add(component_id)
+        if not isinstance(component.get("core"), bool):
+            errors.append(f"{label}.core must be a boolean.")
+        paths = ensure_string_list(component.get("paths"), f"{label}.paths", errors)
+        for path_index, raw in enumerate(paths):
+            safe_rel_path(raw, f"{label}.paths[{path_index}]", errors)
+        if component.get("core") is True and isinstance(component.get("name"), str):
+            core_components.append(component["name"].strip())
+
+    interfaces = document.get("interfaces")
+    routes = interfaces.get("routes") if isinstance(interfaces, dict) else None
+    if not isinstance(routes, list) or not routes:
+        errors.append("architecture.interfaces.routes must be a non-empty list.")
+        routes = []
+    core_routes: List[str] = []
+    route_ids: set[str] = set()
+    for index, route in enumerate(routes):
+        label = f"architecture.interfaces.routes[{index}]"
+        if not isinstance(route, dict):
+            errors.append(f"{label} must be an object.")
+            continue
+        for key in ("id", "path", "kind", "source"):
+            if not isinstance(route.get(key), str) or not route[key].strip():
+                errors.append(f"{label}.{key} must be a non-empty string.")
+        route_id = route.get("id")
+        if isinstance(route_id, str):
+            if route_id in route_ids:
+                errors.append(f"{label}.id must be unique.")
+            route_ids.add(route_id)
+        if not isinstance(route.get("core"), bool):
+            errors.append(f"{label}.core must be a boolean.")
+        if route.get("core") is True and isinstance(route.get("path"), str):
+            core_routes.append(route["path"].strip())
+
+    fingerprint = document.get("source_fingerprint")
+    source_paths: List[str] = []
+    computed_digest = None
+    if not isinstance(fingerprint, dict):
+        errors.append("architecture.source_fingerprint must be a non-empty object.")
+    else:
+        if fingerprint.get("algorithm") != ARCHITECTURE_FINGERPRINT_ALGORITHM:
+            errors.append(
+                f"architecture.source_fingerprint.algorithm must be {ARCHITECTURE_FINGERPRINT_ALGORITHM!r}."
+            )
+        include = ensure_string_list(
+            fingerprint.get("include"),
+            "architecture.source_fingerprint.include",
+            errors,
+        )
+        exclude = ensure_string_list(
+            fingerprint.get("exclude"),
+            "architecture.source_fingerprint.exclude",
+            errors,
+        )
+        declared_digest = fingerprint.get("digest")
+        if not isinstance(declared_digest, str) or not re.fullmatch(r"[0-9a-f]{64}", declared_digest):
+            errors.append("architecture.source_fingerprint.digest must be a lowercase SHA-256 hex digest.")
+        source_paths = expand_architecture_sources(repo_root, include, exclude, errors)
+        if contract_rel in source_paths or human_map_rel in source_paths:
+            errors.append("architecture source fingerprint must not include either generated architecture artifact.")
+        if source_paths:
+            computed_digest = compute_architecture_fingerprint(repo_root, source_paths)
+            if isinstance(declared_digest, str) and declared_digest != computed_digest:
+                errors.append(
+                    "architecture source fingerprint is stale: "
+                    f"declared {declared_digest}, computed {computed_digest}."
+                )
+
+    return {
+        "schema": document.get("schema"),
+        "version": document.get("version"),
+        "core_components": sorted(core_components),
+        "core_routes": sorted(core_routes),
+        "source_files": source_paths,
+        "source_fingerprint": computed_digest,
+    }
+
+
+def validate_architecture(
+    config: Any,
+    repo_root: Path,
+    required_files: Sequence[str],
+) -> Tuple[List[str], Dict[str, Any]]:
+    errors: List[str] = []
+    report: Dict[str, Any] = {}
+    if not isinstance(config, dict):
+        return ["architecture must be an object."], report
+
+    contract_rel = safe_rel_path(config.get("contract"), "architecture.contract", errors)
+    human_map_rel = safe_rel_path(config.get("human_map"), "architecture.human_map", errors)
+    sections = ensure_string_list(
+        config.get("required_html_sections"),
+        "architecture.required_html_sections",
+        errors,
+    )
+    for artifact in (contract_rel, human_map_rel):
+        if artifact and artifact not in required_files:
+            errors.append(f"architecture artifact must appear in required_files: {artifact}")
+    if not contract_rel or not human_map_rel:
+        return errors, report
+
+    contract_path = repo_root / contract_rel
+    human_map_path = repo_root / human_map_rel
+    if not contract_path.is_file():
+        errors.append(f"architecture contract is missing: {contract_rel}")
+    if not human_map_path.is_file():
+        errors.append(f"architecture human map is missing: {human_map_rel}")
+    if errors and (not contract_path.is_file() or not human_map_path.is_file()):
+        return errors, report
+
+    try:
+        document = json.loads(contract_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        errors.append(f"architecture JSON is malformed: {exc}")
+        return errors, report
+    except UnicodeDecodeError as exc:
+        errors.append(f"architecture JSON must be UTF-8: {exc}")
+        return errors, report
+    if not isinstance(document, dict):
+        errors.append("architecture JSON root must be an object.")
+        return errors, report
+
+    report = validate_architecture_document(
+        document,
+        repo_root,
+        contract_rel,
+        human_map_rel,
+        errors,
+    )
+
+    try:
+        html = human_map_path.read_text(encoding="utf-8")
+    except UnicodeDecodeError as exc:
+        errors.append(f"architecture human map must be UTF-8: {exc}")
+        return errors, report
+    parser = ArchitectureHTMLParser()
+    try:
+        parser.feed(html)
+        parser.close()
+    except Exception as exc:
+        errors.append(f"architecture human map could not be parsed: {exc}")
+        return errors, report
+
+    for section in sections:
+        if section not in parser.ids:
+            errors.append(f"architecture human map is missing required section id: {section}")
+    if len(parser.components) != len(set(parser.components)):
+        errors.append("architecture human map contains duplicate core component markers.")
+    if len(parser.routes) != len(set(parser.routes)):
+        errors.append("architecture human map contains duplicate core route markers.")
+    if set(parser.components) != set(report.get("core_components", [])):
+        errors.append(
+            "architecture HTML and JSON core component markers disagree: "
+            f"HTML={sorted(set(parser.components))}, JSON={report.get('core_components', [])}."
+        )
+    if set(parser.routes) != set(report.get("core_routes", [])):
+        errors.append(
+            "architecture HTML and JSON core route markers disagree: "
+            f"HTML={sorted(set(parser.routes))}, JSON={report.get('core_routes', [])}."
+        )
+    if parser.asset_references:
+        errors.append(
+            "architecture human map contains external asset reference(s): "
+            + ", ".join(parser.asset_references)
+        )
+    if re.search(r"url\s*\(", "\n".join(parser.style_text), flags=re.IGNORECASE):
+        errors.append("architecture human map CSS must not use url(), because the file must be self-contained.")
+
+    report["human_map"] = human_map_rel
+    report["required_sections"] = sections
+    return errors, report
+
+
 def validate_contract(
     contract: Dict[str, Any],
     repo_root: Path,
@@ -486,6 +841,7 @@ def validate_contract(
         "canonical_doctrine": None,
         "source_of_truth": [],
         "required_files": [],
+        "architecture": {},
         "commands": [],
     }
 
@@ -573,6 +929,16 @@ def validate_contract(
                 errors.append(f"{path_label} entry should be a directory: {raw}")
             if not raw.endswith("/") and resolved.is_dir() and path_label == "required_files":
                 errors.append(f"required_files entry should name a file, not a directory: {raw}")
+
+    architecture_config = contract.get("architecture")
+    if architecture_config is not None:
+        architecture_errors, architecture_report = validate_architecture(
+            architecture_config,
+            repo_root,
+            required_files,
+        )
+        errors.extend(architecture_errors)
+        report["architecture"] = architecture_report
 
     if contract_path.name != "contribution-contract.json":
         errors.append("contract file should be named contribution-contract.json.")

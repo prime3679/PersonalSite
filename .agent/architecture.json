@@ -1,0 +1,266 @@
+{
+  "schema": "personal-site.architecture",
+  "version": 1,
+  "repo_identity": {
+    "name": "PersonalSite",
+    "repository": "prime3679/PersonalSite",
+    "kind": "statically generated personal site",
+    "purpose": "Adrian Lumley's public editorial, work, writing, lab, Signal Room, and contact surface",
+    "production_url": "https://adrianlumley.co"
+  },
+  "provenance": {
+    "documented_on": "2026-07-22",
+    "basis": [
+      "repo-owned doctrine",
+      "application source and configuration",
+      "content schemas and shared query helpers",
+      "deployment workflows and verification harnesses"
+    ],
+    "maintenance_rule": "Update this contract and docs/architecture.html together when architecture-relevant source changes, then refresh source_fingerprint.digest."
+  },
+  "architecture": {
+    "purpose": "Build and verify a premium editorial personal site as static output while preserving a small set of runtime integrations and compatibility routes.",
+    "style": "Astro pages compose shared layouts and components; typed content collections feed shared query helpers; build-time endpoints generate feeds, sitemaps, and social images.",
+    "stack": [
+      "Astro 5",
+      "TypeScript",
+      "Tailwind CSS 3 plus global CSS tokens",
+      "Astro Content Collections with Zod schemas",
+      "Satori and Sharp for generated Open Graph images",
+      "Vitest and Playwright",
+      "GitHub Actions and GitHub Pages"
+    ],
+    "source_scope": [
+      "public application structure and routes",
+      "content schemas, queries, and path helpers",
+      "shared presentation and metadata layers",
+      "deployment and verification configuration",
+      "zero-context contribution doctrine and gate"
+    ]
+  },
+  "source_fingerprint": {
+    "algorithm": "sha256-path-null-length-null-bytes-null-v1",
+    "algorithm_description": "Expand include patterns to regular files, remove excluded matches, deduplicate and sort by UTF-8 repo-relative POSIX path, then SHA-256 each frame: path bytes, NUL, decimal byte length, NUL, raw file bytes, NUL.",
+    "include": [
+      "AGENTS.md",
+      "CLAUDE.md",
+      "REVIEW.md",
+      "README.md",
+      "docs/zero-context-contribution.md",
+      ".agent/contribution-contract.json",
+      ".agent/contribution_gate.py",
+      "package.json",
+      "astro.config.mjs",
+      "tailwind.config.mjs",
+      "tsconfig.json",
+      "vitest.config.ts",
+      "playwright.config.ts",
+      "wrangler.toml",
+      "wrangler.www.toml",
+      ".github/workflows/*.yml",
+      ".hermes/verifiers/*.mjs",
+      "infra/rogue-status/*.js",
+      "infra/rogue-status/*.sh",
+      "infra/rogue-status/*.toml",
+      "src/canonical-redirect.js",
+      "src/canonical-worker.js",
+      "src/www-redirect.js",
+      "src/components/*.astro",
+      "src/layouts/*.astro",
+      "src/pages/**/*.astro",
+      "src/pages/**/*.ts",
+      "src/content/config.ts",
+      "src/content/blogSchema.ts",
+      "src/content/signalRoomSchema.ts",
+      "src/data/nav.ts",
+      "src/data/rogue.ts",
+      "src/data/siteMetadata.ts",
+      "src/lib/content.ts",
+      "src/lib/format.ts",
+      "src/lib/og-image.ts",
+      "src/lib/readingTime.ts",
+      "src/lib/relativeTime.ts",
+      "src/lib/seo.ts",
+      "src/lib/sitemap.ts",
+      "src/lib/trace.ts",
+      "src/styles/global.css"
+    ],
+    "exclude": [
+      ".agent/architecture.json",
+      "docs/architecture.html",
+      "docs/plans/**",
+      "src/content/blog/**",
+      "src/content/signal-room/**",
+      "public/**",
+      "dist/**",
+      "node_modules/**"
+    ],
+    "digest": "380a9afd982ec639cd022b84ae62bb00b575c429e8d6832c3291dbfe861a07dc"
+  },
+  "components": [
+    {
+      "id": "route-layer",
+      "name": "route layer",
+      "core": true,
+      "paths": ["src/pages/"],
+      "responsibility": "Map Astro files to public pages, compatibility redirects, RSS, sitemap, and generated image endpoints."
+    },
+    {
+      "id": "base-document-shell",
+      "name": "base document shell",
+      "core": true,
+      "paths": ["src/layouts/Base.astro", "src/styles/global.css"],
+      "responsibility": "Own the HTML document, metadata defaults, structured data, accessibility entry points, global styles, shared header, main slot, footer, and delight layer."
+    },
+    {
+      "id": "navigation-shell",
+      "name": "navigation shell",
+      "core": true,
+      "paths": ["src/components/Header.astro", "src/data/nav.ts"],
+      "responsibility": "Render the canonical desktop, mobile, and footer navigation from one ordered data source."
+    },
+    {
+      "id": "content-collections",
+      "name": "content collections",
+      "core": true,
+      "paths": ["src/content/config.ts", "src/content/blogSchema.ts", "src/content/signalRoomSchema.ts", "src/content/blog/", "src/content/signal-room/"],
+      "responsibility": "Validate writing and Signal Room frontmatter while keeping their content bodies in repo-owned Markdown."
+    },
+    {
+      "id": "content-query-layer",
+      "name": "content query layer",
+      "core": true,
+      "paths": ["src/lib/content.ts", "src/lib/format.ts"],
+      "responsibility": "Centralize publication filtering, ordering, canonical route forms, Open Graph paths, and display formatting."
+    },
+    {
+      "id": "seo-and-syndication",
+      "name": "SEO and syndication",
+      "core": true,
+      "paths": ["src/lib/seo.ts", "src/lib/sitemap.ts", "src/pages/rss.xml.ts", "src/pages/sitemap.xml.ts"],
+      "responsibility": "Produce canonical metadata, structured data, RSS, and sitemap output from shared site and content data."
+    },
+    {
+      "id": "og-image-generation",
+      "name": "Open Graph image generation",
+      "core": true,
+      "paths": ["src/lib/og-image.ts", "src/pages/og/"],
+      "responsibility": "Render 1200 by 630 social cards at build time with local typography through Satori and Sharp."
+    },
+    {
+      "id": "static-lab-artifacts",
+      "name": "static lab artifacts",
+      "core": true,
+      "paths": ["public/lab/"],
+      "responsibility": "Serve self-contained experiments directly as static assets outside Astro page composition."
+    },
+    {
+      "id": "rogue-status-integration",
+      "name": "Rogue status integration",
+      "core": true,
+      "paths": ["src/components/LiveStatus.astro", "src/data/rogue.ts", "infra/rogue-status/"],
+      "responsibility": "Fetch a public, server-stamped heartbeat summary and render only freshness claims that can be verified client-side."
+    },
+    {
+      "id": "contribution-gate",
+      "name": "contribution gate",
+      "core": true,
+      "paths": [".agent/contribution-contract.json", ".agent/contribution_gate.py", "src/agent/", ".agent/architecture_gate_test.py"],
+      "responsibility": "Fail closed on contribution-contract, architecture, path, command-safety, and verification errors before trusted commands execute."
+    },
+    {
+      "id": "deployment-pipeline",
+      "name": "deployment pipeline",
+      "core": true,
+      "paths": [".github/workflows/deploy.yml", "astro.config.mjs"],
+      "responsibility": "Build the Astro site and publish the generated artifact from main to GitHub Pages."
+    }
+  ],
+  "interfaces": {
+    "routes": [
+      {"id": "home", "path": "/", "core": true, "kind": "page", "source": "src/pages/index.astro"},
+      {"id": "work", "path": "/work/", "core": true, "kind": "page", "source": "src/pages/work.astro"},
+      {"id": "about", "path": "/about/", "core": true, "kind": "page", "source": "src/pages/about.astro"},
+      {"id": "writing", "path": "/writing/", "core": true, "kind": "collection index", "source": "src/pages/writing.astro"},
+      {"id": "lab", "path": "/lab/", "core": true, "kind": "page and static artifact index", "source": "src/pages/lab.astro"},
+      {"id": "signal-room", "path": "/signal-room/", "core": true, "kind": "collection index", "source": "src/pages/signal-room/index.astro"},
+      {"id": "contact", "path": "/contact/", "core": true, "kind": "page and external form boundary", "source": "src/pages/contact.astro"},
+      {"id": "rss", "path": "/rss.xml", "core": true, "kind": "build-time XML endpoint", "source": "src/pages/rss.xml.ts"},
+      {"id": "writing-entry", "path": "/writing/<slug>", "core": false, "kind": "generated content page", "source": "src/pages/writing/[...slug].astro"},
+      {"id": "signal-room-entry", "path": "/signal-room/<slug>/", "core": false, "kind": "generated content page", "source": "src/pages/signal-room/[...slug].astro"},
+      {"id": "legacy-blog", "path": "/blog/ and /blog/<slug>", "core": false, "kind": "compatibility redirect", "source": "src/pages/blog.astro and src/pages/blog/[...slug].astro"},
+      {"id": "sitemap", "path": "/sitemap.xml", "core": false, "kind": "build-time XML endpoint", "source": "src/pages/sitemap.xml.ts"},
+      {"id": "og-images", "path": "/og/*.png", "core": false, "kind": "build-time PNG endpoints", "source": "src/pages/og/"},
+      {"id": "static-lab", "path": "/lab/<artifact>/", "core": false, "kind": "static file tree", "source": "public/lab/"}
+    ],
+    "runtime_boundaries": [
+      {"name": "contact submission", "direction": "browser outbound", "provider": "Formspree", "failure_mode": "form submission fails without affecting static pages"},
+      {"name": "analytics", "direction": "browser outbound", "provider": "Umami", "failure_mode": "analytics failure does not block rendering"},
+      {"name": "Rogue public status", "direction": "browser fetch", "provider": "repo-owned status worker", "failure_mode": "UI keeps a non-freshness fallback and makes no false live claim"}
+    ]
+  },
+  "data_flows": [
+    {"id": "page-render", "from": "src/pages/*.astro", "through": ["page-specific components", "src/layouts/Base.astro", "src/data/nav.ts", "src/data/siteMetadata.ts"], "to": "static HTML, CSS, and client scripts in dist/"},
+    {"id": "writing-publish", "from": "src/content/blog/*.md", "through": ["blogSchema", "getPublishedPosts", "writing routes", "RSS and Open Graph endpoints"], "to": "writing index, entry pages, feed items, and social cards"},
+    {"id": "signal-room-publish", "from": "src/content/signal-room/*.md", "through": ["signalRoomSchema", "getEpisodes", "Signal Room routes", "RSS and Open Graph endpoints"], "to": "episode index, entry pages, feed items, and social cards"},
+    {"id": "lab-delivery", "from": "public/lab/<artifact>/", "through": ["Astro public-file copy"], "to": "self-contained static lab route"},
+    {"id": "status-read", "from": "public status JSON", "through": ["LiveStatus.astro client script", "freshness calculation"], "to": "live, quiet, or unknown status presentation"},
+    {"id": "build-deploy", "from": "main branch source", "through": ["GitHub Actions", "withastro/action", "Astro build", "actions/deploy-pages"], "to": "GitHub Pages production deployment"},
+    {"id": "contribution-check", "from": "repo doctrine and architecture-relevant source", "through": ["contribution contract", "architecture fingerprint", "contribution gate"], "to": "audit result or bounded trusted verification commands"}
+  ],
+  "dependencies": {
+    "runtime": ["Astro", "Tailwind CSS", "Astro Content Collections", "Zod", "Satori", "Sharp", "bundled font packages"],
+    "development": ["TypeScript", "Astro Check", "Vitest", "happy-dom", "Playwright", "Python 3 standard library for the contribution gate"],
+    "external_services": ["GitHub Actions", "GitHub Pages", "Formspree", "Umami", "Rogue public status worker"],
+    "dependency_policy": "Contribution-only architecture work does not mutate manifests or install dependencies."
+  },
+  "invariants": [
+    "The canonical public navigation order is work, lab, writing, signal room, contact.",
+    "The adrian lumley wordmark does not wrap and mobile navigation remains a hamburger or toggle.",
+    "Old /blog/ URLs continue to redirect or alias to writing.",
+    "Base.astro remains the shared document shell for primary Astro pages.",
+    "Writing publication state and ordering flow through getPublishedPosts; Signal Room ordering flows through getEpisodes.",
+    "Post and episode route forms in src/lib/content.ts remain stable because they are used as RSS identifiers.",
+    "The public surface follows the lowercase editorial and protected-language rules in AGENTS.md.",
+    "Architecture artifacts use only repo-relative paths and the human map has no external asset dependencies.",
+    "Architecture validation runs during contribution audit and before verify executes trusted commands."
+  ],
+  "protected_boundaries": {
+    "paths": ["src/", "public/", ".github/", "package.json", "package-lock.json", "astro.config.mjs", "playwright.config.ts", "vitest.config.ts", "deployment and worker configuration"],
+    "contribution_exception": "Repo-owned contribution tests under src/agent/ are the documented narrow exception; architecture-specific tests live under .agent/ to avoid changing protected application source.",
+    "rules": [
+      "Do not change public source, content, visuals, dependencies, lockfiles, workflows, deployment configuration, authentication, services, or live state for contribution-only work.",
+      "Do not read or print secrets; portable artifacts contain no credentials, identifiers for private coordination, or machine-specific paths.",
+      "Treat verify as defense in depth around trusted repo-owned commands, not as a sandbox.",
+      "Escalate rather than infer behavior when a public, source, deployment, or data boundary is ambiguous."
+    ]
+  },
+  "verification": {
+    "architecture_commands": [
+      {"id": "architecture-tests", "argv": ["python3", ".agent/architecture_gate_test.py"]},
+      {"id": "contribution-audit", "argv": ["python3", ".agent/contribution_gate.py", "audit"]}
+    ],
+    "public_site_commands": [
+      {"id": "astro-check", "argv": ["node_modules/.bin/astro", "check"]},
+      {"id": "astro-build", "argv": ["node_modules/.bin/astro", "build"]},
+      {"id": "vitest", "argv": ["node_modules/.bin/vitest", "run"]},
+      {"id": "public-surface-scan", "argv": ["node", ".hermes/verifiers/public-surface-scan.mjs"]},
+      {"id": "mobile-homepage", "argv": ["node", ".hermes/verifiers/mobile-homepage.mjs"]},
+      {"id": "playwright-targeted", "argv": ["node_modules/.bin/playwright", "test", "tests/mobile/mobile-nav.spec.ts", "tests/header.spec.ts", "tests/e2e/homepage.spec.ts", "--project=mobile-chrome", "--project=chromium"]}
+    ],
+    "signal_room_extra": ["node_modules/.bin/playwright test tests/e2e/signal-room.spec.ts --project=chromium"],
+    "visual_widths": [320, 375, 390, 414]
+  },
+  "escalation_conditions": [
+    "Existing instructions conflict materially and resolving them would change public site behavior.",
+    "Correct work requires modifying a protected public-site path outside the explicit task scope.",
+    "Verification requires dependency installation, secrets, external coordination, or live-state access.",
+    "A source, runtime integration, data contract, or deployment boundary cannot be verified from repo-owned evidence.",
+    "A proposed action would push, deploy, open a pull request, or otherwise leave the worktree boundary without authorization."
+  ],
+  "doctrine": {
+    "authority_precedence": ["AGENTS.md", "CLAUDE.md", "REVIEW.md", ".agent/contribution-contract.json", "docs/zero-context-contribution.md"],
+    "fresh_agent_read_order": ["REVIEW.md", "AGENTS.md", "CLAUDE.md", "docs/zero-context-contribution.md", ".agent/contribution-contract.json", ".agent/architecture.json"],
+    "pointers": ["AGENTS.md", "CLAUDE.md", "REVIEW.md", "docs/zero-context-contribution.md", ".agent/contribution-contract.json", ".agent/contribution_gate.py", "docs/architecture.html"]
+  }
+}

@@ -9,6 +9,8 @@ This repo is self-briefing for fresh coding agents. Start here, then follow the 
 4. `.agent/contribution-contract.json`
 5. this document
 
+`.agent/architecture.json` and `docs/architecture.html` are synchronized descriptive maps, not additional doctrine authorities.
+
 If instructions conflict, the higher-precedence file wins. Read order is onboarding sequence, not authority precedence. Escalate instead of guessing when a conflict would change site behavior.
 
 ## what this repo is
@@ -36,7 +38,9 @@ Bias toward infrastructure when the same mistake could recur for a fresh agent w
 1. Read `REVIEW.md` for the short brief.
 2. Read `AGENTS.md` and `CLAUDE.md` for site doctrine and stack context.
 3. Read `.agent/contribution-contract.json` before changing contribution or verification behavior.
-4. Use `.agent/contribution_gate.py audit` before edits when touching the contribution standard.
+4. Read `.agent/architecture.json` before implementation for components, routes, flows, boundaries, and verification context.
+5. Open `docs/architecture.html` directly from disk when a human-readable system map is useful.
+6. Use `.agent/contribution_gate.py audit` before edits when touching the contribution standard.
 
 ## verification tiers
 Static and context-only checks:

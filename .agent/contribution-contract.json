@@ -16,8 +16,27 @@
     "REVIEW.md",
     "docs/zero-context-contribution.md",
     ".agent/contribution-contract.json",
-    ".agent/contribution_gate.py"
+    ".agent/contribution_gate.py",
+    ".agent/architecture.json",
+    ".agent/architecture_gate_test.py",
+    "docs/architecture.html"
   ],
+  "architecture": {
+    "contract": ".agent/architecture.json",
+    "human_map": "docs/architecture.html",
+    "required_html_sections": [
+      "purpose",
+      "stack",
+      "routes",
+      "components",
+      "content-model",
+      "data-flow",
+      "deployment",
+      "verification",
+      "protected-boundaries",
+      "contribution-path"
+    ]
+  },
   "boundaries": {
     "portable_paths": [
       "AGENTS.md",

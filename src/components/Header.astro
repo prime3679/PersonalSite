@@ -57,6 +57,7 @@ const isCurrentPage = (href: string) => currentPath === normalizePath(href);
     data-header-mobile-panel
     aria-label="Mobile"
     aria-hidden="true"
+    inert
   >
     {navItems.map((item) => (
       <a
@@ -80,6 +81,7 @@ const isCurrentPage = (href: string) => currentPath === normalizePath(href);
     menuToggle?.setAttribute('aria-expanded', String(open));
     menuToggle?.setAttribute('aria-label', open ? 'Close site menu' : 'Open site menu');
     mobilePanel?.setAttribute('aria-hidden', String(!open));
+    if (mobilePanel instanceof HTMLElement) mobilePanel.inert = !open;
     header?.classList.toggle('is-menu-open', open);
   }
 
@@ -130,7 +132,7 @@ const isCurrentPage = (href: string) => currentPath === normalizePath(href);
 
   .site-header__mobile-link {
     display: flex;
-    min-height: 45px;
+    min-height: 46px;
     align-items: center;
     padding: .3125rem 0;
   }
@@ -313,32 +315,36 @@ const isCurrentPage = (href: string) => currentPath === normalizePath(href);
   }
 
   .site-header__mobile-panel {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
     box-sizing: border-box;
     width: 100%;
     max-width: 52rem;
-    max-height: 0;
     margin: 0 auto;
-    padding: 0 clamp(var(--s5), 5vw, var(--s7));
+    padding: .35rem clamp(var(--s5), 5vw, var(--s7)) .875rem;
+    border-bottom: 1px solid var(--line);
+    background: var(--paper);
+    clip-path: inset(0 0 100% 0);
     opacity: 0;
-    overflow: hidden;
     pointer-events: none;
     visibility: hidden;
-    transform: translateY(-4px);
-    transition: max-height 180ms ease, opacity 180ms ease, transform 180ms ease, padding-bottom 180ms ease, visibility 0ms linear 180ms;
+    transform: translateY(-.35rem);
+    transition: clip-path 190ms var(--ease), opacity 170ms ease, transform 190ms var(--ease), visibility 0ms linear 190ms;
   }
 
   .site-header.is-menu-open .site-header__mobile-panel {
-    max-height: 320px;
+    clip-path: inset(0 0 0 0);
     opacity: 1;
     pointer-events: auto;
     visibility: visible;
     transform: translateY(0);
-    padding-bottom: 14px;
     transition-delay: 0ms;
   }
 
   .site-header__mobile-panel > a {
-    min-height: 45px;
+    min-height: 46px;
     display: flex;
     align-items: center;
     border-top: 1px solid var(--line);
@@ -383,6 +389,10 @@ const isCurrentPage = (href: string) => currentPath === normalizePath(href);
     .site-header *::after {
       transition-duration: 0.01ms !important;
       animation-duration: 0.01ms !important;
+    }
+
+    .site-header__mobile-panel {
+      transition: none;
     }
   }
 </style>

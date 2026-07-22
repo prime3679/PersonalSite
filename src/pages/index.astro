@@ -69,7 +69,7 @@ const writingNote = latestWriting
             <dt>previously</dt>
             <dd>siriusxm · disney+ · ea</dd>
           </div>
-          <div class="ledger__row">
+          <div class="ledger__row ledger__row--proof">
             <dt>work</dt>
             <dd><a class="record__link touch-link" href="/work">case studies →</a></dd>
           </div>
@@ -355,8 +355,51 @@ const writingNote = latestWriting
       font-size: .8125rem;
       line-height: 1.45;
     }
-    .record__link { text-decoration: none; }
-    .record__link:hover { color: var(--ink); }
+    .ledger__row--proof {
+      margin-top: .15rem;
+      padding-top: .68rem;
+      border-top: 1px solid var(--line);
+    }
+    .record__link {
+      position: relative;
+      justify-content: flex-start;
+      gap: .45rem;
+      color: var(--ink);
+      font-weight: 560;
+      letter-spacing: .045em;
+      text-decoration: none;
+    }
+    .record__link::before {
+      content: '';
+      flex: 0 0 auto;
+      width: .85rem;
+      height: 1px;
+      background: var(--accent);
+      transform: scaleX(.65);
+      transform-origin: left;
+      transition: transform var(--dur) var(--ease);
+    }
+    .record__link::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      bottom: .55rem;
+      left: 1rem;
+      height: 1px;
+      background: color-mix(in srgb, var(--accent) 58%, transparent);
+      transform: scaleX(.55);
+      transform-origin: left;
+      transition: transform var(--dur) var(--ease), background-color var(--dur) var(--ease);
+    }
+    .record__link:hover,
+    .record__link:focus-visible { color: var(--ink); }
+    .record__link:hover::before,
+    .record__link:focus-visible::before { transform: scaleX(1); }
+    .record__link:hover::after,
+    .record__link:focus-visible::after {
+      background: var(--accent);
+      transform: scaleX(1);
+    }
 
     /* ---- numbered folio sections ------------------------------------- */
     .folio-section { margin-top: clamp(var(--s6), 7vw, 3.25rem); }

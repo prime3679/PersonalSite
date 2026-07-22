@@ -10,6 +10,15 @@ async function expectSingleCanonicalHeader(page: Page) {
   await expect(page.locator('#theme-toggle')).toHaveCount(0);
 }
 
+async function clickBelowMobilePanel(page: Page) {
+  const panelBox = await page.locator('[data-header-mobile-panel]').boundingBox();
+  const viewport = page.viewportSize();
+  expect(panelBox).not.toBeNull();
+  expect(viewport).not.toBeNull();
+
+  await page.mouse.click(16, Math.min(panelBox!.y + panelBox!.height + 24, viewport!.height - 24));
+}
+
 test.describe('Header Component', () => {
   for (const width of [768, 1280]) {
     test(`desktop renders one editorial header with inline mono nav and active underline at ${width}px`, async ({ page }) => {
@@ -91,7 +100,7 @@ test.describe('Header Component', () => {
 
       await toggle.click();
       await expect(mobilePanel).toBeVisible();
-      await page.locator('main').click({ position: { x: 12, y: 120 } });
+      await clickBelowMobilePanel(page);
       await expect(toggle).toHaveAttribute('aria-expanded', 'false');
       await expect(mobilePanel).toBeHidden();
 

@@ -111,7 +111,7 @@ html.dark .instrument-panel { border-color: var(--line-strong); }
 .cta-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 1.125rem; padding-top: 1.75rem; border-top: 1px solid var(--line); }
 .cta-copy { font-size: 1.15rem; line-height: 1.45; }
 .plain-links { display: inline-flex; flex-wrap: wrap; align-items: center; gap: .5rem; color: var(--ink-soft); font-family: var(--sans); font-size: .9rem; }
-.touch-link { display: inline-flex; align-items: center; justify-content: center; min-height: 45px; min-width: 44px; }
+.touch-link { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; min-width: 44px; }
 .section-stack { display: grid; gap: var(--s8); }
 .content-stack { display: grid; gap: var(--s5); max-width: var(--measure); }
 .body-copy { color: var(--ink); line-height: 1.65; }

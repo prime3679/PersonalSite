@@ -10,6 +10,32 @@ test('homepage opens with a factual identity, the real work, and contact links',
   await expect(page.locator('main')).not.toContainText('The hard part of enterprise AI was never the model.');
   await expect(page.locator('main')).not.toContainText('Notes on making');
 
+  const record = page.getByLabel('on file');
+  const caseStudiesLink = record.getByRole('link', { name: 'case studies →' });
+  await expect(caseStudiesLink).toHaveAttribute('href', '/work');
+  await expect(caseStudiesLink).toHaveCSS('text-decoration-line', 'none');
+
+  const caseStudiesTreatment = await caseStudiesLink.evaluate((node) => {
+    const link = window.getComputedStyle(node);
+    const tick = window.getComputedStyle(node, '::before');
+    const rule = window.getComputedStyle(node, '::after');
+
+    return {
+      backgroundColor: link.backgroundColor,
+      borderRadius: link.borderRadius,
+      fontWeight: Number(link.fontWeight),
+      tickDisplay: tick.display,
+      tickWidth: Number.parseFloat(tick.width),
+      ruleHeight: Number.parseFloat(rule.height),
+    };
+  });
+  expect(caseStudiesTreatment.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+  expect(caseStudiesTreatment.borderRadius).toBe('0px');
+  expect(caseStudiesTreatment.fontWeight).toBeGreaterThanOrEqual(550);
+  expect(caseStudiesTreatment.tickDisplay).toBe('block');
+  expect(caseStudiesTreatment.tickWidth).toBeGreaterThan(0);
+  expect(caseStudiesTreatment.ruleHeight).toBe(1);
+
   await expect(page.getByRole('heading', { name: 'writing', exact: true })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'lab', exact: true })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'signal room', exact: true })).toBeVisible();

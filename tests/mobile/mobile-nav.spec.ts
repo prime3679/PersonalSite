@@ -2,11 +2,12 @@ import { test, expect, type Locator, type Page } from '@playwright/test';
 
 const targetWidths = [320, 375, 390, 414];
 const layoutTransitionProperties = new Set(['max-height', 'padding', 'padding-top', 'padding-right', 'padding-bottom', 'padding-left', 'width', 'height', 'margin', 'margin-top', 'margin-right', 'margin-bottom', 'margin-left']);
+const subpixelTolerance = 0.01;
 
-async function expectTapTarget(locator: Locator) {
+async function expectTapTarget(locator: Locator, minimumHeight = 45) {
   const box = await locator.boundingBox();
   expect(box).not.toBeNull();
-  expect(box!.height).toBeGreaterThanOrEqual(45);
+  expect(box!.height + subpixelTolerance).toBeGreaterThanOrEqual(minimumHeight);
 }
 
 async function clickBelowMobilePanel(page: Page) {
@@ -16,6 +17,34 @@ async function clickBelowMobilePanel(page: Page) {
   expect(viewport).not.toBeNull();
 
   await page.mouse.click(16, Math.min(panelBox!.y + panelBox!.height + 24, viewport!.height - 24));
+}
+
+async function getMenuIconState(toggle: Locator) {
+  return toggle.evaluate((node) => {
+    const bars = Array.from(node.querySelectorAll('span'));
+
+    return bars.map((bar) => {
+      const styles = window.getComputedStyle(bar);
+      const matrix = styles.transform === 'none' ? null : new DOMMatrixReadOnly(styles.transform);
+      const angle = matrix ? Math.round(Math.atan2(matrix.b, matrix.a) * (180 / Math.PI)) : 0;
+      const durationSeconds = styles.transitionDuration
+        .split(',')
+        .map((duration) => duration.trim())
+        .reduce((longest, duration) => {
+          const value = Number.parseFloat(duration);
+          const seconds = duration.endsWith('ms') ? value / 1000 : value;
+          return Number.isFinite(seconds) ? Math.max(longest, seconds) : longest;
+        }, 0);
+
+      return {
+        angle,
+        opacity: Number.parseFloat(styles.opacity),
+        transform: styles.transform,
+        transitionProperty: styles.transitionProperty,
+        durationSeconds,
+      };
+    });
+  });
 }
 
 test.describe('mobile homepage navigation', () => {
@@ -77,7 +106,7 @@ test.describe('mobile homepage navigation', () => {
         await expectTapTarget(mobileNav.locator(`a[href="${href}"]`));
       }
 
-      await expectTapTarget(page.locator('main a[href="/work"]'));
+      await expectTapTarget(page.locator('main .record__link[href="/work"]'), 46);
       await expectTapTarget(page.locator('main a[href="/lab"]'));
       await expectTapTarget(page.locator('main a[href="/signal-room"]').first());
       await expectTapTarget(page.locator('main a[href="/contact"]'));
@@ -94,14 +123,61 @@ test('mobile: reduced motion removes the reveal transition without exposing hidd
 
   const toggle = page.locator('#menu-toggle');
   const mobileNav = page.locator('#mobile-nav');
+  const firstMobileLink = mobileNav.locator('a').first();
 
   await expect(mobileNav).toBeHidden();
   await expect(mobileNav).toHaveAttribute('inert', '');
   await expect(mobileNav).toHaveCSS('transition-property', 'none');
 
+  const closedIcon = await getMenuIconState(toggle);
+  expect(closedIcon).toEqual([
+    expect.objectContaining({ angle: 0, opacity: 1, transform: 'none', transitionProperty: 'none' }),
+    expect.objectContaining({ angle: 0, opacity: 1, transform: 'none', transitionProperty: 'none' }),
+    expect.objectContaining({ angle: 0, opacity: 1, transform: 'none', transitionProperty: 'none' }),
+  ]);
+  expect(closedIcon.every((bar) => bar.durationSeconds <= 0.001)).toBe(true);
+
+  await firstMobileLink.focus();
+  await expect(firstMobileLink).not.toBeFocused();
+
+  await toggle.focus();
+  await page.keyboard.press('Tab');
+  await expect(firstMobileLink).not.toBeFocused();
+  expect(await mobileNav.evaluate((node) => node.contains(document.activeElement))).toBe(false);
+
+  await toggle.focus();
   await toggle.click();
   await expect(mobileNav).toBeVisible();
   await expect(mobileNav).not.toHaveAttribute('inert', '');
+  await expect(mobileNav).toHaveCSS('transition-property', 'none');
+
+  const openIcon = await getMenuIconState(toggle);
+  expect(openIcon[0]).toEqual(expect.objectContaining({ angle: 45, opacity: 1, transitionProperty: 'none' }));
+  expect(openIcon[0].transform).not.toBe('none');
+  expect(openIcon[1]).toEqual(expect.objectContaining({ angle: 0, opacity: 0, transform: 'none', transitionProperty: 'none' }));
+  expect(openIcon[2]).toEqual(expect.objectContaining({ angle: -45, opacity: 1, transitionProperty: 'none' }));
+  expect(openIcon[2].transform).not.toBe('none');
+  expect(openIcon.every((bar) => bar.durationSeconds <= 0.001)).toBe(true);
+
+  await toggle.focus();
+  if (test.info().project.name === 'mobile-safari') {
+    // Playwright WebKit inherits the host Safari keyboard-navigation policy,
+    // which may not advance Tab to anchors. The fallback stays narrow: the
+    // inert gate is already removed, then focus must be accepted by the link.
+    await firstMobileLink.focus();
+  } else {
+    await page.keyboard.press('Tab');
+  }
+  await expect(firstMobileLink).toBeFocused();
+
+  await toggle.click();
+  await expect(mobileNav).toBeHidden();
+  const restoredIcon = await getMenuIconState(toggle);
+  expect(restoredIcon).toEqual([
+    expect.objectContaining({ angle: 0, opacity: 1, transform: 'none', transitionProperty: 'none' }),
+    expect.objectContaining({ angle: 0, opacity: 1, transform: 'none', transitionProperty: 'none' }),
+    expect.objectContaining({ angle: 0, opacity: 1, transform: 'none', transitionProperty: 'none' }),
+  ]);
 });
 
 test('mobile: Escape closes the open menu and restores focus to the toggle', async ({ page }) => {

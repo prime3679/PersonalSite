@@ -391,6 +391,18 @@ const isCurrentPage = (href: string) => currentPath === normalizePath(href);
       animation-duration: 0.01ms !important;
     }
 
+    .site-header__menu-toggle span {
+      transition: none;
+    }
+
+    .site-header.is-menu-open .site-header__menu-toggle span:nth-child(1) {
+      transform: translateY(6.5px) rotate(45deg) !important;
+    }
+
+    .site-header.is-menu-open .site-header__menu-toggle span:nth-child(3) {
+      transform: translateY(-6.5px) rotate(-45deg) !important;
+    }
+
     .site-header__mobile-panel {
       transition: none;
     }

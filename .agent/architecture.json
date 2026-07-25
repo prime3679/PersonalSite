@@ -74,6 +74,7 @@
       "src/content/config.ts",
       "src/content/blogSchema.ts",
       "src/content/signalRoomSchema.ts",
+      "src/data/csp.ts",
       "src/data/nav.ts",
       "src/data/rogue.ts",
       "src/data/siteMetadata.ts",
@@ -97,7 +98,7 @@
       "dist/**",
       "node_modules/**"
     ],
-    "digest": "537fc5adcab9ad9edb8aa06a3a0ab0b6abb5094559cd25be2417cf665c78203b"
+    "digest": "7d7d2aaff2f2797009d4552f63e519e6678c2fe62a9fb47749aae96fff4ac0c4"
   },
   "components": [
     {
@@ -111,8 +112,8 @@
       "id": "base-document-shell",
       "name": "base document shell",
       "core": true,
-      "paths": ["src/layouts/Base.astro", "src/styles/global.css"],
-      "responsibility": "Own the HTML document, metadata defaults, structured data, accessibility entry points, global styles, shared header, main slot, footer, and delight layer."
+      "paths": ["src/layouts/Base.astro", "src/data/csp.ts", "src/styles/global.css"],
+      "responsibility": "Own the HTML document, content security policy, metadata defaults, structured data, accessibility entry points, global styles, shared header, main slot, footer, and delight layer."
     },
     {
       "id": "navigation-shell",

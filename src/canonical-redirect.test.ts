@@ -32,8 +32,8 @@ describe('canonical redirect worker', () => {
     expect(assetFetch).not.toHaveBeenCalled();
   });
 
-  it('falls through to assets for canonical requests', async () => {
-    const assetResponse = new Response('ok');
+  it('falls through to assets for canonical requests, preserving the asset body', async () => {
+    const assetResponse = new Response('ok', { status: 200 });
     const assetFetch = vi.fn().mockResolvedValue(assetResponse);
 
     const response = await handleCanonicalAssetRequest(
@@ -41,7 +41,8 @@ describe('canonical redirect worker', () => {
       { ASSETS: { fetch: assetFetch } },
     );
 
-    expect(response).toBe(assetResponse);
+    expect(response.status).toBe(200);
+    expect(await response.text()).toBe('ok');
     expect(assetFetch).toHaveBeenCalledTimes(1);
   });
 
@@ -61,8 +62,50 @@ describe('canonical redirect worker', () => {
       new Request('https://adrianlumley.co/about/'),
       { ASSETS: { fetch: assetFetch } },
     );
-    expect(canonical).toBe(assetResponse);
+    expect(canonical.status).toBe(200);
+    expect(await canonical.text()).toBe('asset ok');
     expect(assetFetch).toHaveBeenCalledTimes(1);
+  });
+
+  it('adds conservative security headers to asset responses while preserving status, body, and existing headers', async () => {
+    const assetResponse = new Response('page body', {
+      status: 200,
+      headers: { 'content-type': 'text/html', 'cache-control': 'public, max-age=3600' },
+    });
+    const assetFetch = vi.fn().mockResolvedValue(assetResponse);
+
+    const response = await handleCanonicalAssetRequest(
+      new Request('https://adrianlumley.co/work/'),
+      { ASSETS: { fetch: assetFetch } },
+    );
+
+    expect(response.headers.get('strict-transport-security')).toBe('max-age=31536000');
+    expect(response.headers.get('x-content-type-options')).toBe('nosniff');
+    expect(response.headers.get('x-frame-options')).toBe('SAMEORIGIN');
+
+    // original status, body, and pre-existing headers are preserved
+    expect(response.status).toBe(200);
+    expect(await response.text()).toBe('page body');
+    expect(response.headers.get('content-type')).toBe('text/html');
+    expect(response.headers.get('cache-control')).toBe('public, max-age=3600');
+
+    // no global permissions-policy or response csp is added
+    expect(response.headers.get('permissions-policy')).toBeNull();
+    expect(response.headers.get('content-security-policy')).toBeNull();
+  });
+
+  it('preserves a non-200 asset status while still adding security headers', async () => {
+    const assetResponse = new Response('not found', { status: 404 });
+    const assetFetch = vi.fn().mockResolvedValue(assetResponse);
+
+    const response = await handleCanonicalAssetRequest(
+      new Request('https://adrianlumley.co/missing/'),
+      { ASSETS: { fetch: assetFetch } },
+    );
+
+    expect(response.status).toBe(404);
+    expect(await response.text()).toBe('not found');
+    expect(response.headers.get('x-content-type-options')).toBe('nosniff');
   });
 
   it('redirects www requests to the canonical host', () => {

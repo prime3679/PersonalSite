@@ -1,11 +1,22 @@
 # rogue telemetry: protocol and runbook
 
-the live layer on adrianlumley.co reads a tiny status document from
-`https://api.adrianlumley.co/v1/status`, served by a cloudflare worker
-(`infra/rogue-status/`). the mac mini posts a heartbeat every 15 minutes.
-if the heartbeat stops for 6 hours the site shows the gray quiet state.
-the site never renders the live state without a fresh server timestamp:
-gray beats false green.
+the live layer is **opt-in and dormant by default**. the status worker
+(`infra/rogue-status/`) is not deployed, so the default production build
+ships no status url and makes **no request** to `api.adrianlumley.co`. the
+homepage strip and lab card stay in the honest gray "running since ..."
+epoch state, which needs no network.
+
+to enable the live layer once the worker is actually deployed, set the
+build-time env var `PUBLIC_ROGUE_STATUS_URL` (see `src/data/rogue.ts`):
+
+```bash
+PUBLIC_ROGUE_STATUS_URL=https://api.adrianlumley.co/v1/status npm run build
+```
+
+with that set, the live layer reads a tiny status document from the worker.
+the mac mini posts a heartbeat every 15 minutes. if the heartbeat stops for
+6 hours the site shows the gray quiet state. the site never renders the live
+state without a fresh server timestamp: gray beats false green.
 
 ## protocol
 
@@ -111,7 +122,10 @@ curl -s -o /dev/null -w "%{http_code}\n" -X POST \
 curl -s https://api.adrianlumley.co/v1/status
 ```
 
-the site tolerates the worker being absent entirely (dns unresolvable,
-404, or timeout): the homepage strip and lab card stay in the gray
-epoch-only state and no console errors appear. this is covered by
-`tests/e2e/live-status.spec.ts`.
+with the live layer disabled (the default), the homepage makes no status
+request at all and stays in the gray epoch-only state. once enabled, the
+site also tolerates the worker being absent entirely (dns unresolvable,
+404, or timeout): the strip and lab card fall back to the same gray state
+and no console errors appear. the default no-request contract is covered by
+`tests/e2e/live-status.spec.ts`; the live/quiet/stale decision logic is
+covered by `evaluateStatus` in `src/data/rogue.test.ts`.

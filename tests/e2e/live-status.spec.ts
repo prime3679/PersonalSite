@@ -1,77 +1,42 @@
 import { test, expect } from '@playwright/test';
 
-const STATUS_URL = 'https://api.adrianlumley.co/v1/status';
+const STATUS_HOST = 'api.adrianlumley.co';
 
-test('live status: fresh heartbeat renders the live state', async ({ page }) => {
-  await page.route(STATUS_URL, (route) =>
-    route.fulfill({
-      contentType: 'application/json',
-      headers: { 'access-control-allow-origin': '*' },
-      body: JSON.stringify({
-        agent: 'rogue',
-        epoch: '2026-04-15',
-        last_signal: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
-        status: 'live',
-        loops_today: 12,
-      }),
-    }),
-  );
+// The status endpoint is opt-in (PUBLIC_ROGUE_STATUS_URL). The default build
+// ships no url, so the live layer must not request the dormant status worker
+// and must keep the honest gray idle state. The live/quiet/stale decision logic
+// itself is unit-tested in src/data/rogue.test.ts (evaluateStatus).
 
-  await page.goto('/');
-  const status = page.locator('[data-live-status]').first();
-  // this doubles as the CSP regression test: if connect-src loses the api
-  // origin the fetch is blocked and the state never becomes live.
-  await expect(status).toHaveAttribute('data-state', 'live');
-  await expect(status).toContainText('days running');
-  await expect(status).toContainText('last signal 5 minutes ago');
-  await expect(status).toContainText('12 loops today');
-});
-
-test('live status: unreachable api keeps the honest idle state, no errors', async ({ page }) => {
-  const errors: string[] = [];
-  page.on('console', (msg) => {
-    // resource-load failures are expected here: the status request is
-    // deliberately aborted and analytics is unreachable in ci. unhandled
-    // js errors are what this test guards against.
-    if (msg.type() === 'error' && !msg.text().startsWith('Failed to load resource')) {
-      errors.push(msg.text());
-    }
+test('live status: default build never requests the dormant status endpoint', async ({ page }) => {
+  const statusRequests: string[] = [];
+  page.on('request', (req) => {
+    if (req.url().includes(STATUS_HOST)) statusRequests.push(req.url());
   });
-  page.on('pageerror', (err) => errors.push(String(err)));
-
-  await page.route(STATUS_URL, (route) => route.abort('failed'));
 
   await page.goto('/');
   const status = page.locator('[data-live-status]').first();
   await expect(status).toHaveAttribute('data-state', 'idle');
   await expect(status).toContainText('running since april 2026');
 
-  // give the fetch failure time to surface before asserting silence
+  // give any deferred fetch a chance to fire before asserting silence
   await page.waitForTimeout(1000);
-  expect(errors).toEqual([]);
+  expect(statusRequests).toEqual([]);
 });
 
-test('live status: stale heartbeat renders the quiet state, never live', async ({ page }) => {
-  await page.route(STATUS_URL, (route) =>
-    route.fulfill({
-      contentType: 'application/json',
-      headers: { 'access-control-allow-origin': '*' },
-      // the payload lies and claims live; the client computes staleness
-      // itself and must not believe it. gray beats false green.
-      body: JSON.stringify({
-        agent: 'rogue',
-        epoch: '2026-04-15',
-        last_signal: new Date(Date.now() - 10 * 60 * 60 * 1000).toISOString(),
-        status: 'live',
-      }),
-    }),
-  );
+test('live status: default build produces no unhandled console errors', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('console', (msg) => {
+    // resource-load failures (e.g. analytics unreachable in ci) are expected;
+    // unhandled js errors are what this test guards against.
+    if (msg.type() === 'error' && !msg.text().startsWith('Failed to load resource')) {
+      errors.push(msg.text());
+    }
+  });
+  page.on('pageerror', (err) => errors.push(String(err)));
 
   await page.goto('/');
-  const status = page.locator('[data-live-status]').first();
-  await expect(status).toHaveAttribute('data-state', 'quiet');
-  await expect(status).toContainText('rogue is quiet');
-  await expect(status).toContainText('last signal 10 hours ago');
+  await page.waitForTimeout(1000);
+  expect(errors).toEqual([]);
 });
 
 test('lab uses the factual running-since receipt instead of a stale stat tile', async ({ page }) => {

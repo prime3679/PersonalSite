@@ -42,6 +42,29 @@ export function getCanonicalRedirectUrl(input) {
   return canonicalUrl.toString();
 }
 
+// conservative transport and framing hardening applied to asset responses.
+// intentionally narrow: no global permissions-policy and no response csp (the
+// document-level csp is owned by src/data/csp.ts).
+const SECURITY_HEADERS = {
+  'Strict-Transport-Security': 'max-age=31536000',
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'SAMEORIGIN',
+};
+
+export function withSecurityHeaders(response) {
+  // response headers from ASSETS.fetch can be immutable, so rebuild the
+  // response while preserving status, body, and the original headers.
+  const headers = new Headers(response.headers);
+  for (const [name, value] of Object.entries(SECURITY_HEADERS)) {
+    headers.set(name, value);
+  }
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
 export async function handleCanonicalAssetRequest(request, env) {
   const redirectUrl = getCanonicalRedirectUrl(request.url);
 
@@ -49,7 +72,8 @@ export async function handleCanonicalAssetRequest(request, env) {
     return Response.redirect(redirectUrl, 308);
   }
 
-  return env.ASSETS.fetch(request);
+  const assetResponse = await env.ASSETS.fetch(request);
+  return withSecurityHeaders(assetResponse);
 }
 
 export function createCanonicalRedirectResponse(request) {

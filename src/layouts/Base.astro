@@ -5,6 +5,7 @@ import geistWoff2 from '@fontsource-variable/geist/files/geist-latin-wght-normal
 import geistMonoWoff2 from '@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2?url';
 import { siteMetadata } from '../data/siteMetadata';
 import { navItems } from '../data/nav';
+import { CSP_POLICY } from '../data/csp';
 import { absoluteUrl, canonicalUrl } from '../lib/seo';
 import Header from '../components/Header.astro';
 import DelightLayer from '../components/DelightLayer.astro';
@@ -90,7 +91,7 @@ const structuredData: Record<string, unknown> = {
       if (dark) document.documentElement.classList.add('dark');
     })();
   </script>
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cloud.umami.is; connect-src 'self' https://cloud.umami.is https://gateway.umami.is https://api.adrianlumley.co; style-src 'self' 'unsafe-inline'; form-action 'self' https://formspree.io; object-src 'none'; base-uri 'self'; upgrade-insecure-requests;">
+  <meta http-equiv="Content-Security-Policy" content={CSP_POLICY} />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{fullTitle}</title>

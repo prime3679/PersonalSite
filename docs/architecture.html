@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="A standalone architecture map for the PersonalSite repository.">
-  <meta name="architecture-contract-sha256" content="a417587d5d87f1b085374c2700a73077956d584e29f19ab5ce54797efcdfec21">
+  <meta name="architecture-contract-sha256" content="a0e686c8d1ae6a549fd956307dee944e9257a42aaf3dcb1574c890fcbe3e7fba">
   <title>PersonalSite architecture map</title>
   <style>
     :root {
@@ -416,7 +416,7 @@
       <div class="section-head"><h2>components</h2><span class="section-number">04 / 10</span></div>
       <ol class="component-list">
         <li class="component" data-architecture-component="route layer"><span class="component-index">01</span><h3>route layer</h3><p>Astro files map public pages, dynamic content, XML output, redirects, and image endpoints.</p></li>
-        <li class="component" data-architecture-component="base document shell"><span class="component-index">02</span><h3>base document shell</h3><p><code>Base.astro</code> owns metadata, structured data, accessibility entry points, global presentation, and shared chrome.</p></li>
+        <li class="component" data-architecture-component="base document shell"><span class="component-index">02</span><h3>base document shell</h3><p><code>Base.astro</code> owns metadata, the content security policy, structured data, accessibility entry points, global presentation, and shared chrome.</p></li>
         <li class="component" data-architecture-component="navigation shell"><span class="component-index">03</span><h3>navigation shell</h3><p>The header, mobile menu, and footer render one ordered source in <code>src/data/nav.ts</code>.</p></li>
         <li class="component" data-architecture-component="content collections"><span class="component-index">04</span><h3>content collections</h3><p>Writing and Signal Room Markdown use distinct, typed frontmatter contracts.</p></li>
         <li class="component" data-architecture-component="content query layer"><span class="component-index">05</span><h3>content query layer</h3><p>Shared helpers own publication filtering, ordering, route forms, and display formatting.</p></li>

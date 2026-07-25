@@ -15,8 +15,7 @@ const sinceLabel = new Date(`${ROGUE_EPOCH}T00:00:00Z`)
 </span>
 
 <script>
-  import { ROGUE_STATUS_URL, STALE_MS, daysRunning } from '../data/rogue';
-  import { relativeTime } from '../lib/relativeTime';
+  import { ROGUE_STATUS_URL, daysRunning, evaluateStatus } from '../data/rogue';
 
   const els = Array.from(document.querySelectorAll<HTMLElement>('[data-live-status]'));
 
@@ -38,7 +37,9 @@ const sinceLabel = new Date(`${ROGUE_EPOCH}T00:00:00Z`)
     document.dispatchEvent(new CustomEvent('rogue:status', { detail }));
   };
 
-  if (els.length > 0) {
+  // opt-in: with no status url configured the default build makes no request
+  // and keeps the honest idle epoch fact rendered server-side.
+  if (els.length > 0 && ROGUE_STATUS_URL) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 5000);
 
@@ -46,22 +47,14 @@ const sinceLabel = new Date(`${ROGUE_EPOCH}T00:00:00Z`)
       .then((res) => (res.ok ? res.json() : Promise.reject(new Error(String(res.status)))))
       .then((data) => {
         clearTimeout(timer);
-        const lastSignal = typeof data?.last_signal === 'string' ? data.last_signal : null;
-        const age = lastSignal ? Date.now() - Date.parse(lastSignal) : Number.POSITIVE_INFINITY;
-        // freshness is computed here, never trusted from the payload
-        if (lastSignal && Number.isFinite(age) && age <= STALE_MS) {
-          const loops = Number.isInteger(data.loops_today) ? data.loops_today : null;
-          let text = `rogue · live · ${days} days running · last signal ${relativeTime(lastSignal, new Date())}`;
-          if (loops !== null) text += ` · ${loops} loops today`;
-          setAll('live', text);
-          announce({ status: 'live', loops_today: loops });
-        } else if (lastSignal) {
-          setAll('quiet', `rogue is quiet · last signal ${relativeTime(lastSignal, new Date())}`);
-          announce({ status: 'quiet' });
-        } else {
-          setAll('quiet', 'rogue is quiet');
-          announce({ status: 'quiet' });
-        }
+        // freshness is computed in evaluateStatus, never trusted from the payload
+        const result = evaluateStatus(data, new Date());
+        setAll(result.status, result.text);
+        announce(
+          result.status === 'live'
+            ? { status: 'live', loops_today: result.loops_today }
+            : { status: 'quiet' },
+        );
       })
       .catch(() => {
         clearTimeout(timer);

@@ -28,3 +28,6 @@ dev_server*.log
 test-results/
 playwright-report/
 .vercel
+
+# local Hermes verification artifacts
+.hermes/artifacts/

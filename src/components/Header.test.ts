@@ -1,3 +1,5 @@
+// @vitest-environment node
+
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import { expect, test } from 'vitest';
 import Header from './Header.astro';

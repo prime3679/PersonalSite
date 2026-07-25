@@ -5,7 +5,7 @@ import { formatLongDate, padEpisode } from '../../../lib/format';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return (await getEpisodes()).map((ep) => ({
-    params: { slug: ep.slug },
+    params: { slug: ep.id },
     props: {
       title: ep.data.title,
       subtitle: `signal room · episode ${padEpisode(ep.data.episode)} · ${formatLongDate(ep.data.date)}`,

@@ -22,9 +22,9 @@
     "purpose": "Build and verify a premium editorial personal site as static output while preserving a small set of runtime integrations and compatibility routes.",
     "style": "Astro pages compose shared layouts and components; typed content collections feed shared query helpers; build-time endpoints generate feeds, sitemaps, and social images.",
     "stack": [
-      "Astro 5",
+      "Astro 7",
       "TypeScript",
-      "Tailwind CSS 3 plus global CSS tokens",
+      "Tailwind CSS 4 via the Vite plugin plus global CSS tokens",
       "Astro Content Collections with Zod schemas",
       "Satori and Sharp for generated Open Graph images",
       "Vitest and Playwright",
@@ -71,7 +71,7 @@
       "src/layouts/*.astro",
       "src/pages/**/*.astro",
       "src/pages/**/*.ts",
-      "src/content/config.ts",
+      "src/content.config.ts",
       "src/content/blogSchema.ts",
       "src/content/signalRoomSchema.ts",
       "src/data/csp.ts",
@@ -98,7 +98,7 @@
       "dist/**",
       "node_modules/**"
     ],
-    "digest": "7d7d2aaff2f2797009d4552f63e519e6678c2fe62a9fb47749aae96fff4ac0c4"
+    "digest": "c36c6f67745fdc9a1ea3b90ecacc01c39800171ac80ac6d6f5fbe58e2debc6db"
   },
   "components": [
     {
@@ -126,7 +126,7 @@
       "id": "content-collections",
       "name": "content collections",
       "core": true,
-      "paths": ["src/content/config.ts", "src/content/blogSchema.ts", "src/content/signalRoomSchema.ts", "src/content/blog/", "src/content/signal-room/"],
+      "paths": ["src/content.config.ts", "src/content/blogSchema.ts", "src/content/signalRoomSchema.ts", "src/content/blog/", "src/content/signal-room/"],
       "responsibility": "Validate writing and Signal Room frontmatter while keeping their content bodies in repo-owned Markdown."
     },
     {

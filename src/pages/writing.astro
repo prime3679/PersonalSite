@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import PageIntro from '../components/PageIntro.astro';
 import { readingTime } from '../lib/readingTime';
-import { getPublishedPosts, postPath } from '../lib/content';
+import { contentBody, getPublishedPosts, postPath } from '../lib/content';
 import { formatMonthYear } from '../lib/format';
 
 const publishedPosts = await getPublishedPosts();
@@ -28,8 +28,8 @@ const allTags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].loca
       <div class="section-stack" id="post-list">
         {publishedPosts.map((post) => (
           <article class="blog-post" data-tags={(post.data.tags ?? []).join(' ')}>
-            <h2 class="card-title"><a href={postPath(post.slug)}>{post.data.title}</a></h2>
-            <p class="font-sans text-sm uppercase tracking-[.08em] text-[var(--ink-soft)] mt-2">{formatMonthYear(post.data.date)} · {readingTime(post.body)} min read</p>
+            <h2 class="card-title"><a href={postPath(post.id)}>{post.data.title}</a></h2>
+            <p class="font-sans text-sm uppercase tracking-[.08em] text-[var(--ink-soft)] mt-2">{formatMonthYear(post.data.date)} · {readingTime(contentBody(post))} min read</p>
             <p class="ui-copy mt-4">{post.data.description}</p>
             {(post.data.tags ?? []).length > 0 && (
               <p class="plain-links mt-3">

@@ -1,10 +1,9 @@
 @import '@fontsource-variable/newsreader';
 @import '@fontsource-variable/geist';
 @import '@fontsource-variable/geist-mono';
+@import 'tailwindcss';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@config '../../tailwind.config.mjs';
 
 :root {
   --paper: #f7f3ea;

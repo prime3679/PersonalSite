@@ -4,7 +4,7 @@ import { absoluteUrl, canonicalUrl } from '../../lib/seo';
 
 export async function getStaticPaths() {
   const published = await getPublishedPosts();
-  return published.map((post) => ({ params: { slug: post.slug }, props: { destination: postPath(post.slug) } }));
+  return published.map((post) => ({ params: { slug: post.id }, props: { destination: postPath(post.id) } }));
 }
 const { destination } = Astro.props;
 const canonicalDestination = canonicalUrl(destination);

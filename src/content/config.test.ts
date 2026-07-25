@@ -6,20 +6,38 @@ import { signalRoomSchema } from './signalRoomSchema';
 vi.mock('astro:content', () => ({
   defineCollection: vi.fn((config) => config),
 }));
+vi.mock('astro/loaders', () => ({
+  glob: vi.fn((config) => ({ kind: 'glob', ...config })),
+}));
 
-import { collections } from './config';
+import { collections } from '../content.config';
+
+type MockCollection = {
+  loader: { kind: string; pattern: string; base: string };
+  schema: unknown;
+};
 
 describe('collections config', () => {
-  it('should export a blog collection with correct type and schema', () => {
-    expect(collections.blog).toBeDefined();
-    expect(collections.blog.type).toBe('content');
-    expect(collections.blog.schema).toBe(blogSchema);
+  it('should export a blog collection with the content layer loader and schema', () => {
+    const collection = collections.blog as unknown as MockCollection;
+    expect(collection).toBeDefined();
+    expect(collection.loader).toMatchObject({
+      kind: 'glob',
+      pattern: '**/*.{md,mdx}',
+      base: './src/content/blog',
+    });
+    expect(collection.schema).toBe(blogSchema);
   });
 
   it('should export the signal-room collection', () => {
-    expect(collections['signal-room']).toBeDefined();
-    expect(collections['signal-room'].type).toBe('content');
-    expect(collections['signal-room'].schema).toBe(signalRoomSchema);
+    const collection = collections['signal-room'] as unknown as MockCollection;
+    expect(collection).toBeDefined();
+    expect(collection.loader).toMatchObject({
+      kind: 'glob',
+      pattern: '**/*.{md,mdx}',
+      base: './src/content/signal-room',
+    });
+    expect(collection.schema).toBe(signalRoomSchema);
   });
 });
 
@@ -97,9 +115,9 @@ describe('blogSchema', () => {
     const result = blogSchema.safeParse(invalidData);
     expect(result.success).toBe(false);
     if (!result.success) {
-      const formattedErrors = result.error.format();
-      expect(formattedErrors.description).toBeDefined();
-      expect(formattedErrors.date).toBeDefined();
+      const invalidFields = result.error.issues.map((issue) => issue.path[0]);
+      expect(invalidFields).toContain('description');
+      expect(invalidFields).toContain('date');
     }
   });
 
@@ -114,10 +132,10 @@ describe('blogSchema', () => {
     const result = blogSchema.safeParse(invalidData);
     expect(result.success).toBe(false);
     if (!result.success) {
-      const formattedErrors = result.error.format();
-      expect(formattedErrors.title).toBeDefined();
-      expect(formattedErrors.date).toBeDefined();
-      expect(formattedErrors.published).toBeDefined();
+      const invalidFields = result.error.issues.map((issue) => issue.path[0]);
+      expect(invalidFields).toContain('title');
+      expect(invalidFields).toContain('date');
+      expect(invalidFields).toContain('published');
     }
   });
 });

@@ -1,7 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import PageIntro from '../../components/PageIntro.astro';
-import type { CollectionEntry } from 'astro:content';
+import { render, type CollectionEntry } from 'astro:content';
 import { getEpisodes, episodePath, episodeOgPath } from '../../lib/content';
 import { episodeTitle, formatLongDate, padEpisode } from '../../lib/format';
 import { canonicalUrl } from '../../lib/seo';
@@ -10,7 +10,7 @@ export async function getStaticPaths() {
   const episodes = await getEpisodes('asc');
 
   return episodes.map((episode, i) => ({
-    params: { slug: episode.slug },
+    params: { slug: episode.id },
     props: {
       episode,
       prev: i > 0 ? episodes[i - 1] : null,
@@ -28,7 +28,7 @@ interface Props {
 }
 
 const { episode, prev, next, first } = Astro.props;
-const { Content } = await episode.render();
+const { Content } = await render(episode);
 
 const pageTitle = `${episode.data.title} | Signal Room`;
 ---
@@ -36,7 +36,7 @@ const pageTitle = `${episode.data.title} | Signal Room`;
 <Base
   title={pageTitle}
   description={episode.data.teaser}
-  ogImage={episodeOgPath(episode.slug)}
+  ogImage={episodeOgPath(episode.id)}
   article={{
     headline: episodeTitle(episode.data.episode, episode.data.title),
     description: episode.data.teaser,
@@ -65,16 +65,16 @@ const pageTitle = `${episode.data.title} | Signal Room`;
   <footer class="mt-16 border-t border-[var(--line)] pt-8 reveal">
     <nav class="flex justify-between gap-6 font-sans text-sm" aria-label="episode navigation">
       {prev ? (
-        <a href={episodePath(prev.slug)}>← {padEpisode(prev.data.episode)} · {prev.data.title}</a>
+        <a href={episodePath(prev.id)}>← {padEpisode(prev.data.episode)} · {prev.data.title}</a>
       ) : <span />}
       {next ? (
-        <a href={episodePath(next.slug)} class="text-right">{padEpisode(next.data.episode)} · {next.data.title} →</a>
+        <a href={episodePath(next.id)} class="text-right">{padEpisode(next.data.episode)} · {next.data.title} →</a>
       ) : <span />}
     </nav>
     <p class="ui-copy mt-6">
       signal room · a fiction serial · published on adrianlumley.co
       {episode.data.episode !== 1 && (
-        <> · <a href={episodePath(first.slug)}>start from episode 01</a></>
+        <> · <a href={episodePath(first.id)}>start from episode 01</a></>
       )}
     </p>
   </footer>

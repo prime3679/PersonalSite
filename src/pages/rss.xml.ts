@@ -23,14 +23,14 @@ export const GET: APIRoute = async (context) => {
 
   const posts = (await getPublishedPosts()).map((post): FeedItem => ({
     title: post.data.title,
-    url: `${site}${postPath(post.slug)}`,
+    url: `${site}${postPath(post.id)}`,
     date: post.data.date,
     description: post.data.description,
   }));
 
   const episodes = (await getEpisodes()).map((ep): FeedItem => ({
     title: episodeTitle(ep.data.episode, ep.data.title),
-    url: `${site}${episodePath(ep.slug)}`,
+    url: `${site}${episodePath(ep.id)}`,
     date: ep.data.date,
     description: ep.data.teaser,
   }));

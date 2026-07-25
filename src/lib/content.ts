@@ -11,7 +11,11 @@ export async function getPublishedPosts() {
   // blogSchema defaults `published` to true, so this is a plain boolean read.
   return (await getCollection('blog'))
     .filter((post) => post.data.published)
-    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+    .sort((a, b) => {
+      const dateOrder = b.data.date.valueOf() - a.data.date.valueOf();
+      if (dateOrder !== 0) return dateOrder;
+      return a.id < b.id ? 1 : a.id > b.id ? -1 : 0;
+    });
 }
 
 /** Signal Room episodes ordered by episode number. */
@@ -20,6 +24,14 @@ export async function getEpisodes(order: 'asc' | 'desc' = 'desc') {
   return (await getCollection('signal-room')).sort(
     (a, b) => sign * (a.data.episode - b.data.episode),
   );
+}
+
+/** Return a Markdown entry body and fail closed if a loader drops it. */
+export function contentBody(entry: { id: string; body?: string }) {
+  if (typeof entry.body !== 'string') {
+    throw new Error(`Content entry ${entry.id} has no Markdown body.`);
+  }
+  return entry.body;
 }
 
 /**

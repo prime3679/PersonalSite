@@ -30,8 +30,8 @@ export async function getCanonicalSitemapPaths(): Promise<string[]> {
 
   return [
     ...canonicalPublicAstroPaths,
-    ...posts.map((post) => postPath(post.slug)),
-    ...episodes.map((episode) => episodePath(episode.slug)),
+    ...posts.map((post) => postPath(post.id)),
+    ...episodes.map((episode) => episodePath(episode.id)),
     ...getIndexableStaticLabPaths(),
   ];
 }

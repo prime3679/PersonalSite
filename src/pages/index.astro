@@ -91,7 +91,7 @@ const writingNote = latestWriting
       <ol class="entries">
         {selectedWriting.map((post) => (
           <li class="entry">
-            <a href={postPath(post.slug)} class="entry__link">
+            <a href={postPath(post.id)} class="entry__link">
               <span class="entry__head">
                 <span class="entry__title">{post.data.title}</span>
                 <span class="entry__meta">{formatMonthYear(post.data.date)}</span>

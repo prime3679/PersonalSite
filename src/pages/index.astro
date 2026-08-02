@@ -178,11 +178,10 @@ const writingNote = latestWriting
   <script>
     const HOMEPAGE_THEME_HINT_KEY = 'homepage-theme-hint-seen';
     const THEME_TOGGLED_EVENT = 'theme-toggle:changed';
-    const HOMEPAGE_THEME_HINT_TIMEOUT_MS = 8000;
+    const HOMEPAGE_THEME_HINT_REVEAL_MS = 1500;
+    const HOMEPAGE_THEME_HINT_MAX_MS = 20000;
     const hint = document.querySelector<HTMLElement>('[data-home-theme-hint]');
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let dismissTimer = 0;
-    let revealed = false;
 
     const setSeen = () => {
       try {
@@ -198,55 +197,84 @@ const writingNote = latestWriting
       }
     };
 
-    const removeHint = () => {
-      if (!hint || hint.hidden) return;
-      window.clearTimeout(dismissTimer);
-      revealed = false;
-      hint.dataset.state = 'hidden';
-
-      if (reducedMotion) {
-        hint.hidden = true;
-        return;
-      }
-
-      window.setTimeout(() => {
-        if (hint.dataset.state === 'hidden') hint.hidden = true;
-      }, 180);
-    };
-
-    const dismissHint = () => {
-      setSeen();
-      removeHint();
-    };
-
     if (hint) {
       if (hasSeen()) {
         hint.hidden = true;
       } else {
-        const revealHint = () => {
-          if (hasSeen() || revealed) return;
-          hint.hidden = false;
+        const timers: number[] = [];
+        const listeners = new AbortController();
+        const masthead = document.querySelector('.masthead');
+        let dismissed = false;
+        let revealFrame: number | null = null;
+
+        const dismissHint = () => {
+          if (dismissed) return;
+          dismissed = true;
+          for (const timer of timers) window.clearTimeout(timer);
+          timers.length = 0;
+          if (revealFrame !== null) {
+            window.cancelAnimationFrame(revealFrame);
+            revealFrame = null;
+          }
+          listeners.abort();
+          setSeen();
+          if (hint.hidden) return;
           hint.dataset.state = 'hidden';
 
-          window.requestAnimationFrame(() => {
-            if (hasSeen()) {
-              hint.hidden = true;
-              return;
-            }
+          if (reducedMotion) {
+            hint.hidden = true;
+            return;
+          }
 
+          window.setTimeout(() => {
+            hint.hidden = true;
+          }, 180);
+        };
+
+        const revealHint = () => {
+          if (hasSeen()) {
+            hint.hidden = true;
+            return;
+          }
+          hint.hidden = false;
+          revealFrame = window.requestAnimationFrame(() => {
+            revealFrame = null;
             hint.dataset.state = 'visible';
-            revealed = true;
-            dismissTimer = window.setTimeout(dismissHint, HOMEPAGE_THEME_HINT_TIMEOUT_MS);
           });
         };
 
-        if (document.readyState === 'complete') {
-          revealHint();
-        } else {
-          window.addEventListener('load', revealHint, { once: true });
-        }
+        const fullyPastMasthead = () =>
+          Boolean(masthead && masthead.getBoundingClientRect().bottom <= 0);
 
-        document.addEventListener(THEME_TOGGLED_EVENT, dismissHint, { once: true });
+        const armHint = () => {
+          // a crossing whose scroll events all landed before this script ran
+          // (or before load) still counts: check the position at arm time.
+          if (fullyPastMasthead()) {
+            dismissHint();
+            return;
+          }
+          timers.push(window.setTimeout(revealHint, HOMEPAGE_THEME_HINT_REVEAL_MS));
+          timers.push(window.setTimeout(dismissHint, HOMEPAGE_THEME_HINT_MAX_MS));
+        };
+
+        window.addEventListener(
+          'scroll',
+          () => {
+            if (fullyPastMasthead()) dismissHint();
+          },
+          { passive: true, signal: listeners.signal },
+        );
+
+        document.addEventListener(THEME_TOGGLED_EVENT, dismissHint, {
+          once: true,
+          signal: listeners.signal,
+        });
+
+        if (document.readyState === 'complete') {
+          armHint();
+        } else {
+          window.addEventListener('load', armHint, { once: true, signal: listeners.signal });
+        }
       }
     }
   </script>

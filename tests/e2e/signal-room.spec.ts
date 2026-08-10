@@ -6,8 +6,8 @@ test('signal room: index lists every episode newest-first', async ({ page }) => 
   await expect(page.locator('main h1')).toHaveText('signal room');
 
   const links = page.locator('section:has(h2:has-text("episodes")) a[href^="/signal-room/"]');
-  await expect(links).toHaveCount(10);
-  await expect(links.first()).toContainText('the missing forty-eight');
+  await expect(links).toHaveCount(11);
+  await expect(links.first()).toContainText('the second knock');
   await expect(links.last()).toContainText('night shift');
 
   // onramp for new readers sits outside the episodes section
@@ -31,6 +31,7 @@ test('signal room: an episode page renders prose and serial nav', async ({ page 
 
 test('signal room: the index shows a date for each episode', async ({ page }) => {
   await page.goto('/signal-room');
+  await expect(page.locator('main')).toContainText('August 10, 2026');
   await expect(page.locator('main')).toContainText('July 20, 2026');
   await expect(page.locator('main')).toContainText('July 6, 2026');
   await expect(page.locator('main')).toContainText('June 29, 2026');
@@ -41,14 +42,14 @@ test('signal room: the index shows a date for each episode', async ({ page }) =>
 });
 
 test('signal room: an episode has a per-episode OG card that is served', async ({ page }) => {
-  await page.goto('/signal-room/the-purchasing-agent');
+  await page.goto('/signal-room/the-second-knock');
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
     'content',
-    /\/og\/signal-room\/the-purchasing-agent\.png$/,
+    /\/og\/signal-room\/the-second-knock\.png$/,
   );
 
   // The generated PNG is actually built and served (relative path → preview server)
-  const img = await page.request.get('/og/signal-room/the-purchasing-agent.png');
+  const img = await page.request.get('/og/signal-room/the-second-knock.png');
   expect(img.status()).toBe(200);
   expect(img.headers()['content-type']).toContain('image/png');
 });
@@ -57,12 +58,14 @@ test('signal room: episodes appear in the rss feed', async ({ page }) => {
   const resp = await page.request.get('/rss.xml');
   expect(resp.status()).toBe(200);
   const body = await resp.text();
+  expect(body).toContain('signal room 11 · the second knock');
   expect(body).toContain('signal room 10 · the missing forty-eight');
   expect(body).toContain('signal room 09 · the borrowed minute');
   expect(body).toContain('signal room 08 · the narrow door');
   expect(body).toContain('signal room 07 · last green light');
   expect(body).toContain('signal room 06 · the snooze window');
   expect(body).toContain('signal room 01 · night shift');
+  expect(body).toContain('/signal-room/the-second-knock');
   expect(body).toContain('/signal-room/the-missing-forty-eight');
   expect(body).toContain('/signal-room/the-borrowed-minute');
   expect(body).toContain('/signal-room/the-narrow-door');

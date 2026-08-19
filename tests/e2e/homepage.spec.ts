@@ -45,8 +45,12 @@ test('homepage opens with a factual identity, the real work, and contact links',
   const writingLink = page.locator('main a[href="/writing/meeting-cost"]');
   await expect(writingLink).toBeVisible();
 
-  const labLink = page.locator('main a[href="/lab/meeting-cost/"]');
-  await expect(labLink).toBeVisible();
+  const labSection = page.locator('#lab');
+  await expect(labSection.locator('a[href="/lab/meeting-cost/"]')).toBeVisible();
+  await expect(labSection.locator('a[href="/lab/iron-log/"]')).toBeVisible();
+  await expect(labSection.locator('a[href="/lab/ink-field/"]')).toBeVisible();
+  await expect(labSection.locator('a[href="/lab/fork/"]')).toBeVisible();
+  await expect(labSection.locator('a[href="/lab/fork/"]')).toContainText('fork');
 
   const signalRoomLink = page.locator('main a[href="/signal-room"]');
   await expect(signalRoomLink).toBeVisible();

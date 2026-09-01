@@ -1,61 +1,10 @@
 @import '@fontsource-variable/newsreader';
 @import '@fontsource-variable/geist';
 @import '@fontsource-variable/geist-mono';
+@import './tokens.css';
 @import 'tailwindcss';
 
 @config '../../tailwind.config.mjs';
-
-:root {
-  --paper: #f7f3ea;
-  --paper-raised: #fbf8f1;
-  --ink: #1c1814;
-  --ink-rgb: 28 24 20;
-  --ink-soft: #574f44;
-  --line: #e4decf;
-  --line-strong: #d3cbb8;
-  --accent: #a8472c;
-  --accent-ink: #8e3a23;
-  --panel: #16130e;
-  --panel-raised: #1e1a13;
-  --panel-text: #eae4d7;
-  --panel-soft: #9c9384;
-  --panel-line: #2b261d;
-  --accent-bright: #c9663f;
-  --serif: 'Newsreader Variable', 'Newsreader', Georgia, 'Times New Roman', serif;
-  --sans: 'Geist Variable', 'Geist', system-ui, -apple-system, sans-serif;
-  --mono: 'Geist Mono Variable', 'Geist Mono', ui-monospace, 'SF Mono', monospace;
-  --s1: .25rem;
-  --s2: .5rem;
-  --s3: .75rem;
-  --s4: 1rem;
-  --s5: 1.5rem;
-  --s6: 2rem;
-  --s7: 3rem;
-  --s8: 4rem;
-  --s9: 6rem;
-  --s10: 8rem;
-  --measure: 66ch;
-  --radius: 3px;
-  --radius-panel: 0;
-  --ease: cubic-bezier(0.2, 0, 0, 1);
-  --dur: 320ms;
-  color-scheme: light;
-}
-
-/* night shift: the paper tokens remap onto the panel family. the panel
-   tokens themselves stay put, so instrument panels remain the darkest
-   surface and keep their own register. links lighten to stay readable. */
-html.dark {
-  --paper: #16130e;
-  --paper-raised: #1e1a13;
-  --ink: #eae4d7;
-  --ink-rgb: 234 228 215;
-  --ink-soft: #9c9384;
-  --line: #2b261d;
-  --line-strong: #3a3428;
-  --accent-ink: #c9663f;
-  color-scheme: dark;
-}
 
 html.dark body { background: var(--paper); }
 html.dark ::selection { background: var(--accent-bright); color: var(--panel); }
@@ -79,18 +28,20 @@ html.dark .instrument-panel { border-color: var(--line-strong); }
   ::selection { background: var(--accent); color: var(--paper-raised); }
   h1, h2, h3 { font-family: var(--serif); color: var(--ink); letter-spacing: -0.01em; }
   p { margin: 0; }
+  /* one link style for the whole site: text ink, hairline underline in the
+     same ink, modest offset. hover keeps the underline and shifts nothing;
+     the tokens in tokens.css are the only place these values live. */
   a {
-    color: var(--accent-ink);
-    text-decoration: underline;
-    text-decoration-color: var(--accent);
-    text-decoration-thickness: 1px;
-    text-underline-offset: 3px;
-    transition: color var(--dur) var(--ease), text-decoration-thickness var(--dur) var(--ease), text-decoration-color var(--dur) var(--ease), background-color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+    color: var(--link-ink);
+    text-decoration-line: underline;
+    text-decoration-color: currentColor;
+    text-decoration-thickness: var(--link-rule);
+    text-underline-offset: var(--link-offset);
   }
-  a:hover { color: var(--ink); text-decoration-color: var(--ink); text-decoration-thickness: 2px; }
+  a:hover { color: var(--link-ink); text-decoration-color: currentColor; }
   a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 3px;
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-offset);
   }
   img, svg { max-width: 100%; height: auto; }
 }
@@ -158,7 +109,7 @@ html.dark .instrument-panel { border-color: var(--line-strong); }
   line-height: 1.5;
 }
 .field-input::placeholder { color: var(--ink-soft); opacity: .7; }
-.field-input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.field-input:focus-visible { outline: var(--focus-ring); outline-offset: 2px; }
 .button {
   display: inline-flex;
   align-items: center;
@@ -181,7 +132,6 @@ html.dark .instrument-panel { border-color: var(--line-strong); }
 .prose { max-width: var(--measure); }
 .prose h1, .prose h2, .prose h3 { margin: var(--s6) 0 var(--s3); font-weight: 500; }
 .prose p { margin: 0 0 var(--s4); }
-.prose a { color: var(--accent-ink); }
 .prose ul, .prose ol { margin: 0 0 var(--s4); padding-left: var(--s5); color: var(--ink-soft); }
 .prose blockquote { border-left: 2px solid var(--line); color: var(--ink-soft); font-style: italic; margin: var(--s5) 0; padding-left: var(--s4); }
 .prose code { background: var(--paper-raised); border: 1px solid var(--line); border-radius: var(--radius); font-family: var(--mono); padding: .1rem .3rem; }
@@ -212,7 +162,11 @@ html.dark .instrument-panel { border-color: var(--line-strong); }
 @keyframes rise { to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; transition-delay: 0ms !important; scroll-behavior: auto !important; transform: none !important; }
+  /* transition-property: none matters as much as the duration: an element
+     with no transition of its own defaults to `all`, and a near-zero
+     transition on discrete properties like visibility can leave links inside
+     a freshly revealed panel unfocusable in Chromium. */
+  *, *::before, *::after { animation: none !important; transition-property: none !important; transition-duration: .01ms !important; transition-delay: 0ms !important; scroll-behavior: auto !important; transform: none !important; }
 }
 @media (max-width: 600px) {
   .pillars { grid-template-columns: 1fr; }

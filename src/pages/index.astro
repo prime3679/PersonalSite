@@ -1,619 +1,171 @@
 ---
 import Base from '../layouts/Base.astro';
-import Panel from '../components/Panel.astro';
-import LiveStatus from '../components/LiveStatus.astro';
-import SignalTrace from '../components/SignalTrace.astro';
-import { getPublishedPosts, getEpisodes, postPath } from '../lib/content';
-import { formatMonthYear, padEpisode } from '../lib/format';
+import { getPublishedPosts, postPath } from '../lib/content';
+import { formatMonthYear } from '../lib/format';
 
-// homepage: a filed dossier front page. an issue masthead (nameplate, lede,
-// and a bordered identity record with a file tab), then the real work filed
-// under numbered folio sections whose left rail is a composed tab carrying a
-// factual field note. everything reads off the global paper/ink/line/accent
-// tokens only, so night shift comes for free.
+// homepage: the record. one sans at body size, italic reserved for the
+// section labels, and every link in the same ink with the same hairline
+// underline (all of that comes from tokens.css through global.css). the
+// one size jump on the page is the latest essay, which the first screen
+// exists to sell. the ledger, the archive, and the lab rows share a single
+// max-content label column so the whole page reads as one table.
 
-const allWriting = await getPublishedPosts();
-const selectedWriting = allWriting.slice(0, 3);
-const latestWriting = selectedWriting[0];
+const posts = await getPublishedPosts();
+const [latest, ...earlier] = posts;
+const archive = earlier.slice(0, 2);
 
-const labWork = [
-  { title: 'meeting cost', note: 'a real-time meeting price tag. add the room, hit start, watch it climb.', href: '/lab/meeting-cost/' },
-  { title: 'iron log', note: 'a workout tracker that runs on nothing: no accounts, no backend.', href: '/lab/iron-log/' },
-  { title: 'ink field', note: 'a living sumi-e study. tap the paper to pour, then save the print.', href: '/lab/ink-field/' },
+const isoDate = (date: Date) => date.toISOString().slice(0, 10);
+const displayTitle = (post: (typeof posts)[number]) => post.data.shortTitle ?? post.data.title;
+
+const lab = [
+  { title: 'Meeting cost', href: '/lab/meeting-cost/' },
+  { title: 'Iron log', href: '/lab/iron-log/' },
+  { title: 'Ink field', href: '/lab/ink-field/' },
 ];
 
-const episodes = await getEpisodes('desc');
-const latestEpisodeNumber = episodes[0]?.data.episode ?? 0;
-
-const writingNote = latestWriting
-  ? `latest · ${formatMonthYear(latestWriting.data.date).toLowerCase()}`
-  : `${allWriting.length} on file`;
+const footerLinks = [
+  { label: 'email', href: '/contact' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/adrianlumley/', external: true },
+  { label: 'GitHub', href: 'https://github.com/prime3679', external: true },
+  { label: 'a short record', href: '/work' },
+];
 ---
 
 <Base
   description="Adrian Lumley is a product leader working where AI meets enterprise adoption."
   ogImage="/og/home.png"
 >
-  <header class="masthead reveal">
-    <div class="masthead__folio-block">
-      <p class="folio">
-        <span class="home-kicker"><span class="home-kicker__tick" aria-hidden="true"></span>product · ai · enterprise</span>
-        <span class="folio__place">new york city</span>
-      </p>
-      <p
-        class="masthead__theme-hint"
-        data-home-theme-hint
-        data-state="hidden"
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-        hidden
-      >
-        tap anywhere to switch the light
-      </p>
-    </div>
+  <div class="record reveal" data-record>
+    <h1 class="record__lede">Adrian Lumley is a product director in New York City.</h1>
 
-    <h1 class="hero-title masthead__name">adrian lumley</h1>
+    {latest && (
+      <article class="record__feature" data-record-feature>
+        <h2 class="record__feature-title"><a href={postPath(latest.id)}>{latest.data.title}</a></h2>
+        <p class="record__feature-date"><time datetime={isoDate(latest.data.date)}>{formatMonthYear(latest.data.date)}</time></p>
+        <p class="record__feature-dek">{latest.data.description}</p>
+      </article>
+    )}
 
-    <div class="masthead__grid">
-      <p class="masthead__lede">director of product at salesforce, working where ai meets enterprise adoption. builds the systems hands-on, then writes down what actually happened.</p>
+    <dl class="record__ledger">
+      <dt class="record__label">currently</dt>
+      <dd>Salesforce.</dd>
+      <dt class="record__label">past</dt>
+      <dd>SiriusXM, Disney+, EA.</dd>
+    </dl>
 
-      <aside class="record" aria-label="on file">
-        <p class="record__tab">on file</p>
-        <dl class="ledger">
-          <div class="ledger__row">
-            <dt>now</dt>
-            <dd>director of product · salesforce</dd>
-          </div>
-          <div class="ledger__row">
-            <dt>previously</dt>
-            <dd>siriusxm · disney+ · ea</dd>
-          </div>
-          <div class="ledger__row ledger__row--proof">
-            <dt>work</dt>
-            <dd><a class="record__link touch-link" href="/work">case studies →</a></dd>
-          </div>
-        </dl>
-      </aside>
-    </div>
-  </header>
-
-  <section id="writing" class="folio-section reveal" aria-labelledby="writing-h">
-    <div class="rail">
-      <span class="rail__tab">
-        <span class="rail__tick" aria-hidden="true"></span>
-        <span class="rail__ord" aria-hidden="true">01</span>
-        <h2 id="writing-h" class="rail__label">writing</h2>
-      </span>
-      <span class="rail__note">{writingNote}</span>
-    </div>
-    <div class="folio-body">
-      <ol class="entries">
-        {selectedWriting.map((post) => (
-          <li class="entry">
-            <a href={postPath(post.id)} class="entry__link">
-              <span class="entry__head">
-                <span class="entry__title">{post.data.title}</span>
-                <span class="entry__meta">{formatMonthYear(post.data.date)}</span>
-              </span>
-              <span class="entry__note">{post.data.description}</span>
-            </a>
+    <section class="record__section" aria-labelledby="writing-h">
+      <h2 id="writing-h" class="record__label">writing</h2>
+      <ul class="record__rows">
+        {archive.map((post) => (
+          <li class="record__row">
+            <time datetime={isoDate(post.data.date)}>{formatMonthYear(post.data.date)}</time>
+            <a href={postPath(post.id)}>{displayTitle(post)}</a>
           </li>
         ))}
-      </ol>
-      <a class="folio-more touch-link" href="/writing">all writing<span aria-hidden="true"> →</span></a>
-    </div>
-  </section>
+      </ul>
+    </section>
 
-  <section id="lab" class="folio-section reveal" aria-labelledby="lab-h">
-    <div class="rail">
-      <span class="rail__tab">
-        <span class="rail__tick" aria-hidden="true"></span>
-        <span class="rail__ord" aria-hidden="true">02</span>
-        <h2 id="lab-h" class="rail__label">lab</h2>
-      </span>
-      <span class="rail__note">single-file</span>
-    </div>
-    <div class="folio-body">
-      <ol class="entries">
-        {labWork.map((item) => (
-          <li class="entry">
-            <a href={item.href} class="entry__link">
-              <span class="entry__head">
-                <span class="entry__title">{item.title}</span>
-                <span class="entry__meta" aria-hidden="true">↗</span>
-              </span>
-              <span class="entry__note">{item.note}</span>
-            </a>
+    <section class="record__section" aria-labelledby="lab-h">
+      <h2 id="lab-h" class="record__label">lab</h2>
+      <ul class="record__rows">
+        {lab.map((item) => (
+          <li class="record__row">
+            <a href={item.href}>{item.title}</a>
           </li>
         ))}
-      </ol>
-      <a class="folio-more touch-link" href="/lab">full lab<span aria-hidden="true"> →</span></a>
-    </div>
-  </section>
+      </ul>
+    </section>
 
-  <section id="signal-room" class="folio-section reveal" aria-labelledby="signal-h">
-    <div class="rail">
-      <span class="rail__tab">
-        <span class="rail__tick" aria-hidden="true"></span>
-        <span class="rail__ord" aria-hidden="true">03</span>
-        <h2 id="signal-h" class="rail__label">signal room</h2>
-      </span>
-      <span class="rail__note">instrument</span>
-    </div>
-    <div class="folio-body">
-      <p class="folio-lede">a quiet instrument for rogue, the agent that runs behind the site. the line moves when it does.</p>
-      <Panel id="instrument-strip" class="signal-panel" ariaLabel="rogue status" label="rogue · status">
-        <SignalTrace />
-        <p class="signal-line">
-          <LiveStatus />
-          <span class="signal-line__sep" aria-hidden="true">·</span>
-          <a class="touch-link" href="/signal-room">ep {padEpisode(latestEpisodeNumber)} live<span aria-hidden="true"> →</span></a>
-        </p>
-      </Panel>
-    </div>
-  </section>
-
-  <section id="contact" class="folio-section reveal" aria-labelledby="contact-h">
-    <div class="rail">
-      <span class="rail__tab">
-        <span class="rail__tick" aria-hidden="true"></span>
-        <span class="rail__ord" aria-hidden="true">04</span>
-        <h2 id="contact-h" class="rail__label">contact</h2>
-      </span>
-      <span class="rail__note">open</span>
-    </div>
-    <div class="folio-body">
-      <p class="folio-lede">building something where ai has to earn its adoption? let's talk.</p>
-      <p class="plain-links contact-links">
-        <a class="touch-link" href="/contact">email</a>
-        <span aria-hidden="true">·</span>
-        <a class="touch-link" href="https://www.linkedin.com/in/adrianlumley/" target="_blank" rel="noopener noreferrer">linkedin</a>
-        <span aria-hidden="true">·</span>
-        <a class="touch-link" href="https://github.com/prime3679" target="_blank" rel="noopener noreferrer">github</a>
-      </p>
-    </div>
-  </section>
-
-  <script>
-    const HOMEPAGE_THEME_HINT_KEY = 'homepage-theme-hint-seen';
-    const THEME_TOGGLED_EVENT = 'theme-toggle:changed';
-    const HOMEPAGE_THEME_HINT_REVEAL_MS = 1500;
-    const HOMEPAGE_THEME_HINT_MAX_MS = 20000;
-    const hint = document.querySelector<HTMLElement>('[data-home-theme-hint]');
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    const setSeen = () => {
-      try {
-        localStorage.setItem(HOMEPAGE_THEME_HINT_KEY, 'true');
-      } catch {}
-    };
-
-    const hasSeen = () => {
-      try {
-        return localStorage.getItem(HOMEPAGE_THEME_HINT_KEY) === 'true';
-      } catch {
-        return false;
-      }
-    };
-
-    if (hint) {
-      if (hasSeen()) {
-        hint.hidden = true;
-      } else {
-        const timers: number[] = [];
-        const listeners = new AbortController();
-        const masthead = document.querySelector('.masthead');
-        let dismissed = false;
-        let revealFrame: number | null = null;
-
-        const dismissHint = () => {
-          if (dismissed) return;
-          dismissed = true;
-          for (const timer of timers) window.clearTimeout(timer);
-          timers.length = 0;
-          if (revealFrame !== null) {
-            window.cancelAnimationFrame(revealFrame);
-            revealFrame = null;
-          }
-          listeners.abort();
-          setSeen();
-          if (hint.hidden) return;
-          hint.dataset.state = 'hidden';
-
-          if (reducedMotion) {
-            hint.hidden = true;
-            return;
-          }
-
-          window.setTimeout(() => {
-            hint.hidden = true;
-          }, 180);
-        };
-
-        const revealHint = () => {
-          if (hasSeen()) {
-            hint.hidden = true;
-            return;
-          }
-          hint.hidden = false;
-          revealFrame = window.requestAnimationFrame(() => {
-            revealFrame = null;
-            hint.dataset.state = 'visible';
-          });
-        };
-
-        const fullyPastMasthead = () =>
-          Boolean(masthead && masthead.getBoundingClientRect().bottom <= 0);
-
-        const armHint = () => {
-          // a crossing whose scroll events all landed before this script ran
-          // (or before load) still counts: check the position at arm time.
-          if (fullyPastMasthead()) {
-            dismissHint();
-            return;
-          }
-          timers.push(window.setTimeout(revealHint, HOMEPAGE_THEME_HINT_REVEAL_MS));
-          timers.push(window.setTimeout(dismissHint, HOMEPAGE_THEME_HINT_MAX_MS));
-        };
-
-        window.addEventListener(
-          'scroll',
-          () => {
-            if (fullyPastMasthead()) dismissHint();
-          },
-          { passive: true, signal: listeners.signal },
-        );
-
-        document.addEventListener(THEME_TOGGLED_EVENT, dismissHint, {
-          once: true,
-          signal: listeners.signal,
-        });
-
-        if (document.readyState === 'complete') {
-          armHint();
-        } else {
-          window.addEventListener('load', armHint, { once: true, signal: listeners.signal });
-        }
-      }
-    }
-  </script>
+    <p class="record__footer">
+      {footerLinks.map((link, index) => (
+        <>
+          <a
+            href={link.href}
+            target={link.external ? '_blank' : undefined}
+            rel={link.external ? 'noopener noreferrer' : undefined}
+          >{link.label}</a>{index < footerLinks.length - 1 && ', '}
+        </>
+      ))}
+    </p>
+  </div>
 
   <style>
-    /* ---- issue masthead ---------------------------------------------- */
-    .masthead {
-      margin-bottom: clamp(var(--s6), 7vw, var(--s8));
-    }
-    .masthead__folio-block {
-      margin-bottom: clamp(var(--s5), 5vw, var(--s6));
-    }
-    .folio {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: .35rem 1rem;
-      margin: 0;
-      padding-block: .8rem;
-      border-top: 1px solid var(--line-strong);
-      border-bottom: 1px solid var(--line);
-      color: var(--ink-soft);
-      font-family: var(--mono);
-      font-size: .6875rem;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-    }
-    .home-kicker {
-      display: inline-flex;
-      align-items: center;
-      gap: .6rem;
-    }
-    .home-kicker__tick {
-      display: inline-block;
-      width: 1.5rem;
-      height: 1px;
-      background: var(--accent);
-    }
-    .folio__place { color: var(--ink-soft); }
-    .masthead__theme-hint {
-      margin: .625rem 0 0;
-      color: var(--ink-soft);
-      font-family: var(--mono);
-      font-size: .6875rem;
-      letter-spacing: .05em;
-      opacity: 0;
-      transition: opacity 220ms var(--ease);
-    }
-    .masthead__theme-hint[data-state='visible'] { opacity: 1; }
-
-    /* the nameplate keeps the global .hero-title responsive sizing (tuned so
-       the mobile name never swallows the first screen); this only refines the
-       dossier register: tighter measure, weight, and tracking. */
-    .masthead__name {
-      margin: 0 0 clamp(var(--s4), 3.5vw, var(--s5));
-      max-width: 14ch;
-      font-weight: 460;
-      line-height: 1.02;
-      letter-spacing: -.025em;
-    }
-
-    .masthead__grid { display: grid; gap: clamp(var(--s5), 5vw, var(--s6)); }
-    .masthead__lede {
-      max-width: 42ch;
-      color: var(--ink);
-      font-family: var(--serif);
-      font-size: clamp(1.1rem, 1.2vw + .9rem, 1.28rem);
-      line-height: 1.5;
-    }
-
-    /* the identity record: a bordered dossier card with a file tab. this is
-       the signature surface, so it carries a hair more contrast than the page. */
+    /* the whole record is one two-column grid: labels and dates in a
+       max-content column, everything else in the remainder. sections join
+       it through subgrid so the column stays exactly as wide as its widest
+       label plus a tight gutter, never a fractional hole. */
     .record {
-      position: relative;
-      align-self: start;
-      padding: clamp(1.1rem, 3vw, 1.4rem);
-      border: 1px solid var(--line-strong);
-      border-radius: var(--radius);
-      background: var(--paper-raised);
+      display: grid;
+      grid-template-columns: max-content minmax(0, 1fr);
+      column-gap: var(--s5);
+      max-width: 38rem;
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: var(--text-body);
+      font-weight: var(--weight-body);
+      line-height: var(--leading-body);
+      font-variant-numeric: lining-nums proportional-nums;
     }
-    .record__tab {
-      margin: 0 0 .9rem;
-      padding-bottom: .7rem;
-      border-bottom: 1px solid var(--line);
-      color: var(--accent-ink);
-      font-family: var(--mono);
-      font-size: .625rem;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-    }
-    .ledger { margin: 0; display: grid; gap: .7rem; }
-    .ledger__row { display: grid; gap: .15rem; }
-    .ledger dt {
-      color: var(--ink-soft);
-      font-family: var(--mono);
-      font-size: .625rem;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      line-height: 1.4;
-    }
-    .ledger dd {
+    .record > * { grid-column: 1 / -1; margin: 0; }
+    .record > * + * { margin-top: var(--s5); }
+    .record__footer { margin-top: var(--s6); }
+
+    .record h1,
+    .record h2 {
       margin: 0;
-      color: var(--ink);
-      font-family: var(--mono);
-      font-size: .8125rem;
-      line-height: 1.45;
-    }
-    .ledger__row--proof {
-      margin-top: .15rem;
-      padding-top: .68rem;
-      border-top: 1px solid var(--line);
-    }
-    .record__link {
-      position: relative;
-      min-height: 46px;
-      justify-content: flex-start;
-      gap: .45rem;
-      color: var(--ink);
-      font-weight: 560;
-      letter-spacing: .045em;
-      text-decoration: none;
-    }
-    .record__link::before {
-      content: '';
-      flex: 0 0 auto;
-      width: .85rem;
-      height: 1px;
-      background: var(--accent);
-      transform: scaleX(.65);
-      transform-origin: left;
-      transition: transform var(--dur) var(--ease);
-    }
-    .record__link::after {
-      content: '';
-      position: absolute;
-      right: 0;
-      bottom: .55rem;
-      left: 1rem;
-      height: 1px;
-      background: color-mix(in srgb, var(--accent) 58%, transparent);
-      transform: scaleX(.55);
-      transform-origin: left;
-      transition: transform var(--dur) var(--ease), background-color var(--dur) var(--ease);
-    }
-    .record__link:hover,
-    .record__link:focus-visible { color: var(--ink); }
-    .record__link:hover::before,
-    .record__link:focus-visible::before { transform: scaleX(1); }
-    .record__link:hover::after,
-    .record__link:focus-visible::after {
-      background: var(--accent);
-      transform: scaleX(1);
+      color: inherit;
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      line-height: inherit;
+      letter-spacing: 0;
     }
 
-    /* ---- numbered folio sections ------------------------------------- */
-    .folio-section { margin-top: clamp(var(--s6), 7vw, 3.25rem); }
-    .rail {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: var(--s5);
-      padding-bottom: .7rem;
-      border-bottom: 1px solid var(--line-strong);
+    /* the only size jump on the page */
+    .record .record__feature-title {
+      font-size: var(--text-feature);
+      line-height: var(--leading-feature);
     }
-    .rail__tab { display: inline-flex; align-items: baseline; gap: .55rem; }
-    .rail__tick {
-      align-self: center;
-      width: .4rem;
-      height: .4rem;
-      background: var(--accent);
-    }
-    .rail__ord {
-      color: var(--accent-ink);
-      font-family: var(--mono);
-      font-size: .75rem;
-      font-variant-numeric: tabular-nums;
-      letter-spacing: .04em;
-    }
-    .rail__label {
-      margin: 0;
-      color: var(--ink);
-      font-family: var(--mono);
-      font-size: .8125rem;
-      font-weight: 500;
-      letter-spacing: .07em;
-      text-transform: lowercase;
-    }
-    .rail__note {
-      flex: 0 0 auto;
-      color: var(--ink-soft);
-      font-family: var(--mono);
-      font-size: .6875rem;
-      letter-spacing: .05em;
-      text-transform: lowercase;
-    }
+    .record__feature-date { margin-top: var(--s1); font-style: normal; }
+    .record__feature-dek { margin-top: var(--s2); max-width: 46ch; }
 
-    .folio-lede {
-      max-width: var(--measure);
-      margin: 0 0 var(--s5);
-      color: var(--ink-soft);
-      font-family: var(--sans);
-      font-size: .96rem;
-      line-height: 1.6;
-    }
+    /* italic is for labels only */
+    .record__label { font-style: var(--label-style); }
 
-    .entries { margin: 0; padding: 0; list-style: none; }
-    .entry { border-top: 1px solid var(--line); }
-    .entry:first-child { border-top: 0; }
-    .entry__link {
-      position: relative;
-      display: block;
-      padding: clamp(.85rem, 2.4vw, 1.15rem) 0 clamp(.85rem, 2.4vw, 1.15rem) 0;
-      text-decoration: none;
+    .record__ledger,
+    .record__section,
+    .record__rows,
+    .record__row {
+      display: grid;
+      grid-template-columns: subgrid;
+      grid-column: 1 / -1;
+      row-gap: var(--s1);
     }
-    /* a hair of accent grows in from the left edge on hover: the filed item
-       being pulled from the stack. */
-    .entry__link::before {
-      content: '';
-      position: absolute;
-      left: -.9rem;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: var(--accent);
-      transform: scaleY(0);
-      transform-origin: top;
-      transition: transform var(--dur) var(--ease);
-    }
-    .entry__link:hover::before,
-    .entry__link:focus-visible::before { transform: scaleY(1); }
-    .entry__head {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: .5rem 1rem;
-    }
-    .entry__title {
-      color: var(--ink);
-      font-family: var(--serif);
-      font-size: clamp(1.18rem, 1vw + 1rem, 1.42rem);
-      font-weight: 500;
-      line-height: 1.24;
-      letter-spacing: -.01em;
-      transition: color var(--dur) var(--ease);
-    }
-    .entry__meta {
-      flex: 0 0 auto;
-      color: var(--ink-soft);
-      font-family: var(--mono);
-      font-size: .7rem;
-      letter-spacing: .05em;
-      font-variant-numeric: tabular-nums;
-    }
-    .entry__note {
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-      overflow: hidden;
-      margin-top: .4rem;
-      max-width: 62ch;
-      color: var(--ink-soft);
-      font-family: var(--sans);
-      font-size: .88rem;
-      line-height: 1.5;
-    }
-    .entry__link:hover .entry__title,
-    .entry__link:focus-visible .entry__title { color: var(--accent-ink); }
+    .record__rows { margin: 0; padding: 0; list-style: none; }
+    .record__section > .record__label { grid-column: 1; }
+    .record__section > .record__rows { grid-column: 1 / -1; }
+    .record__ledger dt { grid-column: 1; }
+    .record__ledger dd { grid-column: 2; margin: 0; }
+    .record__row > time { grid-column: 1; }
+    .record__row > a { grid-column: 2; }
 
-    .folio-more {
-      display: inline-flex;
-      align-items: center;
-      margin-top: var(--s4);
-      color: var(--ink-soft);
-      font-family: var(--mono);
-      font-size: .72rem;
-      letter-spacing: .05em;
-      text-decoration: none;
+    /* every link keeps a 44px tap target without changing the row rhythm or
+       the inline spacing: the padding is paid back with a matching negative
+       margin on both axes, so commas still sit tight against short words. */
+    .record a {
+      display: inline-block;
+      padding: .75rem .3rem;
+      margin: -.75rem -.3rem;
     }
-    .folio-more:hover { color: var(--ink); }
+    .record__row > a { justify-self: start; }
 
-    /* the instrument stays a quiet strip, not a headline block. the panel
-       root is rendered by Panel.astro, so reach it through the scoped body. */
-    .folio-body :global(.signal-panel) { max-width: 34rem; padding: 1.35rem; }
-    .folio-body :global(.signal-panel > div) { margin-bottom: 1.1rem; padding-bottom: 1.1rem; }
-    .signal-line {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: .5rem;
-      margin: 0;
-      color: var(--panel-soft);
-      font-family: var(--mono);
-      font-size: .8125rem;
-    }
-    .signal-line__sep { color: var(--panel-line); }
-    .signal-line a { color: var(--panel-text); }
-    .contact-links { font-size: .95rem; }
-
-    /* ---- composed editorial layout on wider screens ------------------ */
-    @media (min-width: 48rem) {
-      .masthead__grid {
-        grid-template-columns: minmax(0, 1fr) minmax(0, 17.5rem);
-        gap: clamp(2rem, 5vw, 3.5rem);
-        align-items: start;
+    @supports not (grid-template-columns: subgrid) {
+      .record__ledger,
+      .record__section,
+      .record__rows,
+      .record__row {
+        grid-template-columns: max-content minmax(0, 1fr);
       }
-      .masthead .masthead__name { font-size: clamp(2.9rem, 4.5vw, 3.7rem); }
-
-      .folio-section {
-        display: grid;
-        grid-template-columns: 8.5rem minmax(0, 1fr);
-        column-gap: clamp(2rem, 4vw, 3rem);
-        align-items: start;
-      }
-      .rail {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: .5rem;
-        margin: 0;
-        padding: .2rem 0 0;
-        border: 0;
-      }
-      .rail__tab { flex-direction: column; align-items: flex-start; gap: .45rem; }
-      .rail__tick { align-self: flex-start; }
-      .folio-body {
-        border-left: 1px solid var(--line);
-        padding-left: clamp(1.5rem, 3vw, 2.5rem);
-      }
-      /* re-anchor the hover accent to the body's own left rule */
-      .entry__link::before { left: calc(-1 * clamp(1.5rem, 3vw, 2.5rem)); width: 1px; }
-    }
-
-    @media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
-      .entry__link::before { transition: transform var(--dur) var(--ease); }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .masthead__theme-hint { transition: none; }
     }
   </style>
 </Base>

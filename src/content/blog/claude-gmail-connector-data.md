@@ -1,5 +1,6 @@
 ---
 title: "Does Claude train on your email? The plan-by-plan teardown."
+shortTitle: "Does Claude train on your email?"
 date: 2026-06-09
 tags: ["ai"]
 description: "What Claude's Gmail connector trains on, where the data lives, and how long it stays , broken down across all five plans, sourced to Anthropic's own docs, with the gaps marked."

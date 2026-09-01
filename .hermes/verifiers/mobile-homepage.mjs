@@ -35,7 +35,8 @@ try {
       const bodyText = document.body.innerText.toLowerCase();
       const toggle = document.querySelector('#menu-toggle');
       const logo = document.querySelector('.site-header__logo');
-      const hero = document.querySelector('.hero-title');
+      const record = document.querySelector('[data-record]');
+      const hero = document.querySelector('[data-record-feature] a');
       const visibleTapTargets = Array.from(document.querySelectorAll('.site-header a, #menu-toggle, main a')).map((el) => {
         const r = el.getBoundingClientRect();
         const style = getComputedStyle(el);
@@ -56,6 +57,8 @@ try {
         logoWhiteSpace: logo ? getComputedStyle(logo).whiteSpace : null,
         heroPresent: !!hero,
         heroFont: hero ? parseFloat(getComputedStyle(hero).fontSize) : 0,
+        heroBottom: hero ? hero.getBoundingClientRect().bottom : 0,
+        bodyFont: record ? parseFloat(getComputedStyle(record).fontSize) : 0,
         scaffoldLabels: ['homepage / hero', 'lab / flagship card', 'signal room / episode log'].filter((t) => bodyText.includes(t)),
         smallTargets: visibleTapTargets
           .filter((l) => l.width < 44 || l.height < 44)
@@ -68,10 +71,14 @@ try {
     if (!closed.logoPresent) failures.push(`${width}: logo missing`);
     if (closed.logoText !== 'adrian lumley') failures.push(`${width}: logo text changed to ${closed.logoText || 'missing'}`);
     if (closed.logoWhiteSpace !== 'nowrap') failures.push(`${width}: logo whitespace is ${closed.logoWhiteSpace || 'missing'}, expected nowrap`);
-    if (!closed.heroPresent) failures.push(`${width}: hero title missing`);
+    if (!closed.heroPresent) failures.push(`${width}: featured essay title missing`);
     if (closed.scaffoldLabels.length) failures.push(`${width}: scaffold labels ${closed.scaffoldLabels.join(',')}`);
     if (closed.smallTargets.length) failures.push(`${width}: small tap targets ${closed.smallTargets.join(',')}`);
-    if (closed.heroFont > 34 || closed.heroFont < 26) failures.push(`${width}: hero font suspicious ${closed.heroFont}`);
+    // the featured essay is the one size jump: about 1.5x body, never a hero that swallows the first screen
+    const ratio = closed.bodyFont ? closed.heroFont / closed.bodyFont : 0;
+    if (ratio < 1.4 || ratio > 1.6) failures.push(`${width}: featured title ratio suspicious ${ratio.toFixed(2)} (${closed.heroFont}px over ${closed.bodyFont}px body)`);
+    if (closed.heroFont > 34) failures.push(`${width}: featured title too large ${closed.heroFont}`);
+    if (closed.heroBottom > 900 * 0.5) failures.push(`${width}: featured title sits below the first half-screen at ${closed.heroBottom.toFixed(0)}px`);
 
     await page.click('#menu-toggle');
     const open = await page.evaluate(() => {

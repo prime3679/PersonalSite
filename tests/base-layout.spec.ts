@@ -20,7 +20,7 @@ test.describe('base layout seo', () => {
     await page.goto('/');
 
     await expect(page).toHaveTitle('Adrian Lumley');
-    await expect(page.locator('main h1')).toHaveText('adrian lumley');
+    await expect(page.locator('main h1')).toHaveText('Adrian Lumley is a product director in New York City.');
     await expect(page.locator('meta[name="description"]')).toHaveAttribute(
       'content',
       'Adrian Lumley is a product leader working where AI meets enterprise adoption.',

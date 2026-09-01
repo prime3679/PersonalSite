@@ -6,8 +6,8 @@ test('Homepage loads and has reveal elements', async ({ page }) => {
   // Check for the main heading
   await expect(page.locator('main h1')).toBeVisible();
 
-  // Check for reveal class on sections
-  const revealSection = page.locator('section.reveal').first();
+  // the record itself is the reveal surface
+  const revealSection = page.locator('main .reveal').first();
   await expect(revealSection).toBeVisible();
 });
 

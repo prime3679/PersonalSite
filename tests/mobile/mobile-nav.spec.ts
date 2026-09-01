@@ -57,7 +57,7 @@ test.describe('mobile homepage navigation', () => {
       const mobileNav = page.locator('#mobile-nav');
       const desktopNav = page.locator('[data-header-desktop-nav]');
       const logo = page.locator('.site-header__logo');
-      const opening = page.locator('.home-kicker');
+      const opening = page.locator('main h1');
 
       await expect(toggle).toBeVisible();
       await expect(mobileNav).toBeHidden();
@@ -106,12 +106,18 @@ test.describe('mobile homepage navigation', () => {
         await expectTapTarget(mobileNav.locator(`a[href="${href}"]`));
       }
 
-      await expectTapTarget(page.locator('main .record__link[href="/work"]'), 46);
-      await expectTapTarget(page.locator('main a[href="/lab"]'));
-      await expectTapTarget(page.locator('main a[href="/signal-room"]').first());
-      await expectTapTarget(page.locator('main a[href="/contact"]'));
-      await expectTapTarget(page.locator('main a[href="https://www.linkedin.com/in/adrianlumley/"]'));
-      await expectTapTarget(page.locator('main a[href="https://github.com/prime3679"]'));
+      // every record link stays tappable at 44px without inflating the rows
+      const recordLinks = page.locator('main .record a');
+      const recordLinkCount = await recordLinks.count();
+      expect(recordLinkCount).toBeGreaterThan(5);
+      for (let i = 0; i < recordLinkCount; i += 1) {
+        await expectTapTarget(recordLinks.nth(i), 44);
+      }
+      await expectTapTarget(page.locator('main a[href="/writing/the-honest-record"]'), 44);
+      await expectTapTarget(page.locator('main a[href="/work"]'), 44);
+      await expectTapTarget(page.locator('main a[href="/contact"]'), 44);
+      await expectTapTarget(page.locator('main a[href="https://www.linkedin.com/in/adrianlumley/"]'), 44);
+      await expectTapTarget(page.locator('main a[href="https://github.com/prime3679"]'), 44);
     });
   }
 });

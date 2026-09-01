@@ -85,8 +85,8 @@
       "src/lib/relativeTime.ts",
       "src/lib/seo.ts",
       "src/lib/sitemap.ts",
-      "src/lib/trace.ts",
-      "src/styles/global.css"
+      "src/styles/global.css",
+      "src/styles/tokens.css"
     ],
     "exclude": [
       ".agent/architecture.json",
@@ -98,7 +98,7 @@
       "dist/**",
       "node_modules/**"
     ],
-    "digest": "481d674b038fbf7f198f87fef81b61e441900eeb291bb0ec20a96cb41b4029ca"
+    "digest": "277db188676ca3f9403426cd985cd2efd4ab44bde12f446c22a950b55f23af37"
   },
   "components": [
     {
@@ -112,8 +112,8 @@
       "id": "base-document-shell",
       "name": "base document shell",
       "core": true,
-      "paths": ["src/layouts/Base.astro", "src/data/csp.ts", "src/styles/global.css"],
-      "responsibility": "Own the HTML document, content security policy, metadata defaults, structured data, accessibility entry points, global styles, shared header, main slot, footer, and delight layer."
+      "paths": ["src/layouts/Base.astro", "src/data/csp.ts", "src/styles/global.css", "src/styles/tokens.css"],
+      "responsibility": "Own the HTML document, content security policy, metadata defaults, structured data, accessibility entry points, design tokens and global styles (including the single site-wide link and focus style), shared header, main slot, footer, and delight layer."
     },
     {
       "id": "navigation-shell",

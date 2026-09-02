@@ -43,6 +43,13 @@ export function contentBody(entry: { id: string; body?: string }) {
 export const postPath = (slug: string) => `/writing/${slug}`;
 export const episodePath = (slug: string) => `/signal-room/${slug}/`;
 
+/**
+ * The href pages link with. The canonical Worker 308s the slashless
+ * postPath to its trailing-slash form, so page links carry the slash and
+ * skip the hop; RSS keeps postPath because those strings are the GUIDs.
+ */
+export const postHref = (slug: string) => `${postPath(slug)}/`;
+
 /** Generated OG-card routes (must mirror the endpoints under src/pages/og/). */
 export const postOgPath = (slug: string) => `/og/${slug}.png`;
 export const episodeOgPath = (slug: string) => `/og/signal-room/${slug}.png`;

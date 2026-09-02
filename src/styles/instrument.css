@@ -1,0 +1,83 @@
+/* the signal room's language, shared by the index and every episode: the
+   dark instrument panel (Panel.astro), mono for the log, the labels, and
+   the meta lines, the record's sans for anything read at length, and the
+   single accent on the highlight. no serif anywhere in the instrument; the
+   reading serif belongs to essays (essay.css). only signal room pages
+   import this file. */
+
+/* mono meta lines: episode numbers, dates, captions */
+.instrument-meta {
+  color: var(--ink-soft);
+  font-family: var(--mono);
+  font-size: .75rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+/* small sans labels over a block */
+.section-title {
+  margin: 0 0 var(--s4);
+  color: var(--ink-soft);
+  font-family: var(--sans);
+  font-size: .95rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+/* titles inside the ledger and the latest block */
+.card-title {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+/* teasers and running copy outside the panel */
+.ui-copy {
+  color: var(--ink-soft);
+  font-family: var(--sans);
+  font-size: .98rem;
+  line-height: 1.6;
+}
+
+/* the accent pull quote inside the panel */
+.signal-highlight {
+  margin: 1.375rem 0 0;
+  padding: 1rem 1.125rem;
+  border-left: 2px solid var(--accent-bright);
+  color: var(--accent-bright);
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  font-style: italic;
+  line-height: 1.55;
+}
+
+/* the ledger: mono index in a narrow column, the entry beside it */
+.ledger-row {
+  display: grid;
+  grid-template-columns: 3.5rem 1fr;
+  gap: 1rem;
+  border-top: 1px solid var(--line);
+  padding-block: var(--s5);
+}
+.ledger-index {
+  color: var(--ink-soft);
+  font-family: var(--mono);
+  font-size: .75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* an episode read inside the panel: the record's sans in the panel's ink,
+   a touch more leading for the dark ground */
+.episode-prose {
+  max-width: var(--measure);
+  color: var(--panel-text);
+  font-size: 1.0625rem;
+  line-height: 1.7;
+}
+.episode-prose > * + * { margin-top: var(--s4); }
+.episode-prose strong { font-weight: 500; }
+.episode-prose blockquote { margin-left: 0; margin-right: 0; padding-left: var(--s4); border-left: 2px solid var(--accent-bright); }
+.episode-prose code { font-family: var(--mono); font-size: .9375em; color: var(--panel-soft); }
+.episode-prose hr { border: 0; border-top: 1px solid var(--panel-line); margin: var(--s6) 0; }

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="A standalone architecture map for the PersonalSite repository.">
-  <meta name="architecture-contract-sha256" content="d09e9ba0ee9ee24d2d5ec8e1b99fb4ab3bd113848867cce4107913cd27edd715">
+  <meta name="architecture-contract-sha256" content="dfa031021bb9186cffea29efdd3fa8a476e8824b24e9960b26df38bd0eac2a01">
   <title>PersonalSite architecture map</title>
   <style>
     :root {
@@ -423,7 +423,7 @@
         <li class="component" data-architecture-component="SEO and syndication"><span class="component-index">06</span><h3>SEO and syndication</h3><p>Canonical URLs, structured data, RSS, and sitemap output draw from shared metadata and content.</p></li>
         <li class="component" data-architecture-component="Open Graph image generation"><span class="component-index">07</span><h3>Open Graph image generation</h3><p>Build-time endpoints use local fonts, Satori, and Sharp to produce social cards.</p></li>
         <li class="component" data-architecture-component="static lab artifacts"><span class="component-index">08</span><h3>static lab artifacts</h3><p>Self-contained experiments under <code>public/lab/</code> bypass Astro composition and copy directly to output.</p></li>
-        <li class="component" data-architecture-component="Rogue status integration"><span class="component-index">09</span><h3>Rogue status integration</h3><p>A non-critical browser fetch derives fresh, quiet, or unknown presentation from public status data.</p></li>
+        <li class="component" data-architecture-component="Rogue status integration"><span class="component-index">09</span><h3>Rogue status integration</h3><p>The status worker and freshness logic stay in the repo; the default build fetches nothing and the lab page states only the running-since receipt.</p></li>
         <li class="component" data-architecture-component="contribution gate"><span class="component-index">10</span><h3>contribution gate</h3><p>Python standard-library checks validate doctrine, architecture synchronization, safe command shape, and bounded execution.</p></li>
         <li class="component" data-architecture-component="deployment pipeline"><span class="component-index">11</span><h3>deployment pipeline</h3><p>Cloudflare Workers Assets serves the authoritative apex runtime; a separate Worker redirects <code>www</code>; GitHub Pages remains an active, non-authoritative publication path.</p></li>
       </ol>

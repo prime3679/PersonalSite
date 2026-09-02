@@ -1,0 +1,33 @@
+/* the reading register for essays (/writing/<slug>/). the title and the
+   prose are set in the serif, at the sizes the site read at before the
+   record pass; the chrome around them (header, date line, older/newer
+   rows, footer) stays in the record's sans. only the essay route imports
+   this file, so only essays carry the newsreader font faces. the signal
+   room is a different language (instrument.css) and never imports this. */
+@import '@fontsource-variable/newsreader';
+
+.essay .page-title {
+  font-family: var(--serif);
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  font-weight: 420;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+.essay .prose {
+  font-family: var(--serif);
+  font-size: 1.1875rem;
+  line-height: 1.65;
+  font-variant-numeric: oldstyle-nums proportional-nums;
+}
+.essay .prose h2,
+.essay .prose h3 {
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+.essay .prose h2 { font-size: 1.5em; }
+.essay .prose h3 { font-size: 1.17em; }
+.essay .prose strong { font-weight: 600; }
+.essay .prose blockquote { font-style: italic; }

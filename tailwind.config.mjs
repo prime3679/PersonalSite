@@ -5,7 +5,6 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        serif: ['Newsreader Variable', 'Newsreader', 'Georgia', 'serif'],
         sans: ['Geist Variable', 'Geist', 'system-ui', 'sans-serif'],
         mono: ['Geist Mono Variable', 'Geist Mono', 'ui-monospace', 'monospace'],
       },

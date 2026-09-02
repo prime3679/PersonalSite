@@ -13,13 +13,15 @@ test('Homepage record is fully inked at first paint, with no reveal fade', async
   await expect(record).toHaveCSS('animation-name', 'none');
 });
 
-test('Lab page loads and has reveal elements', async ({ page }) => {
-  await page.goto('/lab');
+test('inner pages are inked at first paint too: no reveal classes, no entrance animation', async ({ page }) => {
+  for (const path of ['/lab/', '/writing/', '/about/', '/signal-room/']) {
+    await page.goto(path, { waitUntil: 'commit' });
+    await expect(page.locator('main h1')).toBeVisible();
+    await expect(page.locator('.reveal, .fade-in')).toHaveCount(0);
 
-  // Check for the main heading
-  await expect(page.locator('main h1')).toContainText('lab');
-
-  // Check for reveal class on sections (the lean lab has no project cards)
-  const revealSection = page.locator('section.reveal').first();
-  await expect(revealSection).toBeVisible();
+    // the first block after the page header, whatever element it is
+    const firstBlock = page.locator('main > :nth-child(2)');
+    await expect(firstBlock).toHaveCSS('opacity', '1');
+    await expect(firstBlock).toHaveCSS('animation-name', 'none');
+  }
 });

@@ -4,7 +4,7 @@ Adrian Lumley's personal site. Live at https://adrianlumley.co. Cloudflare Worke
 
 ## Stack
 - **Framework:** Astro + TypeScript + Tailwind CSS
-- **Typography:** premium editorial system using Newsreader, Geist, and Geist Mono via `@fontsource-variable/*`
+- **Typography:** four languages, each internally consistent. The record (homepage and connected pages): one sans (Geist via `@fontsource-variable/geist`) at body size and weight 400, italic reserved for labels, one 1.5x size jump per page, one ink on flat paper. Essays (`/writing/<slug>/`): Newsreader title and prose via `src/styles/essay.css`, the only route that imports or preloads the serif. Signal Room (index and episodes): the instrument via `src/styles/instrument.css`, dark panel, Geist Mono for log and meta, Geist for anything read at length, no serif. `/360/`: its own terminal file
 - **Deploy:** Cloudflare Workers Assets for `adrianlumley.co/*`; a separate Cloudflare redirect Worker for `www.adrianlumley.co/*`; an active GitHub Pages workflow also publishes pushes to `main`
 - **Style:** premium editorial/product-leader surface with subtle systems cues, not a terminal dashboard
 
@@ -36,6 +36,20 @@ Rules:
 - `adrian lumley` wordmark must not wrap
 - do not hardcode alternate nav labels in pages
 - old `/blog/` URLs must keep redirecting/aliasing to `/writing/`
+
+## Record Rules (every connected page)
+The record does not stop at the homepage. Inner pages share one type system:
+- body: the record sans at `--text-body`, weight 400, `--ink` on flat `--paper`; no `--ink-soft` text, no gradient
+- the page title is the page's one size jump (`--text-feature`, same as the homepage feature title)
+- section names, ledger keys, and eyebrows are italic `.label`s at body size; nothing uppercase, nothing tracked, nothing in mono outside code
+- tables are `.rows` / `.row` (key column, value column), the same shape as the homepage ledger
+- no reveal or fade-in animation, no view-transition crossfade, no hover lift
+- one link style everywhere; internal hrefs carry the trailing slash (`postHref`, `navItems`) so no click pays the canonical 308
+
+Three other languages sit beside the record, each whole on its own pages; do not mix them or flatten them into the record:
+- essays (`/writing/<slug>/`) read in Newsreader, title and prose, inside record chrome (`src/styles/essay.css`, essay route only). The writing index stays a record table with its tag chips, per-post tag links, and `?tag=` deep links; no reading-time lines. List is record, article is essay.
+- the Signal Room is one instrument on the index and every episode (`src/styles/instrument.css`): the dark panel, Geist Mono for the log and the meta lines, the record's sans for anything read at length, the single accent on the highlight. Episodes are read inside the panel. Never import `essay.css` or put Newsreader on a Signal Room page.
+- `/360/` keeps its own terminal voice (system mono, black on white, `→` and `//` glyphs); it is not restyled to paper and ink
 
 ## Homepage Rules
 The homepage is the record, not an app shell:

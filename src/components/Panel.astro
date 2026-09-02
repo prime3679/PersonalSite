@@ -1,4 +1,8 @@
 ---
+// the dark instrument panel: the one place the site speaks in the panel
+// register (dark ground, mono, the single accent). used by the signal room
+// index and every episode; the panel tokens in tokens.css stay put in
+// night shift so it is always the darkest surface on the page.
 interface Props {
   label?: string;
   ariaLabel?: string;
@@ -9,7 +13,7 @@ interface Props {
 const { label, ariaLabel, id, class: className } = Astro.props;
 ---
 
-<section id={id} class:list={['instrument-panel', 'p-6', 'md:p-8', 'reveal', className]} aria-label={ariaLabel}>
+<section id={id} class:list={['instrument-panel', 'p-6', 'md:p-8', className]} aria-label={ariaLabel}>
   {label && (
     <div class="mb-5 flex items-center gap-3 border-b border-[var(--panel-line)] pb-5">
       <span class="font-mono text-xs tracking-[.05em] text-[var(--panel-soft)]">{label}</span>
@@ -18,3 +22,22 @@ const { label, ariaLabel, id, class: className } = Astro.props;
   )}
   <slot />
 </section>
+
+<style>
+  .instrument-panel {
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    color: var(--panel-text);
+  }
+  /* slotted links keep the site's hairline rule but take the panel's ink */
+  .instrument-panel :global(a) {
+    color: inherit;
+  }
+  .instrument-panel :global(a:focus-visible) {
+    outline-color: var(--panel-text);
+  }
+  /* in night shift the paper is the panel color, so the border carries the edge */
+  :global(html.dark) .instrument-panel {
+    border-color: var(--line-strong);
+  }
+</style>

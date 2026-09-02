@@ -1,10 +1,12 @@
 /* design tokens. one place for every value the site shares.
 
    the record system: one ink on one paper, one sans at body size and
-   weight 400, italic reserved for labels, and one link style everywhere
-   (same ink, hairline underline, modest offset, no color shift, ink focus
-   ring). pages consume these through global.css and component styles;
-   nothing should restate a color, rule, or offset that lives here. */
+   weight 400, italic reserved for labels, one size jump per page (the
+   feature title on the homepage, the page title everywhere else), and one
+   link style everywhere (same ink, hairline underline, modest offset, no
+   color shift, ink focus ring). pages consume these through global.css and
+   component styles; nothing should restate a color, rule, or offset that
+   lives here. */
 
 :root {
   /* paper and ink */
@@ -16,7 +18,6 @@
   --line: #e4decf;
   --line-strong: #d3cbb8;
   --accent: #a8472c;
-  --accent-ink: #8e3a23;
   --panel: #16130e;
   --panel-raised: #1e1a13;
   --panel-text: #eae4d7;
@@ -24,9 +25,11 @@
   --panel-line: #2b261d;
   --accent-bright: #c9663f;
 
-  /* type families */
-  --serif: 'Newsreader Variable', 'Newsreader', Georgia, 'Times New Roman', serif;
+  /* type families: the record is set in one sans. the serif is the reading
+     face for essays only (essay.css); mono is code and the signal room
+     instrument (instrument.css), not a display voice elsewhere. */
   --sans: 'Geist Variable', 'Geist', system-ui, -apple-system, sans-serif;
+  --serif: 'Newsreader Variable', 'Newsreader', Georgia, 'Times New Roman', serif;
   --mono: 'Geist Mono Variable', 'Geist Mono', ui-monospace, 'SF Mono', monospace;
 
   /* record type: one sans at body size; the feature size is the single jump */
@@ -60,7 +63,7 @@
   --s8: 4rem;
   --s9: 6rem;
   --s10: 8rem;
-  --measure: 66ch;
+  --measure: 38rem;
   --radius: 3px;
   --radius-panel: 0;
   --ease: cubic-bezier(0.2, 0, 0, 1);
@@ -69,9 +72,9 @@
 }
 
 /* night shift: the paper tokens remap onto the panel family. the panel
-   tokens themselves stay put, so instrument panels remain the darkest
-   surface and keep their own register. links follow --ink, so they stay
-   the text color in both shifts. */
+   tokens themselves stay put, so code blocks remain the darkest surface
+   and keep their own register. links follow --ink, so they stay the text
+   color in both shifts. */
 html.dark {
   --paper: #16130e;
   --paper-raised: #1e1a13;
@@ -80,6 +83,5 @@ html.dark {
   --ink-soft: #9c9384;
   --line: #2b261d;
   --line-strong: #3a3428;
-  --accent-ink: #c9663f;
   color-scheme: dark;
 }

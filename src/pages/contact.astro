@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import PageIntro from '../components/PageIntro.astro';
 
-// Formspree redirects here after a successful submit; ?sent=1 shows the banner.
+// Formspree redirects here after a successful submit; ?sent=1 shows the note.
 const returnUrl = new URL('/contact?sent=1', Astro.site).href;
 
 const socialLinks = [
@@ -15,37 +15,35 @@ const socialLinks = [
 <Base title="Contact" description="get in touch with adrian lumley: product leader, builder, occasional advisor.">
   <PageIntro title="contact" standfirst="always interested in product challenges, creative projects, or just good conversation. open to advisory roles and the right side-hustle." />
 
-  <div id="form-success" hidden class="card reveal mb-12" role="status">
-    <p class="card-copy">message sent, thanks for reaching out. i'll get back to you soon.</p>
-  </div>
+  <p id="form-success" hidden class="measure mb-8" role="status">message sent, thanks for reaching out. i'll get back to you soon.</p>
 
-  <form action="https://formspree.io/f/xjgewgoq" method="POST" class="content-stack reveal mb-16">
+  <form action="https://formspree.io/f/xjgewgoq" method="POST" class="content-stack">
     <input type="text" name="_gotcha" style="display:none" />
     <input type="hidden" name="_next" value={returnUrl} />
     <div>
       <label for="name" class="field-label">name *</label>
-      <input type="text" id="name" name="name" required class="field-input" placeholder="your name" />
+      <input type="text" id="name" name="name" required class="field-input" autocomplete="name" />
     </div>
     <div>
       <label for="email" class="field-label">email *</label>
-      <input type="email" id="email" name="email" required class="field-input" placeholder="your@email.com" />
+      <input type="email" id="email" name="email" required class="field-input" autocomplete="email" />
     </div>
     <div>
       <label for="subject" class="field-label">subject</label>
-      <input type="text" id="subject" name="subject" class="field-input" placeholder="what's this about?" />
+      <input type="text" id="subject" name="subject" class="field-input" />
     </div>
     <div>
       <label for="message" class="field-label">message *</label>
-      <textarea id="message" name="message" required rows="5" class="field-input" placeholder="tell me about your project, idea, or just say hello."></textarea>
+      <textarea id="message" name="message" required rows="5" class="field-input"></textarea>
     </div>
-    <button type="submit" class="button">send message</button>
+    <div><button type="submit" class="button">send message</button></div>
   </form>
 
-  <section class="reveal">
-    <h2 class="section-title">elsewhere</h2>
-    <p class="plain-links">
+  <section class="mt-12" aria-labelledby="elsewhere-h">
+    <h2 id="elsewhere-h" class="label">elsewhere</h2>
+    <p class="links mt-2">
       {socialLinks.map((link, index) => (
-        <><a class="touch-link" href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>{index < socialLinks.length - 1 && <span aria-hidden="true">·</span>}</>
+        <><a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>{index < socialLinks.length - 1 && ' · '}</>
       ))}
     </p>
   </section>

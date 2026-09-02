@@ -11,13 +11,14 @@ test('Header renders the canonical editorial navigation once', async () => {
   expect(result).toContain('class="site-header"');
   expect(result).toContain('href="/"');
   expect(result).toContain('adrian lumley');
-  expect(result).toContain('href="/work"');
-  expect(result).toContain('href="/lab"');
-  expect(result).toContain('href="/writing"');
-  expect(result).toContain('href="/signal-room"');
-  expect(result).toContain('href="/contact"');
-  expect(result).not.toContain('href="/about"');
-  expect(result).not.toContain('href="/blog"');
+  // nav hrefs carry the canonical trailing slash so a click is one request
+  expect(result).toContain('href="/work/"');
+  expect(result).toContain('href="/lab/"');
+  expect(result).toContain('href="/writing/"');
+  expect(result).toContain('href="/signal-room/"');
+  expect(result).toContain('href="/contact/"');
+  expect(result).not.toContain('href="/about');
+  expect(result).not.toContain('href="/blog');
   expect(result).not.toContain('id="theme-toggle"');
   expect(result).toContain('id="menu-toggle"');
   expect(result).toContain('id="mobile-nav"');

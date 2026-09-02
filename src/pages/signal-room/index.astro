@@ -1,4 +1,5 @@
 ---
+import '../../styles/instrument.css';
 import Base from '../../layouts/Base.astro';
 import PageIntro from '../../components/PageIntro.astro';
 import Panel from '../../components/Panel.astro';
@@ -6,6 +7,10 @@ import SignalLog from '../../components/SignalLog.astro';
 import { getEpisodes, episodePath } from '../../lib/content';
 import { formatLongDate, padEpisode } from '../../lib/format';
 
+// the signal room is the site's one instrument, and this is its index: a
+// dark panel carrying a fragment of the fiction, then the serial as a
+// ledger. the register (dark ground, mono meta and log, the single accent)
+// lives in instrument.css and is shared with every episode page.
 const episodes = await getEpisodes('desc');
 const latest = episodes[0];
 const first = episodes[episodes.length - 1];
@@ -22,7 +27,7 @@ const logEntries = [
   <PageIntro title="signal room" standfirst="short fiction about rogue and the human side of systems that try to help without becoming the weather." />
 
   {first && (
-    <p class="ui-copy -mt-10 mb-12 reveal">new here? start with <a href={episodePath(first.id)}>episode {padEpisode(first.data.episode)}, {first.data.title}</a>.</p>
+    <p class="ui-copy -mt-6 mb-12">new here? start with <a href={episodePath(first.id)}>episode {padEpisode(first.data.episode)}, {first.data.title}</a>.</p>
   )}
 
   <Panel ariaLabel="signal room episode log" label="signal.room 07:11">
@@ -32,15 +37,15 @@ const logEntries = [
   </Panel>
 
   {latest && (
-    <section class="mt-16 reveal">
+    <section class="mt-16">
       <h2 class="section-title">latest</h2>
-      <p class="font-mono text-xs uppercase tracking-[.08em] text-[var(--ink-soft)]">episode {padEpisode(latest.data.episode)} · {formatLongDate(latest.data.date)}</p>
+      <p class="instrument-meta">episode {padEpisode(latest.data.episode)} · {formatLongDate(latest.data.date)}</p>
       <h2 class="card-title mt-2"><a href={episodePath(latest.id)}>{latest.data.title}</a></h2>
       <p class="ui-copy mt-3">{latest.data.teaser}</p>
     </section>
   )}
 
-  <section class="mt-16 reveal">
+  <section class="mt-16">
     <h2 class="section-title">episodes</h2>
     <div>
       {episodes.map((episode) => (
@@ -49,7 +54,7 @@ const logEntries = [
           <div>
             <h3 class="card-title"><a href={episodePath(episode.id)}>{episode.data.title}</a></h3>
             <p class="ui-copy mt-2">{episode.data.teaser}</p>
-            <p class="font-mono text-xs uppercase tracking-[.08em] text-[var(--ink-soft)] mt-2">{formatLongDate(episode.data.date)}</p>
+            <p class="instrument-meta mt-2">{formatLongDate(episode.data.date)}</p>
           </div>
         </article>
       ))}

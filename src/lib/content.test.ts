@@ -6,7 +6,7 @@ vi.mock('astro:content', () => ({
   getCollection: getCollectionMock,
 }));
 
-import { getPublishedPosts } from './content';
+import { getPublishedPosts, postHref, postPath } from './content';
 
 const post = (id: string, date: string, published = true) => ({
   id,
@@ -50,5 +50,12 @@ describe('getPublishedPosts', () => {
     const posts = await getPublishedPosts();
 
     expect(posts.map(({ id }) => id)).toEqual(['published-post']);
+  });
+});
+
+describe('post paths', () => {
+  it('keeps the slashless RSS GUID form and links pages to the canonical trailing-slash form', () => {
+    expect(postPath('the-honest-record')).toBe('/writing/the-honest-record');
+    expect(postHref('the-honest-record')).toBe('/writing/the-honest-record/');
   });
 });

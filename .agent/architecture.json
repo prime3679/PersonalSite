@@ -86,6 +86,8 @@
       "src/lib/seo.ts",
       "src/lib/sitemap.ts",
       "src/styles/global.css",
+      "src/styles/essay.css",
+      "src/styles/instrument.css",
       "src/styles/tokens.css"
     ],
     "exclude": [
@@ -98,7 +100,7 @@
       "dist/**",
       "node_modules/**"
     ],
-    "digest": "62145b75ff05ebfd8f33f1de03452aebc4f2b7e000482afc98459586ef3ea896"
+    "digest": "682209ca078d59c4e93ad321712b2c45124a21d39866ba02d4dc1fac21f3f7f2"
   },
   "components": [
     {
@@ -112,8 +114,8 @@
       "id": "base-document-shell",
       "name": "base document shell",
       "core": true,
-      "paths": ["src/layouts/Base.astro", "src/data/csp.ts", "src/styles/global.css", "src/styles/tokens.css"],
-      "responsibility": "Own the HTML document, content security policy, metadata defaults, structured data, accessibility entry points, design tokens and global styles (including the single site-wide link and focus style), main slot, delight layer, and the optional shared header and footer chrome (chrome={false} renders the homepage record without them)."
+      "paths": ["src/layouts/Base.astro", "src/data/csp.ts", "src/styles/global.css", "src/styles/essay.css", "src/styles/instrument.css", "src/styles/tokens.css"],
+      "responsibility": "Own the HTML document, content security policy, metadata defaults, structured data, accessibility entry points, design tokens and global styles (the record type system: one sans at body size in one ink on flat paper, italic labels, .rows tables, the single site-wide link and focus style), main slot, delight layer, and the optional shared header and footer chrome (chrome={false} renders the homepage record without them)."
     },
     {
       "id": "navigation-shell",
@@ -161,8 +163,8 @@
       "id": "rogue-status-integration",
       "name": "Rogue status integration",
       "core": true,
-      "paths": ["src/components/LiveStatus.astro", "src/data/rogue.ts", "infra/rogue-status/"],
-      "responsibility": "Fetch a public, server-stamped heartbeat summary and render only freshness claims that can be verified client-side."
+      "paths": ["src/data/rogue.ts", "infra/rogue-status/"],
+      "responsibility": "Keep the public status worker and the freshness evaluation logic; the default build renders only the factual running-since receipt from ROGUE_EPOCH on the lab page and fetches no status."
     },
     {
       "id": "contribution-gate",
@@ -176,7 +178,7 @@
       "name": "deployment pipeline",
       "core": true,
       "paths": ["package.json", "wrangler.toml", "wrangler.www.toml", ".github/workflows/deploy.yml", "astro.config.mjs", "src/canonical-worker.js", "src/www-redirect.js"],
-      "responsibility": "Deploy dist through wrangler.toml and the canonical Worker to the authoritative adrianlumley.co Workers Assets runtime, deploy the separate www redirect Worker through wrangler.www.toml, and retain the active main-branch GitHub Pages publication pipeline as a non-authoritative delivery path."
+      "responsibility": "Deploy dist through wrangler.toml and the canonical Worker to the authoritative adrianlumley.co Workers Assets runtime (assets.not_found_handling = 404-page serves the built 404 page), deploy the separate www redirect Worker through wrangler.www.toml, and retain the active main-branch GitHub Pages publication pipeline as a non-authoritative delivery path."
     }
   ],
   "interfaces": {
@@ -199,7 +201,7 @@
     "runtime_boundaries": [
       {"name": "contact submission", "direction": "browser outbound", "provider": "Formspree", "failure_mode": "form submission fails without affecting static pages"},
       {"name": "analytics", "direction": "browser outbound", "provider": "Umami", "failure_mode": "analytics failure does not block rendering"},
-      {"name": "Rogue public status", "direction": "browser fetch", "provider": "repo-owned status worker", "failure_mode": "UI keeps a non-freshness fallback and makes no false live claim"}
+      {"name": "Rogue public status", "direction": "not wired in the default build", "provider": "repo-owned status worker", "failure_mode": "no page fetches status; the lab page states only the running-since receipt"}
     ]
   },
   "data_flows": [
@@ -207,7 +209,7 @@
     {"id": "writing-publish", "from": "src/content/blog/*.md", "through": ["blogSchema", "getPublishedPosts", "writing routes", "RSS and Open Graph endpoints"], "to": "writing index, entry pages, feed items, and social cards"},
     {"id": "signal-room-publish", "from": "src/content/signal-room/*.md", "through": ["signalRoomSchema", "getEpisodes", "Signal Room routes", "RSS and Open Graph endpoints"], "to": "episode index, entry pages, feed items, and social cards"},
     {"id": "lab-delivery", "from": "public/lab/<artifact>/", "through": ["Astro public-file copy"], "to": "self-contained static lab route"},
-    {"id": "status-read", "from": "public status JSON", "through": ["LiveStatus.astro client script", "freshness calculation"], "to": "live, quiet, or unknown status presentation"},
+    {"id": "status-read", "from": "ROGUE_EPOCH in src/data/rogue.ts", "through": ["src/pages/lab.astro"], "to": "the factual running-since line on the lab page"},
     {"id": "cloudflare-apex-deploy", "from": "npm run deploy:cloudflare", "through": ["npm run build", "dist/", "wrangler.toml", "src/canonical-worker.js", "Cloudflare Workers Assets"], "to": "authoritative production runtime on adrianlumley.co/*"},
     {"id": "cloudflare-www-deploy", "from": "npm run deploy:cloudflare:www", "through": ["wrangler.www.toml", "src/www-redirect.js"], "to": "separate redirect Worker on www.adrianlumley.co/*"},
     {"id": "cloudflare-all-deploy", "from": "npm run deploy:cloudflare:all", "through": ["npm run deploy:cloudflare", "npm run deploy:cloudflare:www"], "to": "apex production runtime and www redirect Worker"},
@@ -226,7 +228,8 @@
     "Old /blog/ URLs continue to redirect or alias to writing.",
     "Base.astro remains the shared document shell for primary Astro pages.",
     "Writing publication state and ordering flow through getPublishedPosts; Signal Room ordering flows through getEpisodes.",
-    "Post and episode route forms in src/lib/content.ts remain stable because they are used as RSS identifiers.",
+    "Post and episode route forms in src/lib/content.ts remain stable because they are used as RSS identifiers; pages link through postHref and trailing-slash nav hrefs so no internal click pays the canonical 308.",
+    "The site has four type languages, each whole on its own pages: the record (homepage and connected pages: one sans at body size and weight 400, one ink on flat paper, the page title as the only size jump, italic labels, no entrance animation); essays (/writing/<slug>/: Newsreader title and prose via src/styles/essay.css, the only route that imports or preloads the serif; the writing index stays a record table with its tag filter); the Signal Room instrument (index and every episode via src/styles/instrument.css: dark panel, Geist Mono for log and meta, sans for reading, no serif); and /360/ (its own terminal file). No page mixes two.",
     "The public surface follows the lowercase editorial and protected-language rules in AGENTS.md.",
     "Cloudflare Workers Assets on adrianlumley.co/* is the authoritative production runtime; the active GitHub Pages workflow is a separate, non-authoritative publication path.",
     "The www.adrianlumley.co/* redirect is deployed as a separate Worker, and deploy:cloudflare:all performs both Cloudflare deployments.",

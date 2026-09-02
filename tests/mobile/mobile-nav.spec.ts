@@ -70,9 +70,9 @@ test.describe('mobile homepage record', () => {
       for (let i = 0; i < recordLinkCount; i += 1) {
         await expectTapTarget(recordLinks.nth(i), 44);
       }
-      await expectTapTarget(page.locator('main a[href="/writing/the-honest-record"]'), 44);
-      await expectTapTarget(page.locator('main a[href="/work"]'), 44);
-      await expectTapTarget(page.locator('main a[href="/contact"]'), 44);
+      await expectTapTarget(page.locator('main a[href="/writing/the-honest-record/"]'), 44);
+      await expectTapTarget(page.locator('main a[href="/work/"]'), 44);
+      await expectTapTarget(page.locator('main a[href="/contact/"]'), 44);
       await expectTapTarget(page.locator('main a[href="https://www.linkedin.com/in/adrianlumley/"]'), 44);
       await expectTapTarget(page.locator('main a[href="https://github.com/prime3679"]'), 44);
     });
@@ -134,7 +134,7 @@ test.describe('mobile navigation', () => {
       const linkTexts = (await mobileNav.locator('a').allTextContents()).map((text) => text.trim());
       expect(linkTexts).toEqual(['work', 'lab', 'writing', 'signal room', 'contact']);
 
-      for (const href of ['/work', '/lab', '/writing', '/signal-room', '/contact']) {
+      for (const href of ['/work/', '/lab/', '/writing/', '/signal-room/', '/contact/']) {
         await expectTapTarget(mobileNav.locator(`a[href="${href}"]`));
       }
     });

@@ -14,6 +14,73 @@ test('signal room: index lists every episode newest-first', async ({ page }) => 
   await expect(page.getByText('new here? start with')).toBeVisible();
 });
 
+test('signal room: the index carries the dark instrument panel above the ledger', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto('/signal-room/');
+
+  const panel = page.locator('section.instrument-panel[aria-label="signal room episode log"]');
+  await expect(panel).toBeVisible();
+  await expect(panel).toContainText('signal.room 07:11');
+  await expect(panel.locator('.signal-log li')).toHaveCount(4);
+  await expect(panel.locator('.signal-log')).toHaveCSS('font-family', /Geist Mono/);
+  await expect(panel.locator('.signal-highlight')).toContainText('the storm is hours out');
+
+  // dark ground, light text, the single accent on the highlight; no fade-in
+  const paint = await panel.evaluate((node) => {
+    const style = window.getComputedStyle(node);
+    const highlight = window.getComputedStyle(node.querySelector('.signal-highlight')!);
+    return { bg: style.backgroundColor, color: style.color, opacity: style.opacity, animation: style.animationName, accent: highlight.color };
+  });
+  expect(paint.bg).toBe('rgb(22, 19, 14)');
+  expect(paint.color).toBe('rgb(234, 228, 215)');
+  expect(paint.accent).toBe('rgb(201, 102, 63)');
+  expect(paint.opacity).toBe('1');
+  expect(paint.animation).toBe('none');
+
+  // the panel sits above the latest block and the ledger
+  const panelBox = await panel.boundingBox();
+  const ledgerBox = await page.locator('.ledger-row').first().boundingBox();
+  expect(panelBox!.y + panelBox!.height).toBeLessThan(ledgerBox!.y);
+  await expect(page.locator('.ledger-index').first()).toHaveText('12');
+  await expect(page.locator('.ledger-index').first()).toHaveCSS('font-family', /Geist Mono/);
+  await expect(page.locator('.ledger-row h3 a').first()).toHaveCSS('font-family', /Geist Variable/);
+  await expect(page.locator('.reveal')).toHaveCount(0);
+});
+
+// the signal room is one instrument: the index and every episode share the
+// dark panel, mono for the log and the meta lines, the record's sans for
+// anything read at length, and no essay serif anywhere.
+for (const path of ['/signal-room/', '/signal-room/night-shift/', '/signal-room/the-honest-gray/']) {
+  test(`signal room: ${path} speaks the instrument language, not the essay one`, async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto(path);
+
+    await expect(page.locator('section.instrument-panel')).toHaveCount(1);
+    await expect(page.locator('main.essay, .essay, .prose')).toHaveCount(0);
+    await expect(page.locator('head link[rel="preload"][href*="newsreader"]')).toHaveCount(0);
+
+    const type = await page.evaluate(() => {
+      const families = new Set<string>();
+      for (const el of document.querySelectorAll<HTMLElement>('main, main *')) {
+        const style = window.getComputedStyle(el);
+        if (style.display === 'none') continue;
+        const ownText = Array.from(el.childNodes).some((n) => n.nodeType === Node.TEXT_NODE && n.textContent?.trim());
+        if (ownText) families.add(style.fontFamily.split(',')[0].replace(/"/g, ''));
+      }
+      const faces = Array.from(document.querySelectorAll('head style')).map((s) => s.textContent ?? '').join('');
+      return { families: [...families].sort(), newsreaderFace: faces.includes('font-family:Newsreader Variable') };
+    });
+    expect(type.families).toEqual(['Geist Mono Variable', 'Geist Variable']);
+    expect(type.newsreaderFace).toBe(false);
+
+    // the meta lines are mono uppercase; the panel is dark with light text
+    await expect(page.locator('.instrument-meta').first()).toHaveCSS('font-family', /Geist Mono/);
+    await expect(page.locator('.instrument-meta').first()).toHaveCSS('text-transform', 'uppercase');
+    await expect(page.locator('section.instrument-panel')).toHaveCSS('background-color', 'rgb(22, 19, 14)');
+    await expect(page.locator('section.instrument-panel')).toHaveCSS('color', 'rgb(234, 228, 215)');
+  });
+}
+
 test('signal room: an episode page renders prose and serial nav', async ({ page }) => {
   await page.goto('/signal-room/night-shift');
 
@@ -27,6 +94,29 @@ test('signal room: an episode page renders prose and serial nav', async ({ page 
   // First episode: no prev, next points at episode 02
   await expect(page.locator('a[href="/signal-room/green-is-not-healthy/"]')).toBeVisible();
   await expect(page.locator('a[href="/signal-room/"]').first()).toBeVisible();
+
+  // the fiction is read inside the dark panel in the record's sans, under a
+  // mono meta line; the neighbour rows are the same ledger as the index
+  const panel = page.locator('section.instrument-panel[aria-label="signal room episode 01"]');
+  await expect(panel).toBeVisible();
+  await expect(panel).toContainText('signal.room · episode 01');
+  await expect(panel.locator('.episode-prose p').first()).toHaveCSS('font-family', /Geist Variable/);
+  await expect(panel.locator('.episode-prose p').first()).toHaveCSS('color', 'rgb(234, 228, 215)');
+  await expect(page.locator('.page-header .instrument-meta')).toHaveText('episode 01 · May 18, 2026');
+  await expect(page.locator('main h1')).toHaveCSS('font-family', /Geist Variable/);
+
+  const nav = page.locator('nav[aria-label="episode navigation"]');
+  await expect(nav.locator('.ledger-row')).toHaveCount(1);
+  await expect(nav.locator('.ledger-index')).toHaveText('02');
+  await expect(nav.locator('.instrument-meta')).toHaveText('next');
+  await expect(nav.locator('.card-title a')).toHaveAttribute('href', '/signal-room/green-is-not-healthy/');
+
+  // a middle episode has both neighbours, previous first
+  await page.goto('/signal-room/the-second-knock/');
+  const middleNav = page.locator('nav[aria-label="episode navigation"]');
+  await expect(middleNav.locator('.instrument-meta')).toHaveText(['previous', 'next']);
+  await expect(middleNav.locator('.ledger-index')).toHaveText(['10', '12']);
+  await expect(page.locator('main footer a[href="/signal-room/night-shift/"]')).toHaveText('start from episode 01');
 });
 
 test('signal room: the index shows a date for each episode', async ({ page }) => {

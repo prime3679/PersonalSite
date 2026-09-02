@@ -126,7 +126,8 @@ test('homepage first screen sells the latest essay under the lede', async ({ pag
 
   const feature = page.locator('[data-record-feature]');
   const featureLink = feature.getByRole('link', { name: 'The honest record' });
-  await expect(featureLink).toHaveAttribute('href', '/writing/the-honest-record');
+  // page links carry the canonical trailing slash so the click is one request
+  await expect(featureLink).toHaveAttribute('href', '/writing/the-honest-record/');
   await expect(feature.locator('time')).toHaveText('July 2026');
   await expect(feature.locator('time')).toHaveCSS('font-style', 'normal');
   await expect(feature.locator('.record__feature-dek')).toHaveText(DEK);
@@ -158,7 +159,7 @@ test('homepage first screen sells the latest essay under the lede', async ({ pag
   expect(sizes).toEqual([`${bodySize}px`]);
 
   // the featured essay is not duplicated in the archive
-  await expect(record.locator('.record__rows a[href="/writing/the-honest-record"]')).toHaveCount(0);
+  await expect(record.locator('.record__rows a[href^="/writing/the-honest-record"]')).toHaveCount(0);
 });
 
 test('homepage links share one ink and one hairline underline; labels alone are italic', async ({ page }) => {
@@ -236,8 +237,8 @@ test('homepage ledger, archive, lab rows, and footer are reconciled', async ({ p
   // writing archive: two dated rows, real posts, short titles
   const writing = page.getByRole('region', { name: 'writing' });
   await expect(writing.locator('.record__row time')).toHaveText(['June 2026', 'March 2026']);
-  await expect(writing.getByRole('link', { name: 'Does Claude train on your email?' })).toHaveAttribute('href', '/writing/claude-gmail-connector-data');
-  await expect(writing.getByRole('link', { name: 'Your meetings are a budget line' })).toHaveAttribute('href', '/writing/meeting-cost');
+  await expect(writing.getByRole('link', { name: 'Does Claude train on your email?' })).toHaveAttribute('href', '/writing/claude-gmail-connector-data/');
+  await expect(writing.getByRole('link', { name: 'Your meetings are a budget line' })).toHaveAttribute('href', '/writing/meeting-cost/');
 
   // lab: sentence case, existing hrefs, no dates, same two-column rhythm
   const lab = page.getByRole('region', { name: 'lab' });
@@ -252,10 +253,10 @@ test('homepage ledger, archive, lab rows, and footer are reconciled', async ({ p
   // footer: one line, commas, four text links
   const footer = page.locator('.record__footer');
   await expect(footer).toHaveText('email, LinkedIn, GitHub, a short record');
-  await expect(footer.getByRole('link', { name: 'email' })).toHaveAttribute('href', '/contact');
+  await expect(footer.getByRole('link', { name: 'email' })).toHaveAttribute('href', '/contact/');
   await expect(footer.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute('href', 'https://www.linkedin.com/in/adrianlumley/');
   await expect(footer.getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', 'https://github.com/prime3679');
-  await expect(footer.getByRole('link', { name: 'a short record' })).toHaveAttribute('href', '/work');
+  await expect(footer.getByRole('link', { name: 'a short record' })).toHaveAttribute('href', '/work/');
 
   // no pitch, no instrument, no numbered rails
   await expect(main).not.toContainText("let's talk");
@@ -273,10 +274,10 @@ test('the homepage link style is the site link style', async ({ page }) => {
   // the homepage carries no header or footer, so read the chrome link
   // style from an inner page, skipping the current-page rule on its own tab
   await page.goto('/work/');
-  const navLink = await linkStyle(page.locator('[data-header-desktop-nav] a[href="/lab"]'));
-  const footerLink = await linkStyle(page.locator('footer nav a[href="/lab"]'));
+  const navLink = await linkStyle(page.locator('[data-header-desktop-nav] a[href="/lab/"]'));
+  const footerLink = await linkStyle(page.locator('footer nav a[href="/lab/"]'));
 
-  await page.goto('/writing/the-honest-record');
+  await page.goto('/writing/the-honest-record/');
   const proseLink = page.locator('main .prose a').first();
   const essayLink = (await proseLink.count()) ? await linkStyle(proseLink) : await linkStyle(page.locator('main a').first());
 
@@ -289,4 +290,79 @@ test('the homepage link style is the site link style', async ({ page }) => {
     expect(style.decorationColor).toBe(homeLink.decorationColor);
     expect(style.thickness).toBe(homeLink.thickness);
   }
+  // chrome links share the record's family; essay prose is the serif reading face
+  for (const style of [navLink, footerLink, labLink]) {
+    expect(style.fontFamily).toBe(homeLink.fontFamily);
+  }
 });
+
+// the record does not stop at the homepage: connected pages are set in the
+// same sans, at the same body size, in the same ink, with the page title as
+// the one size jump and italic reserved for labels. essays read in the serif
+// (writing.spec) and the signal room is the instrument (signal-room.spec);
+// those two languages have their own specs.
+for (const path of ['/writing/', '/about/', '/work/', '/lab/', '/contact/']) {
+  test(`${path} is set in the record's type system`, async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto('/');
+    const home = await page.locator('main .record').evaluate((node) => {
+      const style = window.getComputedStyle(node);
+      return { family: style.fontFamily, size: style.fontSize, color: style.color };
+    });
+    const featureSize = await page.locator('[data-record-feature] h2').evaluate((node) => window.getComputedStyle(node).fontSize);
+
+    await page.goto(path);
+    const measured = await page.evaluate(() => {
+      const families = new Set<string>();
+      const sizes = new Map<string, string[]>();
+      const colors = new Set<string>();
+      const italics: string[] = [];
+      const transforms: string[] = [];
+      const animated: string[] = [];
+      const nodes = document.querySelectorAll<HTMLElement>('header, main, footer, header *, main *, footer *');
+      for (const el of nodes) {
+        const ownText = Array.from(el.childNodes).some((n) => n.nodeType === Node.TEXT_NODE && n.textContent?.trim());
+        const style = window.getComputedStyle(el);
+        if (style.display === 'none' || style.visibility === 'hidden') continue;
+        if (style.animationName !== 'none' || Number(style.opacity) < 1) animated.push(el.tagName.toLowerCase());
+        // controls (night shift, tag chips) are not text; they carry their own size
+        if (!ownText || el.tagName === 'BUTTON') continue;
+        const text = (el.textContent ?? '').trim().slice(0, 40);
+        families.add(style.fontFamily.split(',')[0]);
+        sizes.set(style.fontSize, [...(sizes.get(style.fontSize) ?? []), text]);
+        colors.add(style.color);
+        // inline emphasis inside an essay is content; italic outside prose is a label
+        if (style.fontStyle === 'italic' && !el.closest('.prose')) italics.push(text);
+        if (style.textTransform === 'uppercase') transforms.push(text);
+      }
+      return {
+        families: [...families],
+        sizes: Object.fromEntries(sizes),
+        colors: [...colors],
+        italics,
+        transforms,
+        animated,
+        h1Size: window.getComputedStyle(document.querySelector('main h1')!).fontSize,
+        gradient: window.getComputedStyle(document.body).backgroundImage,
+      };
+    });
+
+    expect(measured.families).toEqual([home.family.split(',')[0]]);
+    expect(measured.colors).toEqual([home.color]);
+    expect(measured.h1Size).toBe(featureSize);
+    // body size everywhere and the title once
+    const sizeKeys = Object.keys(measured.sizes).sort();
+    expect(sizeKeys).toEqual([home.size, featureSize].sort());
+    expect(measured.sizes[featureSize]).toHaveLength(1);
+    expect(measured.transforms).toEqual([]);
+    expect(measured.animated).toEqual([]);
+    expect(measured.gradient).toBe('none');
+    // italic is for labels: short, no sentence punctuation, never a link
+    for (const label of measured.italics) {
+      expect(label.length).toBeLessThan(40);
+      expect(label).not.toMatch(/[.!?]$/);
+    }
+    const italicLinks = await page.locator('main a').evaluateAll((links) => links.filter((a) => window.getComputedStyle(a).fontStyle === 'italic').length);
+    expect(italicLinks).toBe(0);
+  });
+}

@@ -1,11 +1,17 @@
 ---
+import '../../styles/instrument.css';
 import Base from '../../layouts/Base.astro';
 import PageIntro from '../../components/PageIntro.astro';
+import Panel from '../../components/Panel.astro';
 import { render, type CollectionEntry } from 'astro:content';
 import { getEpisodes, episodePath, episodeOgPath } from '../../lib/content';
 import { episodeTitle, formatLongDate, padEpisode } from '../../lib/format';
 import { canonicalUrl } from '../../lib/seo';
 
+// an episode is the instrument opened to one entry: the same record intro
+// as the index, the fiction read inside the dark panel, then the ledger
+// rows for the entries either side. no essay serif here; the signal room
+// speaks in the panel register on every page.
 export async function getStaticPaths() {
   const episodes = await getEpisodes('asc');
 
@@ -31,6 +37,11 @@ const { episode, prev, next, first } = Astro.props;
 const { Content } = await render(episode);
 
 const pageTitle = `${episode.data.title} | Signal Room`;
+const number = padEpisode(episode.data.episode);
+const neighbours = [
+  prev ? { relation: 'previous', entry: prev } : null,
+  next ? { relation: 'next', entry: next } : null,
+].filter((item): item is { relation: string; entry: CollectionEntry<'signal-room'> } => item !== null);
 ---
 
 <Base
@@ -44,39 +55,37 @@ const pageTitle = `${episode.data.title} | Signal Room`;
     url: canonicalUrl(Astro.url),
   }}
 >
-
-  <PageIntro title={episode.data.title}>
-    <div slot="pretitle">
-      <a href="/signal-room/" class="font-sans text-xs uppercase tracking-[.08em]">← signal room</a>
-
-      <div class="flex flex-wrap gap-2 mt-6 mb-5">
-        {episode.data.badges.map((badge) => (
-          <span class="font-mono text-[.6875rem] uppercase tracking-[.08em] text-[var(--ink-soft)] border border-[var(--line)] rounded-full px-3 py-1">{badge}</span>
-        ))}
-        <span class="font-mono text-[.6875rem] uppercase tracking-[.08em] text-[var(--ink-soft)] border border-[var(--line)] rounded-full px-3 py-1">{formatLongDate(episode.data.date)}</span>
-      </div>
-    </div>
+  <PageIntro title={episode.data.title} standfirst={episode.data.teaser}>
+    <p slot="pretitle" class="instrument-meta mb-2">episode {number} · <time datetime={episode.data.date.toISOString().slice(0, 10)}>{formatLongDate(episode.data.date)}</time></p>
   </PageIntro>
 
-  <article class="prose reveal">
-    <Content />
-  </article>
+  <Panel ariaLabel={`signal room episode ${number}`} label={`signal.room · episode ${number}`}>
+    <article class="episode-prose">
+      <Content />
+    </article>
+  </Panel>
 
-  <footer class="mt-16 border-t border-[var(--line)] pt-8 reveal">
-    <nav class="flex justify-between gap-6 font-sans text-sm" aria-label="episode navigation">
-      {prev ? (
-        <a href={episodePath(prev.id)}>← {padEpisode(prev.data.episode)} · {prev.data.title}</a>
-      ) : <span />}
-      {next ? (
-        <a href={episodePath(next.id)} class="text-right">{padEpisode(next.data.episode)} · {next.data.title} →</a>
-      ) : <span />}
+  <footer class="mt-16">
+    <nav aria-label="episode navigation">
+      <h2 class="section-title">continue</h2>
+      <div>
+        {neighbours.map(({ relation, entry }) => (
+          <article class="ledger-row">
+            <p class="ledger-index">{padEpisode(entry.data.episode)}</p>
+            <div>
+              <p class="instrument-meta">{relation}</p>
+              <h3 class="card-title mt-1"><a href={episodePath(entry.id)}>{entry.data.title}</a></h3>
+              <p class="ui-copy mt-2">{entry.data.teaser}</p>
+            </div>
+          </article>
+        ))}
+      </div>
     </nav>
     <p class="ui-copy mt-6">
-      signal room · a fiction serial · published on adrianlumley.co
+      signal room · a fiction serial · published on adrianlumley.co · <a href="/signal-room/">all episodes</a>
       {episode.data.episode !== 1 && (
         <> · <a href={episodePath(first.id)}>start from episode 01</a></>
       )}
     </p>
   </footer>
-
 </Base>

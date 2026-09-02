@@ -23,8 +23,8 @@ test('a11y: skip link jumps focus to main content', async ({ page }) => {
 
 test('a11y: active header tab carries aria-current="page"', async ({ page }) => {
   await page.goto('/writing');
-  await expect(page.locator('header nav a[href="/writing"]').first()).toHaveAttribute('aria-current', 'page');
-  await expect(page.locator('header nav a[href="/work"]').first()).not.toHaveAttribute('aria-current', 'page');
+  await expect(page.locator('header nav a[href="/writing/"]').first()).toHaveAttribute('aria-current', 'page');
+  await expect(page.locator('header nav a[href="/work/"]').first()).not.toHaveAttribute('aria-current', 'page');
 });
 
 test('nav: header shows the home wordmark + canonical primary tabs', async ({ page }) => {
@@ -33,10 +33,44 @@ test('nav: header shows the home wordmark + canonical primary tabs', async ({ pa
   // The name acts as the home link
   await expect(page.locator('header a[href="/"]').first()).toBeVisible();
   // Primary tabs are the visible desktop nav
-  for (const href of ['/work', '/lab', '/writing', '/signal-room', '/contact']) {
+  for (const href of ['/work/', '/lab/', '/writing/', '/signal-room/', '/contact/']) {
     await expect(page.locator(`header a[href="${href}"]`).first()).toBeVisible();
   }
   // about stays out of the primary nav but is reachable from the footer
-  await expect(page.locator('header a[href="/about"]')).toHaveCount(0);
-  await expect(page.locator('footer a[href="/about"]')).toBeVisible();
+  await expect(page.locator('header a[href^="/about"]')).toHaveCount(0);
+  await expect(page.locator('footer a[href="/about/"]')).toBeVisible();
+});
+
+test('/360/ keeps its terminal voice: mono, black on white, arrow and comment glyphs', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.goto('/360/');
+
+  const body = page.locator('body');
+  await expect(body).toHaveCSS('font-family', /SF Mono|Menlo|Monaco|monospace/);
+  await expect(body).toHaveCSS('background-color', 'rgb(255, 255, 255)');
+  await expect(body).toHaveCSS('color', 'rgb(0, 0, 0)');
+  await expect(page.locator('.eyebrow')).toHaveText('→ 360 feedback');
+  await expect(page.locator('.note .comment')).toHaveText('// ');
+  await expect(page.locator('.topbar a[href="/"]')).toHaveText('← adrianlumley.co');
+  await expect(page.locator('#theme-toggle')).toHaveText('theme');
+  await expect(page.locator('h2.section-title').first()).toHaveCSS('text-transform', 'uppercase');
+});
+
+test('a 404 is a page, not a null body', async ({ page }) => {
+  const response = await page.goto('/this-route-does-not-exist/');
+  expect(response!.status()).toBe(404);
+  await expect(page.locator('main h1')).toHaveText('lost the signal');
+  await expect(page.locator('main a[href="/"]')).toBeVisible();
+});
+
+test('internal links carry the canonical trailing slash so no click pays a redirect', async ({ page }) => {
+  for (const path of ['/', '/writing/', '/writing/the-honest-record/', '/lab/', '/about/', '/signal-room/night-shift/']) {
+    await page.goto(path);
+    const slashless = await page.locator('a[href^="/"]').evaluateAll((links) =>
+      links
+        .map((a) => a.getAttribute('href')!.split('?')[0])
+        .filter((href) => !href.startsWith('/#') && href !== '/' && !/\.[a-z]+$/.test(href) && !href.endsWith('/')),
+    );
+    expect(slashless, `${path} links without a trailing slash`).toEqual([]);
+  }
 });

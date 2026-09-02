@@ -90,8 +90,8 @@
     window.setTimeout(() => host.remove(), 5400);
   }
 
-  // 3. typing "rogue" wakes the instrument panel. SignalTrace already
-  // listens for rogue:status, so the strip chart genuinely goes live.
+  // 3. typing "rogue" wakes any instrument panel on the page. LiveStatus
+  // listens for rogue:status, so a hosted status line genuinely goes live.
   // typing "konami" literally gets you pointed at the arrows instead.
   let letterBuffer = '';
   const LONGEST_WORD = 6;

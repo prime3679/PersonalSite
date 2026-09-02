@@ -5,7 +5,9 @@ const STATUS_HOST = 'api.adrianlumley.co';
 // The status endpoint is opt-in (PUBLIC_ROGUE_STATUS_URL). The default build
 // ships no url, so the live layer must not request the dormant status worker
 // and must keep the honest gray idle state. The live/quiet/stale decision logic
-// itself is unit-tested in src/data/rogue.test.ts (evaluateStatus).
+// itself is unit-tested in src/data/rogue.test.ts (evaluateStatus). The
+// homepage is a plain record and hosts no status instrument; the lab page
+// carries the factual receipt.
 
 test('live status: default build never requests the dormant status endpoint', async ({ page }) => {
   const statusRequests: string[] = [];
@@ -14,9 +16,9 @@ test('live status: default build never requests the dormant status endpoint', as
   });
 
   await page.goto('/');
-  const status = page.locator('[data-live-status]').first();
-  await expect(status).toHaveAttribute('data-state', 'idle');
-  await expect(status).toContainText('running since april 2026');
+  await expect(page.locator('main [data-live-status]')).toHaveCount(0);
+  await page.goto('/lab');
+  await expect(page.locator('#rogue')).toContainText('running since april 2026');
 
   // give any deferred fetch a chance to fire before asserting silence
   await page.waitForTimeout(1000);

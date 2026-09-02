@@ -1,0 +1,85 @@
+/* design tokens. one place for every value the site shares.
+
+   the record system: one ink on one paper, one sans at body size and
+   weight 400, italic reserved for labels, and one link style everywhere
+   (same ink, hairline underline, modest offset, no color shift, ink focus
+   ring). pages consume these through global.css and component styles;
+   nothing should restate a color, rule, or offset that lives here. */
+
+:root {
+  /* paper and ink */
+  --paper: #f7f3ea;
+  --paper-raised: #fbf8f1;
+  --ink: #1c1814;
+  --ink-rgb: 28 24 20;
+  --ink-soft: #574f44;
+  --line: #e4decf;
+  --line-strong: #d3cbb8;
+  --accent: #a8472c;
+  --accent-ink: #8e3a23;
+  --panel: #16130e;
+  --panel-raised: #1e1a13;
+  --panel-text: #eae4d7;
+  --panel-soft: #9c9384;
+  --panel-line: #2b261d;
+  --accent-bright: #c9663f;
+
+  /* type families */
+  --serif: 'Newsreader Variable', 'Newsreader', Georgia, 'Times New Roman', serif;
+  --sans: 'Geist Variable', 'Geist', system-ui, -apple-system, sans-serif;
+  --mono: 'Geist Mono Variable', 'Geist Mono', ui-monospace, 'SF Mono', monospace;
+
+  /* record type: one sans at body size; the feature size is the single jump */
+  --font-body: var(--sans);
+  --text-body: 1rem;
+  --leading-body: 1.6;
+  --weight-body: 400;
+  --text-feature: calc(var(--text-body) * 1.5);
+  --leading-feature: 1.3;
+  --label-style: italic;
+
+  /* links: same ink as the text, hairline underline, modest offset.
+     the current-page rule is the only sanctioned variation. */
+  --link-ink: var(--ink);
+  --link-rule: 1px;
+  --link-rule-current: 2px;
+  --link-offset: .18em;
+
+  /* focus */
+  --focus-ring: 2px solid var(--ink);
+  --focus-offset: 3px;
+
+  /* spacing, measure, radius, motion */
+  --s1: .25rem;
+  --s2: .5rem;
+  --s3: .75rem;
+  --s4: 1rem;
+  --s5: 1.5rem;
+  --s6: 2rem;
+  --s7: 3rem;
+  --s8: 4rem;
+  --s9: 6rem;
+  --s10: 8rem;
+  --measure: 66ch;
+  --radius: 3px;
+  --radius-panel: 0;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --dur: 320ms;
+  color-scheme: light;
+}
+
+/* night shift: the paper tokens remap onto the panel family. the panel
+   tokens themselves stay put, so instrument panels remain the darkest
+   surface and keep their own register. links follow --ink, so they stay
+   the text color in both shifts. */
+html.dark {
+  --paper: #16130e;
+  --paper-raised: #1e1a13;
+  --ink: #eae4d7;
+  --ink-rgb: 234 228 215;
+  --ink-soft: #9c9384;
+  --line: #2b261d;
+  --line-strong: #3a3428;
+  --accent-ink: #c9663f;
+  color-scheme: dark;
+}

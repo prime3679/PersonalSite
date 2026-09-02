@@ -224,55 +224,22 @@ const isCurrentPage = (href: string) => currentPath === normalizePath(href);
     white-space: nowrap;
   }
 
+  /* nav links take the global link style (ink, hairline underline). the
+     only variation is the section you are in, which carries the heavier
+     current-page rule from tokens.css. */
   .site-header__nav-link,
   .site-header__mobile-link {
-    color: var(--ink-soft);
+    color: var(--link-ink);
     font-family: var(--mono);
     font-size: 13px;
     font-weight: 450;
     letter-spacing: 0.03em;
     text-transform: lowercase;
-    text-decoration: none;
-    text-underline-offset: 5px;
-    transition: color 160ms ease, text-decoration-color 160ms ease, opacity 180ms ease, transform 180ms ease;
   }
 
-  .site-header__nav-link:hover,
-  .site-header__mobile-link:hover {
-    color: var(--ink);
-  }
-
-  /* desktop nav underline draws in from the left on hover */
-  .site-header__nav-link {
-    position: relative;
-  }
-
-  .site-header__nav-link::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -4px;
-    height: 1.5px;
-    background: var(--accent);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 200ms var(--ease);
-  }
-
-  .site-header__nav-link:hover::after {
-    transform: scaleX(1);
-  }
-
-  .site-header__nav-link.is-active::after {
-    display: none;
-  }
-
-  .site-header__nav-link.is-active {
-    color: var(--ink);
-    text-decoration-line: underline;
-    text-decoration-color: var(--accent);
-    text-decoration-thickness: 1.5px;
+  .site-header__nav-link.is-active,
+  .site-header__mobile-link.is-active {
+    text-decoration-thickness: var(--link-rule-current);
   }
 
   .site-header__menu-toggle {
@@ -350,16 +317,12 @@ const isCurrentPage = (href: string) => currentPath === normalizePath(href);
     border-top: 1px solid var(--line);
   }
 
-  .site-header__mobile-link.is-active {
-    color: var(--accent-ink);
-  }
-
   .site-header__wordmark:focus-visible,
   .site-header__nav-link:focus-visible,
   .site-header__mobile-link:focus-visible,
   .site-header__menu-toggle:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 4px;
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-offset);
     border-radius: 4px;
   }
 

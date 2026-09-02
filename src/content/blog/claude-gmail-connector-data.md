@@ -1,5 +1,6 @@
 ---
 title: "Does Claude train on your email? The plan-by-plan teardown."
+shortTitle: "Does Claude train on your email?"
 date: 2026-06-09
 tags: ["ai"]
 description: "What Claude's Gmail connector trains on, where the data lives, and how long it stays , broken down across all five plans, sourced to Anthropic's own docs, with the gaps marked."
@@ -9,7 +10,7 @@ published: true
 <p class="text-xs text-muted-foreground">
   Last verified June 9, 2026 against Anthropic's primary documentation.
   <em>Changelog: Jun 9, 2026 , v2. Rebuilt as a plan-by-plan teardown: added the five-plan table
-  (and a <a href="/files/claude-gmail-connector-tier-table.pdf" class="underline hover:no-underline" download>downloadable one-pager</a>),
+  (and a <a href="/files/claude-gmail-connector-tier-table.pdf" download>downloadable one-pager</a>),
   a memory &amp; incognito section, and a "where the docs go quiet" list. Every claim was re-checked
   against the source on this date.</em>
 </p>
@@ -43,14 +44,14 @@ published: true
 
 <p class="text-xs text-muted-foreground">
   jump to:
-  <a href="#why" class="underline hover:no-underline">why this matters</a> ·
-  <a href="#sees" class="underline hover:no-underline">what it sees</a> ·
-  <a href="#lives" class="underline hover:no-underline">where it lives</a> ·
-  <a href="#training" class="underline hover:no-underline">training</a> ·
-  <a href="#memory" class="underline hover:no-underline">memory &amp; incognito</a> ·
-  <a href="#table" class="underline hover:no-underline">the table</a> ·
-  <a href="#gaps" class="underline hover:no-underline">the gaps</a> ·
-  <a href="#bottom" class="underline hover:no-underline">bottom line</a>
+  <a href="#why">why this matters</a> ·
+  <a href="#sees">what it sees</a> ·
+  <a href="#lives">where it lives</a> ·
+  <a href="#training">training</a> ·
+  <a href="#memory">memory &amp; incognito</a> ·
+  <a href="#table">the table</a> ·
+  <a href="#gaps">the gaps</a> ·
+  <a href="#bottom">bottom line</a>
 </p>
 
 <hr class="border-foreground/10 my-8" />
@@ -80,7 +81,7 @@ published: true
 <p>
   This is the part most people get wrong in conversation. Connecting Gmail is not "giving Claude
   your whole inbox forever." It's closer to a per-question, you-approve-it, read-only lookup that
-  shows its work. Straight from <a href="https://support.claude.com/en/articles/10166901-use-google-workspace-connectors" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">the connector doc</a>:
+  shows its work. Straight from <a href="https://support.claude.com/en/articles/10166901-use-google-workspace-connectors" target="_blank" rel="noopener noreferrer">the connector doc</a>:
 </p>
 
 <div class="space-y-4 my-6">
@@ -134,7 +135,7 @@ published: true
   One scoping note before moving on: everything in this piece is about the <strong>first-party</strong>
   Google Workspace connector, which Anthropic builds and runs itself , the data path is Anthropic
   end to end, revocable any time from your Google account. Anthropic's
-  <a href="https://claude.com/blog/connectors-for-everyday-life" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">broader directory spans 200+ connectors</a>,
+  <a href="https://claude.com/blog/connectors-for-everyday-life" target="_blank" rel="noopener noreferrer">broader directory spans 200+ connectors</a>,
   and many of those are operated by the app maker over remote MCP servers. For those, "Anthropic
   doesn't train on it" is necessary but not sufficient , you're also trusting whoever runs the
   connector. Different risk class, different checklist. Gmail is the easy case.
@@ -146,7 +147,7 @@ published: true
 
 <p>
   This usually comes out as "does it live for the session, the chat, or forever?" The precise
-  answer, <a href="https://support.claude.com/en/articles/10166901-use-google-workspace-connectors" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">again from the connector doc</a>:
+  answer, <a href="https://support.claude.com/en/articles/10166901-use-google-workspace-connectors" target="_blank" rel="noopener noreferrer">again from the connector doc</a>:
   data retrieved through connectors is stored on Anthropic's servers and
   <strong>retained with its associated chat</strong>. The unit of persistence is the chat, not
   the session.
@@ -172,8 +173,8 @@ published: true
   <em>storage model</em>, not the <em>retention clock</em>. How long that chat itself survives
   depends on your plan , 30 days on a consumer account, up to five years if you opted into
   training, and on Enterprise, indefinitely until an Owner sets a custom period. More on that in
-  <a href="#table" class="underline hover:no-underline">the table</a>. And memory is a separate
-  lever entirely , covered <a href="#memory" class="underline hover:no-underline">below</a>.
+  <a href="#table">the table</a>. And memory is a separate
+  lever entirely , covered <a href="#memory">below</a>.
 </p>
 
 <hr class="border-foreground/10 my-8" />
@@ -181,7 +182,7 @@ published: true
 <h2 id="training" class="text-base font-medium mt-8 mb-3">the training fork: consumer vs commercial</h2>
 
 <p>
-  Stated plainly, in <a href="https://support.claude.com/en/articles/10166901-use-google-workspace-connectors" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Anthropic's own words</a>:
+  Stated plainly, in <a href="https://support.claude.com/en/articles/10166901-use-google-workspace-connectors" target="_blank" rel="noopener noreferrer">Anthropic's own words</a>:
   <em>"We do not train our models on your Gmail, Drive, or Calendar connector data."</em>
   That holds on every plan.
 </p>
@@ -212,7 +213,7 @@ published: true
 
 <p>
   That consumer decision had a hard deadline. Under the
-  <a href="https://www.anthropic.com/news/updates-to-our-consumer-terms" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">2025 consumer-terms update</a>,
+  <a href="https://www.anthropic.com/news/updates-to-our-consumer-terms" target="_blank" rel="noopener noreferrer">2025 consumer-terms update</a>,
   Free/Pro/Max users had until <strong>October 8, 2025</strong> to choose whether their chats and
   coding sessions could be used for training. Opt in and retention on new or resumed chats
   extends to five years (de-identified); opt out and it stays at 30 days. Deleted chats are
@@ -227,7 +228,7 @@ published: true
 <p>
   Connector retention is one lever. <strong>Memory</strong> is a second, independent one , and
   it's where the under-reported surprises live. From the
-  <a href="https://support.claude.com/en/articles/11817273-use-claude-s-chat-search-and-memory-to-build-on-previous-context" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">memory &amp; chat-search doc</a>:
+  <a href="https://support.claude.com/en/articles/11817273-use-claude-s-chat-search-and-memory-to-build-on-previous-context" target="_blank" rel="noopener noreferrer">memory &amp; chat-search doc</a>:
 </p>
 
 <ul class="space-y-1.5 my-4">
@@ -249,7 +250,7 @@ published: true
   And the finding worth the price of admission. People reach for <strong>incognito chats</strong>
   assuming they're private. On a personal account, they largely are: not used for training, not
   saved to history, not pulled into memory or chat search, retained 30 days by default. But on
-  Team and Enterprise, <a href="https://support.claude.com/en/articles/12260368-using-incognito-chats" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">the doc</a> is blunt:
+  Team and Enterprise, <a href="https://support.claude.com/en/articles/12260368-using-incognito-chats" target="_blank" rel="noopener noreferrer">the doc</a> is blunt:
 </p>
 
 <p>
@@ -329,25 +330,25 @@ published: true
 </div>
 
 <p class="text-xs text-muted-foreground -mt-3 mb-4">
-  Sources, by column: <a href="https://www.anthropic.com/news/updates-to-our-consumer-terms" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">consumer terms</a> and <a href="https://code.claude.com/docs/en/data-usage" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">data usage</a> (consumer);
-  <a href="https://support.claude.com/en/articles/10440198-configure-custom-data-retention-controls-for-enterprise-plans" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">custom retention</a>,
-  <a href="https://platform.claude.com/docs/en/manage-claude/api-and-data-retention" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">API &amp; data retention</a>,
-  <a href="https://support.claude.com/en/articles/11817273-use-claude-s-chat-search-and-memory-to-build-on-previous-context" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">memory</a>, and
-  <a href="https://support.claude.com/en/articles/12260368-using-incognito-chats" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">incognito</a> (Team / Enterprise).
-  Where the docs don't say, the cell says so and points to <a href="#gaps" class="underline hover:no-underline">the gaps</a>.
+  Sources, by column: <a href="https://www.anthropic.com/news/updates-to-our-consumer-terms" target="_blank" rel="noopener noreferrer">consumer terms</a> and <a href="https://code.claude.com/docs/en/data-usage" target="_blank" rel="noopener noreferrer">data usage</a> (consumer);
+  <a href="https://support.claude.com/en/articles/10440198-configure-custom-data-retention-controls-for-enterprise-plans" target="_blank" rel="noopener noreferrer">custom retention</a>,
+  <a href="https://platform.claude.com/docs/en/manage-claude/api-and-data-retention" target="_blank" rel="noopener noreferrer">API &amp; data retention</a>,
+  <a href="https://support.claude.com/en/articles/11817273-use-claude-s-chat-search-and-memory-to-build-on-previous-context" target="_blank" rel="noopener noreferrer">memory</a>, and
+  <a href="https://support.claude.com/en/articles/12260368-using-incognito-chats" target="_blank" rel="noopener noreferrer">incognito</a> (Team / Enterprise).
+  Where the docs don't say, the cell says so and points to <a href="#gaps">the gaps</a>.
 </p>
 
 <p class="my-4">
-  <a href="/files/claude-gmail-connector-tier-table.pdf" class="underline hover:no-underline" download>↓ download the one-page tier table (PDF)</a>
+  <a href="/files/claude-gmail-connector-tier-table.pdf" download>↓ download the one-page tier table (PDF)</a>
   <span class="text-xs text-muted-foreground"> , the full five-column version, made to forward.</span>
 </p>
 
 <p>
   Two documented limits worth naming alongside the table, because the person asking has usually
-  read the fine print: Anthropic may <a href="https://platform.claude.com/docs/en/manage-claude/api-and-data-retention" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">retain flagged inputs and outputs for up to two years</a>
+  read the fine print: Anthropic may <a href="https://platform.claude.com/docs/en/manage-claude/api-and-data-retention" target="_blank" rel="noopener noreferrer">retain flagged inputs and outputs for up to two years</a>
   for misuse review even under privacy arrangements, and the Compliance API's <strong>activity feed</strong>
   , the who-did-what-when log, not message content , is
-  <a href="https://platform.claude.com/docs/en/manage-claude/compliance-integration-patterns" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">retained for six years</a>.
+  <a href="https://platform.claude.com/docs/en/manage-claude/compliance-integration-patterns" target="_blank" rel="noopener noreferrer">retained for six years</a>.
   So "delete everything when an employee leaves" is true for content; the activity metadata
   persists.
 </p>
@@ -407,17 +408,17 @@ published: true
 </p>
 
 <ul class="space-y-1.5 my-4 text-sm text-muted-foreground">
-  <li><a href="https://support.claude.com/en/articles/10166901-use-google-workspace-connectors" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Google Workspace connectors</a> , the authoritative connector doc</li>
-  <li><a href="https://www.anthropic.com/news/updates-to-our-consumer-terms" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Updates to consumer terms &amp; privacy policy</a> , the Oct 8, 2025 training fork</li>
-  <li><a href="https://code.claude.com/docs/en/data-usage" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Data usage &amp; retention</a> , consumer retention and coding sessions</li>
-  <li><a href="https://support.claude.com/en/articles/11817273-use-claude-s-chat-search-and-memory-to-build-on-previous-context" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Chat search &amp; memory</a> , memory synthesis, org controls, exports</li>
-  <li><a href="https://support.claude.com/en/articles/12260368-using-incognito-chats" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Using incognito chats</a> , exports + Compliance API inclusion on Team/Enterprise</li>
-  <li><a href="https://support.claude.com/en/articles/10440198-configure-custom-data-retention-controls-for-enterprise-plans" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Custom data retention controls (Enterprise)</a> , indefinite-by-default</li>
-  <li><a href="https://platform.claude.com/docs/en/manage-claude/api-and-data-retention" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">API &amp; data retention / ZDR</a> , ZDR scope, flagged-content retention</li>
-  <li><a href="https://platform.claude.com/docs/en/manage-claude/compliance-content-data" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Compliance API</a> , content deletion</li>
-  <li><a href="https://platform.claude.com/docs/en/manage-claude/compliance-integration-patterns" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Compliance integration patterns</a> , six-year activity-feed retention</li>
-  <li><a href="https://www.anthropic.com/product/enterprise" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Claude Enterprise</a></li>
-  <li><a href="https://claude.com/blog/connectors-for-everyday-life" class="underline hover:no-underline" target="_blank" rel="noopener noreferrer">Connectors for everyday life</a> , the 200+ connector directory</li>
+  <li><a href="https://support.claude.com/en/articles/10166901-use-google-workspace-connectors" target="_blank" rel="noopener noreferrer">Google Workspace connectors</a> , the authoritative connector doc</li>
+  <li><a href="https://www.anthropic.com/news/updates-to-our-consumer-terms" target="_blank" rel="noopener noreferrer">Updates to consumer terms &amp; privacy policy</a> , the Oct 8, 2025 training fork</li>
+  <li><a href="https://code.claude.com/docs/en/data-usage" target="_blank" rel="noopener noreferrer">Data usage &amp; retention</a> , consumer retention and coding sessions</li>
+  <li><a href="https://support.claude.com/en/articles/11817273-use-claude-s-chat-search-and-memory-to-build-on-previous-context" target="_blank" rel="noopener noreferrer">Chat search &amp; memory</a> , memory synthesis, org controls, exports</li>
+  <li><a href="https://support.claude.com/en/articles/12260368-using-incognito-chats" target="_blank" rel="noopener noreferrer">Using incognito chats</a> , exports + Compliance API inclusion on Team/Enterprise</li>
+  <li><a href="https://support.claude.com/en/articles/10440198-configure-custom-data-retention-controls-for-enterprise-plans" target="_blank" rel="noopener noreferrer">Custom data retention controls (Enterprise)</a> , indefinite-by-default</li>
+  <li><a href="https://platform.claude.com/docs/en/manage-claude/api-and-data-retention" target="_blank" rel="noopener noreferrer">API &amp; data retention / ZDR</a> , ZDR scope, flagged-content retention</li>
+  <li><a href="https://platform.claude.com/docs/en/manage-claude/compliance-content-data" target="_blank" rel="noopener noreferrer">Compliance API</a> , content deletion</li>
+  <li><a href="https://platform.claude.com/docs/en/manage-claude/compliance-integration-patterns" target="_blank" rel="noopener noreferrer">Compliance integration patterns</a> , six-year activity-feed retention</li>
+  <li><a href="https://www.anthropic.com/product/enterprise" target="_blank" rel="noopener noreferrer">Claude Enterprise</a></li>
+  <li><a href="https://claude.com/blog/connectors-for-everyday-life" target="_blank" rel="noopener noreferrer">Connectors for everyday life</a> , the 200+ connector directory</li>
 </ul>
 
 <p class="text-xs text-muted-foreground">

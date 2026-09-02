@@ -3,8 +3,9 @@
 the live layer is **opt-in and dormant by default**. the status worker
 (`infra/rogue-status/`) is not deployed, so the default production build
 ships no status url and makes **no request** to `api.adrianlumley.co`. the
-homepage strip and lab card stay in the honest gray "running since ..."
-epoch state, which needs no network.
+lab receipt (and any page that hosts `LiveStatus.astro`) stays in the honest
+gray "running since ..." epoch state, which needs no network. the homepage
+is a plain record and hosts no status instrument.
 
 to enable the live layer once the worker is actually deployed, set the
 build-time env var `PUBLIC_ROGUE_STATUS_URL` (see `src/data/rogue.ts`):
@@ -122,10 +123,10 @@ curl -s -o /dev/null -w "%{http_code}\n" -X POST \
 curl -s https://api.adrianlumley.co/v1/status
 ```
 
-with the live layer disabled (the default), the homepage makes no status
-request at all and stays in the gray epoch-only state. once enabled, the
+with the live layer disabled (the default), no page makes a status request
+and the lab receipt stays in the gray epoch-only state. once enabled, the
 site also tolerates the worker being absent entirely (dns unresolvable,
-404, or timeout): the strip and lab card fall back to the same gray state
+404, or timeout): a hosted status line falls back to the same gray state
 and no console errors appear. the default no-request contract is covered by
 `tests/e2e/live-status.spec.ts`; the live/quiet/stale decision logic is
 covered by `evaluateStatus` in `src/data/rogue.test.ts`.

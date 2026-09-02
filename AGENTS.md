@@ -16,7 +16,10 @@ The only public nav labels, in order:
 work · lab · writing · signal room · contact
 ```
 
-Keep the mobile nav as a clean hamburger/toggle. The `adrian lumley` wordmark must not wrap.
+Keep the mobile nav as a clean hamburger/toggle on inner pages. The `adrian lumley` wordmark must not wrap.
+
+## homepage
+The homepage is the record, not an app shell. It renders through `Base` with `chrome={false}`: no header, wordmark, night shift pill, hamburger, or site footer. The record is dark ink on light paper from the first paint with no fade-in; night shift remaps paper and ink together and must never leave light ink on light ground. Keep the featured essay under the lede. Do not restore a name-hero, put Rogue on the first screen, or add a contact pitch.
 
 ## public-surface rules
 - all UI copy should be lowercase unless proper nouns require otherwise

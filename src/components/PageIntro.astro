@@ -8,7 +8,7 @@ const { title, standfirst } = Astro.props;
 const hasStandfirst = Boolean(standfirst) || Astro.slots.has('standfirst');
 ---
 
-<header class="page-header reveal">
+<header class="page-header">
   <slot name="pretitle" />
   <h1 class="page-title">{title}</h1>
   {hasStandfirst && (

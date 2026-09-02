@@ -1,58 +1,37 @@
 ---
 import Base from '../../layouts/Base.astro';
 import PageIntro from '../../components/PageIntro.astro';
-import Panel from '../../components/Panel.astro';
-import SignalLog from '../../components/SignalLog.astro';
 import { getEpisodes, episodePath } from '../../lib/content';
 import { formatLongDate, padEpisode } from '../../lib/format';
 
+// the serial is one table: episode number in the key column, title,
+// teaser, and date in the value column. the fiction lives inside the
+// episodes, not in an instrument panel above them.
 const episodes = await getEpisodes('desc');
-const latest = episodes[0];
 const first = episodes[episodes.length - 1];
-
-const logEntries = [
-  { time: '02:22', text: 'rogue marks four items: not morning-safe' },
-  { time: '03:48', text: 'off-site voice requests entry. no door.' },
-  { time: '03:50', text: 'front detected 200mi offshore, unseen by local sensors' },
-  { time: '03:52', text: 'brief compressed to one humane sentence' },
-];
+const isoDate = (date: Date) => date.toISOString().slice(0, 10);
 ---
 
 <Base title="Signal Room" description="short fiction about rogue, systems, households, truth, and mercy." ogImage="/og/signal-room.png">
   <PageIntro title="signal room" standfirst="short fiction about rogue and the human side of systems that try to help without becoming the weather." />
 
   {first && (
-    <p class="ui-copy -mt-10 mb-12 reveal">new here? start with <a href={episodePath(first.id)}>episode {padEpisode(first.data.episode)}, {first.data.title}</a>.</p>
+    <p class="measure links -mt-6 mb-12">new here? start with <a href={episodePath(first.id)}>episode {padEpisode(first.data.episode)}, {first.data.title}</a>.</p>
   )}
 
-  <Panel ariaLabel="signal room episode log" label="signal.room 07:11">
-    <SignalLog entries={logEntries} />
-    <p class="signal-highlight">the storm is hours out and nothing is on fire. sleep. i'll have one clean decision waiting for you at six.</p>
-    <p class="mt-5 font-mono text-[.625rem] uppercase tracking-[.08em] text-[var(--panel-soft)]">03 · off-site · the one accent in the dark register</p>
-  </Panel>
-
-  {latest && (
-    <section class="mt-16 reveal">
-      <h2 class="section-title">latest</h2>
-      <p class="font-mono text-xs uppercase tracking-[.08em] text-[var(--ink-soft)]">episode {padEpisode(latest.data.episode)} · {formatLongDate(latest.data.date)}</p>
-      <h2 class="card-title mt-2"><a href={episodePath(latest.id)}>{latest.data.title}</a></h2>
-      <p class="ui-copy mt-3">{latest.data.teaser}</p>
-    </section>
-  )}
-
-  <section class="mt-16 reveal">
-    <h2 class="section-title">episodes</h2>
-    <div>
+  <section aria-labelledby="episodes-h">
+    <h2 id="episodes-h" class="label">episodes</h2>
+    <ol class="rows rows--loose mt-2" reversed>
       {episodes.map((episode) => (
-        <article class="ledger-row">
-          <p class="ledger-index">{padEpisode(episode.data.episode)}</p>
-          <div>
-            <h3 class="card-title"><a href={episodePath(episode.id)}>{episode.data.title}</a></h3>
-            <p class="ui-copy mt-2">{episode.data.teaser}</p>
-            <p class="font-mono text-xs uppercase tracking-[.08em] text-[var(--ink-soft)] mt-2">{formatLongDate(episode.data.date)}</p>
+        <li class="row">
+          <span class="row__key">{padEpisode(episode.data.episode)}</span>
+          <div class="row__value">
+            <h3><a href={episodePath(episode.id)}>{episode.data.title}</a></h3>
+            <p>{episode.data.teaser}</p>
+            <p><time datetime={isoDate(episode.data.date)}>{formatLongDate(episode.data.date)}</time></p>
           </div>
-        </article>
+        </li>
       ))}
-    </div>
+    </ol>
   </section>
 </Base>

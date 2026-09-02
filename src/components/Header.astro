@@ -150,53 +150,22 @@ const isCurrentPage = (href: string) => currentPath === normalizePath(href);
     gap: 20px;
   }
 
+  /* the wordmark is the record's own type: the same sans, size, and weight
+     as the lede on the homepage. it is the one link without an underline,
+     and hover shifts nothing. */
   .site-header__wordmark {
-    position: relative;
     flex: 0 0 auto;
     color: var(--ink);
-    font-family: var(--serif);
-    font-size: 1.2rem;
-    font-weight: 500;
-    line-height: 1;
-    letter-spacing: -0.015em;
+    font: inherit;
     text-decoration: none;
     white-space: nowrap;
-    transition: font-weight 220ms var(--ease);
-  }
-
-  /* a small accent dot answers the hover, like a status light coming on.
-     absolutely positioned so the wordmark never gains width or wraps. */
-  .site-header__wordmark::after {
-    content: '';
-    position: absolute;
-    right: -0.65em;
-    top: 50%;
-    width: 0.3em;
-    height: 0.3em;
-    margin-top: -0.15em;
-    border-radius: 999px;
-    background: var(--accent);
-    opacity: 0;
-    transform: scale(0.4);
-    transition: opacity 200ms var(--ease), transform 200ms var(--ease);
-  }
-
-  .site-header__wordmark:hover,
-  .site-header__wordmark:focus-visible {
-    font-weight: 585;
-  }
-
-  .site-header__wordmark:hover::after,
-  .site-header__wordmark:focus-visible::after {
-    opacity: 1;
-    transform: scale(1);
   }
 
   .site-header__desktop-nav {
     display: none;
     align-items: center;
     justify-content: flex-end;
-    gap: 20px;
+    gap: var(--s5);
     min-width: 0;
     white-space: nowrap;
   }
@@ -215,26 +184,20 @@ const isCurrentPage = (href: string) => currentPath === normalizePath(href);
     flex: 0 0 auto;
   }
 
-  .site-header :global(.theme-toggle) {
-    min-height: 40px;
-    border-radius: 999px;
-    padding: 0 .7rem;
-    background: color-mix(in srgb, var(--paper-raised) 68%, transparent);
-    font-size: .64rem;
-    white-space: nowrap;
-  }
-
-  /* nav links take the global link style (ink, hairline underline). the
-     only variation is the section you are in, which carries the heavier
-     current-page rule from tokens.css. */
+  /* nav links take the global link style (ink, hairline underline) in the
+     record's own type. the only variation is the section you are in, which
+     carries the heavier current-page rule from tokens.css. */
   .site-header__nav-link,
   .site-header__mobile-link {
     color: var(--link-ink);
-    font-family: var(--mono);
-    font-size: 13px;
-    font-weight: 450;
-    letter-spacing: 0.03em;
+    font: inherit;
     text-transform: lowercase;
+  }
+
+  .site-header__nav-link {
+    display: inline-block;
+    padding: .75rem .3rem;
+    margin: -.75rem -.3rem;
   }
 
   .site-header__nav-link.is-active,
@@ -326,7 +289,7 @@ const isCurrentPage = (href: string) => currentPath === normalizePath(href);
     border-radius: 4px;
   }
 
-  @media (min-width: 720px) {
+  @media (min-width: 768px) {
     .site-header__bar {
       padding-top: 17px;
       padding-bottom: 17px;
@@ -337,7 +300,7 @@ const isCurrentPage = (href: string) => currentPath === normalizePath(href);
     }
 
     .site-header__actions {
-      gap: 14px;
+      gap: var(--s5);
     }
 
     .site-header__menu-toggle,

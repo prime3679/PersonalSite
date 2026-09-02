@@ -1,7 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 
 const canonicalLinks = ['work', 'lab', 'writing', 'signal room', 'contact'];
-const canonicalHrefs = ['/work', '/lab', '/writing', '/signal-room', '/contact'];
+const canonicalHrefs = ['/work/', '/lab/', '/writing/', '/signal-room/', '/contact/'];
 
 async function expectSingleCanonicalHeader(page: Page) {
   await expect(page.locator('header.site-header')).toHaveCount(1);
@@ -31,15 +31,26 @@ test.describe('Header Component', () => {
   });
 
   for (const width of [768, 1280]) {
-    test(`desktop renders one editorial header with inline mono nav and active underline at ${width}px`, async ({ page }) => {
+    test(`desktop renders one record header: sans wordmark, sans nav, current-page rule at ${width}px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 800 });
       await page.goto('/lab/');
 
       await expectSingleCanonicalHeader(page);
 
+      // the header is set in the record's own type: the body sans at body
+      // size and weight, no serif wordmark, no mono nav, no hover shift
+      const bodyFont = await page.locator('body').evaluate((node) => {
+        const style = window.getComputedStyle(node);
+        return { family: style.fontFamily, size: style.fontSize, weight: style.fontWeight };
+      });
       const wordmark = page.getByRole('link', { name: 'adrian lumley' });
       await expect(wordmark).toHaveCSS('white-space', 'nowrap');
-      await expect(wordmark).toHaveCSS('font-family', /Newsreader/);
+      await expect(wordmark).toHaveCSS('font-family', bodyFont.family);
+      await expect(wordmark).toHaveCSS('font-size', bodyFont.size);
+      await expect(wordmark).toHaveCSS('font-weight', bodyFont.weight);
+      await expect(wordmark).toHaveCSS('text-decoration-line', 'none');
+      await wordmark.hover();
+      await expect(wordmark).toHaveCSS('font-weight', bodyFont.weight);
 
       const desktopNav = page.locator('[data-header-desktop-nav]');
       await expect(desktopNav).toBeVisible();
@@ -47,12 +58,22 @@ test.describe('Header Component', () => {
 
       const links = desktopNav.getByRole('link');
       await expect(links).toHaveText(canonicalLinks);
-      await expect(links.first()).toHaveCSS('font-family', /Geist Mono/);
+      await expect(links.first()).toHaveCSS('font-family', bodyFont.family);
+      await expect(links.first()).toHaveCSS('font-size', bodyFont.size);
+      await expect(links.first()).toHaveCSS('letter-spacing', 'normal');
       expect(await links.evaluateAll((nodes) => nodes.map((node) => node.getAttribute('href')))).toEqual(canonicalHrefs);
 
       const active = desktopNav.getByRole('link', { name: 'lab' });
       await expect(active).toHaveAttribute('aria-current', 'page');
       await expect(active).toHaveCSS('text-decoration-line', /underline/);
+      await expect(active).toHaveCSS('text-decoration-thickness', '2px');
+      await expect(desktopNav.getByRole('link', { name: 'work' })).toHaveCSS('text-decoration-thickness', '1px');
+
+      // the header stays one row: the toggle sits inside the bar
+      const bar = await page.locator('[data-header-bar]').boundingBox();
+      const toggle = await page.locator('[data-theme-toggle]').boundingBox();
+      expect(toggle!.y + toggle!.height).toBeLessThanOrEqual(bar!.y + bar!.height + 0.5);
+      expect(toggle!.x + toggle!.width).toBeLessThanOrEqual(bar!.x + bar!.width + 0.5);
     });
   }
 
@@ -61,8 +82,8 @@ test.describe('Header Component', () => {
     await page.goto('/work/');
 
     const primaryNav = page.locator('[data-header-desktop-nav]');
-    await expect(primaryNav.locator('a[href="/about"]')).toHaveCount(0);
-    await expect(primaryNav.locator('a[href="/blog"]')).toHaveCount(0);
+    await expect(primaryNav.locator('a[href^="/about"]')).toHaveCount(0);
+    await expect(primaryNav.locator('a[href^="/blog"]')).toHaveCount(0);
 
     await page.goto('/about');
     await expect(page.locator('main h1')).toContainText('about');

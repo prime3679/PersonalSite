@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { getPublishedPosts, postPath } from '../lib/content';
+import { getPublishedPosts, postHref } from '../lib/content';
 import { formatMonthYear } from '../lib/format';
 
 // homepage: the record. one sans at body size, italic reserved for the
@@ -30,10 +30,10 @@ const lab = [
 ];
 
 const footerLinks = [
-  { label: 'email', href: '/contact' },
+  { label: 'email', href: '/contact/' },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/adrianlumley/', external: true },
   { label: 'GitHub', href: 'https://github.com/prime3679', external: true },
-  { label: 'a short record', href: '/work' },
+  { label: 'a short record', href: '/work/' },
 ];
 ---
 
@@ -47,7 +47,7 @@ const footerLinks = [
 
     {latest && (
       <article class="record__feature" data-record-feature>
-        <h2 class="record__feature-title"><a href={postPath(latest.id)}>{latest.data.title}</a></h2>
+        <h2 class="record__feature-title"><a href={postHref(latest.id)}>{latest.data.title}</a></h2>
         <p class="record__feature-date"><time datetime={isoDate(latest.data.date)}>{formatMonthYear(latest.data.date)}</time></p>
         <p class="record__feature-dek">{latest.data.description}</p>
       </article>
@@ -66,7 +66,7 @@ const footerLinks = [
         {archive.map((post) => (
           <li class="record__row">
             <time datetime={isoDate(post.data.date)}>{formatMonthYear(post.data.date)}</time>
-            <a href={postPath(post.id)}>{displayTitle(post)}</a>
+            <a href={postHref(post.id)}>{displayTitle(post)}</a>
           </li>
         ))}
       </ul>

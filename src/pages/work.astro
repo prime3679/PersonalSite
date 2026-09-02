@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import Eyebrow from '../components/Eyebrow.astro';
+import PageIntro from '../components/PageIntro.astro';
 
 const caseStudies = [
   {
@@ -63,23 +63,18 @@ const caseStudies = [
 ---
 
 <Base title="Work" description="case studies from fourteen years in product: salesforce, siriusxm, disney+, and ea.">
-  <header class="page-header reveal">
-    <h1 class="page-title">work</h1>
-    <p class="page-standfirst">scaled products, real numbers, and the messy middle between strategy and shipped.</p>
-  </header>
+  <PageIntro title="work" standfirst="scaled products, real numbers, and the messy middle between strategy and shipped." />
 
-  <div>
-    {caseStudies.map((cs, index) => (
-      <article id={cs.id} class:list={['reveal', 'scroll-mt-20', index > 0 && 'mt-16 border-t border-[var(--line)] pt-16']}>
-        <Eyebrow text={cs.company} />
-        <h2 class="card-title">{cs.title}</h2>
-        <p class="ui-copy mt-2">{cs.headline}</p>
-        {cs.numbers && <p class="font-mono text-xs tracking-[.02em] text-[var(--ink-soft)] mt-3">{cs.numbers}</p>}
-        <h3 class="mt-8 mb-3 font-sans text-sm uppercase tracking-[.08em] text-[var(--ink-soft)]">{cs.heading}</h3>
-        <ul class="list-lines">
-          {cs.responsibilities.map((item) => <li>{item}</li>)}
-        </ul>
-      </article>
-    ))}
-  </div>
+  {caseStudies.map((cs, index) => (
+    <article id={cs.id} class:list={['scroll-mt-20', index > 0 && 'mt-12']}>
+      <p class="label">{cs.company}</p>
+      <h2>{cs.title}</h2>
+      <p class="measure mt-3">{cs.headline}</p>
+      {cs.numbers && <p class="measure mt-2">{cs.numbers}</p>}
+      <h3 class="label mt-6">{cs.heading}</h3>
+      <ul class="list-plain mt-2">
+        {cs.responsibilities.map((item) => <li>{item}</li>)}
+      </ul>
+    </article>
+  ))}
 </Base>

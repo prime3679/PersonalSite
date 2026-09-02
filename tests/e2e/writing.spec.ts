@@ -1,28 +1,26 @@
 import { test, expect } from '@playwright/test';
 
-test('writing: tag chip filters posts and syncs the URL', async ({ page }) => {
+test('writing: the index is the record table, newest first, with a dek under each title', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto('/writing');
 
-  const productPost = page.locator('article.blog-post:has(a[href="/writing/second-order-effects"])');
-  const aiOnlyPost = page.locator('article.blog-post:has(a[href="/writing/claude-gmail-connector-data"])');
+  const rows = page.locator('#post-list .row');
+  await expect(rows).toHaveCount(5);
 
-  await expect(productPost).toBeVisible();
-  await expect(aiOnlyPost).toBeVisible();
+  const first = rows.first();
+  await expect(first.locator('time')).toHaveText('July 2026');
+  await expect(first.getByRole('link', { name: 'The honest record' })).toHaveAttribute('href', '/writing/the-honest-record/');
+  await expect(first.locator('p')).toHaveText('People lie in journals. They perform in therapy. Nobody performs for a coding agent.');
 
-  await page.locator('button.chip[data-tag="systems"]').click();
+  // the key column hugs its widest date; every title starts at the same x
+  const titleXs = await page.locator('#post-list .row h2').evaluateAll((nodes) => nodes.map((n) => n.getBoundingClientRect().x));
+  expect(new Set(titleXs.map((x) => Math.round(x))).size).toBe(1);
 
-  await expect(productPost).toBeVisible(); // second-order-effects is tagged systems
-  await expect(aiOnlyPost).toHaveClass(/hidden/); // claude-gmail is ai only
-  await expect(page).toHaveURL(/\?tag=systems/);
-  await expect(page.locator('button.chip[data-tag="systems"]')).toHaveAttribute('aria-pressed', 'true');
-});
-
-test('writing: ?tag= deep link applies the filter on load', async ({ page }) => {
-  await page.goto('/writing?tag=building');
-
-  await expect(page.locator('article.blog-post:has(a[href="/writing/joytap-one-sprint"])')).toBeVisible();
-  await expect(page.locator('article.blog-post:has(a[href="/writing/meeting-cost"])')).toHaveClass(/hidden/);
-  await expect(page.locator('button.chip[data-tag="building"]')).toHaveAttribute('aria-pressed', 'true');
+  // no blog kit: no tag chips, no per-post tag links, no reading times
+  await expect(page.locator('.chip, #tag-filters')).toHaveCount(0);
+  await expect(page.locator('main a[href*="?tag="]')).toHaveCount(0);
+  await expect(page.locator('main')).not.toContainText('min read');
+  await expect(page.locator('main a[href="/rss.xml"]')).toBeVisible();
 });
 
 test('writing: unpublished posts do not appear on the index', async ({ page }) => {
@@ -35,30 +33,42 @@ test('writing: unpublished posts do not appear on the index', async ({ page }) =
   await expect(page.getByText('Six weeks with an AI chief of staff.')).toHaveCount(0);
 });
 
-test('writing: reading time shows on the index and a post', async ({ page }) => {
-  await page.goto('/writing');
-  await expect(page.locator('article.blog-post').first()).toContainText('min read');
+test('writing: an essay opens with its title as the one size jump and a date line', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto('/writing/the-honest-record/');
 
-  await page.goto('/writing/meeting-cost');
-  await expect(page.locator('main')).toContainText('min read');
+  const title = page.locator('main h1');
+  await expect(title).toHaveText('The honest record');
+  await expect(page.locator('.page-standfirst')).toHaveText('July 8, 2026');
+  await expect(page.locator('main')).not.toContainText('min read');
+  await expect(page.locator('main')).not.toContainText('more on');
+
+  const [titleSize, bodySize] = await Promise.all([
+    title.evaluate((n) => Number.parseFloat(window.getComputedStyle(n).fontSize)),
+    page.locator('.prose p').first().evaluate((n) => Number.parseFloat(window.getComputedStyle(n).fontSize)),
+  ]);
+  expect(titleSize / bodySize).toBeCloseTo(1.5, 1);
+  await expect(page.locator('.prose p').first()).toHaveCSS('font-family', /Geist/);
 });
 
 test('writing: post prev/next navigation walks the archive in date order', async ({ page }) => {
   await page.goto('/writing');
-  // Newest post has no "older" link that predates it; it links back in time only.
-  const newestHref = await page.locator('#post-list article a').first().getAttribute('href');
+  // Newest post has no "newer" row; it links back in time only.
+  const newestHref = await page.locator('#post-list a').first().getAttribute('href');
   await page.goto(newestHref!);
 
   const postNav = page.locator('main footer nav[aria-label="post navigation"]');
   await expect(postNav).toBeVisible();
+  await expect(postNav.locator('dt')).toHaveText(['older', 'index']);
 
-  const olderLink = postNav.locator('a').first();
-  const olderHref = await olderLink.getAttribute('href');
+  const olderHref = await postNav.locator('a').first().getAttribute('href');
   expect(olderHref).toBeTruthy();
   await page.goto(olderHref!);
-  await expect(page).toHaveURL(new RegExp(`${olderHref}/?$`));
+  await expect(page).toHaveURL(new RegExp(`${olderHref}$`));
 
-  // From the older post, the right-hand link leads back to the newest.
+  // From the older post, the newer row leads back to the newest.
   const olderPostNav = page.locator('main footer nav[aria-label="post navigation"]');
+  await expect(olderPostNav.locator('dt')).toHaveText(['older', 'newer', 'index']);
   await expect(olderPostNav.locator(`a[href="${newestHref}"]`)).toBeVisible();
+  await expect(olderPostNav.locator('a[href="/writing/"]')).toHaveText('all writing');
 });

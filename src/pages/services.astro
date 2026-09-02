@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import PageIntro from '../components/PageIntro.astro';
 
 const services = [
   {
@@ -25,36 +26,27 @@ const services = [
     ],
   },
 ];
-const metaLabel = 'font-mono text-xs tracking-[.08em] text-[var(--ink-soft)]';
 ---
 
 <Base
   title="Services"
   description="occasional consulting on ai cost optimization and product strategy, from real experience cutting a production ai stack 70%."
 >
-  <header class="page-header reveal">
-    <h1 class="page-title">services</h1>
-    <p class="page-standfirst">
-      occasional consulting on ai cost optimization and product strategy.
-      based on real experience cutting a production ai stack 70% in cost.
-    </p>
-  </header>
+  <PageIntro title="services" standfirst="occasional consulting on ai cost optimization and product strategy. based on real experience cutting a production ai stack 70% in cost." />
 
-  <div>
-    {services.map((svc, index) => (
-      <article class:list={['reveal', index > 0 && 'rule-top mt-16 pt-16']}>
-        <p class={metaLabel}>{svc.availability}</p>
-        <h2 class="card-title mt-2">{svc.title}</h2>
-        <p class="ui-copy mt-3" style="max-width:var(--measure)">{svc.blurb}</p>
-        <ul class="list-lines mt-6">
-          {svc.items.map((item) => <li>{item}</li>)}
-        </ul>
-        <p class="plain-links mt-6"><a href="/contact">get in touch</a></p>
-      </article>
-    ))}
-  </div>
+  {services.map((svc, index) => (
+    <article class:list={[index > 0 && 'mt-12']}>
+      <p class="label">{svc.availability}</p>
+      <h2>{svc.title}</h2>
+      <p class="measure mt-3">{svc.blurb}</p>
+      <ul class="list-plain mt-4">
+        {svc.items.map((item) => <li>{item}</li>)}
+      </ul>
+      <p class="links mt-4"><a href="/contact/">get in touch</a></p>
+    </article>
+  ))}
 
-  <p class="ui-copy rule-top mt-16 pt-8 reveal" style="max-width:var(--measure)">
+  <p class="measure mt-12">
     i take on a limited number of projects. if the fit is right, i'll say yes.
   </p>
 </Base>

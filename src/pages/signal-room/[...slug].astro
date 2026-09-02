@@ -31,6 +31,7 @@ const { episode, prev, next, first } = Astro.props;
 const { Content } = await render(episode);
 
 const pageTitle = `${episode.data.title} | Signal Room`;
+const episodeLabel = (entry: CollectionEntry<'signal-room'>) => `episode ${padEpisode(entry.data.episode)}, ${entry.data.title}`;
 ---
 
 <Base
@@ -44,39 +45,38 @@ const pageTitle = `${episode.data.title} | Signal Room`;
     url: canonicalUrl(Astro.url),
   }}
 >
+  <PageIntro title={episode.data.title} standfirst={`episode ${padEpisode(episode.data.episode)}, ${formatLongDate(episode.data.date)}`} />
 
-  <PageIntro title={episode.data.title}>
-    <div slot="pretitle">
-      <a href="/signal-room/" class="font-sans text-xs uppercase tracking-[.08em]">← signal room</a>
-
-      <div class="flex flex-wrap gap-2 mt-6 mb-5">
-        {episode.data.badges.map((badge) => (
-          <span class="font-mono text-[.6875rem] uppercase tracking-[.08em] text-[var(--ink-soft)] border border-[var(--line)] rounded-full px-3 py-1">{badge}</span>
-        ))}
-        <span class="font-mono text-[.6875rem] uppercase tracking-[.08em] text-[var(--ink-soft)] border border-[var(--line)] rounded-full px-3 py-1">{formatLongDate(episode.data.date)}</span>
-      </div>
-    </div>
-  </PageIntro>
-
-  <article class="prose reveal">
+  <article class="prose">
     <Content />
   </article>
 
-  <footer class="mt-16 border-t border-[var(--line)] pt-8 reveal">
-    <nav class="flex justify-between gap-6 font-sans text-sm" aria-label="episode navigation">
-      {prev ? (
-        <a href={episodePath(prev.id)}>← {padEpisode(prev.data.episode)} · {prev.data.title}</a>
-      ) : <span />}
-      {next ? (
-        <a href={episodePath(next.id)} class="text-right">{padEpisode(next.data.episode)} · {next.data.title} →</a>
-      ) : <span />}
+  <footer class="mt-12">
+    <nav aria-label="episode navigation">
+      <dl class="rows">
+        {prev && (
+          <div class="row">
+            <dt class="row__key label">previous</dt>
+            <dd class="row__value"><a href={episodePath(prev.id)}>{episodeLabel(prev)}</a></dd>
+          </div>
+        )}
+        {next && (
+          <div class="row">
+            <dt class="row__key label">next</dt>
+            <dd class="row__value"><a href={episodePath(next.id)}>{episodeLabel(next)}</a></dd>
+          </div>
+        )}
+        <div class="row">
+          <dt class="row__key label">index</dt>
+          <dd class="row__value"><a href="/signal-room/">signal room</a></dd>
+        </div>
+      </dl>
     </nav>
-    <p class="ui-copy mt-6">
+    <p class="measure links mt-6">
       signal room · a fiction serial · published on adrianlumley.co
       {episode.data.episode !== 1 && (
         <> · <a href={episodePath(first.id)}>start from episode 01</a></>
       )}
     </p>
   </footer>
-
 </Base>

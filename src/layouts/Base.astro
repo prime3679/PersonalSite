@@ -1,8 +1,8 @@
 ---
 import '../styles/global.css';
-import newsreaderWoff2 from '@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2?url';
+// the record is set in one sans, so only that file is worth preloading;
+// geist mono stays lazy for code blocks inside essays.
 import geistWoff2 from '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url';
-import geistMonoWoff2 from '@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2?url';
 import { siteMetadata } from '../data/siteMetadata';
 import { navItems } from '../data/nav';
 import { CSP_POLICY } from '../data/csp';
@@ -119,9 +119,7 @@ const structuredData: Record<string, unknown> = {
   <meta name="twitter:image" content={ogImageUrl} />
   <link rel="canonical" href={canonicalPageUrl} />
   <link rel="alternate" type="application/rss+xml" title={`${siteMetadata.siteName} · writing`} href="/rss.xml" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href={newsreaderWoff2} />
   <link rel="preload" as="font" type="font/woff2" crossorigin href={geistWoff2} />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href={geistMonoWoff2} />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/site.webmanifest" />
@@ -132,20 +130,20 @@ const structuredData: Record<string, unknown> = {
   <script is:inline defer src="https://cloud.umami.is/script.js" data-website-id="aa267d21-11bc-40c3-a359-974f47e24791"></script>
 </head>
 <body>
-  <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 focus:bg-[var(--paper-raised)] focus:px-4 focus:py-2 focus:font-sans focus:text-sm">skip to content</a>
+  <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 focus:bg-[var(--paper)] focus:px-4 focus:py-2">skip to content</a>
   {chrome && <Header />}
   <main id="main" tabindex="-1" class:list={[mainClass, extraMainClass, 'focus:outline-hidden']}>
     <slot />
   </main>
   {chrome && (
     <footer class="border-t border-[var(--line)] py-8">
-      <div class="site-footer-inner mx-auto flex max-w-[52rem] flex-col items-start justify-between gap-4 font-sans text-xs text-[var(--ink-soft)] sm:flex-row sm:items-center">
+      <div class="site-footer-inner mx-auto flex max-w-[52rem] flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <span>adrian lumley · nyc</span>
         <nav class="flex flex-wrap items-center gap-x-5 gap-y-2" aria-label="footer">
           {navItems.map((item) => (
             <a href={item.href}>{item.label}</a>
           ))}
-          <a href="/about">about</a>
+          <a href="/about/">about</a>
           <a href="/rss.xml">rss</a>
         </nav>
       </div>

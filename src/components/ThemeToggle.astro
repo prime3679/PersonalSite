@@ -81,19 +81,21 @@
 </script>
 
 <style>
+  /* a control, not a link: the record's sans a step under body size, a
+     hairline border, and an ink fill when night shift is on. no accent. */
   .theme-toggle {
+    min-height: 44px;
+    padding: 0 .75rem;
     border: 1px solid var(--line);
     border-radius: var(--radius);
     background: transparent;
-    color: var(--ink-soft);
+    color: var(--ink);
     cursor: pointer;
-    font-family: var(--mono);
-    font-size: .6875rem;
-    letter-spacing: .04em;
-    padding: .25rem .625rem;
-    min-height: 32px;
+    font: inherit;
+    font-size: .875rem;
+    white-space: nowrap;
   }
-  .theme-toggle:hover { border-color: var(--accent); color: var(--ink); }
+  .theme-toggle:hover { border-color: var(--ink); }
   .theme-toggle:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
-  .theme-toggle[aria-pressed="true"] { border-color: var(--accent); color: var(--accent-ink); }
+  .theme-toggle[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
 </style>

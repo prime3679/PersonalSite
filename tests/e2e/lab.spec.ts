@@ -3,8 +3,8 @@ import { test, expect } from '@playwright/test';
 test('lab page has correct title, heading, and rogue card', async ({ page }) => {
   await page.goto('/lab');
 
-  // Check the page title
-  await expect(page).toHaveTitle('lab · Adrian Lumley');
+  // Check the page title (the same canonical form base-layout.spec asserts)
+  await expect(page).toHaveTitle('Lab | Adrian Lumley');
 
   // Check for the main heading
   await expect(page.locator('main h1')).toHaveText('lab');
@@ -40,4 +40,11 @@ test('lab page has correct title, heading, and rogue card', async ({ page }) => 
   await expect(alsoBuilt.locator('a[href="/lab/the-cap-is-gone/"]')).toHaveText('the cap is gone');
   await expect(alsoBuilt.locator('a')).not.toHaveCount(0);
   await expect(alsoBuilt.locator('.card')).toHaveCount(0);
+
+  // the lab index is a record, not a pitch: no feedback gate, no eyebrows in
+  // mono, labels in italic
+  await expect(page.locator('#feedback-gate')).toHaveCount(0);
+  await expect(page.locator('main')).not.toContainText('send the sentence');
+  await expect(rogueCard.locator('.label')).toHaveText('flagship');
+  await expect(rogueCard.locator('.label')).toHaveCSS('font-style', 'italic');
 });

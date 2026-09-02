@@ -139,6 +139,38 @@ try {
           .map((l) => `${l.text || 'untitled'}:${l.width.toFixed(1)}x${l.height.toFixed(1)}`),
       };
     });
+    // the inner page is set in the record's type: one family, one ink, body
+    // size everywhere except the page title (the one jump) and the night
+    // shift control; nothing uppercase, nothing fading in
+    const type = await page.evaluate(() => {
+      const families = new Set();
+      const sizes = new Set();
+      const colors = new Set();
+      const uppercase = [];
+      const animated = [];
+      for (const el of document.querySelectorAll('header *, main *, footer *')) {
+        const style = getComputedStyle(el);
+        if (style.display === 'none' || style.visibility === 'hidden') continue;
+        if (style.animationName !== 'none' || Number(style.opacity) < 1) animated.push(el.tagName.toLowerCase());
+        const ownText = Array.from(el.childNodes).some((n) => n.nodeType === 3 && n.textContent.trim());
+        if (!ownText) continue;
+        families.add(style.fontFamily.split(',')[0]);
+        sizes.add(style.fontSize);
+        colors.add(style.color);
+        if (style.textTransform === 'uppercase') uppercase.push(el.textContent.trim().slice(0, 30));
+      }
+      const body = getComputedStyle(document.body);
+      const title = getComputedStyle(document.querySelector('main h1'));
+      return { families: [...families], sizes: [...sizes].sort(), colors: [...colors], uppercase, animated, bodyFamily: body.fontFamily.split(',')[0], bodySize: body.fontSize, titleSize: title.fontSize };
+    });
+    if (type.families.length !== 1 || type.families[0] !== type.bodyFamily) failures.push(`${width}: ${navPath} uses families ${type.families.join(', ')}`);
+    if (type.colors.length !== 1) failures.push(`${width}: ${navPath} uses inks ${type.colors.join(', ')}`);
+    const allowedSizes = [type.bodySize, type.titleSize, '14px'].sort();
+    if (type.sizes.some((size) => !allowedSizes.includes(size))) failures.push(`${width}: ${navPath} uses sizes ${type.sizes.join(', ')}`);
+    if (Number.parseFloat(type.titleSize) / Number.parseFloat(type.bodySize) > 1.6) failures.push(`${width}: ${navPath} title ${type.titleSize} over ${type.bodySize} body`);
+    if (type.uppercase.length) failures.push(`${width}: ${navPath} uppercase ${type.uppercase.join(',')}`);
+    if (type.animated.length) failures.push(`${width}: ${navPath} animates in ${type.animated.join(',')}`);
+
     if (header.scrollWidth > width) failures.push(`${width}: ${navPath} horizontal scroll ${header.scrollWidth}`);
     if (!header.hasToggle || !header.toggleVisible) failures.push(`${width}: mobile menu toggle missing or hidden`);
     if (!header.logoPresent) failures.push(`${width}: logo missing`);

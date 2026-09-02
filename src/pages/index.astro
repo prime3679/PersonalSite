@@ -9,6 +9,12 @@ import { formatMonthYear } from '../lib/format';
 // one size jump on the page is the latest essay, which the first screen
 // exists to sell. the ledger, the archive, and the lab rows share a single
 // max-content label column so the whole page reads as one table.
+//
+// the record is the whole page: no site header, no night shift pill, no
+// hamburger, no site footer (chrome={false}), and no fade-in. the ink is
+// at full contrast from the first paint; the site-wide reveal animation
+// used to hold this text at low opacity while the header sat fully inked
+// above it, which read as light ink on light ground.
 
 const posts = await getPublishedPosts();
 const [latest, ...earlier] = posts;
@@ -34,8 +40,9 @@ const footerLinks = [
 <Base
   description="Adrian Lumley is a product leader working where AI meets enterprise adoption."
   ogImage="/og/home.png"
+  chrome={false}
 >
-  <div class="record reveal" data-record>
+  <div class="record" data-record>
     <h1 class="record__lede">Adrian Lumley is a product director in New York City.</h1>
 
     {latest && (

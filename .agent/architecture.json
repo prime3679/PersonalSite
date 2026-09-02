@@ -98,7 +98,7 @@
       "dist/**",
       "node_modules/**"
     ],
-    "digest": "1a865c0d4e5f531e17803d46b2f0e300f767da330dc84e7cff2fafd4f1f506b4"
+    "digest": "62145b75ff05ebfd8f33f1de03452aebc4f2b7e000482afc98459586ef3ea896"
   },
   "components": [
     {
@@ -113,7 +113,7 @@
       "name": "base document shell",
       "core": true,
       "paths": ["src/layouts/Base.astro", "src/data/csp.ts", "src/styles/global.css", "src/styles/tokens.css"],
-      "responsibility": "Own the HTML document, content security policy, metadata defaults, structured data, accessibility entry points, design tokens and global styles (including the single site-wide link and focus style), shared header, main slot, footer, and delight layer."
+      "responsibility": "Own the HTML document, content security policy, metadata defaults, structured data, accessibility entry points, design tokens and global styles (including the single site-wide link and focus style), main slot, delight layer, and the optional shared header and footer chrome (chrome={false} renders the homepage record without them)."
     },
     {
       "id": "navigation-shell",

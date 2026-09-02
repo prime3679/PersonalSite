@@ -10,7 +10,7 @@ Adrian Lumley's personal site. Live at https://adrianlumley.co. Cloudflare Worke
 
 ## Key Files
 - `src/pages/` , all pages and routes
-- `src/layouts/Base.astro` , shared head/OG shell, skip link, `<Header />`, `<main>`, and footer
+- `src/layouts/Base.astro` , shared head/OG shell, skip link, `<Header />`, `<main>`, and footer; `chrome={false}` drops header and footer, which the homepage uses
 - `src/components/Header.astro` , sticky header with wordmark, desktop nav, and mobile hamburger menu
 - `src/data/nav.ts` , single source of truth for public nav
 - `src/data/siteMetadata.ts` , title, description, social links, OG defaults
@@ -32,10 +32,18 @@ work · lab · writing · signal room · contact
 ```
 
 Rules:
-- mobile nav is a hamburger/toggle
+- mobile nav is a hamburger/toggle on inner pages
 - `adrian lumley` wordmark must not wrap
 - do not hardcode alternate nav labels in pages
 - old `/blog/` URLs must keep redirecting/aliasing to `/writing/`
+
+## Homepage Rules
+The homepage is the record, not an app shell:
+- no site header, wordmark, night shift pill, hamburger, or site footer on `/`
+- dark ink on light paper from the first paint; no fade-in or reveal animation on the record
+- night shift, when the visitor has it on, remaps paper and ink together; never light ink on light ground
+- one lede line, the featured essay with date and dek, currently/past, writing, lab, then the four footer links
+- no name-hero, no Rogue on the first screen, no contact pitch
 
 ## Live Routes That Matter
 - `/`

@@ -47,11 +47,43 @@ async function getMenuIconState(toggle: Locator) {
   });
 }
 
-test.describe('mobile homepage navigation', () => {
+// the homepage is the record and ships no header, so the header and menu
+// checks run on an inner page; the record gets its own tap-target pass.
+const NAV_PAGE = '/writing/';
+
+test.describe('mobile homepage record', () => {
+  for (const width of targetWidths) {
+    test(`mobile: ${width}px homepage is the record with no chrome and no horizontal scroll`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/');
+
+      await expect(page.locator('header.site-header, #menu-toggle, #mobile-nav, footer')).toHaveCount(0);
+      await expect(page.locator('main h1')).toBeVisible();
+
+      const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+      expect(scrollWidth).toBeLessThanOrEqual(width);
+
+      // every record link stays tappable at 44px without inflating the rows
+      const recordLinks = page.locator('main .record a');
+      const recordLinkCount = await recordLinks.count();
+      expect(recordLinkCount).toBeGreaterThan(5);
+      for (let i = 0; i < recordLinkCount; i += 1) {
+        await expectTapTarget(recordLinks.nth(i), 44);
+      }
+      await expectTapTarget(page.locator('main a[href="/writing/the-honest-record"]'), 44);
+      await expectTapTarget(page.locator('main a[href="/work"]'), 44);
+      await expectTapTarget(page.locator('main a[href="/contact"]'), 44);
+      await expectTapTarget(page.locator('main a[href="https://www.linkedin.com/in/adrianlumley/"]'), 44);
+      await expectTapTarget(page.locator('main a[href="https://github.com/prime3679"]'), 44);
+    });
+  }
+});
+
+test.describe('mobile navigation', () => {
   for (const width of targetWidths) {
     test(`mobile: ${width}px header stays compact and the menu exposes the canonical links`, async ({ page }) => {
       await page.setViewportSize({ width, height: 900 });
-      await page.goto('/');
+      await page.goto(NAV_PAGE);
 
       const toggle = page.locator('#menu-toggle');
       const mobileNav = page.locator('#mobile-nav');
@@ -105,19 +137,6 @@ test.describe('mobile homepage navigation', () => {
       for (const href of ['/work', '/lab', '/writing', '/signal-room', '/contact']) {
         await expectTapTarget(mobileNav.locator(`a[href="${href}"]`));
       }
-
-      // every record link stays tappable at 44px without inflating the rows
-      const recordLinks = page.locator('main .record a');
-      const recordLinkCount = await recordLinks.count();
-      expect(recordLinkCount).toBeGreaterThan(5);
-      for (let i = 0; i < recordLinkCount; i += 1) {
-        await expectTapTarget(recordLinks.nth(i), 44);
-      }
-      await expectTapTarget(page.locator('main a[href="/writing/the-honest-record"]'), 44);
-      await expectTapTarget(page.locator('main a[href="/work"]'), 44);
-      await expectTapTarget(page.locator('main a[href="/contact"]'), 44);
-      await expectTapTarget(page.locator('main a[href="https://www.linkedin.com/in/adrianlumley/"]'), 44);
-      await expectTapTarget(page.locator('main a[href="https://github.com/prime3679"]'), 44);
     });
   }
 });
@@ -125,7 +144,7 @@ test.describe('mobile homepage navigation', () => {
 test('mobile: reduced motion removes the reveal transition without exposing hidden links', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.setViewportSize({ width: 390, height: 900 });
-  await page.goto('/');
+  await page.goto(NAV_PAGE);
 
   const toggle = page.locator('#menu-toggle');
   const mobileNav = page.locator('#mobile-nav');
@@ -187,7 +206,7 @@ test('mobile: reduced motion removes the reveal transition without exposing hidd
 });
 
 test('mobile: Escape closes the open menu and restores focus to the toggle', async ({ page }) => {
-  await page.goto('/');
+  await page.goto(NAV_PAGE);
   const toggle = page.locator('#menu-toggle');
   const mobileNav = page.locator('#mobile-nav');
 
@@ -201,7 +220,7 @@ test('mobile: Escape closes the open menu and restores focus to the toggle', asy
 });
 
 test('mobile: tapping outside the open menu closes it', async ({ page }) => {
-  await page.goto('/');
+  await page.goto(NAV_PAGE);
   const toggle = page.locator('#menu-toggle');
   const mobileNav = page.locator('#mobile-nav');
 

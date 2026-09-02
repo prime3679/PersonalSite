@@ -1,8 +1,8 @@
 ---
 import '../styles/global.css';
 // the record is set in one sans, so that file is preloaded everywhere.
-// long-form pages opt into the serif preload with the `serif` prop; geist
-// mono stays lazy for code blocks and the signal room panel.
+// essays opt into the serif preload with the `serif` prop; geist mono
+// stays lazy for code blocks and the signal room instrument.
 import geistWoff2 from '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url';
 import newsreaderWoff2 from '@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2?url';
 import { siteMetadata } from '../data/siteMetadata';
@@ -30,7 +30,7 @@ interface Props {
    *  with the header. the homepage turns it off so the record is the whole
    *  page rather than content inside an app shell. */
   chrome?: boolean;
-  /** preload the serif reading face; only long-form pages set this */
+  /** preload the serif reading face; only the essay route sets this */
   serif?: boolean;
 }
 

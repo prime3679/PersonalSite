@@ -1,12 +1,17 @@
 ---
-import '../../styles/essay.css';
+import '../../styles/instrument.css';
 import Base from '../../layouts/Base.astro';
 import PageIntro from '../../components/PageIntro.astro';
+import Panel from '../../components/Panel.astro';
 import { render, type CollectionEntry } from 'astro:content';
 import { getEpisodes, episodePath, episodeOgPath } from '../../lib/content';
 import { episodeTitle, formatLongDate, padEpisode } from '../../lib/format';
 import { canonicalUrl } from '../../lib/seo';
 
+// an episode is the instrument opened to one entry: the same record intro
+// as the index, the fiction read inside the dark panel, then the ledger
+// rows for the entries either side. no essay serif here; the signal room
+// speaks in the panel register on every page.
 export async function getStaticPaths() {
   const episodes = await getEpisodes('asc');
 
@@ -32,15 +37,17 @@ const { episode, prev, next, first } = Astro.props;
 const { Content } = await render(episode);
 
 const pageTitle = `${episode.data.title} | Signal Room`;
-const episodeLabel = (entry: CollectionEntry<'signal-room'>) => `episode ${padEpisode(entry.data.episode)}, ${entry.data.title}`;
+const number = padEpisode(episode.data.episode);
+const neighbours = [
+  prev ? { relation: 'previous', entry: prev } : null,
+  next ? { relation: 'next', entry: next } : null,
+].filter((item): item is { relation: string; entry: CollectionEntry<'signal-room'> } => item !== null);
 ---
 
 <Base
   title={pageTitle}
   description={episode.data.teaser}
   ogImage={episodeOgPath(episode.id)}
-  extraMainClass="essay"
-  serif
   article={{
     headline: episodeTitle(episode.data.episode, episode.data.title),
     description: episode.data.teaser,
@@ -48,35 +55,34 @@ const episodeLabel = (entry: CollectionEntry<'signal-room'>) => `episode ${padEp
     url: canonicalUrl(Astro.url),
   }}
 >
-  <PageIntro title={episode.data.title} standfirst={`episode ${padEpisode(episode.data.episode)}, ${formatLongDate(episode.data.date)}`} />
+  <PageIntro title={episode.data.title} standfirst={episode.data.teaser}>
+    <p slot="pretitle" class="instrument-meta mb-2">episode {number} · <time datetime={episode.data.date.toISOString().slice(0, 10)}>{formatLongDate(episode.data.date)}</time></p>
+  </PageIntro>
 
-  <article class="prose">
-    <Content />
-  </article>
+  <Panel ariaLabel={`signal room episode ${number}`} label={`signal.room · episode ${number}`}>
+    <article class="episode-prose">
+      <Content />
+    </article>
+  </Panel>
 
-  <footer class="mt-12">
+  <footer class="mt-16">
     <nav aria-label="episode navigation">
-      <dl class="rows">
-        {prev && (
-          <div class="row">
-            <dt class="row__key label">previous</dt>
-            <dd class="row__value"><a href={episodePath(prev.id)}>{episodeLabel(prev)}</a></dd>
-          </div>
-        )}
-        {next && (
-          <div class="row">
-            <dt class="row__key label">next</dt>
-            <dd class="row__value"><a href={episodePath(next.id)}>{episodeLabel(next)}</a></dd>
-          </div>
-        )}
-        <div class="row">
-          <dt class="row__key label">index</dt>
-          <dd class="row__value"><a href="/signal-room/">signal room</a></dd>
-        </div>
-      </dl>
+      <h2 class="section-title">continue</h2>
+      <div>
+        {neighbours.map(({ relation, entry }) => (
+          <article class="ledger-row">
+            <p class="ledger-index">{padEpisode(entry.data.episode)}</p>
+            <div>
+              <p class="instrument-meta">{relation}</p>
+              <h3 class="card-title mt-1"><a href={episodePath(entry.id)}>{entry.data.title}</a></h3>
+              <p class="ui-copy mt-2">{entry.data.teaser}</p>
+            </div>
+          </article>
+        ))}
+      </div>
     </nav>
-    <p class="measure links mt-6">
-      signal room · a fiction serial · published on adrianlumley.co
+    <p class="ui-copy mt-6">
+      signal room · a fiction serial · published on adrianlumley.co · <a href="/signal-room/">all episodes</a>
       {episode.data.episode !== 1 && (
         <> · <a href={episodePath(first.id)}>start from episode 01</a></>
       )}

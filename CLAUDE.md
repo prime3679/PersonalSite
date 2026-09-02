@@ -4,7 +4,7 @@ Adrian Lumley's personal site. Live at https://adrianlumley.co. Cloudflare Worke
 
 ## Stack
 - **Framework:** Astro + TypeScript + Tailwind CSS
-- **Typography:** the record system: one sans (Geist via `@fontsource-variable/geist`) at body size and weight 400, italic reserved for labels, one 1.5x size jump per page, one ink on flat paper. Newsreader is the reading face for long-form pages (essays and Signal Room episodes, via `src/styles/essay.css`) and the Signal Room index ledger; only those pages import and preload it. Geist Mono is code and the Signal Room instrument panel
+- **Typography:** four languages, each internally consistent. The record (homepage and connected pages): one sans (Geist via `@fontsource-variable/geist`) at body size and weight 400, italic reserved for labels, one 1.5x size jump per page, one ink on flat paper. Essays (`/writing/<slug>/`): Newsreader title and prose via `src/styles/essay.css`, the only route that imports or preloads the serif. Signal Room (index and episodes): the instrument via `src/styles/instrument.css`, dark panel, Geist Mono for log and meta, Geist for anything read at length, no serif. `/360/`: its own terminal file
 - **Deploy:** Cloudflare Workers Assets for `adrianlumley.co/*`; a separate Cloudflare redirect Worker for `www.adrianlumley.co/*`; an active GitHub Pages workflow also publishes pushes to `main`
 - **Style:** premium editorial/product-leader surface with subtle systems cues, not a terminal dashboard
 
@@ -46,10 +46,9 @@ The record does not stop at the homepage. Inner pages share one type system:
 - no reveal or fade-in animation, no view-transition crossfade, no hover lift
 - one link style everywhere; internal hrefs carry the trailing slash (`postHref`, `navItems`) so no click pays the canonical 308
 
-Four deliberate exceptions, kept by Adrian's call; do not flatten them into the record:
-- essays and Signal Room episodes read in Newsreader (title and prose) inside record chrome
-- the writing index keeps its tag chips, per-post tag links, and `?tag=` deep links; no reading-time lines
-- the Signal Room index is the one instrument page: the dark panel with the mono log and the single accent, then the serif ledger
+Three other languages sit beside the record, each whole on its own pages; do not mix them or flatten them into the record:
+- essays (`/writing/<slug>/`) read in Newsreader, title and prose, inside record chrome (`src/styles/essay.css`, essay route only). The writing index stays a record table with its tag chips, per-post tag links, and `?tag=` deep links; no reading-time lines. List is record, article is essay.
+- the Signal Room is one instrument on the index and every episode (`src/styles/instrument.css`): the dark panel, Geist Mono for the log and the meta lines, the record's sans for anything read at length, the single accent on the highlight. Episodes are read inside the panel. Never import `essay.css` or put Newsreader on a Signal Room page.
 - `/360/` keeps its own terminal voice (system mono, black on white, `→` and `//` glyphs); it is not restyled to paper and ink
 
 ## Homepage Rules

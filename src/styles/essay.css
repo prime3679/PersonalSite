@@ -1,8 +1,9 @@
-/* the reading register for long-form pages: essays and signal room
-   episodes. the title and the prose are set in the serif, at the sizes the
-   site read at before the record pass; the chrome around them (header,
-   date line, older/newer rows, footer) stays in the record's sans. only
-   pages that import this file carry the newsreader font faces. */
+/* the reading register for essays (/writing/<slug>/). the title and the
+   prose are set in the serif, at the sizes the site read at before the
+   record pass; the chrome around them (header, date line, older/newer
+   rows, footer) stays in the record's sans. only the essay route imports
+   this file, so only essays carry the newsreader font faces. the signal
+   room is a different language (instrument.css) and never imports this. */
 @import '@fontsource-variable/newsreader';
 
 .essay .page-title {

@@ -1,5 +1,5 @@
 ---
-import '@fontsource-variable/newsreader';
+import '../../styles/instrument.css';
 import Base from '../../layouts/Base.astro';
 import PageIntro from '../../components/PageIntro.astro';
 import Panel from '../../components/Panel.astro';
@@ -7,10 +7,10 @@ import SignalLog from '../../components/SignalLog.astro';
 import { getEpisodes, episodePath } from '../../lib/content';
 import { formatLongDate, padEpisode } from '../../lib/format';
 
-// the signal room index is the site's one instrument page: a dark panel
-// carrying a fragment of the fiction, then the serial as a ledger. the
-// register (dark ground, mono, the single accent) is deliberate and lives
-// only here; the rest of the site stays in the record's sans.
+// the signal room is the site's one instrument, and this is its index: a
+// dark panel carrying a fragment of the fiction, then the serial as a
+// ledger. the register (dark ground, mono meta and log, the single accent)
+// lives in instrument.css and is shared with every episode page.
 const episodes = await getEpisodes('desc');
 const latest = episodes[0];
 const first = episodes[episodes.length - 1];
@@ -23,7 +23,7 @@ const logEntries = [
 ];
 ---
 
-<Base title="Signal Room" description="short fiction about rogue, systems, households, truth, and mercy." ogImage="/og/signal-room.png" serif>
+<Base title="Signal Room" description="short fiction about rogue, systems, households, truth, and mercy." ogImage="/og/signal-room.png">
   <PageIntro title="signal room" standfirst="short fiction about rogue and the human side of systems that try to help without becoming the weather." />
 
   {first && (
@@ -39,7 +39,7 @@ const logEntries = [
   {latest && (
     <section class="mt-16">
       <h2 class="section-title">latest</h2>
-      <p class="font-mono text-xs uppercase tracking-[.08em] text-[var(--ink-soft)]">episode {padEpisode(latest.data.episode)} · {formatLongDate(latest.data.date)}</p>
+      <p class="instrument-meta">episode {padEpisode(latest.data.episode)} · {formatLongDate(latest.data.date)}</p>
       <h2 class="card-title mt-2"><a href={episodePath(latest.id)}>{latest.data.title}</a></h2>
       <p class="ui-copy mt-3">{latest.data.teaser}</p>
     </section>
@@ -54,59 +54,10 @@ const logEntries = [
           <div>
             <h3 class="card-title"><a href={episodePath(episode.id)}>{episode.data.title}</a></h3>
             <p class="ui-copy mt-2">{episode.data.teaser}</p>
-            <p class="font-mono text-xs uppercase tracking-[.08em] text-[var(--ink-soft)] mt-2">{formatLongDate(episode.data.date)}</p>
+            <p class="instrument-meta mt-2">{formatLongDate(episode.data.date)}</p>
           </div>
         </article>
       ))}
     </div>
   </section>
 </Base>
-
-<style>
-  /* the instrument page's own register, kept out of global.css on purpose */
-  .signal-highlight {
-    margin: 1.375rem 0 0;
-    padding: 1rem 1.125rem;
-    border-left: 2px solid var(--accent-bright);
-    color: var(--accent-bright);
-    font-family: var(--serif);
-    font-size: 1.0625rem;
-    font-style: italic;
-    line-height: 1.55;
-  }
-  .section-title {
-    margin: 0 0 var(--s4);
-    color: var(--ink-soft);
-    font-family: var(--sans);
-    font-size: .95rem;
-    font-weight: 500;
-    line-height: 1.3;
-  }
-  .card-title {
-    margin: 0;
-    font-family: var(--serif);
-    font-size: 1.7rem;
-    font-weight: 500;
-    letter-spacing: -.01em;
-    line-height: 1.2;
-  }
-  .ui-copy {
-    color: var(--ink-soft);
-    font-family: var(--sans);
-    font-size: .98rem;
-    line-height: 1.6;
-  }
-  .ledger-row {
-    display: grid;
-    grid-template-columns: 3.5rem 1fr;
-    gap: 1rem;
-    border-top: 1px solid var(--line);
-    padding-block: var(--s5);
-  }
-  .ledger-index {
-    color: var(--ink-soft);
-    font-family: var(--mono);
-    font-size: .75rem;
-    font-variant-numeric: tabular-nums;
-  }
-</style>

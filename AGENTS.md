@@ -24,6 +24,8 @@ The homepage is the record, not an app shell. It renders through `Base` with `ch
 ## record type on every page
 Inner pages share the homepage's type system: one sans at body size and weight 400 in one ink on flat paper, the page title as the only size jump, italic `.label`s for section names and keys, `.rows` tables for anything keyed, no uppercase or mono display text, no fade-in. Internal hrefs carry the trailing slash.
 
+Four deliberate exceptions stay as they are: essays and Signal Room episodes read in Newsreader; the writing index keeps its tag filter; the Signal Room index keeps its dark instrument panel; `/360/` keeps its terminal voice.
+
 ## public-surface rules
 - all UI copy should be lowercase unless proper nouns require otherwise
 - no em dashes in shipped public source/content

@@ -86,6 +86,7 @@
       "src/lib/seo.ts",
       "src/lib/sitemap.ts",
       "src/styles/global.css",
+      "src/styles/essay.css",
       "src/styles/tokens.css"
     ],
     "exclude": [
@@ -98,7 +99,7 @@
       "dist/**",
       "node_modules/**"
     ],
-    "digest": "d42891f87a2665c0cb15aa337d3ede9ccc7271929e329646b7ce29e21070de39"
+    "digest": "26d5285054693758ba55a1b49163401499090c1291274eae3b0d7358e6beb3e6"
   },
   "components": [
     {
@@ -112,7 +113,7 @@
       "id": "base-document-shell",
       "name": "base document shell",
       "core": true,
-      "paths": ["src/layouts/Base.astro", "src/data/csp.ts", "src/styles/global.css", "src/styles/tokens.css"],
+      "paths": ["src/layouts/Base.astro", "src/data/csp.ts", "src/styles/global.css", "src/styles/essay.css", "src/styles/tokens.css"],
       "responsibility": "Own the HTML document, content security policy, metadata defaults, structured data, accessibility entry points, design tokens and global styles (the record type system: one sans at body size in one ink on flat paper, italic labels, .rows tables, the single site-wide link and focus style), main slot, delight layer, and the optional shared header and footer chrome (chrome={false} renders the homepage record without them)."
     },
     {
@@ -227,7 +228,7 @@
     "Base.astro remains the shared document shell for primary Astro pages.",
     "Writing publication state and ordering flow through getPublishedPosts; Signal Room ordering flows through getEpisodes.",
     "Post and episode route forms in src/lib/content.ts remain stable because they are used as RSS identifiers; pages link through postHref and trailing-slash nav hrefs so no internal click pays the canonical 308.",
-    "Every connected page is set in the homepage record's type system: one sans at body size and weight 400, one ink on flat paper, the page title as the only size jump, italic labels, no uppercase or mono display text, no entrance animation.",
+    "Connected pages are set in the homepage record's type system: one sans at body size and weight 400, one ink on flat paper, the page title as the only size jump, italic labels, no entrance animation. Four deliberate exceptions stand: essays and Signal Room episodes read in Newsreader (src/styles/essay.css), the writing index keeps its tag filter, the Signal Room index keeps its dark instrument panel, and /360/ keeps its terminal voice.",
     "The public surface follows the lowercase editorial and protected-language rules in AGENTS.md.",
     "Cloudflare Workers Assets on adrianlumley.co/* is the authoritative production runtime; the active GitHub Pages workflow is a separate, non-authoritative publication path.",
     "The www.adrianlumley.co/* redirect is deployed as a separate Worker, and deploy:cloudflare:all performs both Cloudflare deployments.",

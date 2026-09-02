@@ -4,7 +4,7 @@ Adrian Lumley's personal site. Live at https://adrianlumley.co. Cloudflare Worke
 
 ## Stack
 - **Framework:** Astro + TypeScript + Tailwind CSS
-- **Typography:** the record system: one sans (Geist via `@fontsource-variable/geist`) at body size and weight 400, italic reserved for labels, one 1.5x size jump per page, one ink on flat paper. Geist Mono is loaded lazily for code inside essays only. Newsreader is used only by the generated OG cards (`src/lib/fonts`)
+- **Typography:** the record system: one sans (Geist via `@fontsource-variable/geist`) at body size and weight 400, italic reserved for labels, one 1.5x size jump per page, one ink on flat paper. Newsreader is the reading face for long-form pages (essays and Signal Room episodes, via `src/styles/essay.css`) and the Signal Room index ledger; only those pages import and preload it. Geist Mono is code and the Signal Room instrument panel
 - **Deploy:** Cloudflare Workers Assets for `adrianlumley.co/*`; a separate Cloudflare redirect Worker for `www.adrianlumley.co/*`; an active GitHub Pages workflow also publishes pushes to `main`
 - **Style:** premium editorial/product-leader surface with subtle systems cues, not a terminal dashboard
 
@@ -45,6 +45,12 @@ The record does not stop at the homepage. Inner pages share one type system:
 - tables are `.rows` / `.row` (key column, value column), the same shape as the homepage ledger
 - no reveal or fade-in animation, no view-transition crossfade, no hover lift
 - one link style everywhere; internal hrefs carry the trailing slash (`postHref`, `navItems`) so no click pays the canonical 308
+
+Four deliberate exceptions, kept by Adrian's call; do not flatten them into the record:
+- essays and Signal Room episodes read in Newsreader (title and prose) inside record chrome
+- the writing index keeps its tag chips, per-post tag links, and `?tag=` deep links; no reading-time lines
+- the Signal Room index is the one instrument page: the dark panel with the mono log and the single accent, then the serif ledger
+- `/360/` keeps its own terminal voice (system mono, black on white, `→` and `//` glyphs); it is not restyled to paper and ink
 
 ## Homepage Rules
 The homepage is the record, not an app shell:

@@ -1,8 +1,10 @@
 ---
 import '../styles/global.css';
-// the record is set in one sans, so only that file is worth preloading;
-// geist mono stays lazy for code blocks inside essays.
+// the record is set in one sans, so that file is preloaded everywhere.
+// long-form pages opt into the serif preload with the `serif` prop; geist
+// mono stays lazy for code blocks and the signal room panel.
 import geistWoff2 from '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url';
+import newsreaderWoff2 from '@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2?url';
 import { siteMetadata } from '../data/siteMetadata';
 import { navItems } from '../data/nav';
 import { CSP_POLICY } from '../data/csp';
@@ -28,6 +30,8 @@ interface Props {
    *  with the header. the homepage turns it off so the record is the whole
    *  page rather than content inside an app shell. */
   chrome?: boolean;
+  /** preload the serif reading face; only long-form pages set this */
+  serif?: boolean;
 }
 
 const {
@@ -38,6 +42,7 @@ const {
   mainClass = 'site-main',
   extraMainClass,
   chrome = true,
+  serif = false,
 } = Astro.props;
 const fullTitle = title === siteMetadata.title ? title : `${title} | ${siteMetadata.siteName}`;
 const canonicalPageUrl = canonicalUrl(Astro.url);
@@ -120,6 +125,7 @@ const structuredData: Record<string, unknown> = {
   <link rel="canonical" href={canonicalPageUrl} />
   <link rel="alternate" type="application/rss+xml" title={`${siteMetadata.siteName} · writing`} href="/rss.xml" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href={geistWoff2} />
+  {serif && <link rel="preload" as="font" type="font/woff2" crossorigin href={newsreaderWoff2} />}
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/site.webmanifest" />

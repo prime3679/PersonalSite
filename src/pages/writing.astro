@@ -4,29 +4,76 @@ import PageIntro from '../components/PageIntro.astro';
 import { getPublishedPosts, postHref } from '../lib/content';
 import { formatMonthYear } from '../lib/format';
 
-// the archive is the homepage writing table with every post and its dek:
-// a date column, a title, one line under it. no filters, no tags, no
-// reading times.
+// the archive is the homepage writing table with every post and its dek,
+// plus the tag filter: chips above the table, tag links under each dek,
+// and ?tag= deep links. no reading times.
 const posts = await getPublishedPosts();
 const isoDate = (date: Date) => date.toISOString().slice(0, 10);
+const tagCounts = new Map<string, number>();
+for (const post of posts) for (const tag of post.data.tags ?? []) tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+const allTags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([tag]) => tag);
+const tagHref = (tag: string) => `/writing/?tag=${encodeURIComponent(tag)}`;
 ---
 
 <Base title="Writing" description="notes on ai, enterprise product, and building systems, drawn from real work and the occasional voice memo.">
   <PageIntro title="writing" standfirst="notes on ai, enterprise product, and building systems, drawn from real work and the occasional voice memo. published when there's something worth saying, not on a schedule." />
 
+  {allTags.length > 0 && (
+    <div class="mb-10 flex flex-wrap gap-2" id="tag-filters" role="group" aria-label="filter posts by tag">
+      <button type="button" class="chip" data-tag="all" aria-pressed="true">all</button>
+      {allTags.map((tag) => <button type="button" class="chip" data-tag={tag} aria-pressed="false">{tag}</button>)}
+    </div>
+  )}
+
   {posts.length > 0 ? (
     <ul class="rows rows--loose" id="post-list">
       {posts.map((post) => (
-        <li class="row">
+        <li class="row blog-post" data-tags={(post.data.tags ?? []).join(' ')}>
           <time class="row__key" datetime={isoDate(post.data.date)}>{formatMonthYear(post.data.date)}</time>
           <div class="row__value">
             <h2><a href={postHref(post.id)}>{post.data.title}</a></h2>
             <p>{post.data.description}</p>
+            {(post.data.tags ?? []).length > 0 && (
+              <p class="links">
+                {(post.data.tags ?? []).map((tag, index) => <><a href={tagHref(tag)}>{tag}</a>{index < (post.data.tags ?? []).length - 1 && ' · '}</>)}
+              </p>
+            )}
           </div>
         </li>
       ))}
     </ul>
   ) : <p>first post coming soon.</p>}
+  <p id="no-matches" class="hidden measure py-8">no posts with that tag yet.</p>
 
   <p class="links mt-12">subscribe: <a href="/rss.xml">rss</a> · <a href="/contact/">email me</a> for updates.</p>
 </Base>
+
+<script>
+  const filterBar = document.getElementById('tag-filters');
+  if (filterBar) {
+    const chips = Array.from(filterBar.querySelectorAll('[data-tag]'));
+    const posts = Array.from(document.querySelectorAll('.blog-post'));
+    const noMatches = document.getElementById('no-matches');
+    function applyFilter(tag: string) {
+      let visible = 0;
+      chips.forEach((c) => c.setAttribute('aria-pressed', String(c.getAttribute('data-tag') === tag)));
+      posts.forEach((post) => {
+        const tags = (post.getAttribute('data-tags') || '').split(' ').filter(Boolean);
+        const show = tag === 'all' || tags.includes(tag);
+        post.classList.toggle('hidden', !show);
+        if (show) visible++;
+      });
+      if (noMatches) noMatches.classList.toggle('hidden', visible > 0);
+    }
+    filterBar.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      const btn = target.closest('[data-tag]') as HTMLElement | null;
+      if (!btn) return;
+      const tag = btn.getAttribute('data-tag') || 'all';
+      applyFilter(tag);
+      history.replaceState(null, '', tag === 'all' ? location.pathname : `${location.pathname}?tag=${encodeURIComponent(tag)}`);
+    });
+    const initial = new URLSearchParams(location.search).get('tag');
+    if (initial && chips.some((c) => c.getAttribute('data-tag') === initial)) applyFilter(initial);
+  }
+</script>

@@ -14,6 +14,38 @@ test('signal room: index lists every episode newest-first', async ({ page }) => 
   await expect(page.getByText('new here? start with')).toBeVisible();
 });
 
+test('signal room: the index carries the dark instrument panel above the ledger', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto('/signal-room/');
+
+  const panel = page.locator('section.instrument-panel[aria-label="signal room episode log"]');
+  await expect(panel).toBeVisible();
+  await expect(panel).toContainText('signal.room 07:11');
+  await expect(panel.locator('.signal-log li')).toHaveCount(4);
+  await expect(panel.locator('.signal-log')).toHaveCSS('font-family', /Geist Mono/);
+  await expect(panel.locator('.signal-highlight')).toContainText('the storm is hours out');
+
+  // dark ground, light text, the single accent on the highlight; no fade-in
+  const paint = await panel.evaluate((node) => {
+    const style = window.getComputedStyle(node);
+    const highlight = window.getComputedStyle(node.querySelector('.signal-highlight')!);
+    return { bg: style.backgroundColor, color: style.color, opacity: style.opacity, animation: style.animationName, accent: highlight.color };
+  });
+  expect(paint.bg).toBe('rgb(22, 19, 14)');
+  expect(paint.color).toBe('rgb(234, 228, 215)');
+  expect(paint.accent).toBe('rgb(201, 102, 63)');
+  expect(paint.opacity).toBe('1');
+  expect(paint.animation).toBe('none');
+
+  // the panel sits above the latest block and the ledger
+  const panelBox = await panel.boundingBox();
+  const ledgerBox = await page.locator('.ledger-row').first().boundingBox();
+  expect(panelBox!.y + panelBox!.height).toBeLessThan(ledgerBox!.y);
+  await expect(page.locator('.ledger-index').first()).toHaveText('12');
+  await expect(page.locator('.ledger-row h3 a').first()).toHaveCSS('font-family', /Newsreader/);
+  await expect(page.locator('.reveal')).toHaveCount(0);
+});
+
 test('signal room: an episode page renders prose and serial nav', async ({ page }) => {
   await page.goto('/signal-room/night-shift');
 
@@ -27,6 +59,11 @@ test('signal room: an episode page renders prose and serial nav', async ({ page 
   // First episode: no prev, next points at episode 02
   await expect(page.locator('a[href="/signal-room/green-is-not-healthy/"]')).toBeVisible();
   await expect(page.locator('a[href="/signal-room/"]').first()).toBeVisible();
+
+  // long-form fiction reads in the serif, like the essays; the chrome stays sans
+  await expect(page.locator('main h1')).toHaveCSS('font-family', /Newsreader/);
+  await expect(page.locator('.prose p').first()).toHaveCSS('font-family', /Newsreader/);
+  await expect(page.locator('main footer dt').first()).toHaveCSS('font-family', /Geist/);
 });
 
 test('signal room: the index shows a date for each episode', async ({ page }) => {

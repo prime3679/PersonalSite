@@ -1,4 +1,5 @@
 ---
+import '../../styles/essay.css';
 import Base from '../../layouts/Base.astro';
 import PageIntro from '../../components/PageIntro.astro';
 import { render } from 'astro:content';
@@ -21,7 +22,7 @@ const articleData = { headline: post.data.title, description: post.data.descript
 const ogImagePath = postOgPath(post.id);
 ---
 
-<Base title={post.data.title} description={post.data.description} article={articleData} ogImage={ogImagePath}>
+<Base title={post.data.title} description={post.data.description} article={articleData} ogImage={ogImagePath} extraMainClass="essay" serif>
   <PageIntro title={post.data.title} standfirst={updatedFormatted ? `${dateFormatted}, updated ${updatedFormatted}` : dateFormatted} />
 
   <article class="prose">

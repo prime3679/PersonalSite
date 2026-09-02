@@ -289,14 +289,19 @@ test('the homepage link style is the site link style', async ({ page }) => {
     expect(style.decorationLine).toBe('underline');
     expect(style.decorationColor).toBe(homeLink.decorationColor);
     expect(style.thickness).toBe(homeLink.thickness);
+  }
+  // chrome links share the record's family; essay prose is the serif reading face
+  for (const style of [navLink, footerLink, labLink]) {
     expect(style.fontFamily).toBe(homeLink.fontFamily);
   }
 });
 
-// the record does not stop at the homepage: every connected page is set in
-// the same sans, at the same body size, in the same ink, with the page title
-// as its one size jump and italic reserved for labels.
-for (const path of ['/writing/', '/writing/the-honest-record/', '/about/', '/work/', '/lab/', '/contact/', '/signal-room/', '/signal-room/night-shift/']) {
+// the record does not stop at the homepage: connected pages are set in the
+// same sans, at the same body size, in the same ink, with the page title as
+// the one size jump and italic reserved for labels. long-form pages (essays,
+// episodes) read in the serif and the signal room index is the one
+// instrument page; those have their own specs.
+for (const path of ['/writing/', '/about/', '/work/', '/lab/', '/contact/']) {
   test(`${path} is set in the record's type system`, async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto('/');
@@ -320,7 +325,8 @@ for (const path of ['/writing/', '/writing/the-honest-record/', '/about/', '/wor
         const style = window.getComputedStyle(el);
         if (style.display === 'none' || style.visibility === 'hidden') continue;
         if (style.animationName !== 'none' || Number(style.opacity) < 1) animated.push(el.tagName.toLowerCase());
-        if (!ownText) continue;
+        // controls (night shift, tag chips) are not text; they carry their own size
+        if (!ownText || el.tagName === 'BUTTON') continue;
         const text = (el.textContent ?? '').trim().slice(0, 40);
         families.add(style.fontFamily.split(',')[0]);
         sizes.set(style.fontSize, [...(sizes.get(style.fontSize) ?? []), text]);
@@ -344,11 +350,10 @@ for (const path of ['/writing/', '/writing/the-honest-record/', '/about/', '/wor
     expect(measured.families).toEqual([home.family.split(',')[0]]);
     expect(measured.colors).toEqual([home.color]);
     expect(measured.h1Size).toBe(featureSize);
-    // body size everywhere, the title once, and the night shift control
+    // body size everywhere and the title once
     const sizeKeys = Object.keys(measured.sizes).sort();
-    expect(sizeKeys).toEqual([home.size, '14px', featureSize].sort());
+    expect(sizeKeys).toEqual([home.size, featureSize].sort());
     expect(measured.sizes[featureSize]).toHaveLength(1);
-    expect(measured.sizes['14px']).toEqual(['night shift']);
     expect(measured.transforms).toEqual([]);
     expect(measured.animated).toEqual([]);
     expect(measured.gradient).toBe('none');

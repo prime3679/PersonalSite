@@ -1,0 +1,32 @@
+---
+// the dark instrument panel: the one place the site speaks in the panel
+// register (dark ground, mono, the single accent). used by the signal room
+// index; the panel tokens in tokens.css stay put in night shift so it is
+// always the darkest surface on the page.
+interface Props {
+  label?: string;
+  ariaLabel?: string;
+  id?: string;
+  class?: string;
+}
+
+const { label, ariaLabel, id, class: className } = Astro.props;
+---
+
+<section id={id} class:list={['instrument-panel', 'p-6', 'md:p-8', className]} aria-label={ariaLabel}>
+  {label && (
+    <div class="mb-5 flex items-center gap-3 border-b border-[var(--panel-line)] pb-5">
+      <span class="font-mono text-xs tracking-[.05em] text-[var(--panel-soft)]">{label}</span>
+      <span class="h-[.9375rem] w-2 bg-[var(--accent-bright)]" aria-hidden="true"></span>
+    </div>
+  )}
+  <slot />
+</section>
+
+<style>
+  .instrument-panel {
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    color: var(--panel-text);
+  }
+</style>

@@ -153,7 +153,8 @@ try {
         if (style.display === 'none' || style.visibility === 'hidden') continue;
         if (style.animationName !== 'none' || Number(style.opacity) < 1) animated.push(el.tagName.toLowerCase());
         const ownText = Array.from(el.childNodes).some((n) => n.nodeType === 3 && n.textContent.trim());
-        if (!ownText) continue;
+        // controls (night shift, tag chips) carry their own size
+        if (!ownText || el.tagName === 'BUTTON') continue;
         families.add(style.fontFamily.split(',')[0]);
         sizes.add(style.fontSize);
         colors.add(style.color);
@@ -165,7 +166,7 @@ try {
     });
     if (type.families.length !== 1 || type.families[0] !== type.bodyFamily) failures.push(`${width}: ${navPath} uses families ${type.families.join(', ')}`);
     if (type.colors.length !== 1) failures.push(`${width}: ${navPath} uses inks ${type.colors.join(', ')}`);
-    const allowedSizes = [type.bodySize, type.titleSize, '14px'].sort();
+    const allowedSizes = [type.bodySize, type.titleSize].sort();
     if (type.sizes.some((size) => !allowedSizes.includes(size))) failures.push(`${width}: ${navPath} uses sizes ${type.sizes.join(', ')}`);
     if (Number.parseFloat(type.titleSize) / Number.parseFloat(type.bodySize) > 1.6) failures.push(`${width}: ${navPath} title ${type.titleSize} over ${type.bodySize} body`);
     if (type.uppercase.length) failures.push(`${width}: ${navPath} uppercase ${type.uppercase.join(',')}`);

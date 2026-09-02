@@ -1,4 +1,5 @@
 ---
+import '../../styles/essay.css';
 import Base from '../../layouts/Base.astro';
 import PageIntro from '../../components/PageIntro.astro';
 import { render, type CollectionEntry } from 'astro:content';
@@ -38,6 +39,8 @@ const episodeLabel = (entry: CollectionEntry<'signal-room'>) => `episode ${padEp
   title={pageTitle}
   description={episode.data.teaser}
   ogImage={episodeOgPath(episode.id)}
+  extraMainClass="essay"
+  serif
   article={{
     headline: episodeTitle(episode.data.episode, episode.data.title),
     description: episode.data.teaser,

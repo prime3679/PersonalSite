@@ -112,6 +112,19 @@
     margin: -.75rem -.3rem;
   }
 
+  /* tag filter chips on the writing index */
+  .chip {
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ink-soft);
+    cursor: pointer;
+    font-family: var(--sans);
+    font-size: .75rem;
+    padding: .25rem .75rem;
+  }
+  .chip:hover, .chip[aria-pressed="true"] { border-color: var(--accent); color: var(--ink); }
+
   /* forms: hairline fields, body type, ink focus */
   .field-label { display: block; margin-bottom: var(--s1); }
   .field-input {
@@ -141,7 +154,8 @@
   }
   .button:hover, .button:focus-visible { background: var(--ink); color: var(--paper); }
 
-  /* essay and episode prose */
+  /* essay and episode prose: layout only; the serif reading face for these
+     pages lives in essay.css, which only long-form pages import */
   .prose { max-width: var(--measure); }
   .prose > * + * { margin-top: var(--s4); }
   .prose h2, .prose h3 { font-style: var(--label-style); margin-top: var(--s6); }

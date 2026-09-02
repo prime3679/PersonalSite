@@ -25,9 +25,12 @@
   --panel-line: #2b261d;
   --accent-bright: #c9663f;
 
-  /* type families: the record is set in one sans. mono is reserved for
-     code inside essays; it is not a display voice. */
+  /* type families: the record is set in one sans. the serif is the reading
+     face for long-form pages (essays and episodes) and the signal room
+     instrument page; mono is code and the instrument panel, not a display
+     voice elsewhere. */
   --sans: 'Geist Variable', 'Geist', system-ui, -apple-system, sans-serif;
+  --serif: 'Newsreader Variable', 'Newsreader', Georgia, 'Times New Roman', serif;
   --mono: 'Geist Mono Variable', 'Geist Mono', ui-monospace, 'SF Mono', monospace;
 
   /* record type: one sans at body size; the feature size is the single jump */

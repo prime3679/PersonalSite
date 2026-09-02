@@ -4,7 +4,7 @@ Adrian Lumley's personal site. Live at https://adrianlumley.co. Cloudflare Worke
 
 ## Stack
 - **Framework:** Astro + TypeScript + Tailwind CSS
-- **Typography:** premium editorial system using Newsreader, Geist, and Geist Mono via `@fontsource-variable/*`
+- **Typography:** the record system: one sans (Geist via `@fontsource-variable/geist`) at body size and weight 400, italic reserved for labels, one 1.5x size jump per page, one ink on flat paper. Geist Mono is loaded lazily for code inside essays only. Newsreader is used only by the generated OG cards (`src/lib/fonts`)
 - **Deploy:** Cloudflare Workers Assets for `adrianlumley.co/*`; a separate Cloudflare redirect Worker for `www.adrianlumley.co/*`; an active GitHub Pages workflow also publishes pushes to `main`
 - **Style:** premium editorial/product-leader surface with subtle systems cues, not a terminal dashboard
 
@@ -36,6 +36,15 @@ Rules:
 - `adrian lumley` wordmark must not wrap
 - do not hardcode alternate nav labels in pages
 - old `/blog/` URLs must keep redirecting/aliasing to `/writing/`
+
+## Record Rules (every connected page)
+The record does not stop at the homepage. Inner pages share one type system:
+- body: the record sans at `--text-body`, weight 400, `--ink` on flat `--paper`; no `--ink-soft` text, no gradient
+- the page title is the page's one size jump (`--text-feature`, same as the homepage feature title)
+- section names, ledger keys, and eyebrows are italic `.label`s at body size; nothing uppercase, nothing tracked, nothing in mono outside code
+- tables are `.rows` / `.row` (key column, value column), the same shape as the homepage ledger
+- no reveal or fade-in animation, no view-transition crossfade, no hover lift
+- one link style everywhere; internal hrefs carry the trailing slash (`postHref`, `navItems`) so no click pays the canonical 308
 
 ## Homepage Rules
 The homepage is the record, not an app shell:

@@ -21,6 +21,9 @@ Keep the mobile nav as a clean hamburger/toggle on inner pages. The `adrian luml
 ## homepage
 The homepage is the record, not an app shell. It renders through `Base` with `chrome={false}`: no header, wordmark, night shift pill, hamburger, or site footer. The record is dark ink on light paper from the first paint with no fade-in; night shift remaps paper and ink together and must never leave light ink on light ground. Keep the featured essay under the lede. Do not restore a name-hero, put Rogue on the first screen, or add a contact pitch.
 
+## record type on every page
+Inner pages share the homepage's type system: one sans at body size and weight 400 in one ink on flat paper, the page title as the only size jump, italic `.label`s for section names and keys, `.rows` tables for anything keyed, no uppercase or mono display text, no fade-in. Internal hrefs carry the trailing slash.
+
 ## public-surface rules
 - all UI copy should be lowercase unless proper nouns require otherwise
 - no em dashes in shipped public source/content

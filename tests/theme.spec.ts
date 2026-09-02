@@ -74,10 +74,32 @@ test.describe('night shift theme', () => {
     await expectToggleState(page, 'false', '#f7f3ea');
   });
 
-  test('header theme button stays singular, labeled, and persists', async ({ page }) => {
+  test('the homepage carries no toggle and a stray tap on the record does not flip the theme', async ({ page }) => {
     await blockAnalytics(page);
     await page.emulateMedia({ colorScheme: 'light' });
     await page.goto('/');
+
+    await expect(page.locator('[data-theme-toggle]')).toHaveCount(0);
+    await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#f7f3ea');
+
+    await page.locator('.record__feature-dek').click();
+    await page.locator('main').click({ position: { x: 10, y: 10 } });
+    expect(await hasDark(page)).toBe(false);
+    expect(await storedTheme(page)).toBe(null);
+
+    // a preference set on an inner page still carries back to the record
+    await page.goto('/work');
+    await page.locator('header [data-theme-toggle]').click();
+    expect(await hasDark(page)).toBe(true);
+    await page.goto('/');
+    expect(await hasDark(page)).toBe(true);
+    await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#16130e');
+  });
+
+  test('header theme button stays singular, labeled, and persists', async ({ page }) => {
+    await blockAnalytics(page);
+    await page.emulateMedia({ colorScheme: 'light' });
+    await page.goto('/work');
 
     const toggles = page.locator('[data-theme-toggle]');
     const headerToggle = page.locator('header [data-theme-toggle]');

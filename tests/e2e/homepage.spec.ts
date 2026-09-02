@@ -23,6 +23,100 @@ async function inkColor(page: Page) {
   return page.locator('main .record').evaluate((node) => window.getComputedStyle(node).color);
 }
 
+function relativeLuminance(rgb: string) {
+  const [r, g, b] = rgb.match(/\d+(\.\d+)?/g)!.slice(0, 3).map(Number).map((channel) => {
+    const c = channel / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+function contrastRatio(a: string, b: string) {
+  const [light, dark] = [relativeLuminance(a), relativeLuminance(b)].sort((x, y) => y - x);
+  return (light + 0.05) / (dark + 0.05);
+}
+
+// the ink and the paper the record actually sits on, read the moment the
+// document is parsed rather than after any animation could have settled
+async function firstPaintInk(page: Page) {
+  return page.evaluate(() => {
+    const record = document.querySelector('main .record')!;
+    const style = window.getComputedStyle(record);
+    return {
+      ink: style.color,
+      opacity: Number(style.opacity),
+      animation: style.animationName,
+      paper: window.getComputedStyle(document.documentElement).backgroundColor,
+      dark: document.documentElement.classList.contains('dark'),
+    };
+  });
+}
+
+test('the record is the whole homepage: no header, toggle, hamburger, or site footer', async ({ page }) => {
+  for (const width of [320, 390, 1280]) {
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto('/');
+
+    await expect(page.locator('header.site-header')).toHaveCount(0);
+    await expect(page.locator('[data-theme-toggle]')).toHaveCount(0);
+    await expect(page.locator('#menu-toggle, #mobile-nav')).toHaveCount(0);
+    await expect(page.locator('footer')).toHaveCount(0);
+    await expect(page.locator('body')).not.toContainText('adrian lumley · nyc');
+    await expect(page.locator('body')).not.toContainText('night shift');
+
+    // nothing renders before main except the skip link, and the lede is the
+    // first line of main
+    const shape = await page.evaluate(() => ({
+      before: Array.from(document.body.children)
+        .slice(0, Array.from(document.body.children).findIndex((el) => el.tagName === 'MAIN'))
+        .map((el) => `${el.tagName.toLowerCase()}${el.getAttribute('href') ?? ''}`),
+      firstLine: document.querySelector('main')!.innerText.trim().split('\n')[0],
+    }));
+    expect(shape.before).toEqual(['a#main']);
+    expect(shape.firstLine).toBe(LEDE);
+    await expect(page.locator('main#main')).toHaveCount(1);
+  }
+});
+
+test('homepage ink is dark on light paper from the first paint', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/', { waitUntil: 'domcontentloaded' });
+
+  const paint = await firstPaintInk(page);
+  expect(paint.dark).toBe(false);
+  expect(paint.opacity).toBe(1);
+  expect(paint.animation).toBe('none');
+  expect(relativeLuminance(paint.ink)).toBeLessThan(relativeLuminance(paint.paper));
+  expect(contrastRatio(paint.ink, paint.paper)).toBeGreaterThan(12);
+
+  // every link on the record is the same dark ink
+  const ink = await inkColor(page);
+  expect(ink).toBe(paint.ink);
+});
+
+test('night shift on the homepage remaps paper with ink; it never leaks light ink onto light ground', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/', { waitUntil: 'domcontentloaded' });
+
+  const paint = await firstPaintInk(page);
+  expect(paint.dark).toBe(true);
+  expect(paint.opacity).toBe(1);
+  expect(relativeLuminance(paint.ink)).toBeGreaterThan(relativeLuminance(paint.paper));
+  expect(contrastRatio(paint.ink, paint.paper)).toBeGreaterThan(12);
+  await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#16130e');
+
+  // a stored light preference wins over the system scheme
+  await page.addInitScript(() => localStorage.setItem('theme', 'light'));
+  await page.goto('/', { waitUntil: 'domcontentloaded' });
+  const light = await firstPaintInk(page);
+  expect(light.dark).toBe(false);
+  expect(relativeLuminance(light.ink)).toBeLessThan(relativeLuminance(light.paper));
+  expect(contrastRatio(light.ink, light.paper)).toBeGreaterThan(12);
+  await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#f7f3ea');
+});
+
 test('homepage first screen sells the latest essay under the lede', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto('/');
@@ -175,8 +269,12 @@ test('the homepage link style is the site link style', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto('/');
   const homeLink = await linkStyle(page.locator('.record__rows a').first());
-  const navLink = await linkStyle(page.locator('[data-header-desktop-nav] a').first());
-  const footerLink = await linkStyle(page.locator('footer nav a').first());
+
+  // the homepage carries no header or footer, so read the chrome link
+  // style from an inner page, skipping the current-page rule on its own tab
+  await page.goto('/work/');
+  const navLink = await linkStyle(page.locator('[data-header-desktop-nav] a[href="/lab"]'));
+  const footerLink = await linkStyle(page.locator('footer nav a[href="/lab"]'));
 
   await page.goto('/writing/the-honest-record');
   const proseLink = page.locator('main .prose a').first();

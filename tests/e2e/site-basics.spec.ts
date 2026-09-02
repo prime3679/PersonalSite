@@ -29,7 +29,7 @@ test('a11y: active header tab carries aria-current="page"', async ({ page }) => 
 
 test('nav: header shows the home wordmark + canonical primary tabs', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
-  await page.goto('/');
+  await page.goto('/writing');
   // The name acts as the home link
   await expect(page.locator('header a[href="/"]').first()).toBeVisible();
   // Primary tabs are the visible desktop nav

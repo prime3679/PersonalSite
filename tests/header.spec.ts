@@ -20,6 +20,16 @@ async function clickBelowMobilePanel(page: Page) {
 }
 
 test.describe('Header Component', () => {
+  test('the homepage is the record and carries no header at all', async ({ page }) => {
+    for (const width of [320, 1280]) {
+      await page.setViewportSize({ width, height: 800 });
+      await page.goto('/');
+      await expect(page.locator('header.site-header')).toHaveCount(0);
+      await expect(page.locator('[data-theme-toggle]')).toHaveCount(0);
+      await expect(page.locator('[data-header-menu-toggle]')).toHaveCount(0);
+    }
+  });
+
   for (const width of [768, 1280]) {
     test(`desktop renders one editorial header with inline mono nav and active underline at ${width}px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 800 });
@@ -48,7 +58,7 @@ test.describe('Header Component', () => {
 
   test('legacy routes stay alive while staying out of the primary nav', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
-    await page.goto('/');
+    await page.goto('/work/');
 
     const primaryNav = page.locator('[data-header-desktop-nav]');
     await expect(primaryNav.locator('a[href="/about"]')).toHaveCount(0);

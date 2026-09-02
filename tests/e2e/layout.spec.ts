@@ -1,9 +1,10 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('broadsheet column alignment', () => {
-  test('wordmark and footer content left-align with the opening lede at 1280x800', async ({ page }) => {
+  test('wordmark and footer content left-align with the page title at 1280x800', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
-    await page.goto('/');
+    // the homepage has no header or footer; the inner pages share the column
+    await page.goto('/work/');
 
     const openingBox = await page.locator('main h1').boundingBox();
     const wordmarkBox = await page.locator('.site-header__logo').boundingBox();

@@ -26,12 +26,17 @@ describe('base-page content security policy', () => {
     );
   });
 
+  it('permits the cloudflare web analytics collection host', () => {
+    expect(directives['connect-src']).toContain('https://cloudflareinsights.com');
+  });
+
   it('preserves the existing connect-src allowances, including umami and the opt-in status origin', () => {
     expect(directives['connect-src']).toEqual(
       expect.arrayContaining([
         "'self'",
         'https://cloud.umami.is',
         'https://gateway.umami.is',
+        'https://cloudflareinsights.com',
         'https://api.adrianlumley.co',
       ]),
     );

@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('lab page has correct title, heading, and rogue card', async ({ page }) => {
+test('lab page has correct title, heading, and the ledger as its flagship', async ({ page }) => {
   await page.goto('/lab');
 
   // Check the page title (the same canonical form base-layout.spec asserts)
@@ -9,13 +9,9 @@ test('lab page has correct title, heading, and rogue card', async ({ page }) => 
   // Check for the main heading
   await expect(page.locator('main h1')).toHaveText('lab');
 
-  // The flagship rogue card is visible and describes the agent
-  const rogueCard = page.locator('#rogue');
-  await expect(rogueCard).toBeVisible();
-  await expect(rogueCard).toContainText('agent');
-
-  // The current lean flagship keeps a factual running-since receipt instead of a stat tile.
-  await expect(rogueCard).toContainText('running since');
+  // rogue is retired: no section, no running-since claim
+  await expect(page.locator('#rogue')).toHaveCount(0);
+  await expect(page.locator('main')).not.toContainText('rogue');
 
   const pastThePilot = page.locator('#past-the-pilot');
   await expect(pastThePilot).toBeVisible();
@@ -30,9 +26,7 @@ test('lab page has correct title, heading, and rogue card', async ({ page }) => 
   await expect(fork.locator('a[href="/lab/fork/"]')).toHaveText('open fork');
 
   const sectionIds = await page.locator('main section').evaluateAll((sections) => sections.map((section) => section.id));
-  expect(sectionIds.indexOf('past-the-pilot')).toBeGreaterThan(sectionIds.indexOf('rogue'));
   expect(sectionIds.indexOf('past-the-pilot')).toBeLessThan(sectionIds.indexOf('fork'));
-  expect(sectionIds.indexOf('fork')).toBeGreaterThan(sectionIds.indexOf('rogue'));
   expect(sectionIds.indexOf('fork')).toBeLessThan(sectionIds.indexOf('ink-field'));
 
   // one short section per tool, no "also built" list, no toy cards
@@ -47,8 +41,8 @@ test('lab page has correct title, heading, and rogue card', async ({ page }) => 
   // mono, labels in italic
   await expect(page.locator('#feedback-gate')).toHaveCount(0);
   await expect(page.locator('main')).not.toContainText('send the sentence');
-  await expect(rogueCard.locator('.label')).toHaveText('flagship');
-  await expect(rogueCard.locator('.label')).toHaveCSS('font-style', 'italic');
+  await expect(pastThePilot.locator('.label')).toHaveText('flagship');
+  await expect(pastThePilot.locator('.label')).toHaveCSS('font-style', 'italic');
 });
 
 // every toy is its own world, but none is a dead end: each carries a visible

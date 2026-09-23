@@ -30,16 +30,16 @@ describe('base-page content security policy', () => {
     expect(directives['connect-src']).toContain('https://cloudflareinsights.com');
   });
 
-  it('preserves the existing connect-src allowances, including umami and the opt-in status origin', () => {
+  it('preserves the existing connect-src allowances, including umami, and nothing for the retired status origin', () => {
     expect(directives['connect-src']).toEqual(
       expect.arrayContaining([
         "'self'",
         'https://cloud.umami.is',
         'https://gateway.umami.is',
         'https://cloudflareinsights.com',
-        'https://api.adrianlumley.co',
       ]),
     );
+    expect(directives['connect-src']).not.toContain('https://api.adrianlumley.co');
   });
 
   it('preserves the remaining hardening directives unchanged', () => {

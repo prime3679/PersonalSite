@@ -1,28 +1,13 @@
 ---
 import Base from '../layouts/Base.astro';
 import PageIntro from '../components/PageIntro.astro';
-import { ROGUE_EPOCH } from '../data/rogue';
-
-const rogueSince = new Date(`${ROGUE_EPOCH}T00:00:00Z`)
-  .toLocaleString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' })
-  .toLowerCase();
 ---
 
-<Base title="Lab" description="what adrian lumley builds hands-on: the agent he runs every day, a public evidence ledger for enterprise ai, and a few small tools.">
-  <PageIntro title="lab" standfirst="what i build hands-on: the agent i run every day, a public evidence ledger for enterprise ai, and a few small tools." />
+<Base title="Lab" description="what adrian lumley builds hands-on: a public evidence ledger for enterprise ai and a few small tools.">
+  <PageIntro title="lab" standfirst="what i build hands-on: a public evidence ledger for enterprise ai and a few small tools." />
 
-  <section id="rogue" aria-labelledby="rogue-h">
+  <section id="past-the-pilot" aria-labelledby="past-the-pilot-h">
     <p class="label">flagship</p>
-    <h2 id="rogue-h">rogue</h2>
-    <div class="content-stack mt-3">
-      <p>the agent i actually use. lives on a mac mini, wired to claude and codex, runs the ops i used to do by hand, and builds things, this site included.</p>
-      <p>i ran a stack of agents and kept the combination that worked.</p>
-      <p>running since {rogueSince}, not as a demo but as the local system i keep using.</p>
-    </div>
-  </section>
-
-  <section class="mt-12" id="past-the-pilot" aria-labelledby="past-the-pilot-h">
-    <p class="label">project</p>
     <h2 id="past-the-pilot-h">past the pilot</h2>
     <p class="measure mt-3">a public evidence ledger for enterprise ai that made it into real work. 25 named systems, 74 sources, and every claim tied to a receipt.</p>
     <p class="links mt-4"><a href="https://pastthepilot.adrianlumley.co" target="_blank" rel="noopener noreferrer">open the ledger</a></p>

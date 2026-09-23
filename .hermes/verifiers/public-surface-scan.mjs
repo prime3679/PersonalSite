@@ -5,7 +5,7 @@ const root = process.cwd();
 const dist = join(root, 'dist');
 const failures = [];
 const globalForbidden = ['homepage / hero', 'lab / flagship card', 'signal room / episode log', 'OpenClaw'];
-const primarySurfaceForbidden = ['operator stack', 'familyos', 'bishop-bench', 'mission control', 'signal room'];
+const primarySurfaceForbidden = ['operator stack', 'familyos', 'bishop-bench', 'mission control', 'signal room', 'rogue'];
 const emDashForbidden = '—';
 
 function files(path) {

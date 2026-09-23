@@ -56,7 +56,7 @@ The homepage is the record, not an app shell:
 - dark ink on light paper from the first paint; no fade-in or reveal animation on the record
 - dark mode follows the visitor's system setting (`prefers-color-scheme` in `tokens.css`) and remaps paper and ink together; never light ink on light ground. there is no toggle and no easter-egg script
 - one lede line, the featured essay with date and dek, currently/past, writing, lab, then the four footer links
-- no name-hero, no Rogue on the first screen, no contact pitch
+- no name-hero, no contact pitch
 
 ## Live Routes That Matter
 - `/`
@@ -74,15 +74,14 @@ Legacy/support routes may exist for compatibility or toys, but they must not re-
 - no mockup scaffold labels such as `homepage / hero`, `lab / flagship card`, or `signal room / episode log`
 - no public OpenClaw references
 - no active public Operator Stack, FamilyOS, bishop-bench, or retired Mission Control cards/routes/stat tiles
-- Rogue is the current agent surface
+- Rogue is retired; no public Rogue references or running-agent claims
 - no public Bishop or Mission Control references; the Signal Room serial that carried them is retired
 - keep public family details generic if encountered
 - do not invent metrics or work outcomes
 
 ## Lab Rules
 The Lab page (`src/pages/lab.astro`) is intentionally lean, in this order:
-- one flagship Rogue section
-- one project section: past the pilot
+- one flagship section: past the pilot
 - one short section per surviving tool: fork, meeting price tag (with a link to its essay), ink field
 - no toy cards, no stat tiles, no Operator Stack, no "also built" list
 - the homepage lab rows link to these three tools; keep their hrefs pointing at live `public/lab/` pages
@@ -122,16 +121,6 @@ npm run deploy:cloudflare:all
 `deploy:cloudflare` builds and deploys `dist/` through `wrangler.toml` to the `adrianlumley.co/*` Worker route. `deploy:cloudflare:www` deploys the separate redirect Worker through `wrangler.www.toml`. `deploy:cloudflare:all` performs both in sequence.
 
 The active `.github/workflows/deploy.yml` workflow still builds and publishes a GitHub Pages artifact on pushes to `main`. A push alone does not complete an authoritative apex production release. After an authorized Cloudflare deploy, wait for completion and verify the live URL.
-
-## Loop Artifacts
-Rogue loop contracts and signal bus live outside this repo:
-
-```text
-~/.hermes/state/rogue-loops/contracts/
-~/.hermes/state/rogue-loops/signals/
-```
-
-Coding agents should read those when working on loops, PR babysitting, or personal-site health.
 
 ## zero-context contribution
 For fresh-agent contribution work, start with `REVIEW.md`, then `AGENTS.md`, this file, and `docs/zero-context-contribution.md`. Before implementation, read `.agent/contribution-contract.json` and `.agent/architecture.json`.

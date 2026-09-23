@@ -3,26 +3,51 @@ import Base from '../layouts/Base.astro';
 import PageIntro from '../components/PageIntro.astro';
 
 const goodreads = 'https://www.goodreads.com/user/show/149439647-adrian-lumley';
+
+// the work record: one row per role, the same key/value shape as the
+// homepage ledger. /work/ redirects here.
+const work = [
+  {
+    id: 'salesforce',
+    company: 'Salesforce',
+    summary: 'director of product, emerging technology. 2025 to present. enterprise ai adoption, 0 to 1: how large organizations actually absorb ai, and what makes it stick past the pilot.',
+  },
+  {
+    id: 'siriusxm',
+    company: 'SiriusXM',
+    summary: 'cross-platform listening growth for 34M subscribers across mobile, web, and in-car. 18% more daily sessions, 12% less voluntary churn in the first 90 days, and 3x the shipping cadence.',
+  },
+  {
+    id: 'disney-plus',
+    company: 'Disney+',
+    summary: 'global launch operations: the orchestration layer that let teams localize and certify content, payments, and ux strings. 60+ markets live with feature parity on day one, 35% faster localization.',
+  },
+  {
+    id: 'ea-sports',
+    company: 'EA',
+    summary: 'built the EA Sports companion app from zero: hired a 40-person team, ran two betas at 90% csat and 86% weekly retention, and handed off what became the EA Sports App.',
+  },
+];
 ---
 
-<Base title="About" description="about adrian lumley: product leader, fourteen years in, director of product at salesforce on emerging technology.">
+<Base title="About" description="about adrian lumley: product leader, fourteen years in, director of product at salesforce on emerging technology. previously siriusxm, disney+, and ea.">
   <PageIntro title="about" standfirst="product leader, builder, and new yorker working on enterprise ai adoption." />
 
   <div class="content-stack">
     <p>i'm a product leader, fourteen years in, currently director of product management at salesforce on the emerging technology team. my work is enterprise ai adoption: the gap between what a model can do and what a large organization will actually absorb. that gap is where the hard, interesting problems live.</p>
-    <p>before salesforce, it was siriusxm, disney+, and ea. streaming and connected-car platforms, a global launch across sixty-plus markets, a zero-to-one sports app that grew into a real product. the numbers are on the work page.</p>
-    <p>what's different now is that i build, not just spec. i run a small fleet of ai systems on a mac mini in my apartment: an agent that handles my operational layer, an eval runner that keeps me honest about which model to use, a cost router that cut my spend without cutting capability. some of it ships. some of it doesn't survive contact with reality. i write about both.</p>
-    <p>based in new york city.</p>
+    <p>what's different now is that i build, not just spec. i've run my own agents, eval harnesses, and model routing, and kept what held up: a public evidence ledger for enterprise ai and a few small tools, all in the <a href="/lab/">lab</a>. some of it ships. some of it doesn't survive contact with reality. i write about both.</p>
   </div>
 
-  <section class="mt-12" aria-labelledby="good-at-h">
-    <h2 id="good-at-h" class="label">what i'm good at</h2>
-    <ul class="list-plain mt-2">
-      <li>taking 0 to 1 products through the messy middle to shipped</li>
-      <li>making technical complexity legible to executives and stakeholders</li>
-      <li>building alignment across organizations that don't naturally agree</li>
-      <li>shipping in large orgs without losing the plot</li>
-    </ul>
+  <section id="work" class="mt-12 scroll-mt-8" aria-labelledby="work-h">
+    <h2 id="work-h" class="label">work</h2>
+    <dl class="rows rows--loose mt-2">
+      {work.map((role) => (
+        <div class="row" id={role.id}>
+          <dt class="row__key">{role.company}</dt>
+          <dd class="row__value">{role.summary}</dd>
+        </div>
+      ))}
+    </dl>
   </section>
 
   <section class="mt-12" aria-labelledby="open-to-h">
@@ -45,6 +70,6 @@ const goodreads = 'https://www.goodreads.com/user/show/149439647-adrian-lumley';
 
   <section class="mt-12" aria-labelledby="find-me-h">
     <h2 id="find-me-h" class="label">find me</h2>
-    <p class="links mt-2"><a href="https://www.linkedin.com/in/adrianlumley/" target="_blank" rel="noopener noreferrer">linkedin</a> · <a href="https://github.com/prime3679" target="_blank" rel="noopener noreferrer">github</a> · <a href="/contact/">email</a></p>
+    <p class="links mt-2"><a href="/contact/">email</a> · <a href="https://www.linkedin.com/in/adrianlumley/" target="_blank" rel="noopener noreferrer">linkedin</a> · <a href="https://github.com/prime3679" target="_blank" rel="noopener noreferrer">github</a></p>
   </section>
 </Base>

@@ -20,8 +20,12 @@ async function waitForServer(url, timeoutMs = 20000) {
 }
 
 if (!process.env.MOBILE_VERIFIER_URL) {
+  // detached puts npx and the astro server it starts in their own process
+  // group, so shutdown can signal the whole group; unread pipes would also
+  // keep this process alive, so the server's output is ignored.
   server = spawn('npx', ['astro', 'preview', '--host', '127.0.0.1', '--port', String(port)], {
-    stdio: ['ignore', 'pipe', 'pipe'],
+    stdio: 'ignore',
+    detached: true,
   });
   await waitForServer(baseUrl);
 }
@@ -40,8 +44,8 @@ function contrast(a, b) {
   return (hi + 0.05) / (lo + 0.05);
 }
 
-// the homepage is the record: no header, no night shift pill, no hamburger,
-// no site footer. the header and menu are verified on an inner page below.
+// the homepage is the record: no header and no site footer. the header is
+// verified on an inner page below.
 const navPath = '/writing/';
 
 const browser = await chromium.launch();
@@ -116,32 +120,38 @@ try {
     if (closed.heroFont > 34) failures.push(`${width}: featured title too large ${closed.heroFont}`);
     if (closed.heroBottom > 900 * 0.5) failures.push(`${width}: featured title sits below the first half-screen at ${closed.heroBottom.toFixed(0)}px`);
 
-    // the shared header and hamburger live on the inner pages
+    // the shared header lives on the inner pages: wordmark and all three
+    // nav links on one line at every width, no menu toggle
     await page.goto(baseUrl + navPath, { waitUntil: 'networkidle' });
     const header = await page.evaluate(() => {
-      const toggle = document.querySelector('#menu-toggle');
-      const logo = document.querySelector('.site-header__logo');
-      const targets = Array.from(document.querySelectorAll('.site-header a, #menu-toggle')).map((el) => {
+      const logo = document.querySelector('.site-header__wordmark');
+      const links = Array.from(document.querySelectorAll('.site-header nav a')).map((el) => {
         const r = el.getBoundingClientRect();
         const style = getComputedStyle(el);
         const hidden = style.display === 'none' || style.visibility === 'hidden' || r.width === 0 || r.height === 0;
-        return { text: (el.textContent || el.getAttribute('aria-label') || '').trim(), width: r.width, height: r.height, hidden };
-      }).filter((l) => !l.hidden);
+        return { text: (el.textContent || '').trim(), width: r.width, height: r.height, top: Math.round(r.top), right: r.right, hidden };
+      });
+      const targets = [...links];
+      if (logo) {
+        const r = logo.getBoundingClientRect();
+        targets.push({ text: logo.textContent.trim(), width: r.width, height: r.height, hidden: false });
+      }
       return {
         scrollWidth: document.documentElement.scrollWidth,
-        hasToggle: !!toggle,
-        toggleVisible: toggle ? getComputedStyle(toggle).display !== 'none' && getComputedStyle(toggle).visibility !== 'hidden' : false,
+        viewport: document.documentElement.clientWidth,
+        legacyMenu: !!document.querySelector('#menu-toggle, #mobile-nav, [data-theme-toggle]'),
         logoPresent: !!logo,
         logoText: logo?.textContent.trim(),
         logoWhiteSpace: logo ? getComputedStyle(logo).whiteSpace : null,
+        logoTop: logo ? Math.round(logo.getBoundingClientRect().top) : null,
+        links,
         smallTargets: targets
-          .filter((l) => l.width < 44 || l.height < 44)
+          .filter((l) => !l.hidden && (l.height < 44 || l.width < 24))
           .map((l) => `${l.text || 'untitled'}:${l.width.toFixed(1)}x${l.height.toFixed(1)}`),
       };
     });
     // the inner page is set in the record's type: one family, one ink, body
-    // size everywhere except the page title (the one jump) and the night
-    // shift control; nothing uppercase, nothing fading in
+    // size everywhere except the page title (the one jump); nothing uppercase, nothing fading in
     const type = await page.evaluate(() => {
       const families = new Set();
       const sizes = new Set();
@@ -153,7 +163,7 @@ try {
         if (style.display === 'none' || style.visibility === 'hidden') continue;
         if (style.animationName !== 'none' || Number(style.opacity) < 1) animated.push(el.tagName.toLowerCase());
         const ownText = Array.from(el.childNodes).some((n) => n.nodeType === 3 && n.textContent.trim());
-        // controls (night shift, tag chips) carry their own size
+        // controls (tag chips) carry their own size
         if (!ownText || el.tagName === 'BUTTON') continue;
         families.add(style.fontFamily.split(',')[0]);
         sizes.add(style.fontSize);
@@ -173,46 +183,27 @@ try {
     if (type.animated.length) failures.push(`${width}: ${navPath} animates in ${type.animated.join(',')}`);
 
     if (header.scrollWidth > width) failures.push(`${width}: ${navPath} horizontal scroll ${header.scrollWidth}`);
-    if (!header.hasToggle || !header.toggleVisible) failures.push(`${width}: mobile menu toggle missing or hidden`);
     if (!header.logoPresent) failures.push(`${width}: logo missing`);
     if (header.logoText !== 'adrian lumley') failures.push(`${width}: logo text changed to ${header.logoText || 'missing'}`);
     if (header.logoWhiteSpace !== 'nowrap') failures.push(`${width}: logo whitespace is ${header.logoWhiteSpace || 'missing'}, expected nowrap`);
     if (header.smallTargets.length) failures.push(`${width}: header small tap targets ${header.smallTargets.join(',')}`);
 
-    await page.click('#menu-toggle');
-    const open = await page.evaluate(() => {
-      const panel = document.querySelector('#mobile-nav');
-      const links = Array.from(document.querySelectorAll('#mobile-nav a')).map((el) => {
-        const r = el.getBoundingClientRect();
-        const style = getComputedStyle(el);
-        const hidden = style.display === 'none' || style.visibility === 'hidden' || r.width === 0 || r.height === 0;
-        return {
-          text: (el.textContent || '').trim().toLowerCase(),
-          width: r.width,
-          height: r.height,
-          hidden,
-        };
-      });
-      return {
-        panelPresent: !!panel,
-        panelHidden: panel ? panel.hasAttribute('hidden') : true,
-        links,
-        smallTargets: links
-          .filter((l) => !l.hidden)
-          .filter((l) => l.width < 44 || l.height < 44)
-          .map((l) => `${l.text || 'untitled'}:${l.width.toFixed(1)}x${l.height.toFixed(1)}`),
-      };
-    });
-    if (!open.panelPresent || open.panelHidden) failures.push(`${width}: mobile menu did not open`);
-    for (const expected of ['work', 'lab', 'writing', 'signal room', 'contact']) {
-      if (!open.links.some((l) => l.text === expected && !l.hidden)) failures.push(`${width}: open mobile menu missing visible ${expected}`);
+    if (header.legacyMenu) failures.push(`${width}: ${navPath} still carries a menu toggle or night shift control`);
+    for (const expected of ['writing', 'lab', 'about']) {
+      const link = header.links.find((l) => l.text === expected);
+      if (!link || link.hidden) failures.push(`${width}: header nav missing visible ${expected}`);
+      else {
+        if (link.top !== header.links[0].top) failures.push(`${width}: header nav wraps at ${expected}`);
+        if (link.right > header.viewport) failures.push(`${width}: header nav ${expected} runs off screen`);
+      }
     }
-    if (open.smallTargets.length) failures.push(`${width}: open menu small tap targets ${open.smallTargets.join(',')}`);
     await page.close();
   }
 } finally {
   await browser.close();
-  if (server) server.kill('SIGTERM');
+  if (server) {
+    try { process.kill(-server.pid, 'SIGTERM'); } catch {}
+  }
 }
 
 if (failures.length) {

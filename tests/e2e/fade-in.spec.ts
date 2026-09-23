@@ -14,7 +14,7 @@ test('Homepage record is fully inked at first paint, with no reveal fade', async
 });
 
 test('inner pages are inked at first paint too: no reveal classes, no entrance animation', async ({ page }) => {
-  for (const path of ['/lab/', '/writing/', '/about/', '/signal-room/']) {
+  for (const path of ['/lab/', '/writing/', '/about/', '/contact/']) {
     await page.goto(path, { waitUntil: 'commit' });
     await expect(page.locator('main h1')).toBeVisible();
     await expect(page.locator('.reveal, .fade-in')).toHaveCount(0);

@@ -2,7 +2,7 @@
 import '../styles/global.css';
 // the record is set in one sans, so that file is preloaded everywhere.
 // essays opt into the serif preload with the `serif` prop; geist mono
-// stays lazy for code blocks and the signal room instrument.
+// stays lazy for code blocks.
 import geistWoff2 from '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url';
 import newsreaderWoff2 from '@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2?url';
 import { siteMetadata } from '../data/siteMetadata';
@@ -10,7 +10,6 @@ import { navItems } from '../data/nav';
 import { CSP_POLICY } from '../data/csp';
 import { absoluteUrl, canonicalUrl } from '../lib/seo';
 import Header from '../components/Header.astro';
-import DelightLayer from '../components/DelightLayer.astro';
 
 interface ArticleData {
   headline: string;
@@ -26,9 +25,8 @@ interface Props {
   article?: ArticleData;
   mainClass?: string;
   extraMainClass?: string;
-  /** site chrome: header, footer, and the night shift toggle that ships
-   *  with the header. the homepage turns it off so the record is the whole
-   *  page rather than content inside an app shell. */
+  /** site chrome: header and footer. the homepage turns it off so the
+   *  record is the whole page rather than content inside an app shell. */
   chrome?: boolean;
   /** preload the serif reading face; only the essay route sets this */
   serif?: boolean;
@@ -90,24 +88,8 @@ const structuredData: Record<string, unknown> = {
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="theme-color" content="#f7f3ea" />
-  <script is:inline>
-    // night shift: runs before the stylesheet so there is no light flash.
-    // paper and ink remap together in tokens.css, so the shift never puts
-    // light ink on light ground; the theme-color meta follows the paper.
-    (() => {
-      let dark = false;
-      try {
-        const stored = localStorage.getItem('theme');
-        dark = stored ? stored === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
-      } catch {}
-      if (dark) {
-        document.documentElement.classList.add('dark');
-        const meta = document.querySelector('meta[name="theme-color"]');
-        if (meta) meta.setAttribute('content', '#16130e');
-      }
-    })();
-  </script>
+  <meta name="theme-color" content="#f7f3ea" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#16130e" media="(prefers-color-scheme: dark)" />
   <meta http-equiv="Content-Security-Policy" content={CSP_POLICY} />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -149,12 +131,11 @@ const structuredData: Record<string, unknown> = {
           {navItems.map((item) => (
             <a href={item.href}>{item.label}</a>
           ))}
-          <a href="/about/">about</a>
+          <a href="/contact/">email</a>
           <a href="/rss.xml">rss</a>
         </nav>
       </div>
     </footer>
   )}
-  <DelightLayer />
 </body>
 </html>

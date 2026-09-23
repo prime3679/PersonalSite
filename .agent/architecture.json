@@ -5,7 +5,7 @@
     "name": "PersonalSite",
     "repository": "prime3679/PersonalSite",
     "kind": "statically generated personal site",
-    "purpose": "Adrian Lumley's public editorial, work, writing, lab, Signal Room, and contact surface",
+    "purpose": "Adrian Lumley's public editorial, work, writing, lab, and contact surface",
     "production_url": "https://adrianlumley.co"
   },
   "provenance": {
@@ -61,9 +61,6 @@
       "wrangler.www.toml",
       ".github/workflows/*.yml",
       ".hermes/verifiers/*.mjs",
-      "infra/rogue-status/*.js",
-      "infra/rogue-status/*.sh",
-      "infra/rogue-status/*.toml",
       "src/canonical-redirect.js",
       "src/canonical-worker.js",
       "src/www-redirect.js",
@@ -73,21 +70,17 @@
       "src/pages/**/*.ts",
       "src/content.config.ts",
       "src/content/blogSchema.ts",
-      "src/content/signalRoomSchema.ts",
       "src/data/csp.ts",
       "src/data/nav.ts",
-      "src/data/rogue.ts",
       "src/data/siteMetadata.ts",
       "src/lib/content.ts",
       "src/lib/format.ts",
       "src/lib/og-image.ts",
       "src/lib/readingTime.ts",
-      "src/lib/relativeTime.ts",
       "src/lib/seo.ts",
       "src/lib/sitemap.ts",
       "src/styles/global.css",
       "src/styles/essay.css",
-      "src/styles/instrument.css",
       "src/styles/tokens.css"
     ],
     "exclude": [
@@ -95,12 +88,11 @@
       "docs/architecture.html",
       "docs/plans/**",
       "src/content/blog/**",
-      "src/content/signal-room/**",
       "public/**",
       "dist/**",
       "node_modules/**"
     ],
-    "digest": "0b6af74818ef50dabc92d862e4dac58ad9310acb08d4b90b77fae60ab98bc0bb"
+    "digest": "7ae9bd6c7d1ea083b184aa8ca135b89ec4543b0ee5d21bf7535f7534af234759"
   },
   "components": [
     {
@@ -114,22 +106,22 @@
       "id": "base-document-shell",
       "name": "base document shell",
       "core": true,
-      "paths": ["src/layouts/Base.astro", "src/data/csp.ts", "src/styles/global.css", "src/styles/essay.css", "src/styles/instrument.css", "src/styles/tokens.css"],
-      "responsibility": "Own the HTML document, content security policy, metadata defaults, structured data, accessibility entry points, design tokens and global styles (the record type system: one sans at body size in one ink on flat paper, italic labels, .rows tables, the single site-wide link and focus style), main slot, delight layer, and the optional shared header and footer chrome (chrome={false} renders the homepage record without them)."
+      "paths": ["src/layouts/Base.astro", "src/data/csp.ts", "src/styles/global.css", "src/styles/essay.css", "src/styles/tokens.css"],
+      "responsibility": "Own the HTML document, content security policy, metadata defaults, structured data, accessibility entry points, design tokens and global styles (the record type system: one sans at body size in one ink on flat paper, italic labels, .rows tables, the single site-wide link and focus style), main slot, and the optional shared header and footer chrome (chrome={false} renders the homepage record without them)."
     },
     {
       "id": "navigation-shell",
       "name": "navigation shell",
       "core": true,
       "paths": ["src/components/Header.astro", "src/data/nav.ts"],
-      "responsibility": "Render the canonical desktop, mobile, and footer navigation from one ordered data source."
+      "responsibility": "Render the canonical header and footer navigation from one ordered data source: three items on one row at every width, with no mobile menu."
     },
     {
       "id": "content-collections",
       "name": "content collections",
       "core": true,
-      "paths": ["src/content.config.ts", "src/content/blogSchema.ts", "src/content/signalRoomSchema.ts", "src/content/blog/", "src/content/signal-room/"],
-      "responsibility": "Validate writing and Signal Room frontmatter while keeping their content bodies in repo-owned Markdown."
+      "paths": ["src/content.config.ts", "src/content/blogSchema.ts", "src/content/blog/"],
+      "responsibility": "Validate writing frontmatter while keeping post bodies in repo-owned Markdown."
     },
     {
       "id": "content-query-layer",
@@ -160,13 +152,6 @@
       "responsibility": "Serve self-contained experiments directly as static assets outside Astro page composition."
     },
     {
-      "id": "rogue-status-integration",
-      "name": "Rogue status integration",
-      "core": true,
-      "paths": ["src/data/rogue.ts", "infra/rogue-status/"],
-      "responsibility": "Keep the public status worker and the freshness evaluation logic; the default build renders only the factual running-since receipt from ROGUE_EPOCH on the lab page and fetches no status."
-    },
-    {
       "id": "contribution-gate",
       "name": "contribution gate",
       "core": true,
@@ -184,15 +169,13 @@
   "interfaces": {
     "routes": [
       {"id": "home", "path": "/", "core": true, "kind": "page", "source": "src/pages/index.astro"},
-      {"id": "work", "path": "/work/", "core": true, "kind": "page", "source": "src/pages/work.astro"},
-      {"id": "about", "path": "/about/", "core": true, "kind": "page", "source": "src/pages/about.astro"},
+      {"id": "about", "path": "/about/", "core": true, "kind": "page, including the work record", "source": "src/pages/about.astro"},
       {"id": "writing", "path": "/writing/", "core": true, "kind": "collection index", "source": "src/pages/writing.astro"},
       {"id": "lab", "path": "/lab/", "core": true, "kind": "page and static artifact index", "source": "src/pages/lab.astro"},
-      {"id": "signal-room", "path": "/signal-room/", "core": true, "kind": "collection index", "source": "src/pages/signal-room/index.astro"},
       {"id": "contact", "path": "/contact/", "core": true, "kind": "page and external form boundary", "source": "src/pages/contact.astro"},
       {"id": "rss", "path": "/rss.xml", "core": true, "kind": "build-time XML endpoint", "source": "src/pages/rss.xml.ts"},
       {"id": "writing-entry", "path": "/writing/<slug>", "core": false, "kind": "generated content page", "source": "src/pages/writing/[...slug].astro"},
-      {"id": "signal-room-entry", "path": "/signal-room/<slug>/", "core": false, "kind": "generated content page", "source": "src/pages/signal-room/[...slug].astro"},
+      {"id": "legacy-pages", "path": "/work/, /services/, and /now/", "core": false, "kind": "compatibility redirect (/work/ lands on /about/#work, or on the matching company anchor)", "source": "src/pages/work.astro, src/pages/services.astro, and src/pages/now.astro through src/components/Redirect.astro"},
       {"id": "legacy-blog", "path": "/blog/ and /blog/<slug>", "core": false, "kind": "compatibility redirect", "source": "src/pages/blog.astro and src/pages/blog/[...slug].astro"},
       {"id": "sitemap", "path": "/sitemap.xml", "core": false, "kind": "build-time XML endpoint", "source": "src/pages/sitemap.xml.ts"},
       {"id": "og-images", "path": "/og/*.png", "core": false, "kind": "build-time PNG endpoints", "source": "src/pages/og/"},
@@ -200,16 +183,13 @@
     ],
     "runtime_boundaries": [
       {"name": "contact submission", "direction": "browser outbound", "provider": "Formspree", "failure_mode": "form submission fails without affecting static pages"},
-      {"name": "analytics", "direction": "browser outbound", "provider": "Umami", "failure_mode": "analytics failure does not block rendering"},
-      {"name": "Rogue public status", "direction": "not wired in the default build", "provider": "repo-owned status worker", "failure_mode": "no page fetches status; the lab page states only the running-since receipt"}
+      {"name": "analytics", "direction": "browser outbound", "provider": "Umami", "failure_mode": "analytics failure does not block rendering"}
     ]
   },
   "data_flows": [
     {"id": "page-render", "from": "src/pages/*.astro", "through": ["page-specific components", "src/layouts/Base.astro", "src/data/nav.ts", "src/data/siteMetadata.ts"], "to": "static HTML, CSS, and client scripts in dist/"},
     {"id": "writing-publish", "from": "src/content/blog/*.md", "through": ["blogSchema", "getPublishedPosts", "writing routes", "RSS and Open Graph endpoints"], "to": "writing index, entry pages, feed items, and social cards"},
-    {"id": "signal-room-publish", "from": "src/content/signal-room/*.md", "through": ["signalRoomSchema", "getEpisodes", "Signal Room routes", "RSS and Open Graph endpoints"], "to": "episode index, entry pages, feed items, and social cards"},
     {"id": "lab-delivery", "from": "public/lab/<artifact>/", "through": ["Astro public-file copy"], "to": "self-contained static lab route"},
-    {"id": "status-read", "from": "ROGUE_EPOCH in src/data/rogue.ts", "through": ["src/pages/lab.astro"], "to": "the factual running-since line on the lab page"},
     {"id": "cloudflare-apex-deploy", "from": "npm run deploy:cloudflare", "through": ["npm run build", "dist/", "wrangler.toml", "src/canonical-worker.js", "Cloudflare Workers Assets"], "to": "authoritative production runtime on adrianlumley.co/*"},
     {"id": "cloudflare-www-deploy", "from": "npm run deploy:cloudflare:www", "through": ["wrangler.www.toml", "src/www-redirect.js"], "to": "separate redirect Worker on www.adrianlumley.co/*"},
     {"id": "cloudflare-all-deploy", "from": "npm run deploy:cloudflare:all", "through": ["npm run deploy:cloudflare", "npm run deploy:cloudflare:www"], "to": "apex production runtime and www redirect Worker"},
@@ -219,17 +199,17 @@
   "dependencies": {
     "runtime": ["Astro", "Tailwind CSS", "Astro Content Collections", "Zod", "Satori", "Sharp", "bundled font packages"],
     "development": ["TypeScript", "Astro Check", "Vitest", "happy-dom", "Playwright", "Python 3 standard library for the contribution gate"],
-    "external_services": ["Cloudflare Workers", "Cloudflare Workers Assets", "GitHub Actions", "GitHub Pages", "Formspree", "Umami", "Rogue public status worker"],
+    "external_services": ["Cloudflare Workers", "Cloudflare Workers Assets", "GitHub Actions", "GitHub Pages", "Formspree", "Umami"],
     "dependency_policy": "Contribution-only architecture work does not mutate manifests or install dependencies."
   },
   "invariants": [
-    "The canonical public navigation order is work, lab, writing, signal room, contact.",
-    "The adrian lumley wordmark does not wrap and mobile navigation remains a hamburger or toggle.",
+    "The canonical public navigation order is writing, lab, about; contact is the email link in the footer and on about.",
+    "The adrian lumley wordmark does not wrap and all three nav links sit on its row at every width; there is no hamburger or mobile menu. Dark mode follows prefers-color-scheme; there is no theme toggle and no easter-egg script.",
     "Old /blog/ URLs continue to redirect or alias to writing.",
     "Base.astro remains the shared document shell for primary Astro pages.",
-    "Writing publication state and ordering flow through getPublishedPosts; Signal Room ordering flows through getEpisodes.",
-    "Post and episode route forms in src/lib/content.ts remain stable because they are used as RSS identifiers; pages link through postHref and trailing-slash nav hrefs so no internal click pays the canonical 308.",
-    "The site has four type languages, each whole on its own pages: the record (homepage and connected pages: one sans at body size and weight 400, one ink on flat paper, the page title as the only size jump, italic labels, no entrance animation); essays (/writing/<slug>/: Newsreader title and prose via src/styles/essay.css, the only route that imports or preloads the serif; the writing index stays a record table with its tag filter); the Signal Room instrument (index and every episode via src/styles/instrument.css: dark panel, Geist Mono for log and meta, sans for reading, no serif); and /360/ (its own terminal file). No page mixes two.",
+    "Writing publication state and ordering flow through getPublishedPosts.",
+    "Post route forms in src/lib/content.ts remain stable because they are used as RSS identifiers; pages link through postHref and trailing-slash nav hrefs so no internal click pays the canonical 308.",
+    "The site has two type languages, each whole on its own pages: the record (homepage and connected pages: one sans at body size and weight 400, one ink on flat paper, the page title as the only size jump, italic labels, no entrance animation); essays (/writing/<slug>/: Newsreader title and prose via src/styles/essay.css, the only route that imports or preloads the serif; the writing index stays a record table with its tag filter). Lab tools under public/lab/ keep their own look and each links back to /lab/. No page mixes two.",
     "The public surface follows the lowercase editorial and protected-language rules in AGENTS.md.",
     "Cloudflare Workers Assets on adrianlumley.co/* is the authoritative production runtime; the active GitHub Pages workflow is a separate, non-authoritative publication path.",
     "The www.adrianlumley.co/* redirect is deployed as a separate Worker, and deploy:cloudflare:all performs both Cloudflare deployments.",
@@ -261,7 +241,6 @@
       {"id": "mobile-homepage", "argv": ["node", ".hermes/verifiers/mobile-homepage.mjs"]},
       {"id": "playwright-targeted", "argv": ["node_modules/.bin/playwright", "test", "tests/mobile/mobile-nav.spec.ts", "tests/header.spec.ts", "tests/e2e/homepage.spec.ts", "--project=mobile-chrome", "--project=chromium"]}
     ],
-    "signal_room_extra": ["node_modules/.bin/playwright test tests/e2e/signal-room.spec.ts --project=chromium"],
     "visual_widths": [320, 375, 390, 414]
   },
   "escalation_conditions": [

@@ -18,7 +18,7 @@ test.describe('technical canonicals and indexing', () => {
     expect(xml).toContain('<loc>https://adrianlumley.co/</loc>');
     expect(xml).toContain('<loc>https://adrianlumley.co/about/</loc>');
     expect(xml).toContain('<loc>https://adrianlumley.co/writing/meeting-cost/</loc>');
-    expect(xml).toContain('<loc>https://adrianlumley.co/signal-room/night-shift/</loc>');
+    expect(xml).not.toContain('/signal-room');
     expect(xml).toContain('<loc>https://adrianlumley.co/lab/fork/</loc>');
     expect(xml).not.toContain('/360');
     expect(xml).not.toContain('/404');
@@ -55,14 +55,7 @@ test.describe('technical canonicals and indexing', () => {
     );
   });
 
-  test('/360/ stays intentionally noindex while the homepage stays indexable', async ({ page }) => {
-    await page.goto('/360/');
-    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
-    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
-      'href',
-      'https://adrianlumley.co/360/',
-    );
-
+  test('the homepage stays indexable', async ({ page }) => {
     await page.goto('/');
     await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
   });

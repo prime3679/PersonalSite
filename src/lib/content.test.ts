@@ -25,7 +25,7 @@ describe('getPublishedPosts', () => {
 
   it('orders newest first and resolves identical dates by descending entry id', async () => {
     getCollectionMock.mockResolvedValue([
-      post('joytap-one-sprint', '2025-03-20'),
+      post('first-post', '2025-03-20'),
       post('older-post', '2025-02-01'),
       post('second-order-effects', '2025-03-20'),
       post('newest-post', '2025-04-01'),
@@ -36,7 +36,7 @@ describe('getPublishedPosts', () => {
     expect(posts.map(({ id }) => id)).toEqual([
       'newest-post',
       'second-order-effects',
-      'joytap-one-sprint',
+      'first-post',
       'older-post',
     ]);
   });

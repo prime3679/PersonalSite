@@ -1,336 +1,80 @@
 ---
 import { navItems } from '../data/nav';
-import ThemeToggle from './ThemeToggle.astro';
 
-const pathname = Astro.url.pathname;
 const normalizePath = (path: string) => path.endsWith('/') && path !== '/' ? path.slice(0, -1) : path;
-const currentPath = normalizePath(pathname);
+const currentPath = normalizePath(Astro.url.pathname);
 
 const isActive = (href: string) => {
   const normalizedHref = normalizePath(href);
-  return currentPath === normalizedHref || (normalizedHref !== '/' && currentPath.startsWith(normalizedHref + '/'));
+  return currentPath === normalizedHref || currentPath.startsWith(normalizedHref + '/');
 };
-
-const isCurrentPage = (href: string) => currentPath === normalizePath(href);
 ---
 
 <header class="site-header" data-site-header>
-  <div class="site-header__bar" data-header-bar>
-    <a href="/" class="site-header__wordmark site-header__logo">adrian lumley</a>
-
-    <div class="site-header__actions">
-      <nav class="site-header__desktop-nav" data-header-desktop-nav aria-label="Primary">
-        {navItems.map((item) => (
-          <a
-            href={item.href}
-            aria-current={isCurrentPage(item.href) ? 'page' : undefined}
-            class:list={['site-header__nav-link', isActive(item.href) && 'is-active']}
-          >
-            {item.label}
-          </a>
-        ))}
-      </nav>
-
-      <div class="site-header__theme-toggle" aria-label="Theme">
-        <ThemeToggle />
-      </div>
-
-      <button
-        id="menu-toggle"
-        class="site-header__menu-toggle"
-        data-header-menu-toggle
-        type="button"
-        aria-label="Open site menu"
-        aria-expanded="false"
-        aria-controls="mobile-nav"
-      >
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-      </button>
-    </div>
+  <div class="site-header__bar">
+    <a href="/" class="site-header__wordmark">adrian lumley</a>
+    <nav class="site-header__nav" aria-label="Primary">
+      {navItems.map((item) => (
+        <a
+          href={item.href}
+          aria-current={currentPath === normalizePath(item.href) ? 'page' : undefined}
+          class:list={['site-header__nav-link', isActive(item.href) && 'is-active']}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
   </div>
-
-  <nav
-    id="mobile-nav"
-    class="site-header__mobile-panel"
-    data-header-mobile-panel
-    aria-label="Mobile"
-    aria-hidden="true"
-    inert
-  >
-    {navItems.map((item) => (
-      <a
-        href={item.href}
-        aria-current={isCurrentPage(item.href) ? 'page' : undefined}
-        class:list={['site-header__mobile-link', isActive(item.href) && 'is-active']}
-      >
-        {item.label}
-      </a>
-    ))}
-  </nav>
 </header>
-
-<script>
-  const header = document.querySelector('[data-site-header]');
-  const menuToggle = document.querySelector('[data-header-menu-toggle]');
-  const mobilePanel = document.querySelector('[data-header-mobile-panel]');
-  const mobileLinks = mobilePanel?.querySelectorAll('a') ?? [];
-
-  function setMenuOpen(open: boolean) {
-    menuToggle?.setAttribute('aria-expanded', String(open));
-    menuToggle?.setAttribute('aria-label', open ? 'Close site menu' : 'Open site menu');
-    mobilePanel?.setAttribute('aria-hidden', String(!open));
-    if (mobilePanel instanceof HTMLElement) mobilePanel.inert = !open;
-    header?.classList.toggle('is-menu-open', open);
-  }
-
-  menuToggle?.addEventListener('click', () => {
-    setMenuOpen(menuToggle.getAttribute('aria-expanded') !== 'true');
-  });
-
-  mobileLinks.forEach((link) => {
-    link.addEventListener('click', () => setMenuOpen(false));
-  });
-
-  document.addEventListener('keydown', (event) => {
-    if (event.defaultPrevented) return;
-    if (event.key === 'Escape' && menuToggle?.getAttribute('aria-expanded') === 'true') {
-      setMenuOpen(false);
-      if (menuToggle instanceof HTMLElement) menuToggle.focus();
-    }
-  });
-
-  document.addEventListener('click', (event) => {
-    if (
-      menuToggle?.getAttribute('aria-expanded') === 'true' &&
-      event.target instanceof Node &&
-      !header?.contains(event.target)
-    ) {
-      setMenuOpen(false);
-    }
-  });
-</script>
 
 <style>
   .site-header {
-    position: relative;
-    z-index: 40;
-    background: var(--paper);
     border-bottom: 1px solid var(--line);
+    background: var(--paper);
     color: var(--ink);
-  }
-
-  .site-header__logo {
-    display: inline-flex;
-    min-width: 0;
-    min-height: 45px;
-    align-items: center;
-    flex-shrink: 0;
-    white-space: nowrap;
-  }
-
-  .site-header__mobile-link {
-    display: flex;
-    min-height: 46px;
-    align-items: center;
-    padding: .3125rem 0;
   }
 
   .site-header__bar {
-    box-sizing: border-box;
     width: 100%;
     max-width: 52rem;
-    min-height: 4.25rem;
     margin: 0 auto;
-    padding: 16px clamp(var(--s5), 5vw, var(--s7));
+    padding: var(--s5) clamp(var(--s4), 5vw, var(--s7));
     display: flex;
-    align-items: center;
+    align-items: baseline;
     justify-content: space-between;
-    gap: 20px;
+    gap: var(--s4);
   }
 
   /* the wordmark is the record's own type: the same sans, size, and weight
-     as the lede on the homepage. it is the one link without an underline,
-     and hover shifts nothing. */
+     as the lede on the homepage, and the one link without an underline. */
   .site-header__wordmark {
     flex: 0 0 auto;
+    padding: .75rem 0;
+    margin: -.75rem 0;
     color: var(--ink);
-    font: inherit;
     text-decoration: none;
     white-space: nowrap;
   }
 
-  .site-header__desktop-nav {
-    display: none;
-    align-items: center;
-    justify-content: flex-end;
-    gap: var(--s5);
-    min-width: 0;
+  .site-header__nav {
+    display: flex;
+    gap: var(--s4);
     white-space: nowrap;
   }
 
-  .site-header__actions {
-    display: flex;
-    min-width: 0;
-    flex: 0 1 auto;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 8px;
-  }
-
-  .site-header__theme-toggle {
-    display: inline-flex;
-    flex: 0 0 auto;
-  }
-
-  /* nav links take the global link style (ink, hairline underline) in the
-     record's own type. the only variation is the section you are in, which
-     carries the heavier current-page rule from tokens.css. */
-  .site-header__nav-link,
-  .site-header__mobile-link {
-    color: var(--link-ink);
-    font: inherit;
-    text-transform: lowercase;
-  }
-
+  /* 44px tap target, paid back with a matching negative margin */
   .site-header__nav-link {
     display: inline-block;
     padding: .75rem .3rem;
     margin: -.75rem -.3rem;
   }
 
-  .site-header__nav-link.is-active,
-  .site-header__mobile-link.is-active {
+  /* the section you are in carries the heavier current-page rule */
+  .site-header__nav-link.is-active {
     text-decoration-thickness: var(--link-rule-current);
   }
 
-  .site-header__menu-toggle {
-    width: 45px;
-    height: 45px;
-    padding: 0;
-    border: 0;
-    border-radius: 999px;
-    background: transparent;
-    color: var(--ink);
-    display: inline-flex;
-    flex: 0 0 auto;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    cursor: pointer;
-  }
-
-  .site-header__menu-toggle span {
-    display: block;
-    width: 22px;
-    height: 1.5px;
-    border-radius: 999px;
-    background: currentColor;
-    transform-origin: center;
-    transition: transform 180ms ease, opacity 180ms ease;
-  }
-
-  .site-header.is-menu-open .site-header__menu-toggle span:nth-child(1) {
-    transform: translateY(6.5px) rotate(45deg);
-  }
-
-  .site-header.is-menu-open .site-header__menu-toggle span:nth-child(2) {
-    opacity: 0;
-  }
-
-  .site-header.is-menu-open .site-header__menu-toggle span:nth-child(3) {
-    transform: translateY(-6.5px) rotate(-45deg);
-  }
-
-  .site-header__mobile-panel {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    box-sizing: border-box;
-    width: 100%;
-    max-width: 52rem;
-    margin: 0 auto;
-    padding: .35rem clamp(var(--s5), 5vw, var(--s7)) .875rem;
-    border-bottom: 1px solid var(--line);
-    background: var(--paper);
-    clip-path: inset(0 0 100% 0);
-    opacity: 0;
-    pointer-events: none;
-    visibility: hidden;
-    transform: translateY(-.35rem);
-    transition: clip-path 190ms var(--ease), opacity 170ms ease, transform 190ms var(--ease), visibility 0ms linear 190ms;
-  }
-
-  .site-header.is-menu-open .site-header__mobile-panel {
-    clip-path: inset(0 0 0 0);
-    opacity: 1;
-    pointer-events: auto;
-    visibility: visible;
-    transform: translateY(0);
-    transition-delay: 0ms;
-  }
-
-  .site-header__mobile-panel > a {
-    min-height: 46px;
-    display: flex;
-    align-items: center;
-    border-top: 1px solid var(--line);
-  }
-
-  .site-header__wordmark:focus-visible,
-  .site-header__nav-link:focus-visible,
-  .site-header__mobile-link:focus-visible,
-  .site-header__menu-toggle:focus-visible {
-    outline: var(--focus-ring);
-    outline-offset: var(--focus-offset);
-    border-radius: 4px;
-  }
-
   @media (min-width: 768px) {
-    .site-header__bar {
-      padding-top: 17px;
-      padding-bottom: 17px;
-    }
-
-    .site-header__desktop-nav {
-      display: flex;
-    }
-
-    .site-header__actions {
-      gap: var(--s5);
-    }
-
-    .site-header__menu-toggle,
-    .site-header__mobile-panel {
-      display: none;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .site-header *,
-    .site-header *::before,
-    .site-header *::after {
-      transition-duration: 0.01ms !important;
-      animation-duration: 0.01ms !important;
-    }
-
-    .site-header__menu-toggle span {
-      transition: none;
-    }
-
-    .site-header.is-menu-open .site-header__menu-toggle span:nth-child(1) {
-      transform: translateY(6.5px) rotate(45deg) !important;
-    }
-
-    .site-header.is-menu-open .site-header__menu-toggle span:nth-child(3) {
-      transform: translateY(-6.5px) rotate(-45deg) !important;
-    }
-
-    .site-header__mobile-panel {
-      transition: none;
-    }
+    .site-header__nav { gap: var(--s5); }
   }
 </style>

@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const representativePages = ['/', '/work/', '/writing/'];
+const representativePages = ['/', '/about/', '/writing/'];
 
 test.describe('production HTML inlines Astro stylesheets', () => {
   for (const path of representativePages) {

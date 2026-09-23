@@ -24,8 +24,8 @@ const isoDate = (date: Date) => date.toISOString().slice(0, 10);
 const displayTitle = (post: (typeof posts)[number]) => post.data.shortTitle ?? post.data.title;
 
 const lab = [
-  { title: 'Meeting cost', href: '/lab/meeting-cost/' },
-  { title: 'Iron log', href: '/lab/iron-log/' },
+  { title: 'Meeting price tag', href: '/lab/meeting-cost/' },
+  { title: 'Fork', href: '/lab/fork/' },
   { title: 'Ink field', href: '/lab/ink-field/' },
 ];
 
@@ -33,7 +33,7 @@ const footerLinks = [
   { label: 'email', href: '/contact/' },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/adrianlumley/', external: true },
   { label: 'GitHub', href: 'https://github.com/prime3679', external: true },
-  { label: 'a short record', href: '/work/' },
+  { label: 'about', href: '/about/' },
 ];
 ---
 
@@ -161,6 +161,7 @@ const footerLinks = [
        margin on both axes, so commas still sit tight against short words. */
     .record a {
       display: inline-block;
+      min-width: 44px;
       padding: .75rem .3rem;
       margin: -.75rem -.3rem;
     }

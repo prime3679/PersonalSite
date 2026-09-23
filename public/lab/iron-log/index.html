@@ -32,6 +32,9 @@
   nav { background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 12px 20px; position: sticky; top: 0; z-index: 100; }
   .logo { flex: 0 0 auto; font-size: 15px; font-weight: 700; letter-spacing: .12em; white-space: nowrap; }
   .logo span { color: var(--accent); }
+  .brand { display: flex; align-items: baseline; gap: 16px; }
+  .back-to-lab { color: var(--muted); font-size: 12px; padding: 12px 4px; margin: -12px -4px; }
+  .back-to-lab:hover, .back-to-lab:focus-visible { color: var(--text); }
   .nav-tabs { display: flex; gap: 2px; min-width: 0; overflow-x: auto; scrollbar-width: thin; }
   .nav-tab { background: transparent; border: 0; border-bottom: 2px solid transparent; color: var(--muted); cursor: pointer; font-size: 13px; padding: 6px 10px; transition: color .15s, border-color .15s; }
   .nav-tab:hover { color: var(--text); }
@@ -176,7 +179,10 @@
 <body>
 
 <nav>
-  <h1 class="logo">Iron <span>Log</span></h1>
+  <div class="brand">
+    <h1 class="logo">Iron <span>Log</span></h1>
+    <a class="back-to-lab" href="/lab/">back to lab</a>
+  </div>
   <div class="nav-tabs">
     <button class="nav-tab active" onclick="showPage('log', this)">log</button>
     <button class="nav-tab" onclick="showPage('today', this)">today</button>

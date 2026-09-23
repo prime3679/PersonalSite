@@ -100,7 +100,7 @@
       "dist/**",
       "node_modules/**"
     ],
-    "digest": "74ac9ca2557088c9fb9da9edc1bf272bd6f1a3756889fe54f184ed0207259ef5"
+    "digest": "270fb07406d07903007cec4227fe44509354168a045a3b79778e7513a933d3e6"
   },
   "components": [
     {

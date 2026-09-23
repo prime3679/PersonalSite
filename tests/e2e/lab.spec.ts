@@ -22,11 +22,12 @@ test('lab page has correct title, heading, and rogue card', async ({ page }) => 
   await expect(pastThePilot).toContainText('a public evidence ledger for enterprise ai that made it into real work');
   await expect(pastThePilot.locator('a')).toHaveText('open the ledger');
   await expect(pastThePilot.locator('a')).toHaveAttribute('href', 'https://pastthepilot.adrianlumley.co');
+  await expect(pastThePilot.locator('a')).toHaveAttribute('target', '_blank');
 
   const fork = page.locator('#fork');
   await expect(fork).toBeVisible();
   await expect(fork).toContainText('one hard decision, three futures, three marks each');
-  await expect(fork.locator('a[href="/lab/fork/"]')).toHaveText('open');
+  await expect(fork.locator('a[href="/lab/fork/"]')).toHaveText('open fork');
 
   const sectionIds = await page.locator('main section').evaluateAll((sections) => sections.map((section) => section.id));
   expect(sectionIds.indexOf('past-the-pilot')).toBeGreaterThan(sectionIds.indexOf('rogue'));
@@ -48,3 +49,16 @@ test('lab page has correct title, heading, and rogue card', async ({ page }) => 
   await expect(rogueCard.locator('.label')).toHaveText('flagship');
   await expect(rogueCard.locator('.label')).toHaveCSS('font-style', 'italic');
 });
+
+// every toy is its own world, but none is a dead end: each carries a visible
+// way back to the lab in its own type and ink.
+for (const toy of ['chaos-garden', 'crazy-wall', 'fable-field-recorder', 'fork', 'ink-field', 'iron-log', 'meeting-cost', 'my-kids-world', 'night-train', 'the-cap-is-gone']) {
+  test(`lab toy ${toy} links back to the lab`, async ({ page }) => {
+    await page.goto(`/lab/${toy}/`);
+    const back = page.locator('a[href="/lab/"]').filter({ hasText: 'back to lab' }).first();
+    await back.scrollIntoViewIfNeeded();
+    await expect(back).toBeVisible();
+    await back.click();
+    await expect(page).toHaveURL(/\/lab\/$/);
+  });
+}

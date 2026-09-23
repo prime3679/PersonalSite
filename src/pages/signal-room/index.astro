@@ -8,11 +8,10 @@ import { getEpisodes, episodePath } from '../../lib/content';
 import { formatLongDate, padEpisode } from '../../lib/format';
 
 // the signal room is the site's one instrument, and this is its index: a
-// dark panel carrying a fragment of the fiction, then the serial as a
-// ledger. the register (dark ground, mono meta and log, the single accent)
+// dark panel carrying a fragment of the fiction (linked to its episode),
+// then the serial as a ledger, newest first. the register (dark ground, mono meta and log, the single accent)
 // lives in instrument.css and is shared with every episode page.
 const episodes = await getEpisodes('desc');
-const latest = episodes[0];
 const first = episodes[episodes.length - 1];
 
 const logEntries = [
@@ -33,17 +32,8 @@ const logEntries = [
   <Panel ariaLabel="signal room episode log" label="signal.room 07:11">
     <SignalLog entries={logEntries} />
     <p class="signal-highlight">the storm is hours out and nothing is on fire. sleep. i'll have one clean decision waiting for you at six.</p>
-    <p class="mt-5 font-mono text-[.625rem] uppercase tracking-[.08em] text-[var(--panel-soft)]">03 · off-site · the one accent in the dark register</p>
+    <p class="links mt-5 font-mono text-[.625rem] uppercase tracking-[.08em] text-[var(--panel-soft)]">from <a href="/signal-room/off-site/">episode 03, off-site</a></p>
   </Panel>
-
-  {latest && (
-    <section class="mt-16">
-      <h2 class="section-title">latest</h2>
-      <p class="instrument-meta">episode {padEpisode(latest.data.episode)} · {formatLongDate(latest.data.date)}</p>
-      <h2 class="card-title mt-2"><a href={episodePath(latest.id)}>{latest.data.title}</a></h2>
-      <p class="ui-copy mt-3">{latest.data.teaser}</p>
-    </section>
-  )}
 
   <section class="mt-16">
     <h2 class="section-title">episodes</h2>

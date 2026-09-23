@@ -129,6 +129,10 @@
     .overture{animation:none;opacity:0;visibility:hidden}
     .console{transition:none}
   }
+
+  /* the way back to the site, in this toy's own type and ink */
+  .back-to-lab { position: absolute; top: 12px; left: 16px; z-index: 1000; padding: 12px 6px; margin: -12px -6px; color: inherit; font: inherit; font-size: 13px; opacity: .72; text-underline-offset: .2em; }
+  .back-to-lab:hover, .back-to-lab:focus-visible { opacity: 1; }
 </style>
 </head>
 <body>
@@ -472,5 +476,7 @@
   }
 })();
 </script>
+<!-- last in the DOM so the toy keeps the first tab stops; positioned top-left -->
+<a class="back-to-lab" href="/lab/">back to lab</a>
 </body>
 </html>

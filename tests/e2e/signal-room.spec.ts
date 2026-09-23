@@ -37,7 +37,11 @@ test('signal room: the index carries the dark instrument panel above the ledger'
   expect(paint.opacity).toBe('1');
   expect(paint.animation).toBe('none');
 
-  // the panel sits above the latest block and the ledger
+  // the panel's caption links to the episode it quotes; no design notes leak into the fiction
+  await expect(panel.locator('a[href="/signal-room/off-site/"]')).toHaveText('episode 03, off-site');
+  await expect(panel).not.toContainText('dark register');
+
+  // the panel sits directly above the ledger
   const panelBox = await panel.boundingBox();
   const ledgerBox = await page.locator('.ledger-row').first().boundingBox();
   expect(panelBox!.y + panelBox!.height).toBeLessThan(ledgerBox!.y);

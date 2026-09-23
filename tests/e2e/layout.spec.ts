@@ -4,10 +4,10 @@ test.describe('broadsheet column alignment', () => {
   test('wordmark and footer content left-align with the page title at 1280x800', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
     // the homepage has no header or footer; the inner pages share the column
-    await page.goto('/work/');
+    await page.goto('/about/');
 
     const openingBox = await page.locator('main h1').boundingBox();
-    const wordmarkBox = await page.locator('.site-header__logo').boundingBox();
+    const wordmarkBox = await page.locator('.site-header__wordmark').boundingBox();
     const footerFirstBox = await page.locator('footer .site-footer-inner > *').first().boundingBox();
 
     expect(openingBox).not.toBeNull();

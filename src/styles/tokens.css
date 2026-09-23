@@ -71,17 +71,19 @@
   color-scheme: light;
 }
 
-/* night shift: the paper tokens remap onto the panel family. the panel
-   tokens themselves stay put, so code blocks remain the darkest surface
-   and keep their own register. links follow --ink, so they stay the text
-   color in both shifts. */
-html.dark {
-  --paper: #16130e;
-  --paper-raised: #1e1a13;
-  --ink: #eae4d7;
-  --ink-rgb: 234 228 215;
-  --ink-soft: #9c9384;
-  --line: #2b261d;
-  --line-strong: #3a3428;
-  color-scheme: dark;
+/* dark mode follows the visitor's system setting: the paper tokens remap
+   onto the panel family. the panel tokens themselves stay put, so code
+   blocks remain the darkest surface and keep their own register. links
+   follow --ink, so they stay the text color in both modes. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #16130e;
+    --paper-raised: #1e1a13;
+    --ink: #eae4d7;
+    --ink-rgb: 234 228 215;
+    --ink-soft: #9c9384;
+    --line: #2b261d;
+    --line-strong: #3a3428;
+    color-scheme: dark;
+  }
 }

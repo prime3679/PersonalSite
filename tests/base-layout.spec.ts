@@ -4,7 +4,7 @@ const exactTitles = [
   ['/', 'Adrian Lumley', 'https://adrianlumley.co/'],
   ['/writing', 'Writing | Adrian Lumley', 'https://adrianlumley.co/writing/'],
   ['/lab', 'Lab | Adrian Lumley', 'https://adrianlumley.co/lab/'],
-  ['/work', 'Work | Adrian Lumley', 'https://adrianlumley.co/work/'],
+  ['/about', 'About | Adrian Lumley', 'https://adrianlumley.co/about/'],
   ['/signal-room', 'Signal Room | Adrian Lumley', 'https://adrianlumley.co/signal-room/'],
   ['/contact', 'Contact | Adrian Lumley', 'https://adrianlumley.co/contact/'],
 ] as const;

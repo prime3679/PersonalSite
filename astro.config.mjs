@@ -13,9 +13,9 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      // /blog and /blog/<slug> are meta-refresh stubs kept for old links;
-      // crawlers should discover the /writing/ pages instead.
-      filter: (page) => !/^\/blog(\/|$)/.test(new URL(page).pathname),
+      // /blog, /blog/<slug>, /work, /services, and /now are meta-refresh
+      // stubs kept for old links; crawlers should discover the real pages.
+      filter: (page) => !/^\/(blog|work|services|now)(\/|$)/.test(new URL(page).pathname),
     }),
   ],
   markdown: {

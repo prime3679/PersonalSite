@@ -7,9 +7,7 @@ export const canonicalPublicAstroPaths = [
   '/contact/',
   '/joytap-privacy/',
   '/lab/',
-  '/services/',
   '/signal-room/',
-  '/work/',
   '/writing/',
 ] as const;
 

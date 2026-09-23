@@ -4,13 +4,10 @@ export interface NavItem {
 }
 
 // hrefs carry the trailing slash the canonical worker would otherwise
-// redirect to, so a nav click is one request.
+// redirect to, so a nav click is one request. three items fit on one line
+// at 320px, so there is no mobile menu.
 export const navItems: NavItem[] = [
-  { href: '/work/', label: 'work' },
-  { href: '/lab/', label: 'lab' },
   { href: '/writing/', label: 'writing' },
-  { href: '/signal-room/', label: 'signal room' },
-  { href: '/contact/', label: 'contact' },
+  { href: '/lab/', label: 'lab' },
+  { href: '/about/', label: 'about' },
 ];
-
-export const primaryNavItems = navItems;

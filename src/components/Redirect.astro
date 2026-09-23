@@ -1,0 +1,33 @@
+---
+// a meta-refresh stub for a retired or moved route, so old links land
+// somewhere instead of 404ing. crawlers follow the canonical link.
+import { absoluteUrl, canonicalUrl } from '../lib/seo';
+
+interface Props {
+  to: string;
+  title?: string;
+}
+
+const { to, title = 'Adrian Lumley' } = Astro.props;
+const canonicalDestination = canonicalUrl(to);
+const ogImage = absoluteUrl('/og/home.png');
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0; url=${to}`} />
+    <title>{title}</title>
+    <meta property="og:title" content={title} />
+    <meta property="og:url" content={canonicalDestination} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:image" content={ogImage} />
+    <link rel="canonical" href={canonicalDestination} />
+  </head>
+  <body>
+    <p><a href={to}>{to === '/' ? 'redirecting home' : 'moved here'}</a></p>
+  </body>
+</html>

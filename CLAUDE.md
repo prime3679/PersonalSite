@@ -11,7 +11,8 @@ Adrian Lumley's personal site. Live at https://adrianlumley.co. Cloudflare Worke
 ## Key Files
 - `src/pages/` , all pages and routes
 - `src/layouts/Base.astro` , shared head/OG shell, skip link, `<Header />`, `<main>`, and footer; `chrome={false}` drops header and footer, which the homepage uses
-- `src/components/Header.astro` , sticky header with wordmark, desktop nav, and mobile hamburger menu
+- `src/components/Header.astro` , header with wordmark and the three-item nav on one row at every width; no menu toggle
+- `src/components/Redirect.astro` , meta-refresh stub for moved routes (`/work/`, `/services/`, `/now/`, `/blog/`)
 - `src/data/nav.ts` , single source of truth for public nav
 - `src/data/siteMetadata.ts` , title, description, social links, OG defaults
 - `src/lib/content.ts` , canonical collection queries and route path helpers
@@ -28,11 +29,12 @@ Adrian Lumley's personal site. Live at https://adrianlumley.co. Cloudflare Worke
 Defined once in `src/data/nav.ts` and rendered by header, mobile menu, and footer.
 
 ```text
-work · lab · writing · signal room · contact
+writing · lab · about
 ```
 
 Rules:
-- mobile nav is a hamburger/toggle on inner pages
+- three items fit on one row at 320px, so there is no hamburger or mobile menu
+- signal room is reached from the lab page; contact is the `email` link in the footer and on about
 - `adrian lumley` wordmark must not wrap
 - do not hardcode alternate nav labels in pages
 - old `/blog/` URLs must keep redirecting/aliasing to `/writing/`
@@ -53,18 +55,17 @@ Three other languages sit beside the record, each whole on its own pages; do not
 
 ## Homepage Rules
 The homepage is the record, not an app shell:
-- no site header, wordmark, night shift pill, hamburger, or site footer on `/`
+- no site header, wordmark, or site footer on `/`
 - dark ink on light paper from the first paint; no fade-in or reveal animation on the record
-- night shift, when the visitor has it on, remaps paper and ink together; never light ink on light ground
+- dark mode follows the visitor's system setting (`prefers-color-scheme` in `tokens.css`) and remaps paper and ink together; never light ink on light ground. there is no toggle and no easter-egg script
 - one lede line, the featured essay with date and dek, currently/past, writing, lab, then the four footer links
 - no name-hero, no Rogue on the first screen, no contact pitch
 
 ## Live Routes That Matter
 - `/`
-- `/work/`
-- `/about/`
 - `/writing/`
 - `/lab/`
+- `/about/` (includes the work record; `/work/` redirects to `/about/#work`)
 - `/signal-room/`
 - `/contact/`
 - `/rss.xml`
@@ -131,8 +132,8 @@ npx playwright test tests/e2e/signal-room.spec.ts --project=chromium
 For homepage/header/mobile changes verify 320, 375, 390, and 414px widths:
 - no horizontal scroll
 - no wrapping wordmark
-- no orphaned nav items
-- menu links remain tappable
+- all three nav links on the wordmark's row
+- nav links remain tappable
 - hero type does not swallow the first screen
 - no mockup scaffold labels
 

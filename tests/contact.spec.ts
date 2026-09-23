@@ -15,10 +15,6 @@ test('contact form is present with all fields', async ({ page }) => {
   const emailInput = page.locator('input[name="email"]');
   await expect(emailInput).toBeVisible();
 
-  // Verify the subject input is present
-  const subjectInput = page.locator('input[name="subject"]');
-  await expect(subjectInput).toBeVisible();
-
   // Verify the message textarea is present
   const messageInput = page.locator('textarea[name="message"]');
   await expect(messageInput).toBeVisible();

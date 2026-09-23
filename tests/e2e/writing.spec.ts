@@ -89,7 +89,7 @@ test('writing: an essay reads in the serif with a date line, inside record chrom
 
   // the serif face is preloaded on this page and nowhere in the chrome
   await expect(page.locator('head link[rel="preload"][href*="newsreader"]')).toHaveCount(1);
-  await expect(page.locator('.site-header__logo')).toHaveCSS('font-family', /Geist/);
+  await expect(page.locator('.site-header__wordmark')).toHaveCSS('font-family', /Geist/);
   await expect(page.locator('main footer dt').first()).toHaveCSS('font-family', /Geist/);
 
   // pages that are not long-form neither preload nor use the serif

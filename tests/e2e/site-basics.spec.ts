@@ -24,7 +24,7 @@ test('a11y: skip link jumps focus to main content', async ({ page }) => {
 test('a11y: active header tab carries aria-current="page"', async ({ page }) => {
   await page.goto('/writing');
   await expect(page.locator('header nav a[href="/writing/"]').first()).toHaveAttribute('aria-current', 'page');
-  await expect(page.locator('header nav a[href="/work/"]').first()).not.toHaveAttribute('aria-current', 'page');
+  await expect(page.locator('header nav a[href="/about/"]').first()).not.toHaveAttribute('aria-current', 'page');
 });
 
 test('nav: header shows the home wordmark + canonical primary tabs', async ({ page }) => {
@@ -32,13 +32,12 @@ test('nav: header shows the home wordmark + canonical primary tabs', async ({ pa
   await page.goto('/writing');
   // The name acts as the home link
   await expect(page.locator('header a[href="/"]').first()).toBeVisible();
-  // Primary tabs are the visible desktop nav
-  for (const href of ['/work/', '/lab/', '/writing/', '/signal-room/', '/contact/']) {
+  for (const href of ['/writing/', '/lab/', '/about/']) {
     await expect(page.locator(`header a[href="${href}"]`).first()).toBeVisible();
   }
-  // about stays out of the primary nav but is reachable from the footer
-  await expect(page.locator('header a[href^="/about"]')).toHaveCount(0);
-  await expect(page.locator('footer a[href="/about/"]')).toBeVisible();
+  // signal room and contact sit one click down, out of the primary nav
+  await expect(page.locator('header a[href^="/signal-room"], header a[href^="/contact"]')).toHaveCount(0);
+  await expect(page.locator('footer a[href="/contact/"]')).toBeVisible();
 });
 
 test('/360/ keeps its terminal voice: mono, black on white, arrow and comment glyphs', async ({ page }) => {

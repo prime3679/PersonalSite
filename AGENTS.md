@@ -13,13 +13,13 @@ This repo is Adrian Lumley's public personal site. Treat it as a premium editori
 The only public nav labels, in order:
 
 ```text
-work · lab · writing · signal room · contact
+writing · lab · about
 ```
 
-Keep the mobile nav as a clean hamburger/toggle on inner pages. The `adrian lumley` wordmark must not wrap.
+Three items fit on one row at 320px, so there is no hamburger or mobile menu. The `adrian lumley` wordmark must not wrap. Signal Room is reached from the lab page; contact is the `email` link in the footer and on about.
 
 ## homepage
-The homepage is the record, not an app shell. It renders through `Base` with `chrome={false}`: no header, wordmark, night shift pill, hamburger, or site footer. The record is dark ink on light paper from the first paint with no fade-in; night shift remaps paper and ink together and must never leave light ink on light ground. Keep the featured essay under the lede. Do not restore a name-hero, put Rogue on the first screen, or add a contact pitch.
+The homepage is the record, not an app shell. It renders through `Base` with `chrome={false}`: no header, wordmark, or site footer. The record is dark ink on light paper from the first paint with no fade-in; dark mode follows the system setting, remaps paper and ink together, and must never leave light ink on light ground. There is no theme toggle and no easter-egg script. Keep the featured essay under the lede. Do not restore a name-hero, put Rogue on the first screen, or add a contact pitch.
 
 ## record type on every page
 Inner pages share the homepage's type system: one sans at body size and weight 400 in one ink on flat paper, the page title as the only size jump, italic `.label`s for section names and keys, `.rows` tables for anything keyed, no uppercase or mono display text, no fade-in. Internal hrefs carry the trailing slash.
@@ -37,14 +37,13 @@ Three other languages sit beside it, each whole on its own pages: essays (`/writ
 
 ## routes that matter
 - `/`
-- `/work/`
-- `/about/`
 - `/writing/`
 - `/lab/`
+- `/about/` (includes the work record)
 - `/signal-room/`
 - `/contact/`
 
-Old `/blog/` URLs must keep redirecting/aliasing to writing instead of 404ing.
+Old `/blog/`, `/work/`, `/services/`, and `/now/` URLs must keep redirecting instead of 404ing.
 
 ## verification commands
 Run these before pushing public-site changes:
@@ -68,8 +67,8 @@ npx playwright test tests/e2e/signal-room.spec.ts --project=chromium
 For homepage/header/mobile changes verify 320, 375, 390, and 414px widths:
 - no horizontal scroll
 - no wrapping wordmark
-- no orphaned nav items
-- menu links remain tappable
+- all three nav links on the wordmark's row
+- nav links remain tappable
 - hero type does not swallow the first screen
 - no mockup scaffolding labels
 

@@ -4,7 +4,7 @@ import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import { expect, test } from 'vitest';
 import Header from './Header.astro';
 
-test('Header renders the canonical editorial navigation once', async () => {
+test('Header renders the three-item nav with no menu or theme toggle', async () => {
   const container = await AstroContainer.create();
   const result = await container.renderToString(Header);
 
@@ -12,15 +12,13 @@ test('Header renders the canonical editorial navigation once', async () => {
   expect(result).toContain('href="/"');
   expect(result).toContain('adrian lumley');
   // nav hrefs carry the canonical trailing slash so a click is one request
-  expect(result).toContain('href="/work/"');
-  expect(result).toContain('href="/lab/"');
   expect(result).toContain('href="/writing/"');
-  expect(result).toContain('href="/signal-room/"');
-  expect(result).toContain('href="/contact/"');
-  expect(result).not.toContain('href="/about');
-  expect(result).not.toContain('href="/blog');
-  expect(result).not.toContain('id="theme-toggle"');
-  expect(result).toContain('id="menu-toggle"');
-  expect(result).toContain('id="mobile-nav"');
-  expect(result).toContain('aria-controls="mobile-nav"');
+  expect(result).toContain('href="/lab/"');
+  expect(result).toContain('href="/about/"');
+  for (const retired of ['/work/', '/contact/', '/signal-room/', '/blog']) {
+    expect(result).not.toContain(`href="${retired}`);
+  }
+  expect(result).not.toContain('id="menu-toggle"');
+  expect(result).not.toContain('id="mobile-nav"');
+  expect(result).not.toContain('data-theme-toggle');
 });

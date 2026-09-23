@@ -4,16 +4,10 @@ import PageIntro from '../components/PageIntro.astro';
 
 // Formspree redirects here after a successful submit; ?sent=1 shows the note.
 const returnUrl = new URL('/contact?sent=1', Astro.site).href;
-
-const socialLinks = [
-  { label: 'linkedin', href: 'https://www.linkedin.com/in/adrianlumley/' },
-  { label: 'github', href: 'https://github.com/prime3679' },
-  { label: 'goodreads', href: 'https://www.goodreads.com/user/show/149439647-adrian-lumley' },
-];
 ---
 
 <Base title="Contact" description="get in touch with adrian lumley: product leader, builder, occasional advisor.">
-  <PageIntro title="contact" standfirst="always interested in product challenges, creative projects, or just good conversation. open to advisory roles and the right side-hustle." />
+  <PageIntro title="contact" standfirst="product challenges, advisory, or just good conversation. it lands in my inbox." />
 
   <p id="form-success" hidden class="measure mb-8" role="status">message sent, thanks for reaching out. i'll get back to you soon.</p>
 
@@ -29,24 +23,12 @@ const socialLinks = [
       <input type="email" id="email" name="email" required class="field-input" autocomplete="email" />
     </div>
     <div>
-      <label for="subject" class="field-label">subject</label>
-      <input type="text" id="subject" name="subject" class="field-input" />
-    </div>
-    <div>
       <label for="message" class="field-label">message *</label>
       <textarea id="message" name="message" required rows="5" class="field-input"></textarea>
     </div>
     <div><button type="submit" class="button">send message</button></div>
   </form>
 
-  <section class="mt-12" aria-labelledby="elsewhere-h">
-    <h2 id="elsewhere-h" class="label">elsewhere</h2>
-    <p class="links mt-2">
-      {socialLinks.map((link, index) => (
-        <><a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>{index < socialLinks.length - 1 && ' · '}</>
-      ))}
-    </p>
-  </section>
 </Base>
 
 <script>

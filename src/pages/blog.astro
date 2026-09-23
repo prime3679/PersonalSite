@@ -1,25 +1,4 @@
 ---
-import { absoluteUrl, canonicalUrl } from '../lib/seo';
-
-const destination = '/writing/';
-const canonicalDestination = canonicalUrl(destination);
+import Redirect from '../components/Redirect.astro';
 ---
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="refresh" content={`0; url=${destination}`} />
-    <title>Writing | Adrian Lumley</title>
-    <meta property="og:title" content="Writing | Adrian Lumley" />
-    <meta property="og:url" content={canonicalDestination} />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content={absoluteUrl('/og/home.png')} />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Writing | Adrian Lumley" />
-    <meta name="twitter:image" content={absoluteUrl('/og/home.png')} />
-    <link rel="canonical" href={canonicalDestination} />
-  </head>
-  <body>
-    <p><a href={destination}>writing</a></p>
-  </body>
-</html>
+<Redirect to="/writing/" title="Writing | Adrian Lumley" />

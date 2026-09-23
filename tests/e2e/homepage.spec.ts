@@ -47,7 +47,7 @@ async function firstPaintInk(page: Page) {
       opacity: Number(style.opacity),
       animation: style.animationName,
       paper: window.getComputedStyle(document.documentElement).backgroundColor,
-      dark: document.documentElement.classList.contains('dark'),
+      dark: window.matchMedia('(prefers-color-scheme: dark)').matches,
     };
   });
 }
@@ -95,7 +95,7 @@ test('homepage ink is dark on light paper from the first paint', async ({ page }
   expect(ink).toBe(paint.ink);
 });
 
-test('night shift on the homepage remaps paper with ink; it never leaks light ink onto light ground', async ({ page }) => {
+test('dark mode follows the system and remaps paper with ink; it never leaks light ink onto light ground', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'dark' });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/', { waitUntil: 'domcontentloaded' });
@@ -105,16 +105,12 @@ test('night shift on the homepage remaps paper with ink; it never leaks light in
   expect(paint.opacity).toBe(1);
   expect(relativeLuminance(paint.ink)).toBeGreaterThan(relativeLuminance(paint.paper));
   expect(contrastRatio(paint.ink, paint.paper)).toBeGreaterThan(12);
-  await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#16130e');
+  await expect(page.locator('meta[name="theme-color"][media="(prefers-color-scheme: dark)"]')).toHaveAttribute('content', '#16130e');
+  await expect(page.locator('meta[name="theme-color"][media="(prefers-color-scheme: light)"]')).toHaveAttribute('content', '#f7f3ea');
 
-  // a stored light preference wins over the system scheme
-  await page.addInitScript(() => localStorage.setItem('theme', 'light'));
-  await page.goto('/', { waitUntil: 'domcontentloaded' });
-  const light = await firstPaintInk(page);
-  expect(light.dark).toBe(false);
-  expect(relativeLuminance(light.ink)).toBeLessThan(relativeLuminance(light.paper));
-  expect(contrastRatio(light.ink, light.paper)).toBeGreaterThan(12);
-  await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#f7f3ea');
+  // no toggle and no stored preference: the page carries no theme script
+  await expect(page.locator('[data-theme-toggle]')).toHaveCount(0);
+  expect(await page.evaluate(() => document.documentElement.classList.contains('dark'))).toBe(false);
 });
 
 test('homepage first screen sells the latest essay under the lede', async ({ page }) => {
@@ -252,11 +248,11 @@ test('homepage ledger, archive, lab rows, and footer are reconciled', async ({ p
 
   // footer: one line, commas, four text links
   const footer = page.locator('.record__footer');
-  await expect(footer).toHaveText('email, LinkedIn, GitHub, a short record');
+  await expect(footer).toHaveText('email, LinkedIn, GitHub, about');
   await expect(footer.getByRole('link', { name: 'email' })).toHaveAttribute('href', '/contact/');
   await expect(footer.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute('href', 'https://www.linkedin.com/in/adrianlumley/');
   await expect(footer.getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', 'https://github.com/prime3679');
-  await expect(footer.getByRole('link', { name: 'a short record' })).toHaveAttribute('href', '/work/');
+  await expect(footer.getByRole('link', { name: 'about' })).toHaveAttribute('href', '/about/');
 
   // no pitch, no instrument, no numbered rails
   await expect(main).not.toContainText("let's talk");
@@ -273,8 +269,8 @@ test('the homepage link style is the site link style', async ({ page }) => {
 
   // the homepage carries no header or footer, so read the chrome link
   // style from an inner page, skipping the current-page rule on its own tab
-  await page.goto('/work/');
-  const navLink = await linkStyle(page.locator('[data-header-desktop-nav] a[href="/lab/"]'));
+  await page.goto('/about/');
+  const navLink = await linkStyle(page.locator('header.site-header nav a[href="/lab/"]'));
   const footerLink = await linkStyle(page.locator('footer nav a[href="/lab/"]'));
 
   await page.goto('/writing/the-honest-record/');
@@ -301,7 +297,7 @@ test('the homepage link style is the site link style', async ({ page }) => {
 // the one size jump and italic reserved for labels. essays read in the serif
 // (writing.spec) and the signal room is the instrument (signal-room.spec);
 // those two languages have their own specs.
-for (const path of ['/writing/', '/about/', '/work/', '/lab/', '/contact/']) {
+for (const path of ['/writing/', '/about/', '/lab/', '/contact/']) {
   test(`${path} is set in the record's type system`, async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto('/');
@@ -325,7 +321,7 @@ for (const path of ['/writing/', '/about/', '/work/', '/lab/', '/contact/']) {
         const style = window.getComputedStyle(el);
         if (style.display === 'none' || style.visibility === 'hidden') continue;
         if (style.animationName !== 'none' || Number(style.opacity) < 1) animated.push(el.tagName.toLowerCase());
-        // controls (night shift, tag chips) are not text; they carry their own size
+        // controls (tag chips) are not text; they carry their own size
         if (!ownText || el.tagName === 'BUTTON') continue;
         const text = (el.textContent ?? '').trim().slice(0, 40);
         families.add(style.fontFamily.split(',')[0]);

@@ -26,7 +26,7 @@ Adrian Lumley's personal site. Live at https://adrianlumley.co. Cloudflare Worke
 - `.hermes/verifiers/` , repo-local verification harness
 
 ## Canonical Public Nav
-Defined once in `src/data/nav.ts` and rendered by header, mobile menu, and footer.
+Defined once in `src/data/nav.ts` and rendered by the header and the footer.
 
 ```text
 writing · lab · about
@@ -84,12 +84,13 @@ Legacy/support routes may exist for compatibility or toys, but they must not re-
 - do not invent metrics or work outcomes
 
 ## Lab Rules
-The current Lab page is intentionally lean:
-- one flagship Rogue card
-- one factual stat tile only, currently `67 days running`
-- one plain text row of surviving toys: iron log, joytap, my kid's world, chaos garden, meeting price tag
-- no toy cards
-- no Operator Stack
+The Lab page (`src/pages/lab.astro`) is intentionally lean, in this order:
+- one flagship Rogue section, linking to signal room
+- one project section: past the pilot
+- short sections for the toys worth a paragraph (currently fork and ink field)
+- one plain text row, `also built`, for every other surviving toy
+- no toy cards, no stat tiles, no Operator Stack
+- the homepage lab rows link to three of these; keep their hrefs pointing at live `public/lab/` pages
 - do not restyle internal playground/toy HTML pages unless explicitly asked
 
 ## Signal Room Rules

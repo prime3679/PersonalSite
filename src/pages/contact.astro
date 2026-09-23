@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import PageIntro from '../components/PageIntro.astro';
 
 // Formspree redirects here after a successful submit; ?sent=1 shows the note.
-const returnUrl = new URL('/contact?sent=1', Astro.site).href;
+const returnUrl = new URL('/contact/?sent=1', Astro.site).href;
 ---
 
 <Base title="Contact" description="get in touch with adrian lumley: product leader, builder, occasional advisor.">

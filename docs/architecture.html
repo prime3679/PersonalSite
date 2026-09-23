@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="A standalone architecture map for the PersonalSite repository.">
-  <meta name="architecture-contract-sha256" content="6e14b85c5651d20bcef195a9301a076e22dd7a66c554bec6e3359b5fb081cb08">
+  <meta name="architecture-contract-sha256" content="ca49553a78a59a696665016a2e284d2a36186b68b58fa490a2f05ab8cb6bd852">
   <title>PersonalSite architecture map</title>
   <style>
     :root {
@@ -401,8 +401,7 @@
       <p class="lead">Eight named interfaces define the primary public surface and feed. Dynamic entries and compatibility endpoints extend this layer without entering canonical navigation.</p>
       <div class="route-table" role="table" aria-label="core routes">
         <div class="route-row" data-architecture-route="/" role="row"><code class="route-path">/</code><span class="route-kind">home</span><code class="route-source">src/pages/index.astro</code></div>
-        <div class="route-row" data-architecture-route="/work/" role="row"><code class="route-path">/work/</code><span class="route-kind">work</span><code class="route-source">src/pages/work.astro</code></div>
-        <div class="route-row" data-architecture-route="/about/" role="row"><code class="route-path">/about/</code><span class="route-kind">about</span><code class="route-source">src/pages/about.astro</code></div>
+        <div class="route-row" data-architecture-route="/about/" role="row"><code class="route-path">/about/</code><span class="route-kind">about + work record</span><code class="route-source">src/pages/about.astro</code></div>
         <div class="route-row" data-architecture-route="/writing/" role="row"><code class="route-path">/writing/</code><span class="route-kind">collection index</span><code class="route-source">src/pages/writing.astro</code></div>
         <div class="route-row" data-architecture-route="/lab/" role="row"><code class="route-path">/lab/</code><span class="route-kind">page + artifact index</span><code class="route-source">src/pages/lab.astro</code></div>
         <div class="route-row" data-architecture-route="/signal-room/" role="row"><code class="route-path">/signal-room/</code><span class="route-kind">collection index</span><code class="route-source">src/pages/signal-room/index.astro</code></div>
@@ -417,7 +416,7 @@
       <ol class="component-list">
         <li class="component" data-architecture-component="route layer"><span class="component-index">01</span><h3>route layer</h3><p>Astro files map public pages, dynamic content, XML output, redirects, and image endpoints.</p></li>
         <li class="component" data-architecture-component="base document shell"><span class="component-index">02</span><h3>base document shell</h3><p><code>Base.astro</code> owns metadata, the content security policy, structured data, accessibility entry points, global presentation (design tokens in <code>src/styles/tokens.css</code>, including the one site-wide link and focus style), and optional shared chrome; the homepage record passes <code>chrome={false}</code> and renders without header or footer.</p></li>
-        <li class="component" data-architecture-component="navigation shell"><span class="component-index">03</span><h3>navigation shell</h3><p>The header, mobile menu, and footer render one ordered source in <code>src/data/nav.ts</code>.</p></li>
+        <li class="component" data-architecture-component="navigation shell"><span class="component-index">03</span><h3>navigation shell</h3><p>The header and footer render one ordered source in <code>src/data/nav.ts</code>.</p></li>
         <li class="component" data-architecture-component="content collections"><span class="component-index">04</span><h3>content collections</h3><p>Writing and Signal Room Markdown use distinct, typed frontmatter contracts.</p></li>
         <li class="component" data-architecture-component="content query layer"><span class="component-index">05</span><h3>content query layer</h3><p>Shared helpers own publication filtering, ordering, route forms, and display formatting.</p></li>
         <li class="component" data-architecture-component="SEO and syndication"><span class="component-index">06</span><h3>SEO and syndication</h3><p>Canonical URLs, structured data, RSS, and sitemap output draw from shared metadata and content.</p></li>
@@ -502,7 +501,7 @@
           <code class="command">node_modules/.bin/vitest run</code>
           <code class="command">node .hermes/verifiers/public-surface-scan.mjs</code>
           <code class="command">node .hermes/verifiers/mobile-homepage.mjs</code>
-          <p class="muted">Targeted Playwright covers the header, homepage, and mobile navigation in Chromium projects. Signal Room publishing adds its own route coverage.</p>
+          <p class="muted">Targeted Playwright covers the header, homepage, and the mobile header in Chromium projects. Signal Room publishing adds its own route coverage.</p>
         </div>
       </div>
     </section>

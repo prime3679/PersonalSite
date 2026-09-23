@@ -100,7 +100,7 @@
       "dist/**",
       "node_modules/**"
     ],
-    "digest": "44e6d13c45756d7ceb704e0731c5d5db915eada5ec236103eca81309863ea5bf"
+    "digest": "74ac9ca2557088c9fb9da9edc1bf272bd6f1a3756889fe54f184ed0207259ef5"
   },
   "components": [
     {
@@ -115,14 +115,14 @@
       "name": "base document shell",
       "core": true,
       "paths": ["src/layouts/Base.astro", "src/data/csp.ts", "src/styles/global.css", "src/styles/essay.css", "src/styles/instrument.css", "src/styles/tokens.css"],
-      "responsibility": "Own the HTML document, content security policy, metadata defaults, structured data, accessibility entry points, design tokens and global styles (the record type system: one sans at body size in one ink on flat paper, italic labels, .rows tables, the single site-wide link and focus style), main slot, delight layer, and the optional shared header and footer chrome (chrome={false} renders the homepage record without them)."
+      "responsibility": "Own the HTML document, content security policy, metadata defaults, structured data, accessibility entry points, design tokens and global styles (the record type system: one sans at body size in one ink on flat paper, italic labels, .rows tables, the single site-wide link and focus style), main slot, and the optional shared header and footer chrome (chrome={false} renders the homepage record without them)."
     },
     {
       "id": "navigation-shell",
       "name": "navigation shell",
       "core": true,
       "paths": ["src/components/Header.astro", "src/data/nav.ts"],
-      "responsibility": "Render the canonical desktop, mobile, and footer navigation from one ordered data source."
+      "responsibility": "Render the canonical header and footer navigation from one ordered data source: three items on one row at every width, with no mobile menu."
     },
     {
       "id": "content-collections",
@@ -184,8 +184,7 @@
   "interfaces": {
     "routes": [
       {"id": "home", "path": "/", "core": true, "kind": "page", "source": "src/pages/index.astro"},
-      {"id": "work", "path": "/work/", "core": true, "kind": "page", "source": "src/pages/work.astro"},
-      {"id": "about", "path": "/about/", "core": true, "kind": "page", "source": "src/pages/about.astro"},
+      {"id": "about", "path": "/about/", "core": true, "kind": "page, including the work record", "source": "src/pages/about.astro"},
       {"id": "writing", "path": "/writing/", "core": true, "kind": "collection index", "source": "src/pages/writing.astro"},
       {"id": "lab", "path": "/lab/", "core": true, "kind": "page and static artifact index", "source": "src/pages/lab.astro"},
       {"id": "signal-room", "path": "/signal-room/", "core": true, "kind": "collection index", "source": "src/pages/signal-room/index.astro"},
@@ -193,6 +192,7 @@
       {"id": "rss", "path": "/rss.xml", "core": true, "kind": "build-time XML endpoint", "source": "src/pages/rss.xml.ts"},
       {"id": "writing-entry", "path": "/writing/<slug>", "core": false, "kind": "generated content page", "source": "src/pages/writing/[...slug].astro"},
       {"id": "signal-room-entry", "path": "/signal-room/<slug>/", "core": false, "kind": "generated content page", "source": "src/pages/signal-room/[...slug].astro"},
+      {"id": "legacy-pages", "path": "/work/, /services/, and /now/", "core": false, "kind": "compatibility redirect (/work/ lands on /about/#work, or on the matching company anchor)", "source": "src/pages/work.astro, src/pages/services.astro, and src/pages/now.astro through src/components/Redirect.astro"},
       {"id": "legacy-blog", "path": "/blog/ and /blog/<slug>", "core": false, "kind": "compatibility redirect", "source": "src/pages/blog.astro and src/pages/blog/[...slug].astro"},
       {"id": "sitemap", "path": "/sitemap.xml", "core": false, "kind": "build-time XML endpoint", "source": "src/pages/sitemap.xml.ts"},
       {"id": "og-images", "path": "/og/*.png", "core": false, "kind": "build-time PNG endpoints", "source": "src/pages/og/"},
@@ -223,8 +223,8 @@
     "dependency_policy": "Contribution-only architecture work does not mutate manifests or install dependencies."
   },
   "invariants": [
-    "The canonical public navigation order is work, lab, writing, signal room, contact.",
-    "The adrian lumley wordmark does not wrap and mobile navigation remains a hamburger or toggle.",
+    "The canonical public navigation order is writing, lab, about. Signal Room is reached from the lab page; contact is the email link in the footer and on about.",
+    "The adrian lumley wordmark does not wrap and all three nav links sit on its row at every width; there is no hamburger or mobile menu. Dark mode follows prefers-color-scheme; there is no theme toggle and no easter-egg script.",
     "Old /blog/ URLs continue to redirect or alias to writing.",
     "Base.astro remains the shared document shell for primary Astro pages.",
     "Writing publication state and ordering flow through getPublishedPosts; Signal Room ordering flows through getEpisodes.",

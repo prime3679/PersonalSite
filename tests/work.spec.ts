@@ -15,3 +15,9 @@ test('about page carries the work record, one row per role', async ({ page }) =>
   }
   await expect(work.getByText(/18% more daily sessions/)).toBeVisible();
 });
+
+test('/work/#<company> keeps its anchor on the about page', async ({ page }) => {
+  await page.goto('/work/#siriusxm');
+  await page.waitForURL(/\/about\/#siriusxm$/);
+  await expect(page.locator('#siriusxm')).toContainText('SiriusXM');
+});

@@ -1,6 +1,9 @@
 ---
 // a meta-refresh stub for a retired or moved route, so old links land
-// somewhere instead of 404ing. crawlers follow the canonical link.
+// somewhere instead of 404ing. crawlers follow the canonical link. meta
+// refresh drops the incoming #fragment, so a tiny script redirects first
+// and carries it over (/work/#siriusxm lands on /about/#siriusxm); the
+// meta refresh remains the no-script fallback.
 import { absoluteUrl, canonicalUrl } from '../lib/seo';
 
 interface Props {
@@ -11,11 +14,15 @@ interface Props {
 const { to, title = 'Adrian Lumley' } = Astro.props;
 const canonicalDestination = canonicalUrl(to);
 const ogImage = absoluteUrl('/og/home.png');
+const [toPath, toHash = ''] = to.split('#');
 ---
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <script is:inline define:vars={{ toPath, toHash }}>
+      location.replace(toPath + (location.hash || (toHash ? '#' + toHash : '')));
+    </script>
     <meta http-equiv="refresh" content={`0; url=${to}`} />
     <title>{title}</title>
     <meta property="og:title" content={title} />

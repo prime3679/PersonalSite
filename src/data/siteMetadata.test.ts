@@ -37,16 +37,17 @@ describe('siteMetadata', () => {
   it('should have exact seo identity fields', () => {
     expect(siteMetadata.title).toBe('Adrian Lumley');
     expect(siteMetadata.siteName).toBe('Adrian Lumley');
-    expect(siteMetadata.jobTitle).toBe('Product Management');
-    expect(siteMetadata.personDescription).toBe('Enterprise product leader and independent AI diligence analyst. Creator of The Trust Layer.');
+    expect(siteMetadata.jobTitle).toBe('Director of Product Management');
+    expect(siteMetadata.personDescription).toBe('Director of product management at Salesforce on the emerging technology team, working on enterprise AI adoption. Previously SiriusXM, Disney+, and EA.');
+    // the structured data only claims what the visible pages say
+    expect(siteMetadata.personDescription).not.toMatch(/diligence|Trust Layer/);
     expect(siteMetadata.alumniOf).toEqual([
       "St. John's University",
       'Quantic School of Business and Technology',
     ]);
     expect(siteMetadata.knowsAbout).toEqual([
-      'AI evaluation',
-      'AI diligence',
       'Product management',
+      'Enterprise AI adoption',
       'Enterprise software',
       'AI agents',
     ]);

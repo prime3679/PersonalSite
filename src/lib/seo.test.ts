@@ -5,7 +5,7 @@ describe('seo helpers', () => {
   it('normalizes canonical paths to trailing slashes for html routes and preserves file urls', () => {
     expect(normalizeCanonicalPath('/')).toBe('/');
     expect(normalizeCanonicalPath('/writing')).toBe('/writing/');
-    expect(normalizeCanonicalPath('/signal-room/night-shift/')).toBe('/signal-room/night-shift/');
+    expect(normalizeCanonicalPath('/writing/meeting-cost/')).toBe('/writing/meeting-cost/');
     expect(normalizeCanonicalPath('/sitemap.xml')).toBe('/sitemap.xml');
     expect(normalizeCanonicalPath('/images/adrian-lumley.jpg')).toBe('/images/adrian-lumley.jpg');
   });

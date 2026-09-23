@@ -155,8 +155,7 @@
   .button:hover, .button:focus-visible { background: var(--ink); color: var(--paper); }
 
   /* essay prose: layout only; the serif reading face lives in essay.css,
-     which only the essay route imports. signal room episodes read inside
-     the instrument panel (instrument.css) and do not use .prose. */
+     which only the essay route imports. */
   .prose { max-width: var(--measure); }
   .prose > * + * { margin-top: var(--s4); }
   .prose h2, .prose h3 { font-style: var(--label-style); margin-top: var(--s6); }

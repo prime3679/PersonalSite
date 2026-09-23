@@ -16,7 +16,7 @@ The only public nav labels, in order:
 writing · lab · about
 ```
 
-Three items fit on one row at 320px, so there is no hamburger or mobile menu. The `adrian lumley` wordmark must not wrap. Signal Room is reached from the lab page; contact is the `email` link in the footer and on about.
+Three items fit on one row at 320px, so there is no hamburger or mobile menu. The `adrian lumley` wordmark must not wrap. Contact is the `email` link in the footer and on about.
 
 ## homepage
 The homepage is the record, not an app shell. It renders through `Base` with `chrome={false}`: no header, wordmark, or site footer. The record is dark ink on light paper from the first paint with no fade-in; dark mode follows the system setting, remaps paper and ink together, and must never leave light ink on light ground. There is no theme toggle and no easter-egg script. Keep the featured essay under the lede. Do not restore a name-hero, put Rogue on the first screen, or add a contact pitch.
@@ -24,7 +24,7 @@ The homepage is the record, not an app shell. It renders through `Base` with `ch
 ## record type on every page
 Inner pages share the homepage's type system: one sans at body size and weight 400 in one ink on flat paper, the page title as the only size jump, italic `.label`s for section names and keys, `.rows` tables for anything keyed, no uppercase or mono display text, no fade-in. Internal hrefs carry the trailing slash.
 
-Two other languages sit beside it, each whole on its own pages: essays (`/writing/<slug>/`) read in Newsreader while the writing index stays a record table with its tag filter; the Signal Room (index and every episode) is the dark instrument, mono for log and meta, sans for reading, no serif. Never mix languages on one page.
+One other language sits beside it, whole on its own pages: essays (`/writing/<slug>/`) read in Newsreader while the writing index stays a record table with its tag filter. Never mix the two on one page.
 
 ## public-surface rules
 - all UI copy should be lowercase unless proper nouns require otherwise
@@ -33,14 +33,13 @@ Two other languages sit beside it, each whole on its own pages: essays (`/writin
 - no public OpenClaw references
 - no public Operator Stack, FamilyOS, bishop-bench, or retired Mission Control cards/routes/stat tiles
 - Rogue is the current agent surface
-- Bishop and Mission Control may appear only as fictional/archive language inside Signal Room episodes, not as active product surfaces
+- no public Bishop or Mission Control references; the Signal Room serial that carried them is retired
 
 ## routes that matter
 - `/`
 - `/writing/`
 - `/lab/`
 - `/about/` (includes the work record)
-- `/signal-room/`
 - `/contact/`
 
 Old `/blog/`, `/work/`, `/services/`, and `/now/` URLs must keep redirecting instead of 404ing.
@@ -55,12 +54,6 @@ npx vitest run
 npx playwright test tests/mobile/mobile-nav.spec.ts tests/header.spec.ts tests/e2e/homepage.spec.ts --project=mobile-chrome --project=chromium
 node .hermes/verifiers/public-surface-scan.mjs
 node .hermes/verifiers/mobile-homepage.mjs
-```
-
-For Signal Room publishing also run:
-
-```bash
-npx playwright test tests/e2e/signal-room.spec.ts --project=chromium
 ```
 
 ## visual quality gates
@@ -87,7 +80,7 @@ Rogue loop contracts and signal bus live outside this repo:
 ~/.hermes/state/rogue-loops/signals/
 ```
 
-Coding agents should read those when working on loops, PR babysitting, Signal Room publishing, or personal-site health.
+Coding agents should read those when working on loops, PR babysitting, or personal-site health.
 
 ## zero-context contribution
 For fresh-agent contribution work, read `REVIEW.md` first, then this file, `CLAUDE.md`, and `docs/zero-context-contribution.md`. Before implementation, read `.agent/contribution-contract.json` and `.agent/architecture.json`.

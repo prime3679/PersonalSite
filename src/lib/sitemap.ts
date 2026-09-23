@@ -6,7 +6,6 @@ export const canonicalPublicAstroPaths = [
   '/about/',
   '/contact/',
   '/lab/',
-  '/signal-room/',
   '/writing/',
 ] as const;
 
@@ -21,14 +20,12 @@ export function getIndexableStaticLabPaths(
 }
 
 export async function getCanonicalSitemapPaths(): Promise<string[]> {
-  const { getEpisodes, getPublishedPosts, episodePath, postPath } = await import('./content');
+  const { getPublishedPosts, postPath } = await import('./content');
   const posts = await getPublishedPosts();
-  const episodes = await getEpisodes('asc');
 
   return [
     ...canonicalPublicAstroPaths,
     ...posts.map((post) => postPath(post.id)),
-    ...episodes.map((episode) => episodePath(episode.id)),
     ...getIndexableStaticLabPaths(),
   ];
 }

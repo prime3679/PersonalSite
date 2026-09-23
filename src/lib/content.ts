@@ -18,14 +18,6 @@ export async function getPublishedPosts() {
     });
 }
 
-/** Signal Room episodes ordered by episode number. */
-export async function getEpisodes(order: 'asc' | 'desc' = 'desc') {
-  const sign = order === 'asc' ? 1 : -1;
-  return (await getCollection('signal-room')).sort(
-    (a, b) => sign * (a.data.episode - b.data.episode),
-  );
-}
-
 /** Return a Markdown entry body and fail closed if a loader drops it. */
 export function contentBody(entry: { id: string; body?: string }) {
   if (typeof entry.body !== 'string') {
@@ -41,7 +33,6 @@ export function contentBody(entry: { id: string; body?: string }) {
  * unread in subscribers' feed readers.
  */
 export const postPath = (slug: string) => `/writing/${slug}`;
-export const episodePath = (slug: string) => `/signal-room/${slug}/`;
 
 /**
  * The href pages link with. The canonical Worker 308s the slashless
@@ -52,4 +43,3 @@ export const postHref = (slug: string) => `${postPath(slug)}/`;
 
 /** Generated OG-card routes (must mirror the endpoints under src/pages/og/). */
 export const postOgPath = (slug: string) => `/og/${slug}.png`;
-export const episodeOgPath = (slug: string) => `/og/signal-room/${slug}.png`;

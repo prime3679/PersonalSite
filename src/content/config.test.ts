@@ -1,6 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
 import { blogSchema } from './blogSchema';
-import { signalRoomSchema } from './signalRoomSchema';
 
 // Mock astro:content before importing config
 vi.mock('astro:content', () => ({
@@ -29,37 +28,8 @@ describe('collections config', () => {
     expect(collection.schema).toBe(blogSchema);
   });
 
-  it('should export the signal-room collection', () => {
-    const collection = collections['signal-room'] as unknown as MockCollection;
-    expect(collection).toBeDefined();
-    expect(collection.loader).toMatchObject({
-      kind: 'glob',
-      pattern: '**/*.{md,mdx}',
-      base: './src/content/signal-room',
-    });
-    expect(collection.schema).toBe(signalRoomSchema);
-  });
-});
-
-describe('signalRoomSchema', () => {
-  it('should parse a valid episode and coerce the date', () => {
-    const result = signalRoomSchema.safeParse({
-      title: 'night shift',
-      episode: 1,
-      date: '2026-05-01',
-      teaser: 'a quiet house, a crowded queue.',
-      badges: ['episode 01', 'night shift'],
-    });
-    expect(result.success).toBe(true);
-    if (result.success) {
-      expect(result.data.date).toBeInstanceOf(Date);
-      expect(result.data.episode).toBe(1);
-    }
-  });
-
-  it('should fail when episode metadata is missing', () => {
-    const result = signalRoomSchema.safeParse({ title: 'incomplete' });
-    expect(result.success).toBe(false);
+  it('exports writing as the only collection', () => {
+    expect(Object.keys(collections)).toEqual(['blog']);
   });
 });
 

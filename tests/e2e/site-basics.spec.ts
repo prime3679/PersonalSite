@@ -35,13 +35,13 @@ test('nav: header shows the home wordmark + canonical primary tabs', async ({ pa
   for (const href of ['/writing/', '/lab/', '/about/']) {
     await expect(page.locator(`header a[href="${href}"]`).first()).toBeVisible();
   }
-  // signal room and contact sit one click down, out of the primary nav
-  await expect(page.locator('header a[href^="/signal-room"], header a[href^="/contact"]')).toHaveCount(0);
+  // contact sits one click down, out of the primary nav
+  await expect(page.locator('header a[href^="/contact"]')).toHaveCount(0);
   await expect(page.locator('footer a[href="/contact/"]')).toBeVisible();
 });
 
 test('scrubbed pages are gone, not redirected', async ({ page }) => {
-  for (const path of ['/360/', '/joytap-privacy/', '/writing/joytap-one-sprint/', '/lab/iron-log/', '/lab/night-train/']) {
+  for (const path of ['/360/', '/joytap-privacy/', '/writing/joytap-one-sprint/', '/lab/iron-log/', '/lab/night-train/', '/signal-room/', '/signal-room/night-shift/']) {
     const response = await page.goto(path);
     expect(response?.status(), path).toBe(404);
   }
@@ -55,7 +55,7 @@ test('a 404 is a page, not a null body', async ({ page }) => {
 });
 
 test('internal links carry the canonical trailing slash so no click pays a redirect', async ({ page }) => {
-  for (const path of ['/', '/writing/', '/writing/the-honest-record/', '/lab/', '/about/', '/signal-room/night-shift/']) {
+  for (const path of ['/', '/writing/', '/writing/the-honest-record/', '/lab/', '/about/', '/contact/']) {
     await page.goto(path);
     const slashless = await page.locator('a[href^="/"]').evaluateAll((links) =>
       links

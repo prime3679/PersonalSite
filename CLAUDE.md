@@ -4,7 +4,7 @@ Adrian Lumley's personal site. Live at https://adrianlumley.co. Cloudflare Worke
 
 ## Stack
 - **Framework:** Astro + TypeScript + Tailwind CSS
-- **Typography:** three languages, each internally consistent. The record (homepage and connected pages): one sans (Geist via `@fontsource-variable/geist`) at body size and weight 400, italic reserved for labels, one 1.5x size jump per page, one ink on flat paper. Essays (`/writing/<slug>/`): Newsreader title and prose via `src/styles/essay.css`, the only route that imports or preloads the serif. Signal Room (index and episodes): the instrument via `src/styles/instrument.css`, dark panel, Geist Mono for log and meta, Geist for anything read at length, no serif. Lab tools in `public/lab/` keep their own look
+- **Typography:** two languages, each internally consistent. The record (homepage and connected pages): one sans (Geist via `@fontsource-variable/geist`) at body size and weight 400, italic reserved for labels, one 1.5x size jump per page, one ink on flat paper. Essays (`/writing/<slug>/`): Newsreader title and prose via `src/styles/essay.css`, the only route that imports or preloads the serif. Lab tools in `public/lab/` keep their own look
 - **Deploy:** Cloudflare Workers Assets for `adrianlumley.co/*`; a separate Cloudflare redirect Worker for `www.adrianlumley.co/*`; an active GitHub Pages workflow also publishes pushes to `main`
 - **Style:** premium editorial/product-leader surface with subtle systems cues, not a terminal dashboard
 
@@ -16,9 +16,8 @@ Adrian Lumley's personal site. Live at https://adrianlumley.co. Cloudflare Worke
 - `src/data/nav.ts` , single source of truth for public nav
 - `src/data/siteMetadata.ts` , title, description, social links, OG defaults
 - `src/lib/content.ts` , canonical collection queries and route path helpers
-- `src/lib/format.ts` , shared date and episode formatting
+- `src/lib/format.ts` , shared date formatting
 - `src/content/blog/` , writing posts, still used as the content collection
-- `src/content/signal-room/` , Signal Room episodes
 - `src/lib/og-image.ts` and `src/pages/og/` , generated 1200x630 OG cards
 - `src/styles/global.css` , global tokens, typography, layout, reduced-motion rules
 - `public/lab/<slug>/` , self-contained HTML demos and toys
@@ -34,7 +33,7 @@ writing · lab · about
 
 Rules:
 - three items fit on one row at 320px, so there is no hamburger or mobile menu
-- signal room is reached from the lab page; contact is the `email` link in the footer and on about
+- contact is the `email` link in the footer and on about
 - `adrian lumley` wordmark must not wrap
 - do not hardcode alternate nav labels in pages
 - old `/blog/` URLs must keep redirecting/aliasing to `/writing/`
@@ -48,9 +47,8 @@ The record does not stop at the homepage. Inner pages share one type system:
 - no reveal or fade-in animation, no view-transition crossfade, no hover lift
 - one link style everywhere; internal hrefs carry the trailing slash (`postHref`, `navItems`) so no click pays the canonical 308
 
-Two other languages sit beside the record, each whole on its own pages; do not mix them or flatten them into the record:
+One other language sits beside the record, whole on its own pages; do not mix it into the record or flatten it:
 - essays (`/writing/<slug>/`) read in Newsreader, title and prose, inside record chrome (`src/styles/essay.css`, essay route only). The writing index stays a record table with its tag chips, per-post tag links, and `?tag=` deep links; no reading-time lines. List is record, article is essay.
-- the Signal Room is one instrument on the index and every episode (`src/styles/instrument.css`): the dark panel, Geist Mono for the log and the meta lines, the record's sans for anything read at length, the single accent on the highlight. Episodes are read inside the panel. Never import `essay.css` or put Newsreader on a Signal Room page.
 
 ## Homepage Rules
 The homepage is the record, not an app shell:
@@ -65,7 +63,6 @@ The homepage is the record, not an app shell:
 - `/writing/`
 - `/lab/`
 - `/about/` (includes the work record; `/work/` redirects to `/about/#work`)
-- `/signal-room/`
 - `/contact/`
 - `/rss.xml`
 
@@ -78,38 +75,19 @@ Legacy/support routes may exist for compatibility or toys, but they must not re-
 - no public OpenClaw references
 - no active public Operator Stack, FamilyOS, bishop-bench, or retired Mission Control cards/routes/stat tiles
 - Rogue is the current agent surface
-- Bishop and Mission Control may appear only as fictional/archive language inside Signal Room episodes, not as active product surfaces
+- no public Bishop or Mission Control references; the Signal Room serial that carried them is retired
 - keep public family details generic if encountered
 - do not invent metrics or work outcomes
 
 ## Lab Rules
 The Lab page (`src/pages/lab.astro`) is intentionally lean, in this order:
-- one flagship Rogue section, linking to signal room
+- one flagship Rogue section
 - one project section: past the pilot
 - one short section per surviving tool: fork, meeting price tag (with a link to its essay), ink field
 - no toy cards, no stat tiles, no Operator Stack, no "also built" list
 - the homepage lab rows link to these three tools; keep their hrefs pointing at live `public/lab/` pages
 - every page under `public/lab/` carries a visible `back to lab` link in its own type and ink
 - the site is for people evaluating Adrian's work: add a tool only if it says something about how he builds or thinks
-
-## Signal Room Rules
-- episodes live in `src/content/signal-room/`
-- next episode number is derived from the highest existing `episode` frontmatter value
-- publishing requires local checks and Signal Room Playwright tests
-- Signal Room may use Bishop/Mission Control as fiction/archive language
-- do not autopublish from loops without explicit approval
-
-**Signal Room episode format:**
-```markdown
----
-title: "episode title"
-episode: 8
-date: YYYY-MM-DD
-teaser: "one-line hook shown on the index"
-badges: ["episode 08", "episode title"]
----
-Prose here...
-```
 
 ## Verification Commands
 Before pushing public-site changes run:
@@ -121,12 +99,6 @@ npx vitest run
 npx playwright test tests/mobile/mobile-nav.spec.ts tests/header.spec.ts tests/e2e/homepage.spec.ts --project=mobile-chrome --project=chromium
 node .hermes/verifiers/public-surface-scan.mjs
 node .hermes/verifiers/mobile-homepage.mjs
-```
-
-For Signal Room publishing also run:
-
-```bash
-npx playwright test tests/e2e/signal-room.spec.ts --project=chromium
 ```
 
 For homepage/header/mobile changes verify 320, 375, 390, and 414px widths:
@@ -159,7 +131,7 @@ Rogue loop contracts and signal bus live outside this repo:
 ~/.hermes/state/rogue-loops/signals/
 ```
 
-Coding agents should read those when working on loops, PR babysitting, Signal Room publishing, or personal-site health.
+Coding agents should read those when working on loops, PR babysitting, or personal-site health.
 
 ## zero-context contribution
 For fresh-agent contribution work, start with `REVIEW.md`, then `AGENTS.md`, this file, and `docs/zero-context-contribution.md`. Before implementation, read `.agent/contribution-contract.json` and `.agent/architecture.json`.

@@ -2,8 +2,7 @@
    prose are set in the serif, at the sizes the site read at before the
    record pass; the chrome around them (header, date line, older/newer
    rows, footer) stays in the record's sans. only the essay route imports
-   this file, so only essays carry the newsreader font faces. the signal
-   room is a different language (instrument.css) and never imports this. */
+   this file, so only essays carry the newsreader font faces. */
 @import '@fontsource-variable/newsreader';
 
 .essay .page-title {

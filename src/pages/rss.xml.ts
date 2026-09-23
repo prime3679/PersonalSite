@@ -1,7 +1,6 @@
 import type { APIRoute } from 'astro';
 import { siteMetadata } from '../data/siteMetadata';
-import { getEpisodes, getPublishedPosts, episodePath, postPath } from '../lib/content';
-import { episodeTitle } from '../lib/format';
+import { getPublishedPosts, postPath } from '../lib/content';
 
 const escapeXml = (value: string): string =>
   value
@@ -28,14 +27,7 @@ export const GET: APIRoute = async (context) => {
     description: post.data.description,
   }));
 
-  const episodes = (await getEpisodes()).map((ep): FeedItem => ({
-    title: episodeTitle(ep.data.episode, ep.data.title),
-    url: `${site}${episodePath(ep.id)}`,
-    date: ep.data.date,
-    description: ep.data.teaser,
-  }));
-
-  const items = [...posts, ...episodes]
+  const items = posts
     .sort((a, b) => b.date.valueOf() - a.date.valueOf())
     .map(
       (item) => `    <item>
@@ -51,7 +43,7 @@ export const GET: APIRoute = async (context) => {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>adrian lumley · writing and signal room</title>
+    <title>adrian lumley · writing</title>
     <link>${site}</link>
     <description>${escapeXml(siteMetadata.description)}</description>
     <language>en-us</language>

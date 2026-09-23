@@ -5,7 +5,7 @@ const root = process.cwd();
 const dist = join(root, 'dist');
 const failures = [];
 const globalForbidden = ['homepage / hero', 'lab / flagship card', 'signal room / episode log', 'OpenClaw'];
-const primarySurfaceForbidden = ['operator stack', 'familyos', 'bishop-bench', 'mission control'];
+const primarySurfaceForbidden = ['operator stack', 'familyos', 'bishop-bench', 'mission control', 'signal room'];
 const emDashForbidden = '—';
 
 function files(path) {
@@ -18,9 +18,6 @@ function isLabToy(rel) {
   return rel.startsWith('dist/lab/');
 }
 
-function isSignalRoomFictionSurface(rel) {
-  return rel.startsWith('dist/signal-room/') || rel === 'dist/rss.xml';
-}
 
 for (const path of files(dist)) {
   const rel = path.replace(root + '/', '');
@@ -33,10 +30,8 @@ for (const path of files(dist)) {
     if (haystack.includes(needle)) failures.push(`${rel}: forbidden marker '${term}'`);
   }
   if (text.includes(emDashForbidden)) failures.push(`${rel}: forbidden marker '${emDashForbidden}'`);
-  if (!isSignalRoomFictionSurface(rel)) {
-    for (const term of primarySurfaceForbidden) {
-      if (lower.includes(term)) failures.push(`${rel}: retired primary-surface marker '${term}'`);
-    }
+  for (const term of primarySurfaceForbidden) {
+    if (lower.includes(term)) failures.push(`${rel}: retired primary-surface marker '${term}'`);
   }
 }
 

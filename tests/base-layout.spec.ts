@@ -5,7 +5,6 @@ const exactTitles = [
   ['/writing', 'Writing | Adrian Lumley', 'https://adrianlumley.co/writing/'],
   ['/lab', 'Lab | Adrian Lumley', 'https://adrianlumley.co/lab/'],
   ['/about', 'About | Adrian Lumley', 'https://adrianlumley.co/about/'],
-  ['/signal-room', 'Signal Room | Adrian Lumley', 'https://adrianlumley.co/signal-room/'],
   ['/contact', 'Contact | Adrian Lumley', 'https://adrianlumley.co/contact/'],
 ] as const;
 
@@ -54,12 +53,11 @@ test.describe('base layout seo', () => {
       name: 'Adrian Lumley',
       url: 'https://adrianlumley.co',
       image: 'https://adrianlumley.co/images/adrian-lumley.jpg',
-      jobTitle: 'Product Management',
-      description: 'Enterprise product leader and independent AI diligence analyst. Creator of The Trust Layer.',
+      jobTitle: 'Director of Product Management',
+      description: 'Director of product management at Salesforce on the emerging technology team, working on enterprise AI adoption. Previously SiriusXM, Disney+, and EA.',
       knowsAbout: [
-        'AI evaluation',
-        'AI diligence',
         'Product management',
+        'Enterprise AI adoption',
         'Enterprise software',
         'AI agents',
       ],
@@ -116,11 +114,5 @@ test.describe('base layout seo', () => {
     });
     expect(JSON.stringify(postStructuredData)).not.toContain('worksFor');
 
-    await page.goto('/signal-room/night-shift/');
-    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
-      'href',
-      'https://adrianlumley.co/signal-room/night-shift/',
-    );
-    await expect(page.locator('meta[property="og:type"]')).toHaveAttribute('content', 'article');
   });
 });

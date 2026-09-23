@@ -23,7 +23,7 @@ This repo is active. Cloudflare Workers Assets is the authoritative production r
 
 ```text
 src/
-  pages/        # site pages (home, writing, lab, about, signal room, contact) plus redirect stubs
+  pages/        # site pages (home, writing, lab, about, contact) plus redirect stubs
   layouts/      # shared page layout
   components/   # shared UI like the header
   content/blog/ # blog posts via Astro Content Collections

@@ -15,8 +15,8 @@ describe('canonical redirect worker', () => {
     expect(getCanonicalRedirectUrl('http://www.adrianlumley.co/contact?sent=1')).toBe(
       'https://adrianlumley.co/contact/?sent=1',
     );
-    expect(getCanonicalRedirectUrl('https://adrianlumley.co/signal-room/night-shift')).toBe(
-      'https://adrianlumley.co/signal-room/night-shift/',
+    expect(getCanonicalRedirectUrl('https://adrianlumley.co/writing/meeting-cost')).toBe(
+      'https://adrianlumley.co/writing/meeting-cost/',
     );
   });
 

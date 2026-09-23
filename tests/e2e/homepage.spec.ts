@@ -295,8 +295,7 @@ test('the homepage link style is the site link style', async ({ page }) => {
 // the record does not stop at the homepage: connected pages are set in the
 // same sans, at the same body size, in the same ink, with the page title as
 // the one size jump and italic reserved for labels. essays read in the serif
-// (writing.spec) and the signal room is the instrument (signal-room.spec);
-// those two languages have their own specs.
+// and have their own spec (writing.spec).
 for (const path of ['/writing/', '/about/', '/lab/', '/contact/']) {
   test(`${path} is set in the record's type system`, async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });

@@ -5,7 +5,7 @@ test('writing: the index is the record table, newest first, with a dek and tags 
   await page.goto('/writing');
 
   const rows = page.locator('#post-list .row');
-  await expect(rows).toHaveCount(5);
+  await expect(rows).toHaveCount(4);
 
   const first = rows.first();
   await expect(first.locator('time')).toHaveText('July 2026');
@@ -19,7 +19,7 @@ test('writing: the index is the record table, newest first, with a dek and tags 
 
   // no reading times; the filter and the rss line are present
   await expect(page.locator('main')).not.toContainText('min read');
-  await expect(page.locator('#tag-filters button.chip')).toHaveCount(8);
+  await expect(page.locator('#tag-filters button.chip')).toHaveCount(7);
   await expect(page.locator('main a[href="/rss.xml"]')).toBeVisible();
 });
 
@@ -47,11 +47,11 @@ test('writing: tag chip filters posts and syncs the URL', async ({ page }) => {
 });
 
 test('writing: ?tag= deep link applies the filter on load', async ({ page }) => {
-  await page.goto('/writing/?tag=building');
+  await page.goto('/writing/?tag=systems');
 
-  await expect(page.locator('.blog-post:has(a[href="/writing/joytap-one-sprint/"])')).toBeVisible();
+  await expect(page.locator('.blog-post:has(a[href="/writing/second-order-effects/"])')).toBeVisible();
   await expect(page.locator('.blog-post:has(a[href="/writing/meeting-cost/"])')).toHaveClass(/hidden/);
-  await expect(page.locator('button.chip[data-tag="building"]')).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('button.chip[data-tag="systems"]')).toHaveAttribute('aria-pressed', 'true');
 });
 
 test('writing: a per-post tag link is a deep link into the filter', async ({ page }) => {
@@ -62,14 +62,9 @@ test('writing: a per-post tag link is a deep link into the filter', async ({ pag
   await expect(page.locator('.blog-post:has(a[href="/writing/the-honest-record/"])')).toHaveClass(/hidden/);
 });
 
-test('writing: unpublished posts do not appear on the index', async ({ page }) => {
+test('writing: the index lists exactly the published posts', async ({ page }) => {
   await page.goto('/writing');
-
-  // familyos-building-a-family-agent.md has published: false.
-  await expect(page.getByText('I gave an AI agent two weeks to coordinate my family')).toHaveCount(0);
-  // ai-cost-70-percent.md and bishop-six-weeks.md are also published: false.
-  await expect(page.getByText("Here's the only thing that mattered.")).toHaveCount(0);
-  await expect(page.getByText('Six weeks with an AI chief of staff.')).toHaveCount(0);
+  await expect(page.locator('#post-list .blog-post')).toHaveCount(4);
 });
 
 test('writing: an essay reads in the serif with a date line, inside record chrome', async ({ page }) => {

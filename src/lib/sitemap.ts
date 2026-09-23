@@ -5,7 +5,6 @@ export const canonicalPublicAstroPaths = [
   '/',
   '/about/',
   '/contact/',
-  '/joytap-privacy/',
   '/lab/',
   '/signal-room/',
   '/writing/',

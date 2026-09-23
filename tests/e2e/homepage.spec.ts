@@ -240,7 +240,7 @@ test('homepage ledger, archive, lab rows, and footer are reconciled', async ({ p
   const lab = page.getByRole('region', { name: 'lab' });
   await expect(lab.locator('time')).toHaveCount(0);
   await expect(lab.getByRole('link', { name: 'Meeting price tag' })).toHaveAttribute('href', '/lab/meeting-cost/');
-  await expect(lab.getByRole('link', { name: 'Iron log' })).toHaveAttribute('href', '/lab/iron-log/');
+  await expect(lab.getByRole('link', { name: 'Fork' })).toHaveAttribute('href', '/lab/fork/');
   await expect(lab.getByRole('link', { name: 'Ink field' })).toHaveAttribute('href', '/lab/ink-field/');
   const writingTitleX = (await writing.locator('.record__row a').first().boundingBox())!.x;
   const labTitleX = (await lab.locator('.record__row a').first().boundingBox())!.x;

@@ -6,21 +6,10 @@ import { ROGUE_EPOCH } from '../data/rogue';
 const rogueSince = new Date(`${ROGUE_EPOCH}T00:00:00Z`)
   .toLocaleString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' })
   .toLowerCase();
-const toys = [
-  { label: 'the cap is gone', href: '/lab/the-cap-is-gone/' },
-  { label: 'the crazy wall', href: '/lab/crazy-wall/' },
-  { label: 'fable field recorder', href: '/lab/fable-field-recorder/' },
-  { label: 'iron log', href: '/lab/iron-log/' },
-  { label: 'night train', href: '/lab/night-train/' },
-  { label: 'joytap', href: '/writing/joytap-one-sprint/' },
-  { label: 'animal garden', href: '/lab/my-kids-world/' },
-  { label: 'chaos garden', href: '/lab/chaos-garden/' },
-  { label: 'meeting price tag', href: '/lab/meeting-cost/' },
-];
 ---
 
-<Base title="Lab" description="things i'm building. not a portfolio, an honest record of what's running and what survived contact with reality.">
-  <PageIntro title="lab" standfirst="things i'm building. not a portfolio, an honest record of what's running, what's in progress, and what didn't survive contact with reality." />
+<Base title="Lab" description="what adrian lumley builds hands-on: the agent he runs every day, a public evidence ledger for enterprise ai, and a few small tools.">
+  <PageIntro title="lab" standfirst="what i build hands-on: the agent i run every day, a public evidence ledger for enterprise ai, and a few small tools." />
 
   <section id="rogue" aria-labelledby="rogue-h">
     <p class="label">flagship</p>
@@ -41,28 +30,23 @@ const toys = [
   </section>
 
   <section class="mt-12" id="fork" aria-labelledby="fork-h">
-    <p class="label">toy</p>
+    <p class="label">tool</p>
     <h2 id="fork-h">fork</h2>
     <p class="measure mt-3">one hard decision, three futures, three marks each. fork draws them as one map, in ink and pencil, and hands the decision back. no account, no ai, nothing leaves the page.</p>
     <p class="links mt-4"><a href="/lab/fork/">open fork</a></p>
   </section>
 
+  <section class="mt-12" id="meeting-price-tag" aria-labelledby="meeting-price-tag-h">
+    <p class="label">tool</p>
+    <h2 id="meeting-price-tag-h">meeting price tag</h2>
+    <p class="measure mt-3">a running dollar count for the meeting you are sitting in. pick the room, start the clock, and watch what the hour costs.</p>
+    <p class="links mt-4"><a href="/lab/meeting-cost/">open meeting price tag</a> · <a href="/writing/meeting-cost/">why i built it</a></p>
+  </section>
+
   <section class="mt-12" id="ink-field" aria-labelledby="ink-field-h">
-    <p class="label">toy</p>
+    <p class="label">study</p>
     <h2 id="ink-field-h">ink field</h2>
     <p class="measure mt-3">a living sumi-e study. sumi ink pours onto warm bone paper and drifts through a seeded noise field, with rare embers of clay. tap the paper to pour, then save the print. it runs on nothing but a single html file.</p>
     <p class="links mt-4"><a href="/lab/ink-field/">open ink field</a> · <a href="https://github.com/prime3679/ink-field" target="_blank" rel="noopener noreferrer">source</a></p>
-  </section>
-
-  <section class="mt-12" id="also-built" aria-labelledby="also-built-h">
-    <h2 id="also-built-h" class="label">also built</h2>
-    <p class="links measure mt-2">
-      {toys.map((toy, index) => (
-        <>
-          <a href={toy.href}>{toy.label}</a>
-          {index < toys.length - 1 && ' · '}
-        </>
-      ))}
-    </p>
   </section>
 </Base>

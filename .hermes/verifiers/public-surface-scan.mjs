@@ -14,8 +14,8 @@ function files(path) {
   return /\.(html|xml|css|js)$/.test(path) ? [path] : [];
 }
 
-function isToyOrLegacyStatic(rel) {
-  return rel.startsWith('dist/lab/') || rel.startsWith('dist/360/');
+function isLabToy(rel) {
+  return rel.startsWith('dist/lab/');
 }
 
 function isSignalRoomFictionSurface(rel) {
@@ -24,7 +24,7 @@ function isSignalRoomFictionSurface(rel) {
 
 for (const path of files(dist)) {
   const rel = path.replace(root + '/', '');
-  if (isToyOrLegacyStatic(rel)) continue;
+  if (isLabToy(rel)) continue;
   const text = readFileSync(path, 'utf8');
   const lower = text.toLowerCase();
   for (const term of globalForbidden) {

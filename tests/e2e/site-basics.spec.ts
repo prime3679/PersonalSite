@@ -40,19 +40,11 @@ test('nav: header shows the home wordmark + canonical primary tabs', async ({ pa
   await expect(page.locator('footer a[href="/contact/"]')).toBeVisible();
 });
 
-test('/360/ keeps its terminal voice: mono, black on white, arrow and comment glyphs', async ({ page }) => {
-  await page.emulateMedia({ colorScheme: 'light' });
-  await page.goto('/360/');
-
-  const body = page.locator('body');
-  await expect(body).toHaveCSS('font-family', /SF Mono|Menlo|Monaco|monospace/);
-  await expect(body).toHaveCSS('background-color', 'rgb(255, 255, 255)');
-  await expect(body).toHaveCSS('color', 'rgb(0, 0, 0)');
-  await expect(page.locator('.eyebrow')).toHaveText('→ 360 feedback');
-  await expect(page.locator('.note .comment')).toHaveText('// ');
-  await expect(page.locator('.topbar a[href="/"]')).toHaveText('← adrianlumley.co');
-  await expect(page.locator('#theme-toggle')).toHaveText('theme');
-  await expect(page.locator('h2.section-title').first()).toHaveCSS('text-transform', 'uppercase');
+test('scrubbed pages are gone, not redirected', async ({ page }) => {
+  for (const path of ['/360/', '/joytap-privacy/', '/writing/joytap-one-sprint/', '/lab/iron-log/', '/lab/night-train/']) {
+    const response = await page.goto(path);
+    expect(response?.status(), path).toBe(404);
+  }
 });
 
 test('a 404 is a page, not a null body', async ({ page }) => {

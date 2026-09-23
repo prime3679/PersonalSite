@@ -35,12 +35,13 @@ test('lab page has correct title, heading, and rogue card', async ({ page }) => 
   expect(sectionIds.indexOf('fork')).toBeGreaterThan(sectionIds.indexOf('rogue'));
   expect(sectionIds.indexOf('fork')).toBeLessThan(sectionIds.indexOf('ink-field'));
 
-  // The "also built" section is a plain-text row of links, not toy cards
-  const alsoBuilt = page.locator('#also-built');
-  await expect(alsoBuilt).toBeVisible();
-  await expect(alsoBuilt.locator('a[href="/lab/the-cap-is-gone/"]')).toHaveText('the cap is gone');
-  await expect(alsoBuilt.locator('a')).not.toHaveCount(0);
-  await expect(alsoBuilt.locator('.card')).toHaveCount(0);
+  // one short section per tool, no "also built" list, no toy cards
+  const meeting = page.locator('#meeting-price-tag');
+  await expect(meeting.locator('a[href="/lab/meeting-cost/"]')).toHaveText('open meeting price tag');
+  await expect(meeting.locator('a[href="/writing/meeting-cost/"]')).toHaveText('why i built it');
+  expect(sectionIds.indexOf('meeting-price-tag')).toBeGreaterThan(sectionIds.indexOf('fork'));
+  await expect(page.locator('#also-built')).toHaveCount(0);
+  await expect(page.locator('main .card')).toHaveCount(0);
 
   // the lab index is a record, not a pitch: no feedback gate, no eyebrows in
   // mono, labels in italic
@@ -52,7 +53,7 @@ test('lab page has correct title, heading, and rogue card', async ({ page }) => 
 
 // every toy is its own world, but none is a dead end: each carries a visible
 // way back to the lab in its own type and ink.
-for (const toy of ['chaos-garden', 'crazy-wall', 'fable-field-recorder', 'fork', 'ink-field', 'iron-log', 'meeting-cost', 'my-kids-world', 'night-train', 'the-cap-is-gone']) {
+for (const toy of ['fork', 'ink-field', 'meeting-cost']) {
   test(`lab toy ${toy} links back to the lab`, async ({ page }) => {
     await page.goto(`/lab/${toy}/`);
     const back = page.locator('a[href="/lab/"]').filter({ hasText: 'back to lab' }).first();

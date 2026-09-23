@@ -100,7 +100,7 @@
       "dist/**",
       "node_modules/**"
     ],
-    "digest": "270fb07406d07903007cec4227fe44509354168a045a3b79778e7513a933d3e6"
+    "digest": "cd4fdf066c4c0c8276e8b7b39583eba4ee68763c4f53a255d8d3a37f65a79f4b"
   },
   "components": [
     {
@@ -229,7 +229,7 @@
     "Base.astro remains the shared document shell for primary Astro pages.",
     "Writing publication state and ordering flow through getPublishedPosts; Signal Room ordering flows through getEpisodes.",
     "Post and episode route forms in src/lib/content.ts remain stable because they are used as RSS identifiers; pages link through postHref and trailing-slash nav hrefs so no internal click pays the canonical 308.",
-    "The site has four type languages, each whole on its own pages: the record (homepage and connected pages: one sans at body size and weight 400, one ink on flat paper, the page title as the only size jump, italic labels, no entrance animation); essays (/writing/<slug>/: Newsreader title and prose via src/styles/essay.css, the only route that imports or preloads the serif; the writing index stays a record table with its tag filter); the Signal Room instrument (index and every episode via src/styles/instrument.css: dark panel, Geist Mono for log and meta, sans for reading, no serif); and /360/ (its own terminal file). No page mixes two.",
+    "The site has three type languages, each whole on its own pages: the record (homepage and connected pages: one sans at body size and weight 400, one ink on flat paper, the page title as the only size jump, italic labels, no entrance animation); essays (/writing/<slug>/: Newsreader title and prose via src/styles/essay.css, the only route that imports or preloads the serif; the writing index stays a record table with its tag filter); the Signal Room instrument (index and every episode via src/styles/instrument.css: dark panel, Geist Mono for log and meta, sans for reading, no serif). Lab tools under public/lab/ keep their own look and each links back to /lab/. No page mixes two.",
     "The public surface follows the lowercase editorial and protected-language rules in AGENTS.md.",
     "Cloudflare Workers Assets on adrianlumley.co/* is the authoritative production runtime; the active GitHub Pages workflow is a separate, non-authoritative publication path.",
     "The www.adrianlumley.co/* redirect is deployed as a separate Worker, and deploy:cloudflare:all performs both Cloudflare deployments.",

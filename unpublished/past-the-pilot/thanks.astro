@@ -1,0 +1,15 @@
+---
+// Held off the public site until outside work is approved.
+// Not a route: Astro only publishes files under src/pages.
+// To restore, move this file to src/pages/past-the-pilot/thanks.astro and point
+// the imports at ../../layouts/Base.astro and ../../components/PageIntro.astro.
+import Base from '../../src/layouts/Base.astro';
+import PageIntro from '../../src/components/PageIntro.astro';
+---
+
+<Base title="you're in" description="Past the Pilot payment received. Send your materials for the async audit.">
+  <PageIntro title="paid. you're in." standfirst="send URL + Loom/docs: what is live, who the user is, what earning was supposed to mean, and anything already measured." />
+
+  <p class="measure">turnaround: ≤7 days async. no Zoom required.</p>
+  <p class="links measure mt-6"><a href="/contact/">send materials via contact</a></p>
+</Base>

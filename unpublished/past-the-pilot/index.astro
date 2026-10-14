@@ -1,0 +1,38 @@
+---
+// Held off the public site until outside work is approved.
+// Not a route: Astro only publishes files under src/pages.
+// To restore, move this file to src/pages/past-the-pilot.astro and point the
+// imports at ../layouts/Base.astro and ../components/PageIntro.astro.
+import Base from '../../src/layouts/Base.astro';
+import PageIntro from '../../src/components/PageIntro.astro';
+---
+
+<Base title="Past the Pilot" description="Async written audit of one AI feature that is live but not earning: kill, fix, or ship-next. $1,500. No discovery call.">
+  <PageIntro title="past the pilot" standfirst="one AI feature that is live but not earning. in writing: kill, fix, or ship-next, with a ranked list you can act on." />
+
+  <section class="measure">
+    <p class="label">$1,500 · async · ≤7 days · no discovery call</p>
+    <ul class="list-plain mt-4">
+      <li>short written memo (not a slide deck)</li>
+      <li>ranked kill / fix / ship-next list</li>
+      <li>what evidence would change the call</li>
+      <li>one recommended next move</li>
+    </ul>
+    <p class="mt-4">
+      personal product advisory from someone who has lived enterprise AI past the pilot.
+      not a Salesforce offering. not a coaching call.
+    </p>
+    <p class="links mt-6">
+      <a href="https://buy.stripe.com/28E3cx3VG6TwaMl10o6Zy01">buy past the pilot</a>
+    </p>
+  </section>
+
+  <section class="measure mt-12">
+    <p class="label">how it works</p>
+    <ol class="list-plain mt-4">
+      <li>pay $1,500 on Stripe.</li>
+      <li>send URL + Loom/docs: what is live, who the user is, what earning was supposed to mean.</li>
+      <li>within 7 days you get the memo + ranked list. no Zoom required.</li>
+    </ol>
+  </section>
+</Base>

@@ -1,5 +1,14 @@
 import { test, expect } from '@playwright/test';
 
+test('contact page does not invite advisory work', async ({ page }) => {
+  await page.goto('/contact/');
+  await expect(page.locator('.page-standfirst')).toHaveText('product challenges or just good conversation. it lands in my inbox.');
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /product leader and builder/);
+  const description = await page.locator('meta[name="description"]').getAttribute('content');
+  expect(description?.toLowerCase()).not.toMatch(/advis|consult/);
+  await expect(page.locator('main')).not.toContainText(/advis|consult/i);
+});
+
 test('contact form is present with all fields', async ({ page }) => {
   await page.goto('/contact');
 

@@ -41,7 +41,7 @@ test('nav: header shows the home wordmark + canonical primary tabs', async ({ pa
 });
 
 test('scrubbed pages are gone, not redirected', async ({ page }) => {
-  for (const path of ['/360/', '/joytap-privacy/', '/writing/joytap-one-sprint/', '/lab/iron-log/', '/lab/night-train/', '/signal-room/', '/signal-room/night-shift/']) {
+  for (const path of ['/360/', '/joytap-privacy/', '/writing/joytap-one-sprint/', '/lab/iron-log/', '/lab/night-train/', '/signal-room/', '/signal-room/night-shift/', '/past-the-pilot/', '/past-the-pilot/thanks/']) {
     const response = await page.goto(path);
     expect(response?.status(), path).toBe(404);
   }

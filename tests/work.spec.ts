@@ -10,9 +10,18 @@ test('about page carries the work record, one row per role', async ({ page }) =>
   await page.goto('/about/');
   const work = page.locator('#work');
   await expect(work.getByRole('heading', { name: 'work' })).toBeVisible();
-  for (const company of ['Salesforce', 'SiriusXM', 'Disney+', 'EA']) {
-    await expect(work.getByText(company, { exact: true })).toBeVisible();
-  }
+  await expect(work.locator('dt')).toHaveText([
+    'Salesforce',
+    'SiriusXM',
+    'Disney/ESPN',
+    'Hyperscience',
+    'EA Sports',
+  ]);
+  await expect(page.locator('#hyperscience')).toHaveText('Hyperscience');
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+    'content',
+    'about adrian lumley: product leader, fourteen years in, director of product at salesforce on emerging technology. previously siriusxm, disney/espn, hyperscience, and ea sports.',
+  );
   await expect(work.getByText(/18% more daily sessions/)).toBeVisible();
   await expect(work.getByText(/what makes it stick after the first rollout/)).toBeVisible();
   await expect(page.getByRole('heading', { name: 'open to' })).toHaveCount(0);

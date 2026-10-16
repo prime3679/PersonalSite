@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import { currentRole, pastRoles } from '../data/career';
 import { getPublishedPosts, postHref } from '../lib/content';
 import { formatMonthYear } from '../lib/format';
 
@@ -55,9 +56,9 @@ const footerLinks = [
 
     <dl class="record__ledger">
       <dt class="record__label">currently</dt>
-      <dd>Salesforce.</dd>
+      <dd>{currentRole.company}.</dd>
       <dt class="record__label">past</dt>
-      <dd>SiriusXM, Disney+, EA.</dd>
+      <dd>{pastRoles.map((role) => role.company).join(', ')}.</dd>
     </dl>
 
     <section class="record__section" aria-labelledby="writing-h">

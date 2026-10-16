@@ -1,36 +1,14 @@
 ---
 import Base from '../layouts/Base.astro';
 import PageIntro from '../components/PageIntro.astro';
+import { currentRole, pastEmployers, pastRoles } from '../data/career';
 
 const goodreads = 'https://www.goodreads.com/user/show/149439647-adrian-lumley';
 
-// the work record: one row per role, the same key/value shape as the
-// homepage ledger. /work/ redirects here.
-const work = [
-  {
-    id: 'salesforce',
-    company: 'Salesforce',
-    summary: 'director of product, emerging technology. 2025 to present. enterprise ai adoption, 0 to 1: how large organizations actually absorb ai, and what makes it stick after the first rollout.',
-  },
-  {
-    id: 'siriusxm',
-    company: 'SiriusXM',
-    summary: 'cross-platform listening growth for 34M subscribers across mobile, web, and in-car. 18% more daily sessions, 12% less voluntary churn in the first 90 days, and 3x the shipping cadence.',
-  },
-  {
-    id: 'disney-plus',
-    company: 'Disney+',
-    summary: 'global launch operations: the orchestration layer that let teams localize and certify content, payments, and ux strings. 60+ markets live with feature parity on day one, 35% faster localization.',
-  },
-  {
-    id: 'ea-sports',
-    company: 'EA',
-    summary: 'built the EA Sports companion app from zero: hired a 40-person team, ran two betas at 90% csat and 86% weekly retention, and handed off what became the EA Sports App.',
-  },
-];
+const work = [currentRole, ...pastRoles];
 ---
 
-<Base title="About" description="about adrian lumley: product leader, fourteen years in, director of product at salesforce on emerging technology. previously siriusxm, disney+, and ea.">
+<Base title="About" description={`about adrian lumley: product leader, fourteen years in, director of product at salesforce on emerging technology. previously ${pastEmployers.toLowerCase()}.`}>
   <PageIntro title="about" standfirst="product leader, builder, and new yorker working on enterprise ai adoption." />
 
   <div class="content-stack">
@@ -44,7 +22,7 @@ const work = [
       {work.map((role) => (
         <div class="row" id={role.id}>
           <dt class="row__key">{role.company}</dt>
-          <dd class="row__value">{role.summary}</dd>
+          <dd class="row__value">{role.summary ?? ''}</dd>
         </div>
       ))}
     </dl>

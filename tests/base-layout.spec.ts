@@ -54,7 +54,7 @@ test.describe('base layout seo', () => {
       url: 'https://adrianlumley.co',
       image: 'https://adrianlumley.co/images/adrian-lumley.jpg',
       jobTitle: 'Director of Product Management',
-      description: 'Director of product management at Salesforce on the emerging technology team, working on enterprise AI adoption. Previously SiriusXM, Disney+, and EA.',
+      description: 'Director of product management at Salesforce on the emerging technology team, working on enterprise AI adoption. Previously SiriusXM, Disney/ESPN, Hyperscience, and EA Sports.',
       knowsAbout: [
         'Product management',
         'Enterprise AI adoption',

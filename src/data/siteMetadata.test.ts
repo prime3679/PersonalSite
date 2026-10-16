@@ -38,8 +38,8 @@ describe('siteMetadata', () => {
     expect(siteMetadata.title).toBe('Adrian Lumley');
     expect(siteMetadata.siteName).toBe('Adrian Lumley');
     expect(siteMetadata.jobTitle).toBe('Director of Product Management');
-    expect(siteMetadata.personDescription).toBe('Director of product management at Salesforce on the emerging technology team, working on enterprise AI adoption. Previously SiriusXM, Disney+, and EA.');
-    // the structured data only claims what the visible pages say
+    expect(siteMetadata.description).toBe('director of product at salesforce. previously siriusxm, disney/espn, hyperscience, and ea sports. building ai systems hands-on in nyc.');
+    expect(siteMetadata.personDescription).toBe('Director of product management at Salesforce on the emerging technology team, working on enterprise AI adoption. Previously SiriusXM, Disney/ESPN, Hyperscience, and EA Sports.');
     expect(siteMetadata.personDescription).not.toMatch(/diligence|Trust Layer/);
     expect(siteMetadata.alumniOf).toEqual([
       "St. John's University",

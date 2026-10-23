@@ -67,7 +67,7 @@ published: true
 </p>
 
 <p>
-  It's worth naming the shape of the problem: this is <strong>shared responsibility</strong>.
+  This is <strong>shared responsibility</strong>.
   Anthropic secures and documents the data path. You decide which plan your people are on,
   what retention is set to, and whether anyone is running company email through a personal
   account. Most rollout anxiety points at the model. The real exposure almost always lives on
@@ -79,8 +79,7 @@ published: true
 <h2 id="sees" class="text-base font-medium mt-8 mb-3">what the connector can see and do</h2>
 
 <p>
-  This is the part most people get wrong in conversation. Connecting Gmail is not "giving Claude
-  your whole inbox forever." It's closer to a per-question, you-approve-it, read-only lookup that
+  Connecting Gmail works like a per-question, you-approve-it, read-only lookup that
   shows its work. Straight from <a href="https://support.claude.com/en/articles/10166901-use-google-workspace-connectors" target="_blank" rel="noopener noreferrer">the connector doc</a>:
 </p>
 
@@ -116,7 +115,7 @@ published: true
 </div>
 
 <p>
-  Now the tension worth flagging before someone on your team finds it and panics. During the
+  One thing will alarm your team. During the
   Google sign-in, the OAuth consent screen lists email-<em>sending</em> permission. That looks
   alarming. Anthropic addresses it directly: <em>"During authentication, Google's OAuth screen
   mentions email sending permissions. Claude only reads emails and creates drafts with your
@@ -126,9 +125,8 @@ published: true
 <p>
   This is the gap between <strong>scope breadth</strong> (what the OAuth grant technically covers)
   and the <strong>app layer</strong> (what the product actually wires up). The grant is broad; the
-  send capability is switched off in the application. That distinction is exactly the kind of
-  thing a diligent reviewer should ask a vendor to put in writing, which is precisely what
-  Anthropic has done.
+  send capability is switched off in the application. A careful reviewer would ask a vendor to put
+  that in writing. Anthropic has.
 </p>
 
 <p>
@@ -191,7 +189,7 @@ published: true
   Here is the fork. The same doc carves out one consumer-only case: if you're on Free, Pro, or
   Max <em>and</em> you've opted into training, then anything you copy and paste from a connector,
   or any of Claude's responses that quote connector information, may be used to improve the
-  models. Read the two statements together, because the distinction is the whole game:
+  models. Read the two statements together:
 </p>
 
 <ul class="space-y-1.5 my-4">
@@ -206,8 +204,7 @@ published: true
 </ul>
 
 <p>
-  The clean mental model, and the one sentence worth memorizing for the room:
-  <strong>the pipe is private; the conversation might not be, but only on consumer plans you
+  <strong>The pipe is private; the conversation might not be, but only on consumer plans you
   opted into.</strong>
 </p>
 
@@ -217,17 +214,16 @@ published: true
   Free/Pro/Max users had until <strong>October 8, 2025</strong> to choose whether their chats and
   coding sessions could be used for training. Opt in and retention on new or resumed chats
   extends to five years (de-identified); opt out and it stays at 30 days. Deleted chats are
-  excluded from training either way, and you can change the setting any time. Critically, this
+  excluded from training either way, and you can change the setting any time. This
   fork <em>does not apply</em> to Claude for Work, Government, Education, or the API.
 </p>
 
 <hr class="border-foreground/10 my-8" />
 
-<h2 id="memory" class="text-base font-medium mt-8 mb-3">memory and incognito (the part nobody reads)</h2>
+<h2 id="memory" class="text-base font-medium mt-8 mb-3">memory and incognito</h2>
 
 <p>
-  Connector retention is one lever. <strong>Memory</strong> is a second, independent one, and
-  it's where the under-reported surprises live. From the
+  Connector retention is one lever. <strong>Memory</strong> is a second, independent one. From the
   <a href="https://support.claude.com/en/articles/11817273-use-claude-s-chat-search-and-memory-to-build-on-previous-context" target="_blank" rel="noopener noreferrer">memory &amp; chat-search doc</a>:
 </p>
 
@@ -247,7 +243,7 @@ published: true
 </ul>
 
 <p>
-  And the finding worth the price of admission. People reach for <strong>incognito chats</strong>
+  People reach for <strong>incognito chats</strong>
   assuming they're private. On a personal account, they largely are: not used for training, not
   saved to history, not pulled into memory or chat search, retained 30 days by default. But on
   Team and Enterprise, <a href="https://support.claude.com/en/articles/12260368-using-incognito-chats" target="_blank" rel="noopener noreferrer">the doc</a> is blunt:
@@ -259,7 +255,7 @@ published: true
 </p>
 
 <p>
-  In other words: on a managed plan, <strong>incognito is incognito from you, not from your
+  On a managed plan, <strong>incognito hides a chat from you, not from your
   org</strong>. It keeps a chat out of your history and out of memory, but it does not hide it
   from an Owner's export or an Enterprise Compliance pull, and it's retained at least 30 days for
   safety. If you're rolling Claude out, tell your people this plainly, because the word
@@ -272,7 +268,7 @@ published: true
 <h2 id="table" class="text-base font-medium mt-8 mb-3">the plan-by-plan table</h2>
 
 <p>
-  This is the table everyone wants and Anthropic never publishes as a table. Free, Pro, and Max
+  Anthropic doesn't publish this as a table, so here it is. Free, Pro, and Max
   share identical data-governance terms, the differences between them are usage and features,
   not data handling, so they share a column below. The real lines are drawn at Team and
   Enterprise.
@@ -386,7 +382,7 @@ published: true
 <h2 id="bottom" class="text-base font-medium mt-8 mb-3">the bottom line</h2>
 
 <p>
-  The data question isn't the hard part. The answer exists, it's defensible, and most of it is a
+  The answer to the data question exists, it's defensible, and most of it is a
   setting you control. <strong>The pipe is private</strong>, Anthropic does not train on your
   Gmail, Drive, or Calendar connector data on any plan. <strong>The conversation might not
   be</strong>, but only on consumer plans you opted into training on. Retrieved data lives with
@@ -396,7 +392,7 @@ published: true
 
 <p>
   So if your company is rolling out Claude and half the team is on personal Pro accounts, start
-  there. Not with the connector, with the plan.
+  with the plan, then the connector.
 </p>
 
 <hr class="border-foreground/10 my-10" />

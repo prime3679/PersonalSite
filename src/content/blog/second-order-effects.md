@@ -16,7 +16,7 @@ published: true
 </p>
 
 <p>
-  That's it. That's the whole framework. But it's harder than it sounds, because the answer
+  It's harder than it sounds, because the answer
   to "and then what?" is almost never technical. It's usually organizational.
 </p>
 
@@ -38,8 +38,7 @@ published: true
       The direct effect: feature ships in Q3, you hit the milestone, stakeholders are happy.
       The second-order effect: every shortcut in the implementation becomes load-bearing.
       The next six features slow down by 20% because the foundation is fragile. By Q1 the team
-      is moving half as fast as they were before the "fast" ship. The launch looked like a win.
-      The compounding looked like decline.
+      is moving half as fast as they were before the "fast" ship.
     </p>
   </div>
   <div class="border border-foreground/10 rounded-xl p-4">
@@ -63,7 +62,7 @@ published: true
     <p class="text-sm text-foreground/60 leading-relaxed">
       Direct effect: you reduce scope, hit the timeline, and ship something smaller than promised.
       Second-order effect: the stakeholder who was already skeptical now has evidence for the narrative
-      they were already building. The scope cut wasn't just a project decision, it was a trust signal.
+      they were already building. The scope cut became a trust signal.
       You shipped on time. You also made next quarter's roadmap fight harder.
     </p>
   </div>
@@ -89,15 +88,14 @@ published: true
 </p>
 
 <p>
-  Cutting scope doesn't just change a delivery date, it changes a narrative. Shipping a rough
-  feature doesn't just add tech debt, it sets expectations for what "done" means on your team.
-  Saying yes to a request from a senior stakeholder doesn't just add scope, it creates
-  a precedent for who gets to change the roadmap and when.
+  Cutting scope changes a narrative. Shipping a rough feature sets expectations for what
+  "done" means on your team. Saying yes to a senior stakeholder sets a precedent for who gets
+  to change the roadmap and when.
 </p>
 
 <p>
   At small companies, these effects are visible and fast. Someone makes a decision, the team
-  reacts, you see the consequence within a sprint. At Salesforce scale, tens of thousands
+  reacts, you see the consequence within a sprint. At the scale of a large enterprise, tens of thousands
   of employees, nested hierarchies, cross-functional dependencies, the lag between decision
   and second-order consequence can be six months. By the time the effect shows up,
   most people have forgotten the cause.
@@ -119,7 +117,6 @@ published: true
 
 <p>
   Once gets you the obvious consequence. Twice gets you the consequence of that consequence.
-  That's usually where the real risk lives.
 </p>
 
 <ul class="space-y-1.5 my-4">
@@ -145,13 +142,13 @@ published: true
 
 <hr class="border-foreground/10 my-8" />
 
-<h2 class="text-base font-medium mt-8 mb-3">what separates the best from the rest</h2>
+<h2 class="text-base font-medium mt-8 mb-3">what the best PMs do</h2>
 
 <p>
   I've worked with PMs at every level across media, streaming, and enterprise software.
   The ones who compound, who consistently produce outsized outcomes over years, not just
-  quarters, share this trait more reliably than any other. They're not smarter about features.
-  They're smarter about systems.
+  quarters, share this trait more reliably than any other. They're smarter about systems
+  than about features.
 </p>
 
 <p>

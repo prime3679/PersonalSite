@@ -13,7 +13,7 @@ test('about page carries the work record, one row per role', async ({ page }) =>
   for (const company of ['Salesforce', 'SiriusXM', 'Disney+', 'EA']) {
     await expect(work.getByText(company, { exact: true })).toBeVisible();
   }
-  await expect(work.getByText(/18% more daily sessions/)).toBeVisible();
+  await expect(work.getByText(/cross-platform listening growth across mobile, web, and in-car/)).toBeVisible();
   await expect(work.getByText(/what makes it stick after the first rollout/)).toBeVisible();
   await expect(page.getByRole('heading', { name: 'open to' })).toHaveCount(0);
   await expect(page.locator('main')).not.toContainText(/advisory|consulting|past the pilot/i);

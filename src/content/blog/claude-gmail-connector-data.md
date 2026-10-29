@@ -2,17 +2,32 @@
 title: "Does Claude train on your email? The plan-by-plan teardown."
 shortTitle: "Does Claude train on your email?"
 date: 2026-06-09
+updatedDate: 2026-10-29
 tags: ["ai"]
 description: "What Claude's Gmail connector trains on, where the data lives, and how long it stays, broken down across all five plans, sourced to Anthropic's own docs, with the gaps marked."
 published: true
 ---
+
+<p>
+  <strong>Correction, October 29, 2026:</strong> An earlier version of this piece said Claude's
+  Gmail connector cannot send email, and quoted Anthropic saying the send function was not
+  enabled. That's no longer true. As of October 29, 2026, Anthropic's
+  <a href="https://support.claude.com/en/articles/10166901-use-google-workspace-connectors" target="_blank" rel="noopener noreferrer">help center</a>
+  lists "Send, reply to, and forward emails from Gmail" among the connector's actions, and says
+  Claude asks for your approval before each one by default. On Team and Enterprise plans, owners
+  decide whether members can let those actions run without asking. The connector's tool list also
+  includes trash. Anthropic's separate docs page at claude.com/docs still describes Gmail as
+  read-only. The training and retention findings below are unchanged; I re-checked them against
+  the help center the same day.
+</p>
 
 <p class="text-xs text-muted-foreground">
   Last verified June 9, 2026 against Anthropic's primary documentation.
   <em>Changelog: Jun 9, 2026, v2. Rebuilt as a plan-by-plan teardown: added the five-plan table
   (and a <a href="/files/claude-gmail-connector-tier-table.pdf" download>downloadable one-pager</a>),
   a memory &amp; incognito section, and a "where the docs go quiet" list. Every claim was re-checked
-  against the source on this date.</em>
+  against the source on this date. Oct 29, 2026: corrected the send claim (see the correction
+  above) and re-checked the training and retention statements.</em>
 </p>
 
 <hr class="border-foreground/10 my-8" />
@@ -22,7 +37,7 @@ published: true
 <ul class="space-y-1.5 my-4">
   <li class="flex items-start gap-2 text-foreground/70">
     <span class="shrink-0 mt-0.5">→</span>
-    <span>The connector reads and drafts your mail but <strong>cannot send it</strong>, and every action it takes needs your explicit approval.</span>
+    <span>The connector reads and drafts your mail and <strong>can send, reply, and forward</strong>. By default it asks for your approval before each of those.</span>
   </li>
   <li class="flex items-start gap-2 text-foreground/70">
     <span class="shrink-0 mt-0.5">→</span>
@@ -80,7 +95,7 @@ published: true
 
 <p>
   This is the part most people get wrong in conversation. Connecting Gmail is not "giving Claude
-  your whole inbox forever." It's closer to a per-question, you-approve-it, read-only lookup that
+  your whole inbox forever." It's closer to a per-question, you-approve-it lookup that
   shows its work. Straight from <a href="https://support.claude.com/en/articles/10166901-use-google-workspace-connectors" target="_blank" rel="noopener noreferrer">the connector doc</a>:
 </p>
 
@@ -88,9 +103,9 @@ published: true
   <div class="border border-foreground/10 rounded-xl p-4">
     <div class="flex items-baseline gap-3 mb-1.5">
       <span class="text-xs text-muted-foreground">01</span>
-      <span class="text-sm font-medium">read and draft, never send</span>
+      <span class="text-sm font-medium">read, draft, and send</span>
     </div>
-    <p class="text-sm text-foreground/60 leading-relaxed">Claude can search and read your messages, create drafts, and manage labels and threads. It cannot send email on your behalf.</p>
+    <p class="text-sm text-foreground/60 leading-relaxed">Claude can search and read your messages, draft emails, send, reply, and forward, and manage labels and threads. By default it asks before it sends, replies, or forwards. On Team and Enterprise, an owner can let members turn that off. I haven't tested whether that approval holds outside the claude.ai chat window.</p>
   </div>
   <div class="border border-foreground/10 rounded-xl p-4">
     <div class="flex items-baseline gap-3 mb-1.5">
@@ -116,19 +131,12 @@ published: true
 </div>
 
 <p>
-  Now the tension worth flagging before someone on your team finds it and panics. During the
-  Google sign-in, the OAuth consent screen lists email-<em>sending</em> permission. That looks
-  alarming. Anthropic addresses it directly: <em>"During authentication, Google's OAuth screen
-  mentions email sending permissions. Claude only reads emails and creates drafts with your
-  explicit approval. The send function is not enabled, all emails must be sent manually."</em>
-</p>
-
-<p>
-  This is the gap between <strong>scope breadth</strong> (what the OAuth grant technically covers)
-  and the <strong>app layer</strong> (what the product actually wires up). The grant is broad; the
-  send capability is switched off in the application. That distinction is exactly the kind of
-  thing a diligent reviewer should ask a vendor to put in writing, which is precisely what
-  Anthropic has done.
+  During the Google sign-in, the OAuth consent screen lists email-<em>sending</em> permission.
+  When this piece first ran in June, Anthropic said the send function was not enabled, so the
+  grant was broader than the product. That gap has closed: the help center now lists send,
+  reply, and forward. The consent screen means what it says. The control that matters is the
+  approval step, and on Team and Enterprise, whether an owner lets members switch it off. That is
+  exactly the kind of thing a diligent reviewer should ask a vendor to put in writing.
 </p>
 
 <p>

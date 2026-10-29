@@ -1,7 +1,7 @@
 import { test, expect, type Locator, type Page } from '@playwright/test';
 
 const LEDE = 'Adrian Lumley is a product director in New York City.';
-const DEK = 'People lie in journals. They perform in therapy. Nobody performs for a coding agent.';
+const DEK = "A tested teardown of Claude's Slack connector: it reads DMs, its consent rule is a sentence to the model, and it can post and schedule messages that its docs page never mentions.";
 
 async function linkStyle(link: Locator) {
   return link.evaluate((node) => {
@@ -121,10 +121,10 @@ test('homepage first screen sells the latest essay under the lede', async ({ pag
   await expect(page.locator('main h1')).toHaveText(LEDE);
 
   const feature = page.locator('[data-record-feature]');
-  const featureLink = feature.getByRole('link', { name: 'The honest record' });
+  const featureLink = feature.getByRole('link', { name: "What Claude's Slack connector actually does" });
   // page links carry the canonical trailing slash so the click is one request
-  await expect(featureLink).toHaveAttribute('href', '/writing/the-honest-record/');
-  await expect(feature.locator('time')).toHaveText('July 2026');
+  await expect(featureLink).toHaveAttribute('href', '/writing/claude-slack-connector/');
+  await expect(feature.locator('time')).toHaveText('October 2026');
   await expect(feature.locator('time')).toHaveCSS('font-style', 'normal');
   await expect(feature.locator('.record__feature-dek')).toHaveText(DEK);
   await expect(feature.locator('.record__feature-dek a')).toHaveCount(0);
@@ -155,7 +155,7 @@ test('homepage first screen sells the latest essay under the lede', async ({ pag
   expect(sizes).toEqual([`${bodySize}px`]);
 
   // the featured essay is not duplicated in the archive
-  await expect(record.locator('.record__rows a[href^="/writing/the-honest-record"]')).toHaveCount(0);
+  await expect(record.locator('.record__rows a[href^="/writing/claude-slack-connector"]')).toHaveCount(0);
 });
 
 test('homepage links share one ink and one hairline underline; labels alone are italic', async ({ page }) => {
@@ -231,9 +231,9 @@ test('homepage ledger, archive, lab rows, and footer are reconciled', async ({ p
 
   // writing archive: two dated rows, real posts, short titles
   const writing = page.getByRole('region', { name: 'writing' });
-  await expect(writing.locator('.record__row time')).toHaveText(['June 2026', 'March 2026']);
-  await expect(writing.getByRole('link', { name: 'Does Claude train on your email?' })).toHaveAttribute('href', '/writing/claude-gmail-connector-data/');
-  await expect(writing.getByRole('link', { name: 'Your meetings are a budget line' })).toHaveAttribute('href', '/writing/meeting-cost/');
+  await expect(writing.locator('.record__row time')).toHaveText(['October 2026', 'October 2026']);
+  await expect(writing.getByRole('link', { name: "Claude's Google Drive connector" })).toHaveAttribute('href', '/writing/claude-drive-connector/');
+  await expect(writing.getByRole('link', { name: "Claude's Google Calendar connector" })).toHaveAttribute('href', '/writing/claude-calendar-connector/');
 
   // lab: sentence case, existing hrefs, no dates, same two-column rhythm
   const lab = page.getByRole('region', { name: 'lab' });

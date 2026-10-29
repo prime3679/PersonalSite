@@ -5,13 +5,13 @@ test('writing: the index is the record table, newest first, with a dek and tags 
   await page.goto('/writing');
 
   const rows = page.locator('#post-list .row');
-  await expect(rows).toHaveCount(4);
+  await expect(rows).toHaveCount(7);
 
   const first = rows.first();
-  await expect(first.locator('time')).toHaveText('July 2026');
-  await expect(first.getByRole('link', { name: 'The honest record' })).toHaveAttribute('href', '/writing/the-honest-record/');
-  await expect(first.locator('p').first()).toHaveText('People lie in journals. They perform in therapy. Nobody performs for a coding agent.');
-  await expect(first.locator('a[href="/writing/?tag=writing"]')).toHaveText('writing');
+  await expect(first.locator('time')).toHaveText('October 2026');
+  await expect(first.getByRole('link', { name: "What Claude's Slack connector actually does" })).toHaveAttribute('href', '/writing/claude-slack-connector/');
+  await expect(first.locator('p').first()).toHaveText("A tested teardown of Claude's Slack connector: it reads DMs, its consent rule is a sentence to the model, and it can post and schedule messages that its docs page never mentions.");
+  await expect(first.locator('a[href="/writing/?tag=ai"]')).toHaveText('ai');
 
   // the key column hugs its widest date; every title starts at the same x
   const titleXs = await page.locator('#post-list .row h2').evaluateAll((nodes) => nodes.map((n) => n.getBoundingClientRect().x));
@@ -64,7 +64,7 @@ test('writing: a per-post tag link is a deep link into the filter', async ({ pag
 
 test('writing: the index lists exactly the published posts', async ({ page }) => {
   await page.goto('/writing');
-  await expect(page.locator('#post-list .blog-post')).toHaveCount(4);
+  await expect(page.locator('#post-list .blog-post')).toHaveCount(7);
 });
 
 test('writing: an essay reads in the serif with a date line, inside record chrome', async ({ page }) => {

@@ -32,7 +32,7 @@ test.describe('mobile homepage record', () => {
       for (let i = 0; i < recordLinkCount; i += 1) {
         await expectTapTarget(recordLinks.nth(i));
       }
-      await expectTapTarget(page.locator('main a[href="/writing/the-honest-record/"]'));
+      await expectTapTarget(page.locator('main a[href="/writing/claude-slack-connector/"]'));
       await expectTapTarget(page.locator('main a[href="/about/"]'));
       await expectTapTarget(page.locator('main a[href="/contact/"]'));
       await expectTapTarget(page.locator('main a[href="https://www.linkedin.com/in/adrianlumley/"]'));

@@ -5,6 +5,7 @@ export const canonicalPublicAstroPaths = [
   '/',
   '/about/',
   '/contact/',
+  '/privacy/',
   '/lab/',
   '/writing/',
 ] as const;

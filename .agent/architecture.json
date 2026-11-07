@@ -92,7 +92,7 @@
       "dist/**",
       "node_modules/**"
     ],
-    "digest": "f75390f6b492e0cbd2ad46578b2caf3e388b539a6d1e49845a16decdb7fdf481"
+    "digest": "bb2eb4c0d758e5935be30cdccba56b91f8daeb7e9c9f176028ae37ae4e523048"
   },
   "components": [
     {

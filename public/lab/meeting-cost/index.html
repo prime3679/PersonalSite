@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Meeting Price Tag</title>
 <meta name="description" content="How much is this meeting costing? A real-time meeting cost calculator.">
 <link rel="canonical" href="https://adrianlumley.co/lab/meeting-cost/" />
@@ -26,6 +26,10 @@
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* fast repeated taps on the steppers must not double-tap zoom, while
+     pinch zoom stays available */
+  button { touch-action: manipulation; }
 
   body {
     background: var(--bg);
@@ -624,7 +628,7 @@ function buildTiers() {
 
 }
 
-// Single delegated listener — outside buildTiers so it's never duplicated
+// Single delegated listener, outside buildTiers so it's never duplicated
 tiersEl.addEventListener("click", e => {
   const btn = e.target.closest("button[data-tier]");
   if (!btn) return;

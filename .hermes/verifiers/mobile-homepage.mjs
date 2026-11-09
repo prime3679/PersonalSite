@@ -22,8 +22,9 @@ async function waitForServer(url, timeoutMs = 20000) {
 if (!process.env.MOBILE_VERIFIER_URL) {
   // detached puts npx and the astro server it starts in their own process
   // group, so shutdown can signal the whole group; unread pipes would also
-  // keep this process alive, so the server's output is ignored.
-  server = spawn('npx', ['astro', 'preview', '--host', '127.0.0.1', '--port', String(port)], {
+  // keep this process alive, so the server's output is ignored. --ignore-lock
+  // keeps astro 7.4+ from backgrounding the server when an agent runs this.
+  server = spawn('npx', ['astro', 'preview', '--ignore-lock', '--host', '127.0.0.1', '--port', String(port)], {
     stdio: 'ignore',
     detached: true,
   });

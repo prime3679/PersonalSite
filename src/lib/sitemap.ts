@@ -1,6 +1,8 @@
 import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
+// this endpoint is the site's only sitemap (robots.txt points at
+// /sitemap.xml). a new astro page is not listed until it is added here.
 export const canonicalPublicAstroPaths = [
   '/',
   '/about/',

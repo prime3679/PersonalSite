@@ -28,6 +28,14 @@ test.describe('technical canonicals and indexing', () => {
     expect(xml).not.toContain('sitemap-index.xml');
   });
 
+  test('sitemap.xml is the only sitemap', async ({ page }) => {
+    // a second, generated sitemap once listed pages this one leaves out,
+    // including the post-checkout page
+    for (const path of ['/sitemap-index.xml', '/sitemap-0.xml']) {
+      expect((await page.request.get(path)).status(), path).toBe(404);
+    }
+  });
+
   test('indexable static html lab routes expose canonical og and twitter metadata', async ({ page }) => {
     await page.goto('/lab/fork');
 

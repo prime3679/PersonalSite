@@ -13,7 +13,9 @@ concurrency:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    # pinned: ubuntu-latest moved to 26.04, which playwright 1.58 cannot
+    # install chromium on. return to ubuntu-latest once playwright supports it.
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - name: Checkout
@@ -22,7 +24,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22.12.0
+          node-version: 22
           cache: npm
 
       - name: Install dependencies

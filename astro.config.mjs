@@ -1,7 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import { unified } from '@astrojs/markdown-remark';
-import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
@@ -11,13 +10,6 @@ export default defineConfig({
   build: {
     inlineStylesheets: 'always',
   },
-  integrations: [
-    sitemap({
-      // /blog, /blog/<slug>, /work, /services, and /now are meta-refresh
-      // stubs kept for old links; crawlers should discover the real pages.
-      filter: (page) => !/^\/(blog|work|services|now)(\/|$)/.test(new URL(page).pathname),
-    }),
-  ],
   markdown: {
     // Keep the established remark/rehype rendering pipeline and output.
     processor: unified(),

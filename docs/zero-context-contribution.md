@@ -70,7 +70,6 @@ Notes:
 - `verify` runs the focused architecture tests first, before any public-site command
 - source fingerprint v2 normalizes CRLF bytes to LF before measuring and hashing each framed source file; the HTML synchronization marker hashes the exact architecture JSON bytes without newline normalization
 - if local `node_modules/` is absent and an already-installed sibling copy is available, a temporary untracked symlink is acceptable for verification only and must be removed afterward
-- for Signal Room publishing, keep using the extra Playwright coverage already documented in `AGENTS.md`
 
 ## escalation conditions
 Escalate before continuing if:

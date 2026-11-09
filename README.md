@@ -16,7 +16,8 @@ This repo is active. Cloudflare Workers Assets is the authoritative production r
 - **Framework:** Astro
 - **Styling:** Tailwind CSS
 - **Deploy:** Cloudflare Workers Assets for the apex host, a separate Cloudflare Worker for `www` redirects, plus an active GitHub Pages pipeline
-- **Testing:** Playwright
+- **Testing:** Vitest for units, Playwright for end-to-end
+- **Node:** 22.23.4 or newer (the floor Astro sets; `.nvmrc` and both workflows track Node 22)
 - **Image generation:** Satori + Sharp for dynamic OG images
 
 ## Current structure
@@ -37,9 +38,17 @@ dist/           # generated build output
 ```bash
 npm install
 npm run dev
+npm run check      # astro type check
 npm run build
 npm run preview
-npm test
+npx vitest run     # unit tests
+npm test           # playwright, every browser project
+```
+
+The secret-scan pre-commit hook is opt-in per clone. It needs `gitleaks` installed:
+
+```bash
+git config core.hooksPath .githooks
 ```
 
 ## Deployment

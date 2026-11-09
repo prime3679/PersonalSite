@@ -156,7 +156,7 @@
 
   /* essay prose: layout only; the serif reading face lives in essay.css,
      which only the essay route imports. */
-  .prose { max-width: var(--measure); }
+  .prose { max-width: var(--measure); overflow-wrap: break-word; }
   .prose > * + * { margin-top: var(--s4); }
   .prose h2, .prose h3 { font-style: var(--label-style); margin-top: var(--s6); }
   .prose h2 + *, .prose h3 + * { margin-top: var(--s2); }
@@ -166,6 +166,9 @@
   .prose blockquote { margin-left: 0; margin-right: 0; padding-left: var(--s4); border-left: 1px solid var(--line-strong); }
   .prose hr { border: 0; border-top: 1px solid var(--line); margin: var(--s6) 0; }
   .prose code { font-family: var(--mono); font-size: .9375em; }
+  /* long inline tokens (tool names, json) wrap instead of pushing the page
+     sideways on a phone; code blocks keep their own horizontal scroll. */
+  .prose :not(pre) > code { overflow-wrap: anywhere; }
   .prose pre { background: var(--panel); color: var(--panel-text); padding: var(--s4); overflow-x: auto; border-radius: var(--radius); }
   .prose pre code { font-size: .875rem; }
   .prose img { display: block; }

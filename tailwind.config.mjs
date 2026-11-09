@@ -12,7 +12,7 @@ export default {
         background: 'var(--paper)',
         // legacy text-foreground/NN utilities need an alpha-capable value,
         // so var(--ink) cannot be used directly. --ink-rgb tracks --ink in
-        // src/styles/global.css for both light and dark mode.
+        // src/styles/tokens.css for both light and dark mode.
         foreground: 'rgb(var(--ink-rgb) / <alpha-value>)',
         muted: {
           DEFAULT: 'var(--paper-raised)',

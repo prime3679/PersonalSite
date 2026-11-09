@@ -5,7 +5,7 @@ import path from 'node:path';
 
 // Self-hosted Newsreader + Geist Mono (the site's fonts), read at build time.
 // Using local woff files keeps the OG cards on-brand and removes the
-// build-time Google Fonts fetch. Satori needs TTF/OTF/WOFF , not the WOFF2
+// build-time Google Fonts fetch. Satori needs TTF/OTF/WOFF, not the WOFF2
 // the browser uses.
 let serifFont: Buffer | null = null;
 let monoFont: Buffer | null = null;

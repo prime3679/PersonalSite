@@ -27,14 +27,14 @@ export const GET: APIRoute = async (context) => {
     description: post.data.description,
   }));
 
+  // getPublishedPosts already returns newest first
   const items = posts
-    .sort((a, b) => b.date.valueOf() - a.date.valueOf())
     .map(
       (item) => `    <item>
       <title>${escapeXml(item.title)}</title>
       <link>${item.url}</link>
       <guid isPermaLink="true">${item.url}</guid>
-      <pubDate>${new Date(item.date).toUTCString()}</pubDate>
+      <pubDate>${item.date.toUTCString()}</pubDate>
       <description>${escapeXml(item.description)}</description>
     </item>`,
     )

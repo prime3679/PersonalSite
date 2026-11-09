@@ -1,10 +1,10 @@
 /**
  * Shared display formatting. Dates in content are date-only (YYYY-MM-DD →
- * UTC midnight), so every formatter pins timeZone: 'UTC' , formatting in the
+ * UTC midnight), so every formatter pins timeZone: 'UTC'; formatting in the
  * build machine's local zone can shift the shown day.
  */
 
-/** "June 12, 2026" , natural casing; call sites apply `uppercase` via CSS. */
+/** "June 12, 2026": the essay date line. */
 export const formatLongDate = (d: Date): string =>
   d.toLocaleDateString('en-US', {
     year: 'numeric',
@@ -13,17 +13,6 @@ export const formatLongDate = (d: Date): string =>
     timeZone: 'UTC',
   });
 
-/** "June 2026" , used by index lists where the day is noise. */
+/** "June 2026": used by index lists where the day is noise. */
 export const formatMonthYear = (d: Date): string =>
   d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', timeZone: 'UTC' });
-
-/** "jun 2026" snapshot label for lab stats; ',' for missing/invalid input. */
-export const snapshotLabel = (iso: string | undefined | null): string => {
-  if (!iso) return ',';
-  const date = new Date(iso);
-  return isNaN(date.getTime())
-    ? ','
-    : date
-        .toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' })
-        .toLowerCase();
-};

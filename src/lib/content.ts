@@ -18,16 +18,8 @@ export async function getPublishedPosts() {
     });
 }
 
-/** Return a Markdown entry body and fail closed if a loader drops it. */
-export function contentBody(entry: { id: string; body?: string }) {
-  if (typeof entry.body !== 'string') {
-    throw new Error(`Content entry ${entry.id} has no Markdown body.`);
-  }
-  return entry.body;
-}
-
 /**
- * Site-relative URLs , single place that knows the routing scheme.
+ * Site-relative URLs: the single place that knows the routing scheme.
  * The trailing-slash difference is historical but load-bearing: these exact
  * forms are the RSS GUIDs, and changing them would resurface every item as
  * unread in subscribers' feed readers.

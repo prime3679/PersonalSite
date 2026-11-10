@@ -2,6 +2,9 @@ name: Tests
 
 on:
   pull_request:
+  # direct pushes to main are allowed, so they get the same checks
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -30,11 +33,20 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Architecture gate tests
+        run: python3 .agent/architecture_gate_test.py
+
       - name: Type check
         run: npm run check
 
       - name: Unit tests
         run: npx vitest run src
+
+      - name: Build
+        run: npm run build
+
+      - name: Public surface scan
+        run: node .hermes/verifiers/public-surface-scan.mjs
 
       - name: Install Playwright (chromium)
         run: npx playwright install --with-deps chromium
@@ -42,6 +54,9 @@ jobs:
       # Desktop + mobile projects share the chromium binary, so both run cheaply.
       - name: E2E tests
         run: npx playwright test --project=chromium --project=mobile-chrome
+
+      - name: Mobile homepage verifier
+        run: node .hermes/verifiers/mobile-homepage.mjs
 
       - name: Upload report on failure
         uses: actions/upload-artifact@v4

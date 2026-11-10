@@ -29,7 +29,7 @@
       "Satori and Sharp for generated Open Graph images",
       "Vitest and Playwright",
       "Cloudflare Workers and Workers Assets",
-      "GitHub Actions and GitHub Pages"
+      "GitHub Actions for verification"
     ],
     "source_scope": [
       "public application structure and routes",
@@ -85,13 +85,12 @@
     "exclude": [
       ".agent/architecture.json",
       "docs/architecture.html",
-      "docs/plans/**",
       "src/content/blog/**",
       "public/**",
       "dist/**",
       "node_modules/**"
     ],
-    "digest": "8553dd16d415d53eb2f914d4a448bf1e4cb0f859d87b0a294ff2d38721754cf2"
+    "digest": "c5251b6456e32eed5d78f703b81dfe9db3f3139710dda7f7eb420fdeae2b7917"
   },
   "components": [
     {
@@ -161,8 +160,8 @@
       "id": "deployment-pipeline",
       "name": "deployment pipeline",
       "core": true,
-      "paths": ["package.json", "wrangler.toml", "wrangler.www.toml", ".github/workflows/deploy.yml", "astro.config.mjs", "src/canonical-worker.js", "src/www-redirect.js"],
-      "responsibility": "Deploy dist through wrangler.toml and the canonical Worker to the authoritative adrianlumley.co Workers Assets runtime (assets.not_found_handling = 404-page serves the built 404 page), deploy the separate www redirect Worker through wrangler.www.toml, and retain the active main-branch GitHub Pages publication pipeline as a non-authoritative delivery path."
+      "paths": ["package.json", "wrangler.toml", "wrangler.www.toml", ".github/workflows/test.yml", "astro.config.mjs", "src/canonical-worker.js", "src/www-redirect.js"],
+      "responsibility": "Deploy dist through wrangler.toml and the canonical Worker to the authoritative adrianlumley.co Workers Assets runtime (assets.not_found_handling = 404-page serves the built 404 page), and deploy the separate www redirect Worker through wrangler.www.toml. Nothing deploys on push; the Tests workflow verifies pull requests and pushes to main."
     }
   ],
   "interfaces": {
@@ -195,13 +194,13 @@
     {"id": "cloudflare-apex-deploy", "from": "npm run deploy:cloudflare", "through": ["npm run build", "dist/", "wrangler.toml", "src/canonical-worker.js", "Cloudflare Workers Assets"], "to": "authoritative production runtime on adrianlumley.co/*"},
     {"id": "cloudflare-www-deploy", "from": "npm run deploy:cloudflare:www", "through": ["wrangler.www.toml", "src/www-redirect.js"], "to": "separate redirect Worker on www.adrianlumley.co/*"},
     {"id": "cloudflare-all-deploy", "from": "npm run deploy:cloudflare:all", "through": ["npm run deploy:cloudflare", "npm run deploy:cloudflare:www"], "to": "apex production runtime and www redirect Worker"},
-    {"id": "github-pages-publish", "from": "push to main or workflow dispatch", "through": [".github/workflows/deploy.yml", "withastro/action", "Astro build", "actions/deploy-pages"], "to": "active GitHub Pages publication, not the authoritative apex production release"},
+    {"id": "ci-verification", "from": "pull request, push to main, or workflow dispatch", "through": [".github/workflows/test.yml", "architecture gate tests", "type check", "unit tests", "build", "public-surface scan", "Playwright", "mobile homepage verifier"], "to": "a pass or fail check; it publishes nothing"},
     {"id": "contribution-check", "from": "repo doctrine and architecture-relevant source", "through": ["contribution contract", "architecture fingerprint", "contribution gate"], "to": "audit result or bounded trusted verification commands"}
   ],
   "dependencies": {
     "runtime": ["Astro", "Tailwind CSS", "Astro Content Collections", "Zod", "Satori", "Sharp", "bundled font packages"],
     "development": ["TypeScript", "Astro Check", "Vitest", "happy-dom", "Playwright", "Python 3 standard library for the contribution gate"],
-    "external_services": ["Cloudflare Workers", "Cloudflare Workers Assets", "Cloudflare Web Analytics", "GitHub Actions", "GitHub Pages", "Formspree", "Umami", "Stripe payment links"],
+    "external_services": ["Cloudflare Workers", "Cloudflare Workers Assets", "Cloudflare Web Analytics", "GitHub Actions", "Formspree", "Umami", "Stripe payment links"],
     "dependency_policy": "Contribution-only architecture work does not mutate manifests or install dependencies."
   },
   "invariants": [
@@ -213,7 +212,7 @@
     "Post route forms in src/lib/content.ts remain stable because they are used as RSS identifiers; pages link through postHref and trailing-slash nav hrefs so no internal click pays the canonical 308.",
     "The site has two type languages, each whole on its own pages: the record (homepage and connected pages: one sans at body size and weight 400, one ink on flat paper, the page title as the only size jump, italic labels, no entrance animation); essays (/writing/<slug>/: Newsreader title and prose via src/styles/essay.css, the only route that imports or preloads the serif; the writing index stays a record table with its tag filter). Lab tools under public/lab/ keep their own look and each links back to /lab/. No page mixes two.",
     "The public surface follows the lowercase editorial and protected-language rules in AGENTS.md.",
-    "Cloudflare Workers Assets on adrianlumley.co/* is the authoritative production runtime; the active GitHub Pages workflow is a separate, non-authoritative publication path.",
+    "Cloudflare Workers Assets on adrianlumley.co/* is the only production runtime; a push publishes nothing, and a release is an explicit Cloudflare deploy.",
     "The www.adrianlumley.co/* redirect is deployed as a separate Worker, and deploy:cloudflare:all performs both Cloudflare deployments.",
     "Architecture source fingerprint v2 normalizes CRLF bytes to LF before framing so equivalent text checkouts have one digest.",
     "The human map carries a SHA-256 marker for the exact architecture JSON bytes; JSON changes require an intentional HTML marker refresh.",

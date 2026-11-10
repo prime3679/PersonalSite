@@ -41,6 +41,7 @@ One other language sits beside it, whole on its own pages: essays (`/writing/<sl
 - `/lab/`
 - `/about/` (includes the work record)
 - `/contact/`
+- `/privacy/` (footer link)
 
 Old `/blog/`, `/work/`, `/services/`, and `/now/` URLs must keep redirecting instead of 404ing.
 
@@ -69,7 +70,7 @@ For homepage/header/mobile changes verify 320, 375, 390, and 414px widths:
 - direct-to-main pushes are allowed for verified private repo/site work
 - Cloudflare Workers Assets is the authoritative production runtime for `adrianlumley.co/*`
 - `npm run deploy:cloudflare` builds and deploys `dist/` through `wrangler.toml`; `npm run deploy:cloudflare:www` deploys the separate `www.adrianlumley.co/*` redirect Worker; `npm run deploy:cloudflare:all` performs both
-- pushes to `main` still trigger the active GitHub Pages workflow, but that pipeline is not the authoritative apex production release path
+- pushes to `main` run the Tests workflow and deploy nothing; production changes only through the Cloudflare deploy commands
 - never report done at commit or push only; after an authorized production deploy, wait for it to complete and verify the live URL in browser or via fetch before declaring live
 
 ## zero-context contribution

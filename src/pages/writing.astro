@@ -19,7 +19,7 @@ const tagHref = (tag: string) => `/writing/?tag=${encodeURIComponent(tag)}`;
   <PageIntro title="writing" standfirst="notes on ai, enterprise product, and building systems, drawn from real work and the occasional voice memo. published when there's something worth saying, not on a schedule." />
 
   {allTags.length > 0 && (
-    <div class="mb-10 flex flex-wrap gap-2" id="tag-filters" role="group" aria-label="filter posts by tag">
+    <div class="mb-10 flex flex-wrap gap-x-2 gap-y-4" id="tag-filters" role="group" aria-label="filter posts by tag">
       <button type="button" class="chip" data-tag="all" aria-pressed="true">all</button>
       {allTags.map((tag) => <button type="button" class="chip" data-tag={tag} aria-pressed="false">{tag}</button>)}
     </div>
@@ -28,7 +28,7 @@ const tagHref = (tag: string) => `/writing/?tag=${encodeURIComponent(tag)}`;
   {posts.length > 0 ? (
     <ul class="rows rows--loose" id="post-list">
       {posts.map((post) => (
-        <li class="row blog-post" data-tags={(post.data.tags ?? []).join(' ')}>
+        <li class="row blog-post" data-tags={JSON.stringify(post.data.tags)}>
           <time class="row__key" datetime={isoDate(post.data.date)}>{formatMonthYear(post.data.date)}</time>
           <div class="row__value">
             <h2><a href={postHref(post.id)}>{post.data.title}</a></h2>
@@ -58,7 +58,8 @@ const tagHref = (tag: string) => `/writing/?tag=${encodeURIComponent(tag)}`;
       let visible = 0;
       chips.forEach((c) => c.setAttribute('aria-pressed', String(c.getAttribute('data-tag') === tag)));
       posts.forEach((post) => {
-        const tags = (post.getAttribute('data-tags') || '').split(' ').filter(Boolean);
+        // json, not a space-joined string, so a tag with a space still filters
+        const tags: string[] = JSON.parse(post.getAttribute('data-tags') || '[]');
         const show = tag === 'all' || tags.includes(tag);
         post.classList.toggle('hidden', !show);
         if (show) visible++;

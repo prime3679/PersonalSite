@@ -31,6 +31,9 @@ interface Props {
   chrome?: boolean;
   /** preload the serif reading face; only the essay route sets this */
   serif?: boolean;
+  /** keep the page out of search indexes (the 404 and post-checkout pages).
+   *  a noindex page names no canonical, so the two never disagree. */
+  noindex?: boolean;
 }
 
 const {
@@ -42,6 +45,7 @@ const {
   extraMainClass,
   chrome = true,
   serif = false,
+  noindex = false,
 } = Astro.props;
 const fullTitle = title === siteMetadata.title ? title : `${title} | ${siteMetadata.siteName}`;
 const canonicalPageUrl = canonicalUrl(Astro.url);
@@ -106,7 +110,7 @@ const structuredData: Record<string, unknown> = {
   <meta name="twitter:title" content={fullTitle} />
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={ogImageUrl} />
-  <link rel="canonical" href={canonicalPageUrl} />
+  {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonicalPageUrl} />}
   <link rel="alternate" type="application/rss+xml" title={`${siteMetadata.siteName} · writing`} href="/rss.xml" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href={geistWoff2} />
   {serif && <link rel="preload" as="font" type="font/woff2" crossorigin href={newsreaderWoff2} />}

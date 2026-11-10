@@ -112,8 +112,12 @@
     margin: -.75rem -.3rem;
   }
 
-  /* tag filter chips on the writing index */
+  /* tag filter chips on the writing index. the pill stays small; an
+     invisible extension carries the tap target to 44px, and the filter
+     row's gap keeps neighbouring targets from overlapping. */
   .chip {
+    position: relative;
+    min-width: 2.75rem;
     border: 1px solid var(--line);
     border-radius: 999px;
     background: transparent;
@@ -123,6 +127,7 @@
     font-size: .75rem;
     padding: .25rem .75rem;
   }
+  .chip::after { content: ''; position: absolute; inset: -.5rem 0; }
   .chip:hover, .chip[aria-pressed="true"] { border-color: var(--accent); color: var(--ink); }
 
   /* forms: hairline fields, body type, ink focus */

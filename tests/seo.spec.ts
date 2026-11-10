@@ -67,4 +67,12 @@ test.describe('technical canonicals and indexing', () => {
     await page.goto('/');
     await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
   });
+
+  test('the 404 and post-checkout pages are noindex and name no canonical', async ({ page }) => {
+    for (const path of ['/this-route-does-not-exist/', '/past-the-pilot/thanks/']) {
+      await page.goto(path);
+      await expect(page.locator('meta[name="robots"]'), path).toHaveAttribute('content', 'noindex');
+      await expect(page.locator('link[rel="canonical"]'), path).toHaveCount(0);
+    }
+  });
 });

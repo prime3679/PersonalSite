@@ -5,7 +5,9 @@ const root = process.cwd();
 const dist = join(root, 'dist');
 const failures = [];
 const globalForbidden = ['homepage / hero', 'lab / flagship card', 'signal room / episode log', 'OpenClaw'];
-const primarySurfaceForbidden = ['operator stack', 'familyos', 'bishop-bench', 'mission control', 'signal room', 'rogue'];
+// retired from the site. the paid offer is caught by its checkout host,
+// since the lab's past the pilot ledger shares the name and stays.
+const primarySurfaceForbidden = ['operator stack', 'familyos', 'bishop-bench', 'mission control', 'signal room', 'rogue', 'hyperscience', 'buy.stripe.com'];
 const emDashForbidden = '—';
 
 function files(path) {

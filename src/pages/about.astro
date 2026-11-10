@@ -22,7 +22,7 @@ const work = [currentRole, ...pastRoles];
       {work.map((role) => (
         <div class="row" id={role.id}>
           <dt class="row__key">{role.company}</dt>
-          <dd class="row__value">{role.summary ?? ''}</dd>
+          <dd class="row__value">{role.summary}</dd>
         </div>
       ))}
     </dl>

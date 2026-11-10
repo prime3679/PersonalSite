@@ -34,6 +34,8 @@ One other language sits beside it, whole on its own pages: essays (`/writing/<sl
 - no public Operator Stack, FamilyOS, bishop-bench, or retired Mission Control cards/routes/stat tiles
 - Rogue is retired; no public Rogue references or running-agent claims
 - no public Bishop or Mission Control references; the Signal Room serial that carried them is retired
+- no paid offer, checkout link, or advisory pitch: the Past the Pilot offer pages are retired (the lab's past the pilot ledger is a separate thing and stays)
+- Hyperscience is not listed in the career record
 
 ## routes that matter
 - `/`

@@ -29,8 +29,7 @@ test.describe('technical canonicals and indexing', () => {
   });
 
   test('sitemap.xml is the only sitemap', async ({ page }) => {
-    // a second, generated sitemap once listed pages this one leaves out,
-    // including the post-checkout page
+    // a second, generated sitemap once listed pages this one leaves out
     for (const path of ['/sitemap-index.xml', '/sitemap-0.xml']) {
       expect((await page.request.get(path)).status(), path).toBe(404);
     }
@@ -68,11 +67,9 @@ test.describe('technical canonicals and indexing', () => {
     await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
   });
 
-  test('the 404 and post-checkout pages are noindex and name no canonical', async ({ page }) => {
-    for (const path of ['/this-route-does-not-exist/', '/past-the-pilot/thanks/']) {
-      await page.goto(path);
-      await expect(page.locator('meta[name="robots"]'), path).toHaveAttribute('content', 'noindex');
-      await expect(page.locator('link[rel="canonical"]'), path).toHaveCount(0);
-    }
+  test('the 404 page is noindex and names no canonical', async ({ page }) => {
+    await page.goto('/this-route-does-not-exist/');
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
+    await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
   });
 });

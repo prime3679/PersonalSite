@@ -6,8 +6,9 @@ const dist = join(root, 'dist');
 const failures = [];
 const globalForbidden = ['homepage / hero', 'lab / flagship card', 'signal room / episode log', 'OpenClaw'];
 // retired from the site. the paid offer is caught by its checkout host,
-// since the lab's past the pilot ledger shares the name and stays.
-const primarySurfaceForbidden = ['operator stack', 'familyos', 'bishop-bench', 'mission control', 'signal room', 'rogue', 'hyperscience', 'buy.stripe.com'];
+// since the lab's past the pilot ledger shares the name and stays. the
+// trust layer teardowns are caught by name and by their url slugs.
+const primarySurfaceForbidden = ['operator stack', 'familyos', 'bishop-bench', 'mission control', 'signal room', 'rogue', 'hyperscience', 'buy.stripe.com', 'trust layer', '-connector'];
 const emDashForbidden = '—';
 
 function files(path) {

@@ -60,7 +60,7 @@
       "wrangler.toml",
       "wrangler.www.toml",
       ".github/workflows/*.yml",
-      ".hermes/verifiers/*.mjs",
+      "scripts/verify/*.mjs",
       "src/canonical-redirect.js",
       "src/canonical-worker.js",
       "src/www-redirect.js",
@@ -90,7 +90,7 @@
       "dist/**",
       "node_modules/**"
     ],
-    "digest": "d8a8be8c329319f5ffe95eac060b9635579899c5d156ac81ddbd79e21f9e88fc"
+    "digest": "43687fb07db5c85083e845f163d2f98dc9e569ccb38448f984a9ae8a5a26785f"
   },
   "components": [
     {
@@ -236,8 +236,8 @@
       {"id": "astro-check", "argv": ["node_modules/.bin/astro", "check"]},
       {"id": "astro-build", "argv": ["node_modules/.bin/astro", "build"]},
       {"id": "vitest", "argv": ["node_modules/.bin/vitest", "run"]},
-      {"id": "public-surface-scan", "argv": ["node", ".hermes/verifiers/public-surface-scan.mjs"]},
-      {"id": "mobile-homepage", "argv": ["node", ".hermes/verifiers/mobile-homepage.mjs"]},
+      {"id": "public-surface-scan", "argv": ["node", "scripts/verify/public-surface-scan.mjs"]},
+      {"id": "mobile-homepage", "argv": ["node", "scripts/verify/mobile-homepage.mjs"]},
       {"id": "playwright-targeted", "argv": ["node_modules/.bin/playwright", "test", "tests/mobile/mobile-nav.spec.ts", "tests/header.spec.ts", "tests/e2e/homepage.spec.ts", "--project=mobile-chrome", "--project=chromium"]}
     ],
     "visual_widths": [320, 375, 390, 414]

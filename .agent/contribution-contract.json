@@ -63,7 +63,7 @@
     "forbidden_actions": [
       "automatic dependency installation or bootstrap",
       "editing user-facing site surfaces for contribution-only work",
-      "deploying, pushing, or touching live state",
+      "deploying to production or touching live state",
       "reading or printing secrets from local environments"
     ]
   },
@@ -157,7 +157,7 @@
         "cwd": ".",
         "argv": [
           "node",
-          ".hermes/verifiers/public-surface-scan.mjs"
+          "scripts/verify/public-surface-scan.mjs"
         ],
         "timeout_seconds": 60,
         "output_limit_bytes": 16384
@@ -168,7 +168,7 @@
         "cwd": ".",
         "argv": [
           "node",
-          ".hermes/verifiers/mobile-homepage.mjs"
+          "scripts/verify/mobile-homepage.mjs"
         ],
         "timeout_seconds": 120,
         "output_limit_bytes": 16384

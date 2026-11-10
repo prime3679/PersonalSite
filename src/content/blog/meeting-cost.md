@@ -35,7 +35,7 @@ Once meetings become a line item in your head, not metaphorically, actually, the
 
 **Default to async for status updates.** If the purpose of the meeting is to share information that doesn't require real-time reaction, it shouldn't be a meeting. A Loom, a doc, a Slack post with a 24-hour comment window costs $0 and lets people engage when they're actually ready to think.
 
-**Cut the invite list.** Every person you add is a multiplier on cost. The person who's "good to have in the loop" isn't free, they're $30/hour you're spending on passive attendance. If they don't need to make a decision or contribute meaningfully, they shouldn't be there. Send them the notes.
+**Cut the invite list.** Every person you add is a multiplier on cost. The person who's "good to have in the loop" isn't free, they're about $96/hour you're spending on passive attendance. If they don't need to make a decision or contribute meaningfully, they shouldn't be there. Send them the notes.
 
 **Timebox everything.** A 30-minute meeting that runs to 45 minutes isn't a minor overage, it's a 50% cost overrun. Set a hard stop. Respect it.
 

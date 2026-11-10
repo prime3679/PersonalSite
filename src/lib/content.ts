@@ -29,7 +29,7 @@ export const postPath = (slug: string) => `/writing/${slug}`;
 /**
  * The href pages link with. The canonical Worker 308s the slashless
  * postPath to its trailing-slash form, so page links carry the slash and
- * skip the hop; RSS keeps postPath because those strings are the GUIDs.
+ * skip the hop. RSS item links use it too; only the RSS guid keeps postPath.
  */
 export const postHref = (slug: string) => `${postPath(slug)}/`;
 

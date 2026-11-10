@@ -30,7 +30,7 @@ playwright-report/
 .vercel
 
 # local Hermes verification artifacts
-.hermes/artifacts/
+scripts/verify/artifacts/
 
 # python bytecode from the contribution gate
 __pycache__/

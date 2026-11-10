@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="A standalone architecture map for the PersonalSite repository.">
-  <meta name="architecture-contract-sha256" content="7815de02e5b770fa6227eb058973d459a3e56724fe616d085e57bc8568ab63fb">
+  <meta name="architecture-contract-sha256" content="c45199c82fd31cf127a7320c78d61d814b515549871583b2ed5ee4c314e56af2">
   <title>PersonalSite architecture map</title>
   <style>
     :root {
@@ -487,8 +487,8 @@
           <code class="command">node_modules/.bin/astro check</code>
           <code class="command">node_modules/.bin/astro build</code>
           <code class="command">node_modules/.bin/vitest run</code>
-          <code class="command">node .hermes/verifiers/public-surface-scan.mjs</code>
-          <code class="command">node .hermes/verifiers/mobile-homepage.mjs</code>
+          <code class="command">node scripts/verify/public-surface-scan.mjs</code>
+          <code class="command">node scripts/verify/mobile-homepage.mjs</code>
           <p class="muted">Targeted Playwright covers the header, homepage, and the mobile header in Chromium projects.</p>
         </div>
       </div>
@@ -510,8 +510,8 @@
       <p class="lead">Read for authority first, use the machine map for implementation orientation, then let the gate test both contracts before work leaves the repository.</p>
       <ol class="path-list">
         <li><code>REVIEW.md</code><span>short onboarding brief and work classification</span></li>
-        <li><code>AGENTS.md</code><span>highest-precedence public-site doctrine and verification requirements</span></li>
-        <li><code>CLAUDE.md</code><span>repository structure, content conventions, and deployment context</span></li>
+        <li><code>AGENTS.md</code><span>highest-precedence public-site doctrine, repository structure, deployment, and verification requirements</span></li>
+        <li><code>CLAUDE.md</code><span>imports AGENTS.md so every agent reads one file</span></li>
         <li><code>docs/zero-context-contribution.md</code><span>authority precedence, boundaries, and contribution procedure</span></li>
         <li><code>.agent/contribution-contract.json</code><span>enforceable contribution and verification contract</span></li>
         <li><code>.agent/architecture.json</code><span>machine-readable implementation map, interfaces, flows, invariants, and source fingerprint</span></li>

@@ -35,8 +35,10 @@ If instructions conflict, the higher-precedence file wins. Read order is onboard
 Bias toward infrastructure when the same mistake could recur for a fresh agent without more local guidance.
 
 ## required read order for a fresh agent
+For copy, content, or small fixes, `AGENTS.md` is enough. For structural or contribution-infrastructure work:
+
 1. Read `REVIEW.md` for the short brief.
-2. Read `AGENTS.md` and `CLAUDE.md` for site doctrine and stack context.
+2. Read `AGENTS.md` for site doctrine and stack context (`CLAUDE.md` imports it).
 3. Read `.agent/contribution-contract.json` before changing contribution or verification behavior.
 4. Read `.agent/architecture.json` before implementation for components, routes, flows, boundaries, and verification context.
 5. Open `docs/architecture.html` directly from disk when a human-readable system map is useful.
@@ -59,8 +61,8 @@ python3 .agent/architecture_gate_test.py
 node_modules/.bin/astro check
 node_modules/.bin/astro build
 node_modules/.bin/vitest run
-node .hermes/verifiers/public-surface-scan.mjs
-node .hermes/verifiers/mobile-homepage.mjs
+node scripts/verify/public-surface-scan.mjs
+node scripts/verify/mobile-homepage.mjs
 node_modules/.bin/playwright test tests/mobile/mobile-nav.spec.ts tests/header.spec.ts tests/e2e/homepage.spec.ts --project=mobile-chrome --project=chromium
 ```
 
@@ -74,8 +76,10 @@ Notes:
 ## escalation conditions
 Escalate before continuing if:
 - repo instructions conflict materially and cannot be reconciled without changing site behavior
-- full verification would require installing dependencies or accessing secrets
-- any action would touch live state, trigger deploy, or leave this worktree
+- full verification would require accessing secrets (running `npm ci` for the locked dependencies is fine)
+- any action would touch live state or trigger a production deploy
+
+Retrying a failed or timed-out check, creating a branch, pushing it, and opening a pull request need no approval.
 
 ## expected contribution shape
 - keep changes repo-local, minimal, and reversible

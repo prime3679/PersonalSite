@@ -5,13 +5,13 @@ test('writing: the index is the record table, newest first, with a dek and tags 
   await page.goto('/writing');
 
   const rows = page.locator('#post-list .row');
-  await expect(rows).toHaveCount(7);
+  await expect(rows).toHaveCount(3);
 
   const first = rows.first();
-  await expect(first.locator('time')).toHaveText('October 2026');
-  await expect(first.getByRole('link', { name: "What Claude's Slack connector actually does" })).toHaveAttribute('href', '/writing/claude-slack-connector/');
-  await expect(first.locator('p').first()).toHaveText("A tested teardown of Claude's Slack connector: it reads DMs, its consent rule is a sentence to the model, and it can post and schedule messages that its docs page never mentions.");
-  await expect(first.locator('a[href="/writing/?tag=ai"]')).toHaveText('ai');
+  await expect(first.locator('time')).toHaveText('July 2026');
+  await expect(first.getByRole('link', { name: 'The honest record' })).toHaveAttribute('href', '/writing/the-honest-record/');
+  await expect(first.locator('p').first()).toHaveText('People lie in journals. They perform in therapy. Nobody performs for a coding agent.');
+  await expect(first.locator('a[href="/writing/?tag=writing"]')).toHaveText('writing');
 
   // the key column hugs its widest date; every title starts at the same x
   const titleXs = await page.locator('#post-list .row h2').evaluateAll((nodes) => nodes.map((n) => n.getBoundingClientRect().x));
@@ -19,30 +19,30 @@ test('writing: the index is the record table, newest first, with a dek and tags 
 
   // no reading times; the filter and the rss line are present
   await expect(page.locator('main')).not.toContainText('min read');
-  await expect(page.locator('#tag-filters button.chip')).toHaveCount(7);
+  await expect(page.locator('#tag-filters button.chip')).toHaveCount(6);
   await expect(page.locator('main a[href="/rss.xml"]')).toBeVisible();
 });
 
 test('writing: tag chip filters posts and syncs the URL', async ({ page }) => {
   await page.goto('/writing');
 
-  const productPost = page.locator('.blog-post:has(a[href="/writing/second-order-effects/"])');
-  const aiOnlyPost = page.locator('.blog-post:has(a[href="/writing/claude-gmail-connector-data/"])');
+  const systemsPost = page.locator('.blog-post:has(a[href="/writing/second-order-effects/"])');
+  const otherPost = page.locator('.blog-post:has(a[href="/writing/meeting-cost/"])');
 
-  await expect(productPost).toBeVisible();
-  await expect(aiOnlyPost).toBeVisible();
+  await expect(systemsPost).toBeVisible();
+  await expect(otherPost).toBeVisible();
 
   await page.locator('button.chip[data-tag="systems"]').click();
 
-  await expect(productPost).toBeVisible(); // second-order-effects is tagged systems
-  await expect(aiOnlyPost).toHaveClass(/hidden/); // claude-gmail is ai only
-  await expect(aiOnlyPost).toBeHidden();
+  await expect(systemsPost).toBeVisible(); // second-order-effects is tagged systems
+  await expect(otherPost).toHaveClass(/hidden/); // meeting-cost is product and cost only
+  await expect(otherPost).toBeHidden();
   await expect(page).toHaveURL(/\?tag=systems/);
   await expect(page.locator('button.chip[data-tag="systems"]')).toHaveAttribute('aria-pressed', 'true');
   await expect(page.locator('button.chip[data-tag="all"]')).toHaveAttribute('aria-pressed', 'false');
 
   await page.locator('button.chip[data-tag="all"]').click();
-  await expect(aiOnlyPost).toBeVisible();
+  await expect(otherPost).toBeVisible();
   await expect(page).not.toHaveURL(/\?tag=/);
 });
 
@@ -64,7 +64,7 @@ test('writing: a per-post tag link is a deep link into the filter', async ({ pag
 
 test('writing: the index lists exactly the published posts', async ({ page }) => {
   await page.goto('/writing');
-  await expect(page.locator('#post-list .blog-post')).toHaveCount(7);
+  await expect(page.locator('#post-list .blog-post')).toHaveCount(3);
 });
 
 test('writing: an essay reads in the serif with a date line, inside record chrome', async ({ page }) => {

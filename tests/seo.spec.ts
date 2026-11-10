@@ -28,6 +28,13 @@ test.describe('technical canonicals and indexing', () => {
     expect(xml).not.toContain('sitemap-index.xml');
   });
 
+  test('sitemap.xml is the only sitemap', async ({ page }) => {
+    // a second, generated sitemap once listed pages this one leaves out
+    for (const path of ['/sitemap-index.xml', '/sitemap-0.xml']) {
+      expect((await page.request.get(path)).status(), path).toBe(404);
+    }
+  });
+
   test('indexable static html lab routes expose canonical og and twitter metadata', async ({ page }) => {
     await page.goto('/lab/fork');
 
@@ -58,5 +65,11 @@ test.describe('technical canonicals and indexing', () => {
   test('the homepage stays indexable', async ({ page }) => {
     await page.goto('/');
     await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
+  });
+
+  test('the 404 page is noindex and names no canonical', async ({ page }) => {
+    await page.goto('/this-route-does-not-exist/');
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
+    await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
   });
 });

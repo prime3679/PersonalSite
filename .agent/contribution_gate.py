@@ -91,6 +91,8 @@ CHILD_ENV_PASSTHROUGH = (
     "TMP",
     "LANG",
     "LC_ALL",
+    # browsers installed outside the default cache (cloud sandboxes, CI images)
+    "PLAYWRIGHT_BROWSERS_PATH",
 )
 INLINE_CODE_EXECUTOR_RE = re.compile(r"^python(?:\d+(?:\.\d+)*)?$")
 ENV_ASSIGNMENT_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*=.*$")

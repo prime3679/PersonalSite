@@ -19,11 +19,7 @@
   --line-strong: #d3cbb8;
   --accent: #a8472c;
   --panel: #16130e;
-  --panel-raised: #1e1a13;
   --panel-text: #eae4d7;
-  --panel-soft: #9c9384;
-  --panel-line: #2b261d;
-  --accent-bright: #c9663f;
 
   /* type families: the record is set in one sans. the serif is the reading
      face for essays only (essay.css); mono is for code, not a display
@@ -52,7 +48,7 @@
   --focus-ring: 2px solid var(--ink);
   --focus-offset: 3px;
 
-  /* spacing, measure, radius, motion */
+  /* spacing, measure, radius */
   --s1: .25rem;
   --s2: .5rem;
   --s3: .75rem;
@@ -65,9 +61,6 @@
   --s10: 8rem;
   --measure: 38rem;
   --radius: 3px;
-  --radius-panel: 0;
-  --ease: cubic-bezier(0.2, 0, 0, 1);
-  --dur: 320ms;
   color-scheme: light;
 }
 

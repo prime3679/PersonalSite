@@ -1,7 +1,7 @@
 export interface Role {
   readonly id: string;
   readonly company: string;
-  readonly summary?: string;
+  readonly summary: string;
 }
 
 export const currentRole: Role = {
@@ -21,7 +21,6 @@ export const pastRoles: readonly Role[] = [
     company: 'Disney/ESPN',
     summary: 'global launch operations: the orchestration layer that let teams localize and certify content, payments, and ux strings. 60+ markets live with feature parity on day one, 35% faster localization.',
   },
-  { id: 'hyperscience', company: 'Hyperscience' },
   {
     id: 'ea-sports',
     company: 'EA Sports',

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatLongDate, formatMonthYear, snapshotLabel } from './format';
+import { formatLongDate, formatMonthYear } from './format';
 
 describe('formatLongDate', () => {
   it('formats a date-only value without shifting the day', () => {
@@ -15,17 +15,5 @@ describe('formatMonthYear', () => {
 
   it('does not shift the month for first-of-month dates', () => {
     expect(formatMonthYear(new Date('2026-06-01'))).toBe('June 2026');
-  });
-});
-
-describe('snapshotLabel', () => {
-  it('renders a lowercase month + year', () => {
-    expect(snapshotLabel('2026-06-01T00:00:00Z')).toBe('jun 2026');
-  });
-
-  it('returns a dash for missing or invalid input', () => {
-    expect(snapshotLabel(null)).toBe(',');
-    expect(snapshotLabel(undefined)).toBe(',');
-    expect(snapshotLabel('not a date')).toBe(',');
   });
 });

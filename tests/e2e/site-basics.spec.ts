@@ -7,6 +7,10 @@ test('rss: /rss.xml is served as XML with items', async ({ page }) => {
   const body = await resp.text();
   expect(body).toContain('<rss');
   expect(body).toContain('<item>');
+  // links open the canonical trailing-slash page with no redirect hop; guids
+  // keep the slashless form subscribers' readers already know each item by
+  expect(body).toContain('<link>https://adrianlumley.co/writing/the-honest-record/</link>');
+  expect(body).toContain('<guid isPermaLink="true">https://adrianlumley.co/writing/the-honest-record</guid>');
 });
 
 test('a11y: skip link jumps focus to main content', async ({ page }) => {
@@ -41,7 +45,7 @@ test('nav: header shows the home wordmark + canonical primary tabs', async ({ pa
 });
 
 test('scrubbed pages are gone, not redirected', async ({ page }) => {
-  for (const path of ['/360/', '/joytap-privacy/', '/writing/joytap-one-sprint/', '/lab/iron-log/', '/lab/night-train/', '/signal-room/', '/signal-room/night-shift/']) {
+  for (const path of ['/360/', '/joytap-privacy/', '/writing/joytap-one-sprint/', '/lab/iron-log/', '/lab/night-train/', '/signal-room/', '/signal-room/night-shift/', '/past-the-pilot/', '/past-the-pilot/thanks/']) {
     const response = await page.goto(path);
     expect(response?.status(), path).toBe(404);
   }

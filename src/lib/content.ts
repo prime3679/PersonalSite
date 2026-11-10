@@ -18,16 +18,8 @@ export async function getPublishedPosts() {
     });
 }
 
-/** Return a Markdown entry body and fail closed if a loader drops it. */
-export function contentBody(entry: { id: string; body?: string }) {
-  if (typeof entry.body !== 'string') {
-    throw new Error(`Content entry ${entry.id} has no Markdown body.`);
-  }
-  return entry.body;
-}
-
 /**
- * Site-relative URLs , single place that knows the routing scheme.
+ * Site-relative URLs: the single place that knows the routing scheme.
  * The trailing-slash difference is historical but load-bearing: these exact
  * forms are the RSS GUIDs, and changing them would resurface every item as
  * unread in subscribers' feed readers.
@@ -37,7 +29,7 @@ export const postPath = (slug: string) => `/writing/${slug}`;
 /**
  * The href pages link with. The canonical Worker 308s the slashless
  * postPath to its trailing-slash form, so page links carry the slash and
- * skip the hop; RSS keeps postPath because those strings are the GUIDs.
+ * skip the hop. RSS item links use it too; only the RSS guid keeps postPath.
  */
 export const postHref = (slug: string) => `${postPath(slug)}/`;
 

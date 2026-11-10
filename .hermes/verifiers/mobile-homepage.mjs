@@ -19,15 +19,27 @@ async function waitForServer(url, timeoutMs = 20000) {
   throw new Error(`preview server did not become ready at ${url}`);
 }
 
+// the server runs in its own process group; signal the whole group
+function stopServer() {
+  if (!server) return;
+  try { process.kill(-server.pid, 'SIGTERM'); } catch {}
+}
+
 if (!process.env.MOBILE_VERIFIER_URL) {
   // detached puts npx and the astro server it starts in their own process
   // group, so shutdown can signal the whole group; unread pipes would also
-  // keep this process alive, so the server's output is ignored.
-  server = spawn('npx', ['astro', 'preview', '--host', '127.0.0.1', '--port', String(port)], {
+  // keep this process alive, so the server's output is ignored. --ignore-lock
+  // keeps astro 7.4+ from backgrounding the server when an agent runs this.
+  server = spawn('npx', ['astro', 'preview', '--ignore-lock', '--host', '127.0.0.1', '--port', String(port)], {
     stdio: 'ignore',
     detached: true,
   });
-  await waitForServer(baseUrl);
+  try {
+    await waitForServer(baseUrl);
+  } catch (error) {
+    stopServer();
+    throw error;
+  }
 }
 
 // wcag relative luminance and contrast, so the verifier catches ink that is
@@ -48,8 +60,11 @@ function contrast(a, b) {
 // verified on an inner page below.
 const navPath = '/writing/';
 
-const browser = await chromium.launch();
+// launch inside the try: a failed launch used to skip the cleanup below and
+// leave the preview server holding the port
+let browser;
 try {
+  browser = await chromium.launch();
   for (const width of widths) {
     const page = await browser.newPage({ viewport: { width, height: 900 }, isMobile: true, deviceScaleFactor: 2 });
 
@@ -200,10 +215,8 @@ try {
     await page.close();
   }
 } finally {
-  await browser.close();
-  if (server) {
-    try { process.kill(-server.pid, 'SIGTERM'); } catch {}
-  }
+  await browser?.close();
+  stopServer();
 }
 
 if (failures.length) {

@@ -41,6 +41,27 @@ test.describe('mobile homepage record', () => {
   }
 });
 
+test('mobile: tag chips keep a 44px tap target without growing the pill', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 900 });
+  await page.goto('/writing/');
+
+  const chips = page.locator('#tag-filters .chip');
+  const count = await chips.count();
+  expect(count).toBeGreaterThan(1);
+  for (let i = 0; i < count; i += 1) {
+    const target = await chips.nth(i).evaluate((chip) => {
+      const box = chip.getBoundingClientRect();
+      const reach = (y: number) => document.elementFromPoint(box.left + box.width / 2, y) === chip;
+      // the tap target runs past the visible pill above and below
+      const centre = box.top + box.height / 2;
+      return { width: box.width, pill: box.height, above: reach(centre - 21), below: reach(centre + 21) };
+    });
+    expect(target.width).toBeGreaterThanOrEqual(44);
+    expect(target.pill).toBeLessThan(44);
+    expect(target.above && target.below, `chip ${i} tap target`).toBe(true);
+  }
+});
+
 test.describe('mobile navigation', () => {
   for (const width of targetWidths) {
     test(`mobile: ${width}px header keeps the wordmark and all three links on one row`, async ({ page }) => {

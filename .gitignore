@@ -31,3 +31,6 @@ playwright-report/
 
 # local Hermes verification artifacts
 .hermes/artifacts/
+
+# python bytecode from the contribution gate
+__pycache__/

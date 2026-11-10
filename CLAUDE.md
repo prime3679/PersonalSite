@@ -1,11 +1,11 @@
 # PersonalSite, Project Context
 
-Adrian Lumley's personal site. Live at https://adrianlumley.co. Cloudflare Workers Assets is the authoritative production runtime for the apex host. GitHub Pages also publishes from `main`, but it is not the authoritative apex release path.
+Adrian Lumley's personal site. Live at https://adrianlumley.co. Cloudflare Workers Assets is the authoritative production runtime for the apex host. Nothing deploys on push: a production release is the explicit Cloudflare deploy below.
 
 ## Stack
 - **Framework:** Astro + TypeScript + Tailwind CSS
 - **Typography:** two languages, each internally consistent. The record (homepage and connected pages): one sans (Geist via `@fontsource-variable/geist`) at body size and weight 400, italic reserved for labels, one 1.5x size jump per page, one ink on flat paper. Essays (`/writing/<slug>/`): Newsreader title and prose via `src/styles/essay.css`, the only route that imports or preloads the serif. Lab tools in `public/lab/` keep their own look
-- **Deploy:** Cloudflare Workers Assets for `adrianlumley.co/*`; a separate Cloudflare redirect Worker for `www.adrianlumley.co/*`; an active GitHub Pages workflow also publishes pushes to `main`
+- **Deploy:** Cloudflare Workers Assets for `adrianlumley.co/*`; a separate Cloudflare redirect Worker for `www.adrianlumley.co/*`; no other publication path
 - **Style:** premium editorial/product-leader surface with subtle systems cues, not a terminal dashboard
 
 ## Key Files
@@ -64,6 +64,7 @@ The homepage is the record, not an app shell:
 - `/lab/`
 - `/about/` (includes the work record; `/work/` redirects to `/about/#work`)
 - `/contact/`
+- `/privacy/` (footer link)
 - `/rss.xml`
 
 Legacy/support routes may exist for compatibility or toys, but they must not re-enter the primary public surface unless Adrian explicitly asks.
@@ -76,6 +77,8 @@ Legacy/support routes may exist for compatibility or toys, but they must not re-
 - no active public Operator Stack, FamilyOS, bishop-bench, or retired Mission Control cards/routes/stat tiles
 - Rogue is retired; no public Rogue references or running-agent claims
 - no public Bishop or Mission Control references; the Signal Room serial that carried them is retired
+- no paid offer, checkout link, or advisory pitch: the Past the Pilot offer pages are retired (the lab's past the pilot ledger is a separate thing and stays)
+- Hyperscience is not listed in the career record
 - keep public family details generic if encountered
 - do not invent metrics or work outcomes
 
@@ -120,7 +123,7 @@ npm run deploy:cloudflare:all
 
 `deploy:cloudflare` builds and deploys `dist/` through `wrangler.toml` to the `adrianlumley.co/*` Worker route. `deploy:cloudflare:www` deploys the separate redirect Worker through `wrangler.www.toml`. `deploy:cloudflare:all` performs both in sequence.
 
-The active `.github/workflows/deploy.yml` workflow still builds and publishes a GitHub Pages artifact on pushes to `main`. A push alone does not complete an authoritative apex production release. After an authorized Cloudflare deploy, wait for completion and verify the live URL.
+A push to `main` deploys nothing; it only runs the Tests workflow (`.github/workflows/test.yml`), the same checks a pull request gets. After an authorized Cloudflare deploy, wait for completion and verify the live URL.
 
 ## zero-context contribution
 For fresh-agent contribution work, start with `REVIEW.md`, then `AGENTS.md`, this file, and `docs/zero-context-contribution.md`. Before implementation, read `.agent/contribution-contract.json` and `.agent/architecture.json`.

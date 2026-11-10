@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { siteMetadata } from '../data/siteMetadata';
-import { getPublishedPosts, postPath } from '../lib/content';
+import { getPublishedPosts, postHref, postPath } from '../lib/content';
 
 const escapeXml = (value: string): string =>
   value
@@ -12,7 +12,10 @@ const escapeXml = (value: string): string =>
 
 interface FeedItem {
   title: string;
+  /** the trailing-slash page url a reader opens, with no redirect hop */
   url: string;
+  /** the slashless form every subscriber's reader already knows the item by */
+  guid: string;
   date: Date;
   description: string;
 }
@@ -22,19 +25,20 @@ export const GET: APIRoute = async (context) => {
 
   const posts = (await getPublishedPosts()).map((post): FeedItem => ({
     title: post.data.title,
-    url: `${site}${postPath(post.id)}`,
+    url: `${site}${postHref(post.id)}`,
+    guid: `${site}${postPath(post.id)}`,
     date: post.data.date,
     description: post.data.description,
   }));
 
+  // getPublishedPosts already returns newest first
   const items = posts
-    .sort((a, b) => b.date.valueOf() - a.date.valueOf())
     .map(
       (item) => `    <item>
       <title>${escapeXml(item.title)}</title>
       <link>${item.url}</link>
-      <guid isPermaLink="true">${item.url}</guid>
-      <pubDate>${new Date(item.date).toUTCString()}</pubDate>
+      <guid isPermaLink="true">${item.guid}</guid>
+      <pubDate>${item.date.toUTCString()}</pubDate>
       <description>${escapeXml(item.description)}</description>
     </item>`,
     )

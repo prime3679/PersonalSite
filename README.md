@@ -9,14 +9,15 @@ A personal site and writing home for:
 - small lab projects / demos
 - about, with the work record
 
-This repo is active. Cloudflare Workers Assets is the authoritative production runtime; pushes to `main` also publish through an active GitHub Pages workflow.
+This repo is active. Cloudflare Workers Assets is the production runtime. Nothing deploys on push.
 
 ## Stack
 
 - **Framework:** Astro
 - **Styling:** Tailwind CSS
-- **Deploy:** Cloudflare Workers Assets for the apex host, a separate Cloudflare Worker for `www` redirects, plus an active GitHub Pages pipeline
-- **Testing:** Playwright
+- **Deploy:** Cloudflare Workers Assets for the apex host and a separate Cloudflare Worker for `www` redirects
+- **Testing:** Vitest for units, Playwright for end-to-end
+- **Node:** 22.23.4 or newer (the floor Astro sets; `.nvmrc` and the Tests workflow track Node 22)
 - **Image generation:** Satori + Sharp for dynamic OG images
 
 ## Current structure
@@ -37,9 +38,17 @@ dist/           # generated build output
 ```bash
 npm install
 npm run dev
+npm run check      # astro type check
 npm run build
 npm run preview
-npm test
+npx vitest run     # unit tests
+npm test           # playwright, every browser project
+```
+
+The secret-scan pre-commit hook is opt-in per clone. It needs `gitleaks` installed:
+
+```bash
+git config core.hooksPath .githooks
 ```
 
 ## Deployment
@@ -57,7 +66,7 @@ npm run deploy:cloudflare:www
 npm run deploy:cloudflare:all
 ```
 
-Pushes to `main` still trigger `.github/workflows/deploy.yml`, which builds and publishes a GitHub Pages artifact. That active pipeline is not the authoritative apex production release path, so push-to-main alone does not complete production deployment.
+A push to `main` deploys nothing. It runs `.github/workflows/test.yml`: type check, unit tests, build, the public-surface scan, end-to-end tests, and the mobile verifier.
 
 ## Notes
 

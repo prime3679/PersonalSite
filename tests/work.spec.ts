@@ -14,13 +14,14 @@ test('about page carries the work record, one row per role', async ({ page }) =>
     'Salesforce',
     'SiriusXM',
     'Disney/ESPN',
-    'Hyperscience',
     'EA Sports',
   ]);
-  await expect(page.locator('#hyperscience')).toHaveText('Hyperscience');
+  await expect(page.locator('#hyperscience')).toHaveCount(0);
+  // every listed role says something; no empty rows
+  expect(await work.locator('dd').evaluateAll((cells) => cells.every((cell) => cell.textContent!.trim().length > 0))).toBe(true);
   await expect(page.locator('meta[name="description"]')).toHaveAttribute(
     'content',
-    'about adrian lumley: product leader, fourteen years in, director of product at salesforce on emerging technology. previously siriusxm, disney/espn, hyperscience, and ea sports.',
+    'about adrian lumley: product leader, fourteen years in, director of product at salesforce on emerging technology. previously siriusxm, disney/espn, and ea sports.',
   );
   await expect(work.getByText(/18% more daily sessions/)).toBeVisible();
   await expect(work.getByText(/what makes it stick after the first rollout/)).toBeVisible();

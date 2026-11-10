@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="A standalone architecture map for the PersonalSite repository.">
-  <meta name="architecture-contract-sha256" content="cc6fd8dfdc7ffc8875e67c37ae9c79442be5ce9abb9d283ba73e7487f92a60e6">
+  <meta name="architecture-contract-sha256" content="7815de02e5b770fa6227eb058973d459a3e56724fe616d085e57bc8568ab63fb">
   <title>PersonalSite architecture map</title>
   <style>
     :root {
@@ -407,7 +407,7 @@
         <div class="route-row" data-architecture-route="/contact/" role="row"><code class="route-path">/contact/</code><span class="route-kind">page + form boundary</span><code class="route-source">src/pages/contact.astro</code></div>
         <div class="route-row" data-architecture-route="/rss.xml" role="row"><code class="route-path">/rss.xml</code><span class="route-kind">XML endpoint</span><code class="route-source">src/pages/rss.xml.ts</code></div>
       </div>
-      <p class="muted" style="margin-top: 24px;"><strong>supporting interfaces:</strong> <code>/writing/&lt;slug&gt;</code>, <code>/sitemap.xml</code>, <code>/og/*.png</code>, and static <code>/lab/&lt;artifact&gt;/</code> trees. Legacy <code>/blog/</code> URLs remain compatibility redirects to writing.</p>
+      <p class="muted" style="margin-top: 24px;"><strong>supporting interfaces:</strong> <code>/writing/&lt;slug&gt;</code>, <code>/privacy/</code>, <code>/sitemap.xml</code>, <code>/og/*.png</code>, and static <code>/lab/&lt;artifact&gt;/</code> trees. Legacy <code>/blog/</code> URLs remain compatibility redirects to writing.</p>
     </section>
 
     <section id="components">
@@ -422,7 +422,7 @@
         <li class="component" data-architecture-component="Open Graph image generation"><span class="component-index">07</span><h3>Open Graph image generation</h3><p>Build-time endpoints use local fonts, Satori, and Sharp to produce social cards.</p></li>
         <li class="component" data-architecture-component="static lab artifacts"><span class="component-index">08</span><h3>static lab artifacts</h3><p>Self-contained experiments under <code>public/lab/</code> bypass Astro composition and copy directly to output.</p></li>
         <li class="component" data-architecture-component="contribution gate"><span class="component-index">09</span><h3>contribution gate</h3><p>Python standard-library checks validate doctrine, architecture synchronization, safe command shape, and bounded execution.</p></li>
-        <li class="component" data-architecture-component="deployment pipeline"><span class="component-index">10</span><h3>deployment pipeline</h3><p>Cloudflare Workers Assets serves the authoritative apex runtime; a separate Worker redirects <code>www</code>; GitHub Pages remains an active, non-authoritative publication path.</p></li>
+        <li class="component" data-architecture-component="deployment pipeline"><span class="component-index">10</span><h3>deployment pipeline</h3><p>Cloudflare Workers Assets serves the authoritative apex runtime; a separate Worker redirects <code>www</code>. Nothing deploys on push; the Tests workflow verifies pull requests and pushes to <code>main</code>.</p></li>
       </ol>
     </section>
 
@@ -470,7 +470,7 @@
         <div class="deploy-step"><span class="label">03 · www redirect</span><strong><code>deploy:cloudflare:www</code></strong><span class="muted"><code>wrangler.www.toml</code> routes the separate redirect Worker</span></div>
         <div class="deploy-step"><span class="label">04 · combined</span><strong><code>deploy:cloudflare:all</code></strong><span class="muted">performs the apex and <code>www</code> deployments in sequence</span></div>
       </div>
-      <p class="muted" style="margin-top: 24px;"><strong>parallel delivery:</strong> <code>.github/workflows/deploy.yml</code> remains active and publishes a GitHub Pages artifact on pushes to <code>main</code> or manual dispatch. It is a real pipeline, but it is not the authoritative apex production release path; push-to-main alone does not update the Cloudflare runtime.</p>
+      <p class="muted" style="margin-top: 24px;"><strong>no deploy on push:</strong> <code>.github/workflows/test.yml</code> runs the checks on pull requests and on pushes to <code>main</code> and publishes nothing. A push alone does not update the Cloudflare runtime.</p>
     </section>
 
     <section id="verification">

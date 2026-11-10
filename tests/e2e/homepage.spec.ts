@@ -208,7 +208,7 @@ test('homepage ledger, archive, lab rows, and footer are reconciled', async ({ p
 
   const ledger = page.locator('.record__ledger');
   await expect(ledger.locator('dt')).toHaveText(['currently', 'past']);
-  await expect(ledger.locator('dd')).toHaveText(['Salesforce.', 'SiriusXM, Disney/ESPN, Hyperscience, EA Sports.']);
+  await expect(ledger.locator('dd')).toHaveText(['Salesforce.', 'SiriusXM, Disney/ESPN, EA Sports.']);
   await expect(main).not.toContainText('director of product');
   await expect(main).not.toContainText('diligence');
   await expect(main).not.toContainText('case studies');

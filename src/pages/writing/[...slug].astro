@@ -18,7 +18,7 @@ const { post, older, newer } = Astro.props;
 const { Content } = await render(post);
 const dateFormatted = formatLongDate(post.data.date);
 const updatedFormatted = post.data.updatedDate ? formatLongDate(post.data.updatedDate) : null;
-const articleData = { headline: post.data.title, description: post.data.description, datePublished: post.data.date.toISOString(), url: new URL(postPath(post.id), Astro.site).href };
+const articleData = { headline: post.data.title, description: post.data.description, datePublished: post.data.date.toISOString(), dateModified: post.data.updatedDate?.toISOString(), url: new URL(postPath(post.id), Astro.site).href };
 const ogImagePath = postOgPath(post.id);
 ---
 

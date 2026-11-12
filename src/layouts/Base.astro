@@ -10,6 +10,7 @@ import { navItems } from '../data/nav';
 import { CSP_POLICY } from '../data/csp';
 import { absoluteUrl, canonicalUrl } from '../lib/seo';
 import Header from '../components/Header.astro';
+import HoldingLine from '../components/HoldingLine.astro';
 
 interface ArticleData {
   headline: string;
@@ -131,16 +132,21 @@ const structuredData: Record<string, unknown> = {
   </main>
   {chrome && (
     <footer class="border-t border-[var(--line)] py-8">
-      <div class="site-footer-inner mx-auto flex max-w-[52rem] flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-        <span>adrian lumley · nyc</span>
-        <nav class="flex flex-wrap items-center gap-x-5 gap-y-2" aria-label="footer">
-          {navItems.map((item) => (
-            <a href={item.href}>{item.label}</a>
-          ))}
-          <a href="/contact/">email</a>
-          <a href="/rss.xml">rss</a>
-          <a href="/privacy/">privacy</a>
-        </nav>
+      <div class="site-footer-inner mx-auto max-w-[52rem]">
+        <div class="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+          <span>adrian lumley · nyc</span>
+          <nav class="flex flex-wrap items-center gap-x-5 gap-y-2" aria-label="footer">
+            {navItems.map((item) => (
+              <a href={item.href}>{item.label}</a>
+            ))}
+            <a href="/contact/">email</a>
+            <a href="/rss.xml">rss</a>
+            <a href="/privacy/">privacy</a>
+          </nav>
+        </div>
+        <div class="mt-4">
+          <HoldingLine />
+        </div>
       </div>
     </footer>
   )}

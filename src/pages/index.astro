@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import HoldingLine from '../components/HoldingLine.astro';
 import { currentRole, pastRoles } from '../data/career';
 import { getPublishedPosts, postHref } from '../lib/content';
 import { formatMonthYear } from '../lib/format';
@@ -96,6 +97,9 @@ const footerLinks = [
       ))}
     </p>
   </div>
+  <div class="record-holding">
+    <HoldingLine />
+  </div>
 
   <style>
     /* the whole record is one two-column grid: labels and dates in a
@@ -117,6 +121,9 @@ const footerLinks = [
     .record > * { grid-column: 1 / -1; margin: 0; }
     .record > * + * { margin-top: var(--s5); }
     .record__footer { margin-top: var(--s6); }
+    /* outside the label grid so a long line wraps in the record measure
+       instead of widening the max-content column */
+    .record-holding { max-width: 38rem; margin-top: var(--s5); }
 
     .record h1,
     .record h2 {

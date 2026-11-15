@@ -8,6 +8,8 @@ Adrian Lumley's personal site. Live at https://adrianlumley.co. Cloudflare Worke
 - **Deploy:** Cloudflare Workers Assets for `adrianlumley.co/*`; a separate Cloudflare redirect Worker for `www.adrianlumley.co/*`; no other publication path
 - **Style:** premium editorial/product-leader surface with subtle systems cues, not a terminal dashboard
 
+For HTML, CSS, and client-side JavaScript, follow the Modern Web Guidance skill at `.agents/skills/modern-web-guidance` and prefer accessible, Baseline-supported platform features.
+
 ## Key Files
 - `src/pages/` , all pages and routes
 - `src/layouts/Base.astro` , shared head/OG shell, skip link, `<Header />`, `<main>`, and footer; `chrome={false}` drops header and footer, which the homepage uses

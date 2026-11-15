@@ -9,6 +9,8 @@ This repo is Adrian Lumley's public personal site. Treat it as a premium editori
 - global styles: `src/styles/global.css`
 - tests: Vitest and Playwright
 
+For HTML, CSS, and client-side JavaScript, follow the Modern Web Guidance skill at `.agents/skills/modern-web-guidance` and prefer accessible, Baseline-supported platform features.
+
 ## canonical public nav
 The only public nav labels, in order:
 
